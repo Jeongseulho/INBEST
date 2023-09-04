@@ -1,4 +1,4 @@
-# 1주차
+# 2주차
 
 <details>
 <summary>접기/펼치기</summary>
