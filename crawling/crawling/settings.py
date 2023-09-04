@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'news',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,6 +78,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'mongo_db':{
+        'ENGINE': 'django',
+        'ENFORCE_SCHEMA': True,
+        'NAME': 'S09P22D110',
+        'CLIENT': {
+            'host': '127.0.0.1',
+            'port': 27017,
+            'username': 'S09P22D110',
+            'password': "KbnJjY3PZQ",
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1'
+        }
     }
 }
 
