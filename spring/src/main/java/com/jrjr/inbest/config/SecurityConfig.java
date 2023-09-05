@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.jrjr.inbest.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.jrjr.inbest.oauth.handler.OAuth2AuthenticationSuccessHandler;
-import com.jrjr.inbest.oauth.service.CustomOAuth2UserService;
+import com.jrjr.inbest.oauth.service.OAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SecurityConfig {
 
-	private final CustomOAuth2UserService customOAuth2UserService;
+	private final OAuth2UserService oAuth2UserService;
 	private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 	private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
@@ -44,7 +44,7 @@ public class SecurityConfig {
 			oAuth2LoginConfigurer
 				.loginPage("/login")
 				.userInfoEndpoint((userInfoEndpointConfig) ->
-					userInfoEndpointConfig.userService(customOAuth2UserService))
+					userInfoEndpointConfig.userService(oAuth2UserService))
 				.successHandler(oAuth2AuthenticationSuccessHandler)
 				.failureHandler(oAuth2AuthenticationFailureHandler)
 		);
