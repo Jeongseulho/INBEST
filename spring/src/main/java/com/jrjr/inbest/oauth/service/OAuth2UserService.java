@@ -10,7 +10,11 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.jrjr.inbest.login.constant.Role;
+import com.jrjr.inbest.login.entity.Login;
+import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.oauth.OAuth2UserInfoFactory;
 import com.jrjr.inbest.user.entity.User;
@@ -24,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
+	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
 
 	@Override
@@ -52,14 +57,14 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 		OAuth2UserInfo oAuth2UserInfo =
 			OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, oAuth2User.getAttributes());
 
-		User user = userRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
+		Login login = loginRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
 
 		// 해당 이메일로 가입된 계정이 없다면, 회원가입 진행
-		if (user == null) {
+		if (login == null) {
 			join(oAuth2UserInfo, registrationId);
 		} else {
 			// 가입된 계정이 있을 경우 provider 를 비교하여 같으면 로그인 진행
-			if (!user.getProvider().equals(registrationId)) {
+			if (!login.getProvider().equals(registrationId)) {
 				throw new OAuth2AuthenticationException("ACCESS_DENIED");
 			}
 		}
@@ -70,8 +75,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 		return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
 	}
 
-	private void join(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
-		userRepository.save(
+	@Transactional
+	public void join(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
+		User user = userRepository.save(
 			User.builder()
 				.email(oAuth2UserInfo.getEmail())
 				.name(oAuth2UserInfo.getName())
@@ -79,7 +85,16 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 				.birthyear(oAuth2UserInfo.getBirthYear())
 				.birthday(oAuth2UserInfo.getBirthDay())
 				.gender(oAuth2UserInfo.getGender())
+				.build()
+		);
+
+		loginRepository.save(
+			Login.builder()
+				.email(oAuth2UserInfo.getEmail())
+				.role(Role.ROLE_USER)
+				.userSeq(user.getSeq())
 				.provider(registrationId)
-				.build());
+				.build()
+		);
 	}
 }
