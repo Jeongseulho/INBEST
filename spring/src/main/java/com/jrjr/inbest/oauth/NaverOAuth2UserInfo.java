@@ -4,26 +4,26 @@ import java.util.Map;
 
 public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 
-	public NaverOAuth2UserInfo(Map<String, Object> attributes) {
-		super(attributes);
+	public NaverOAuth2UserInfo(Map<String, Object> attributes, String attributesKey) {
+		super(attributes, attributesKey);
 	}
 
 	@Override
 	public String getName() {
-		return (String)attributes.get("name");
+		return (String)userInfo.get("name");
 	}
 
 	@Override
 	public String getEmail() {
-		return (String)attributes.get("email");
+		return (String)userInfo.get("email");
 	}
 
 	@Override
 	public Integer getGender() {
-		if (!attributes.containsKey("gender")) {
+		if (!userInfo.containsKey("gender")) {
 			return 0;
 		}
-		String gender = (String)attributes.get("gender");
+		String gender = (String)userInfo.get("gender");
 		if (gender.equals("M"))
 			return 1;
 		else {
@@ -33,17 +33,17 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 
 	@Override
 	public String getBirthYear() {
-		if (!attributes.containsKey("birthyear")) {
+		if (!userInfo.containsKey("birthyear")) {
 			return "";
 		}
-		return (String)attributes.get("birthyear");
+		return (String)userInfo.get("birthyear");
 	}
 
 	@Override
 	public String getBirthDay() {
-		if (!attributes.containsKey("birthday")) {
+		if (!userInfo.containsKey("birthday")) {
 			return "";
 		}
-		return (String)attributes.get("birthday");
+		return (String)userInfo.get("birthday");
 	}
 }
