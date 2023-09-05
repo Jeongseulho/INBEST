@@ -2,6 +2,8 @@ package com.jrjr.inbest.user.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.jrjr.inbest.global.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -38,8 +40,11 @@ public class User extends BaseEntity {
 
 	private String birthday;
 
+	@ColumnDefault("0")
+	@Column(nullable = false)
 	private Integer gender;
 
+	@ColumnDefault("'inbest'")
 	@Column(nullable = false)
 	private String provider;
 
