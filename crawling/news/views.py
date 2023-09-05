@@ -13,24 +13,105 @@ from rest_framework.decorators import (api_view)
 def MainNewsList(request):
     url = f'https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=101'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
-    response = requests.get(url,headers=headers)
-    soup = BeautifulSoup(response.text,'html.parser')
 
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, 'lxml')
 
-    
+    newslist = soup.select(".sh_list .sh_item")
+    news_data = []
 
+    for news in newslist:
+        try:
+            image_url = news.select_one(".sh_thumb_link img")['src']
+        except TypeError:
+            continue
 
-    return
+        title = news.select_one(".sh_text_headline").text.strip()
+        content = news.select_one(".sh_text_lede").text.strip()
+
+        data_dict = {
+            'title':title,
+            'content':content,
+            'image_url':image_url
+        }
+
+        news_data.append(data_dict)
+
+    return JsonResponse(news_data, safe=False)
+
 
 # 뉴스 속보 목록
 @api_view(['GET'])
 def BreakingNewsList(request):
-    return
+    url = f'https://www.mk.co.kr/news/economy/latest/'
+    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, 'lxml')
+
+    newslist = soup.select(".news_list .news_node")
+    news_data = []
+
+    for news in newslist:
+        try:
+            image_url = news.select_one("img.lazy")['data-src']
+        except TypeError:
+            continue
+
+        title = news.select_one(".news_ttl").text.strip()
+        content = news.select_one(".news_desc").text.strip()
+        time = news.select_one(".time_info").text.strip()
+
+        data_dict = {
+            'title':title,
+            'content':content,
+            'image_url':image_url,
+            'time' : time
+        }
+
+        news_data.append(data_dict)
+
+    return JsonResponse(news_data, safe=False)
+
 
 # 산업별 뉴스 목록
 @api_view(['GET'])
-def IndustryByNewsList(request):
-    return
+def IndustryByNewsList(request, category):
+    url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
+    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, 'lxml')
+
+    newslist = soup.select(".list .item-box01")
+    news_data = []
+
+    for news in newslist:
+        try:
+            image_url = "https:" + news.select_one(".img-con img")['src']
+        except TypeError:
+            continue
+
+        try:
+            content = news.select_one(".lead").text.strip()    
+        except TypeError:
+            continue
+        
+        title = news.select_one(".tit-news").text.strip()
+
+        data_dict ={
+            'title': title,
+            'content' : content,
+            'image_url': image_url,
+        }
+
+        news_data.append(data_dict)
+
+    return JsonResponse(news_data, safe=False)
+
+
+
+
 
 # 기업별 뉴스
 @api_view(['GET'])
