@@ -1,4 +1,5 @@
+import LoginForm from "../organisms/LoginForm";
 const LoginSignup = () => {
-  return <div>LoginSignup</div>;
+  return <LoginForm />;
 };
 export default LoginSignup;

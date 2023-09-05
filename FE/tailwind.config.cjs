@@ -4,7 +4,16 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        light: ["light"],
+        regular: ["regular"],
+        medium: ["medium"],
+        semiBold: ["semibold"],
+        bold: ["bold"],
+        extraBold: ["extraBold"],
+      },
+    },
   },
   plugins: [],
 };

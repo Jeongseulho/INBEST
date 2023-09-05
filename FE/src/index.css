@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face{
+  font-family: 'light';
+  src:url('./asset/font/NotoSansKR-Light.ttf')
+}
+
+@font-face{
+  font-family: 'regular';
+  src:url('./asset/font/NotoSansKR-Regular.ttf')
+}
+
+@font-face{
+  font-family: 'medium';
+  src:url('./asset/font/NotoSansKR-Medium.ttf')
+}
+
+@font-face{
+  font-family: 'semiBold';
+  src:url('./asset/font/NotoSansKR-SemiBold.ttf')
+}
+
+@font-face{
+  font-family: 'bold';
+  src:url('./asset/font/NotoSansKR-Bold.ttf')
+}
+
+@font-face{
+  font-family: 'extraBold';
+  src:url('./asset/font/NotoSansKR-ExtraBold.ttf')
+}
+
+body{
+  font-family: 'medium';
+}
