@@ -4,10 +4,10 @@ import java.util.Map;
 
 public abstract class OAuth2UserInfo {
 
-	Map<String, Object> attributes;
+	Map<String, Object> userInfo;
 
-	public OAuth2UserInfo(Map<String, Object> attributes) {
-		this.attributes = attributes;
+	public OAuth2UserInfo(Map<String, Object> attributes, String attributesKey) {
+		this.userInfo = (Map<String, Object>)attributes.get(attributesKey);
 	}
 
 	public abstract String getName();
