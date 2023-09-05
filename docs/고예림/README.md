@@ -1,3 +1,8 @@
+# 23-09-05
+- Spring Cloud Gateway 구현
+- Gateway, Eureka Server, Client(서비스) 연동
+    - segment, rewrite로 url prefix 문제 해결
+
 # 23-09-04
 - MSA 학습
 - Spring Cloud 학습
