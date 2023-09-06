@@ -61,7 +61,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
 		// 해당 이메일로 가입된 계정이 없다면, 회원가입 진행
 		if (login == null) {
-			join(oAuth2UserInfo, registrationId);
+			login = join(oAuth2UserInfo, registrationId);
 		} else {
 			// 가입된 계정이 있을 경우 provider 를 비교하여 같으면 로그인 진행
 			if (!login.getProvider().equals(registrationId)) {
@@ -70,13 +70,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 		}
 
 		// 권한 생성
-		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(login.getRole().toString());
 
 		return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
 	}
 
 	@Transactional
-	public void join(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
+	public Login join(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
 		User user = userRepository.save(
 			User.builder()
 				.email(oAuth2UserInfo.getEmail())
@@ -88,7 +88,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 				.build()
 		);
 
-		loginRepository.save(
+		return loginRepository.save(
 			Login.builder()
 				.email(oAuth2UserInfo.getEmail())
 				.role(Role.ROLE_USER)
