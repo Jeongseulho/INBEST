@@ -1,7 +1,23 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
+@layer base {
+  h1 {
+    @apply text-5xl;
+  }
+  h2 {
+    @apply text-4xl;
+  }
+  h3 {
+    @apply text-3xl;
+  }
+  a {
+    @apply text-blue-600 underline;
+  }
+}
+
+@tailwind components;
+
+@tailwind utilities;
 @font-face{
   font-family: 'light';
   src:url('./asset/font/NotoSansKR-Light.ttf')

@@ -1,10 +1,10 @@
-import IdInput from "../atoms/IdInput";
+import EmailInput from "../atoms/EmailInput";
 import LoginPassWordInput from "../atoms/LoginPassWordInput";
 
 const GeneralLogin = () => {
   return (
     <div className="flex flex-col justify-around h-full">
-      <IdInput />
+      <EmailInput />
       <LoginPassWordInput />
     </div>
   );
