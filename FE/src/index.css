@@ -50,4 +50,5 @@
 
 body{
   font-family: 'medium';
+  overflow-x: hidden;
 }
