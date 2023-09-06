@@ -22,7 +22,7 @@ const StepSide = ({ curStep }: StepSideProps) => {
           visible: { opacity: 1 },
           hidden: { opacity: 0 },
         }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 1 }}
       >
         <StepDesc title={HOME_TEXT[curStep].title} desc={HOME_TEXT[curStep].desc} />
       </motion.div>
