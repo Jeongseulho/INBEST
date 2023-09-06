@@ -19,4 +19,21 @@ ATOMIC 패턴과  Component - custom hooks 패턴 합치면서 hooks 폴더에 a
 # 📌to do
 - 피그마 계속
 
+#### 2023/9/5(화)
+
+# 📌what i did
+- 기본 ATOMIC 구조 예시 생성
+- 피그마 만들기
+
+# 📌issue & solution
+## 📖 공통 Input.tsx 만들기 
+### 💢 issue
+원래는 공통 Input.tsx을 만들고 props로 password인지, 일반 default값으로 text인지 선택하여 다른 곳에서 공통으로 쓰려고 했는데, 삼항 연산자 또는 if문으로 분기를 해줘야해서 나눌지 공통으로 1개의 파일에 쓸지 고민했다.
+### 👀 solution
+결론은 나누기로 했다, input type이 text or password 말고도 email, 또는 search bar 인경우도 있으므로 나누는게 맞다고 생각했다.
+
+# 📌to do
+- 피그마 계속
+
+
 </details>
