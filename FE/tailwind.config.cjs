@@ -21,6 +21,7 @@ module.exports = {
         mainMoreLight: "#ADF777",
         bright: "#EDFDE8",
         lime: "#C1E061",
+        kakao: "#FEE500",
       },
     },
   },

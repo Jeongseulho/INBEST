@@ -11,7 +11,7 @@
     @apply text-3xl;
   }
   a {
-    @apply text-blue-600 underline;
+    @apply cursor-pointer;
   }
 }
 
