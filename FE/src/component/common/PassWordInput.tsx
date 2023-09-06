@@ -1,12 +1,15 @@
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import { usePassWordInput } from "./usePassWordInput";
-
+import { useState } from "react";
 interface PassWordInputProps {
   placeholder?: string;
 }
 
 const PassWordInput = ({ placeholder = "" }: PassWordInputProps) => {
-  const { showPassWord, onToggleShowPassWord } = usePassWordInput();
+  const [showPassWord, setShowPassWord] = useState(false);
+
+  const onToggleShowPassWord = () => {
+    setShowPassWord((prev) => !prev);
+  };
 
   return (
     <div className="flex items-center relative">
