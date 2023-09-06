@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-export const useStepAnimation = (myStep: number, setCurStep: React.Dispatch<React.SetStateAction<number>>) => {
+export const useStep = (myStep: number, setCurStep: React.Dispatch<React.SetStateAction<number>>) => {
   const animation = useAnimation();
   const { ref, inView } = useInView({
     threshold: 0.81,

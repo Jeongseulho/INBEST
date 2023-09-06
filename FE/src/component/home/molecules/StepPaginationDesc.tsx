@@ -4,7 +4,7 @@ interface StepDescProps {
   title: string;
 }
 
-const StepDesc = ({ title }: StepDescProps) => {
+const StepPaginationDesc = ({ title }: StepDescProps) => {
   return (
     <AnimatePresence>
       <motion.div
@@ -13,11 +13,11 @@ const StepDesc = ({ title }: StepDescProps) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-white"
+        className="text-white relative"
       >
-        <h1>{title}</h1>
+        <h1 className=" absolute">{title}</h1>
       </motion.div>
     </AnimatePresence>
   );
 };
-export default StepDesc;
+export default StepPaginationDesc;

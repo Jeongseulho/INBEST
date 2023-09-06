@@ -4,8 +4,7 @@ import { useState } from "react";
 import StepSide from "../organisms/StepSide";
 
 const Home = () => {
-  const [curStep, setCurStep] = useState(0);
-  console.log(curStep);
+  const [curStep, setCurStep] = useState(-1);
 
   return (
     <main>

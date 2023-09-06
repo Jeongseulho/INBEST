@@ -1,10 +1,10 @@
 import temp_logo from "../../../asset/image/temp_logo.png";
 import { StepProps } from "../../../type/HomeStepProps";
 import { motion } from "framer-motion";
-import { useStepAnimation } from "./useStepAnimation";
+import { useStep } from "./useStep";
 
 const StepOne = ({ setCurStep }: StepProps) => {
-  const { ref, animation, variants } = useStepAnimation(1, setCurStep);
+  const { ref, animation, variants } = useStep(1, setCurStep);
   return (
     <motion.div
       ref={ref}
