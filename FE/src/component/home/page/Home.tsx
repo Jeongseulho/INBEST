@@ -5,13 +5,12 @@ import StepSide from "../organisms/StepSide";
 
 const Home = () => {
   const [curStep, setCurStep] = useState(0);
-  console.log(curStep);
-
+  console.log(setCurStep);
   return (
     <main>
       <Intro />
       <StepSide curStep={curStep} />
-      <GuideSteps setCurStep={setCurStep} />
+      <GuideSteps />
     </main>
   );
 };

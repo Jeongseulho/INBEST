@@ -1,30 +1,77 @@
-import { useGuideSteps } from "./useGuideSteps";
+import { motion } from "framer-motion";
+import { useObserver } from "../../../hook/useObserver";
 
-interface GuideStepsProps {
-  setCurStep: React.Dispatch<React.SetStateAction<number>>;
-}
+/* eslint-disable max-lines-per-function */
+const GuideSteps = () => {
+  const { ref, animation } = useObserver();
 
-const GuideSteps = ({ setCurStep }: GuideStepsProps) => {
-  const { stepZeroRef, stepOneRef, stepTwoRef, stepThreeRef, stepFourRef } = useGuideSteps(setCurStep);
   return (
     <section className="bg-slate-800 text-white">
-      <div ref={stepZeroRef} className=" h-screen">
-        STEP0
-      </div>
-      <div ref={stepOneRef} className=" h-screen">
-        STEP1
-      </div>
-      <div ref={stepTwoRef} className=" h-screen">
-        STEP2
-      </div>
-      <div ref={stepThreeRef} className=" h-screen">
-        STEP3
-      </div>
-      <div ref={stepFourRef} className=" h-screen">
-        STEP4
-      </div>
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={animation}
+        variants={{
+          visible: { opacity: 1 },
+          hidden: { opacity: 0 },
+        }}
+        className=" h-screen"
+      >
+        STEP0 제목 설명
+      </motion.div>
+
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={animation}
+        variants={{
+          visible: { opacity: 1 },
+          hidden: { opacity: 0 },
+        }}
+        className=" h-screen"
+      >
+        STEP1 제목 설명
+      </motion.div>
+
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={animation}
+        variants={{
+          visible: { opacity: 1 },
+          hidden: { opacity: 0 },
+        }}
+        className=" h-screen"
+      >
+        STEP2 제목 설명
+      </motion.div>
+
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={animation}
+        variants={{
+          visible: { opacity: 1 },
+          hidden: { opacity: 0 },
+        }}
+        className=" h-screen"
+      >
+        STEP3 제목 설명
+      </motion.div>
+
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={animation}
+        variants={{
+          visible: { opacity: 1 },
+          hidden: { opacity: 0 },
+        }}
+        className=" h-screen"
+      >
+        STEP4 제목 설명
+      </motion.div>
     </section>
   );
 };
-
 export default GuideSteps;
