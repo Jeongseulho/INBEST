@@ -113,7 +113,7 @@ def IndustryByNewsList(request, category):
 
 
 
-# 기업별 뉴스
+# 기업별 뉴스 + 감정분석
 @api_view(['GET'])
 def CompanyByNewsList(request, company_code):
 
