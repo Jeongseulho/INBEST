@@ -1,6 +1,12 @@
-const Intro = () => {
+import { useIntro } from "./useIntro";
+interface IntroProps {
+  setCurStep: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Intro = ({ setCurStep }: IntroProps) => {
+  const { ref } = useIntro(setCurStep);
   return (
-    <section className="flex flex-col items-center mt-10 h-screen">
+    <section ref={ref} className="flex flex-col items-center mt-10 h-screen">
       <h1>모의 투자</h1>
       <h3 className=" font-regular">자산 늘리기 도우미</h3>
       <p className=" font-light">

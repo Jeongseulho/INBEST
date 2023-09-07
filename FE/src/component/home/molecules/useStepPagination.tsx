@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 export const useStepPagination = (curStep: number) => {
   const animation = useAnimation();
   const { ref } = useInView();
-  const isOnView = curStep >= 0;
+  const isOnView = curStep > 0 && curStep < 6;
 
   useEffect(() => {
     if (isOnView) {

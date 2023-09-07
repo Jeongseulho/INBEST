@@ -4,11 +4,11 @@ import { useState } from "react";
 import StepSide from "../organisms/StepSide";
 
 const Home = () => {
-  const [curStep, setCurStep] = useState(-1);
+  const [curStep, setCurStep] = useState(0);
 
   return (
     <main>
-      <Intro />
+      <Intro setCurStep={setCurStep} />
       <StepSide curStep={curStep} />
       <GuideSteps setCurStep={setCurStep} />
     </main>
