@@ -23,7 +23,7 @@ export const useStep = (myStep: number, setCurStep: React.Dispatch<React.SetStat
 
   const variants = {
     visible: {
-      opacity: 0.8,
+      opacity: 0.65,
       y: 0,
       transition: {
         duration: 0.5,
