@@ -1,7 +1,6 @@
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import HorizonLine from "../atoms/HorizonLine";
 interface LoginFormValue {
   email: string;
   password: string;
@@ -21,9 +20,9 @@ const GeneralLogin = () => {
   return (
     <form
       onSubmit={handleSubmit((data: LoginFormValue) => console.log(data))}
-      className="flex flex-col items-center justify-center"
+      className="flex flex-col items-center justify-center h-full"
     >
-      <div className="w-10/12">
+      <div className="w-10/12 mt-4">
         <label htmlFor="email" className="mt-5 text-left">
           <p className="my-2 font-regular">이메일</p>
         </label>
@@ -31,11 +30,11 @@ const GeneralLogin = () => {
           id="email"
           type="email"
           placeholder="이메일을 입력해 주세요"
-          className=" border-gray-400 border w-full p-2 rounded-md"
+          className=" border-gray-400 border w-full p-3 rounded-md"
           {...register("email")}
         />
       </div>
-      <div className="w-10/12">
+      <div className="w-10/12 mt-4">
         <label htmlFor="password" className="mt-5 text-left">
           <p className="my-2 font-regular ">비밀번호</p>
         </label>
@@ -44,7 +43,7 @@ const GeneralLogin = () => {
             id="password"
             type={showPassWord ? "text" : "password"}
             placeholder="비밀번호를 입력해 주세요"
-            className=" border-gray-400 border w-full p-2 rounded-md"
+            className=" border-gray-400 border w-full p-3 rounded-md"
             {...register("password")}
           />
           <div
@@ -55,17 +54,14 @@ const GeneralLogin = () => {
           </div>
         </div>
       </div>
-      <div className="text-center w-10/12 mt-7">
+      <div className="text-center w-10/12 mt-11">
         <button
           type="submit"
-          className="bg-mainDark w-full p-2 rounded-md text-white font-regular"
+          className="bg-mainDark w-full p-3 rounded-md text-white font-regular"
           disabled={isSubmitting}
         >
           로그인
         </button>
-      </div>
-      <div className="w-10/12 py-2 my-9">
-        <HorizonLine text="OR" />
       </div>
     </form>
   );
