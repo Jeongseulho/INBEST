@@ -6,9 +6,9 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <main className=" bg-gray-200 min-h-screen">
+    <div className=" bg-gray-50 min-h-screen">
       <Header />
       {children}
-    </main>
+    </div>
   );
 };
