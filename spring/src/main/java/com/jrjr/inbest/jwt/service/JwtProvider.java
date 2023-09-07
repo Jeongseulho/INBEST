@@ -1,9 +1,11 @@
 package com.jrjr.inbest.jwt.service;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,6 +15,7 @@ import com.jrjr.inbest.jwt.entity.RefreshToken;
 import com.jrjr.inbest.jwt.repository.RefreshTokenRepository;
 import com.jrjr.inbest.login.constant.Role;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +28,7 @@ public class JwtProvider {
 	private String secretKey;
 
 	private final RefreshTokenRepository refreshTokenRepository;
-
+	private static final String HEADER_AUTHORIZATION = "Authorization";
 	private static final String GRANT_TYPE = "Bearer";
 
 	public AccessTokenDto generateAccessToken(String email, Role role) {
@@ -65,5 +68,16 @@ public class JwtProvider {
 		log.info("RefreshToken Redis 저장 완료: {}", refreshTokenEntity.getRefreshToken());
 
 		return refreshToken;
+	}
+
+	public Optional<String> resolveAccessToken(HttpServletRequest request) {
+		log.info("JwtProvider - resolveAccessToken 실행");
+
+		String bearerToken = request.getHeader(HEADER_AUTHORIZATION);
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(GRANT_TYPE)) {
+			return Optional.of(bearerToken.substring(7));
+		}
+
+		return Optional.empty();
 	}
 }
