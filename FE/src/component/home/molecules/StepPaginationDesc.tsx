@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 
-interface StepDescProps {
+interface Props {
   title: string;
   desc: string;
 }
 
-const StepPaginationDesc = ({ title, desc }: StepDescProps) => {
+const StepPaginationDesc = ({ title, desc }: Props) => {
   return (
     <AnimatePresence>
       <motion.div

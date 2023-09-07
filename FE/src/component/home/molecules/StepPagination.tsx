@@ -2,11 +2,11 @@ import { useStepPagination } from "./useStepPagination";
 import { motion } from "framer-motion";
 import only_logo from "../../../asset/image/only_logo.png";
 
-interface StepPaginationProps {
+interface Props {
   curStep: number;
 }
 
-const StepPagination = ({ curStep }: StepPaginationProps) => {
+const StepPagination = ({ curStep }: Props) => {
   const { ref, animation, variants } = useStepPagination(curStep);
   return (
     <motion.div ref={ref} initial="hidden" animate={animation} variants={variants}>
