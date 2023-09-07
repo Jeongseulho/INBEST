@@ -10,12 +10,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class CookieUtil {
 
-	public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
+	public static Optional<String> getCookieValue(HttpServletRequest request, String name) {
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals(name)) {
-					return Optional.of(cookie);
+					return Optional.of(cookie.getValue());
 				}
 			}
 		}
