@@ -7,18 +7,15 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.oauth.OAuth2UserInfoFactory;
-import com.jrjr.inbest.user.entity.User;
-import com.jrjr.inbest.user.repository.UserRepository;
+import com.jrjr.inbest.oauth.entity.CustomOAuth2User;
+import com.jrjr.inbest.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
+	private final UserService userService;
+
 	private final LoginRepository loginRepository;
-	private final UserRepository userRepository;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -61,7 +59,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
 		// 해당 이메일로 가입된 계정이 없다면, 회원가입 진행
 		if (login == null) {
-			login = join(oAuth2UserInfo, registrationId);
+			login = userService.join(oAuth2UserInfo, registrationId);
 		} else {
 			// 가입된 계정이 있을 경우 provider 를 비교하여 같으면 로그인 진행
 			if (!login.getProvider().equals(registrationId)) {
@@ -72,29 +70,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 		// 권한 생성
 		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(login.getRole().toString());
 
-		return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
-	}
-
-	@Transactional
-	public Login join(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
-		User user = userRepository.save(
-			User.builder()
-				.email(oAuth2UserInfo.getEmail())
-				.name(oAuth2UserInfo.getName())
-				.nickname(oAuth2UserInfo.getEmail())
-				.birthyear(oAuth2UserInfo.getBirthYear())
-				.birthday(oAuth2UserInfo.getBirthDay())
-				.gender(oAuth2UserInfo.getGender())
-				.build()
-		);
-
-		return loginRepository.save(
-			Login.builder()
-				.email(oAuth2UserInfo.getEmail())
-				.role(Role.ROLE_USER)
-				.userSeq(user.getSeq())
-				.provider(registrationId)
-				.build()
-		);
+		return new CustomOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName, login.getEmail());
 	}
 }
