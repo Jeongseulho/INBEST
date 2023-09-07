@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 from .models import News
 import requests
 from rest_framework.decorators import (api_view)
+from textblob import TextBlob
+from googletrans import Translator
 
 
 # 메인 뉴스 목록
@@ -125,6 +127,7 @@ def CompanyByNewsList(request, company_code):
 
     newslist = soup.select(".type5 tbody tr.first, .type5 tbody tr.last, .type5 tbody tr.relation_tit")
     news_data = []
+    translator = Translator()
 
     for news in newslist:
 
@@ -132,11 +135,22 @@ def CompanyByNewsList(request, company_code):
         link = "https://finance.naver.com" + news.select_one(".tit")['href']
         time = news.select_one(".date").text.strip()
 
+        translation = translator.translate(title, dest='en').text
+
+        blob = TextBlob(translation)
+        sentiment_polarity = blob.sentiment.polarity
+        sentiment_subjectivity = blob.sentiment.subjectivity
+
+        sentiment_analysis = (sentiment_polarity + 1) * 50 * (1 - sentiment_subjectivity)
+        # print(sentiment_polarity, sentiment_subjectivity)
+
         data_dict ={
             'title': title,
             'link' : link,
             'time': time,
+            'sentiment_analysis': sentiment_analysis
         }
+
 
         news_data.append(data_dict)
 
