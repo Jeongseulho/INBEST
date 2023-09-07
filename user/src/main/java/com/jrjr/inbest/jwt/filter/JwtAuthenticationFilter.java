@@ -36,42 +36,46 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		Optional<String> refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
 		log.info("refreshToken: {}", refreshToken.orElse("refreshToken 없음"));
 
-		// 1. accessToken 이 없으면, refreshToken 검사 후 재발급
+		// accessToken 없을 때 -> refreshToken 검사 후 재발급
 		if (accessToken.isEmpty()) {
 			log.info("accessToken.isEmpty() 실행");
-			// refreshToken 없음 or 만료
-			if (refreshToken.isEmpty() || !jwtProvider.isValidToken(refreshToken.get())) {
+			if (refreshToken.isEmpty()) {
 				throw new JwtException("EXPIRED_REFRESH_TOKEN");
 			}
-			// redis 에 저장된 refreshToken 과 비교
-			if (!jwtProvider.compareRefreshTokens(refreshToken.get())) {
-				throw new JwtException("INVALID_TOKEN");
-			}
-			// accessToken 재발급
-			LoginDto loginDto = jwtProvider.getUserInfoFromToken(refreshToken.get());
-			AccessTokenDto accessTokenDto = jwtProvider.generateAccessToken(loginDto.getEmail(), loginDto.getRole());
-			response.setHeader("grantType", accessTokenDto.getGrantType());
-			response.setHeader("accessToken", accessTokenDto.getAccessToken());
-			log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
-			throw new JwtException("REISSUE_ACCESS_TOKEN");
+			this.reissueAccessToken(response, refreshToken.get());
 		}
 
-		// 2. accessToken 이 있으면
-		log.info("accessToken.isPresent() 실행");
-		// 2.1 accessToken 손상 -> 로그아웃 (JwtExceptionFilter 예외처리)
-		// 2.2 accessToken 만료
-		// 2.2.1 refreshToken 정상 -> accessToken 재발급
-		// 2.2.2 refreshToken 손상 or 만료 -> 로그아웃
+		// accessToken 있을 때 -> 손상: 로그아웃, 만료: 재발급
+		if (accessToken.isPresent()) {
+			log.info("accessToken.isPresent() 실행");
+			// accessToken: 손상 x, 만료 o -> accessToken 재발급
+			if (!jwtProvider.isValidToken(accessToken.get())) {
+				if (refreshToken.isEmpty()) {
+					throw new JwtException("EXPIRED_REFRESH_TOKEN");
+				}
+				this.reissueAccessToken(response, refreshToken.get());
+			}
+		}
 
-		// refreshToken 이 없으면, 로그아웃
-		// if (refreshToken.isEmpty()) {
-		//
-		// }
-
-		// refreshToken 검사
-		// log.info("refreshToken.get(): {}", refreshToken.get());
-		// jwtProvider.isValidToken(refreshToken.get());
-
+		// accessToken 이 정상이라면, 정상 로직 진행
 		filterChain.doFilter(request, response);
+	}
+
+	private void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {
+		// refreshToken 만료
+		if (!jwtProvider.isValidToken(refreshToken)) {
+			throw new JwtException("EXPIRED_REFRESH_TOKEN");
+		}
+		// redis 에 저장된 refreshToken 과 비교
+		if (!jwtProvider.compareRefreshTokens(refreshToken)) {
+			throw new JwtException("INVALID_TOKEN");
+		}
+		// accessToken 재발급
+		LoginDto loginDto = jwtProvider.getUserInfoFromToken(refreshToken);
+		AccessTokenDto accessTokenDto = jwtProvider.generateAccessToken(loginDto.getEmail(), loginDto.getRole());
+		response.setHeader("grantType", accessTokenDto.getGrantType());
+		response.setHeader("accessToken", accessTokenDto.getAccessToken());
+		log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
+		throw new JwtException("REISSUE_ACCESS_TOKEN");
 	}
 }
