@@ -80,4 +80,9 @@ public class JwtProvider {
 
 		return Optional.empty();
 	}
+
+	public Boolean isValidToken(String token) {
+		log.info("JwtProvider - isValidToken 실행");
+		return false;
+	}
 }
