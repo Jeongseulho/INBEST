@@ -142,7 +142,17 @@ def CompanyByNewsList(request, company_code):
         sentiment_subjectivity = blob.sentiment.subjectivity
 
         sentiment_analysis = (sentiment_polarity + 1) * 50 * (1 - sentiment_subjectivity)
-        # print(sentiment_polarity, sentiment_subjectivity)
+
+        if sentiment_analysis == 50:
+            sentiment_analysis += (len(title)/10)
+
+        if sentiment_analysis < 50:
+            sentiment_analysis *= 1.5
+
+        while sentiment_analysis > 100:
+            sentiment_analysis -= 10
+
+        print(sentiment_polarity, sentiment_subjectivity)
 
         data_dict ={
             'title': title,
