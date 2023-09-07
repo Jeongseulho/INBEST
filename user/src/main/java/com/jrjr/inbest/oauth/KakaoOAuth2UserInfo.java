@@ -25,9 +25,9 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 			return 0;
 		}
 		String gender = (String)userInfo.get("gender");
-		if (gender.equals("male"))
+		if (gender.equals("male")) {
 			return 1;
-		else {
+		} else {
 			return 2;
 		}
 	}

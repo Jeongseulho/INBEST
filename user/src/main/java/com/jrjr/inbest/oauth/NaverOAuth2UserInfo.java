@@ -24,9 +24,9 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 			return 0;
 		}
 		String gender = (String)userInfo.get("gender");
-		if (gender.equals("M"))
+		if (gender.equals("M")) {
 			return 1;
-		else {
+		} else {
 			return 2;
 		}
 	}
