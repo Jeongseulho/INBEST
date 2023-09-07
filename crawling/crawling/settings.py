@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import py_eureka_client.eureka_client as eureka_client
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -135,3 +136,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EUREKA_SERVER = 'http://192.168.100.148:8761/eureka/'
+
+def register_with_eureka():
+    # EUREKA_CLIENT 설정 및 서버에 등록.
+    eureka_client.init(
+        eureka_server=EUREKA_SERVER,
+        app_name="news-service",
+        instance_port=8000,  # Django 애플리케이션의 포트
+    )
+register_with_eureka()

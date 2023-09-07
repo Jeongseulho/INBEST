@@ -3,6 +3,21 @@
 import os
 import sys
 
+import py_eureka_client.eureka_client as eureka_client
+from django.conf import settings
+
+# Eureka client 등록
+# EUREKA_SERVER = 'http://192.168.100.148:8761/eureka/'
+
+# def register_with_eureka():
+#     # EUREKA_CLIENT 설정 및 서버에 등록.
+#     eureka_client.init(
+#         eureka_server=EUREKA_SERVER,
+#         app_name="news-service",
+#         instance_port=8000,  # Django 애플리케이션의 포트
+#     )
+
+# register_with_eureka()
 
 def main():
     """Run administrative tasks."""
