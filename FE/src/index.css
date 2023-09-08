@@ -57,3 +57,24 @@ body{
 .signup-input{
   @apply border-gray-400 border p-2 rounded-md;
 }
+
+
+.selected-day{
+  @apply font-semiBold
+}
+.gray-day{
+  @apply text-gray-400
+}
+.react-datepicker__header {
+  @apply bg-white
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__input-container input {
+
+  @apply w-full;
+  @apply h-full;
+}

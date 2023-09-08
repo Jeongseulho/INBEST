@@ -1,48 +1,18 @@
 import { useState } from "react";
+import { getYear } from "date-fns";
+
 export const useInputDatePicker = () => {
-  const options = {
-    title: "생년월일",
-    autoHide: true,
-    todayBtn: false,
-    clearBtn: true,
-    maxDate: new Date(),
-    minDate: new Date("1950-01-01"),
-    weekDays: ["월", "화", "수", "목", "금", "토", "일"],
-    theme: {
-      background: "",
-      todayBtn: "",
-      clearBtn: "",
-      icons: "",
-      text: "",
-      disabledText: "text-gray-300",
-      input: "",
+  const [month, setMonth] = useState(new Date().getMonth());
 
-      inputIcon: "",
-      selected: "",
-    },
-    icons: {
-      // () => ReactElement | JSX.Element
-      prev: () => <span>←</span>,
-      next: () => <span>→</span>,
-    },
-    datepickerClassNames: "top-12",
-    defaultDate: new Date(),
-    language: "ko",
+  const handleMonthChange = (date: Date) => {
+    console.log(date);
+    setMonth(date.getMonth());
   };
 
-  const [show, setShow] = useState<boolean>(false);
-  const handleChange = (selectedDate: Date) => {
-    console.log(selectedDate);
-  };
-  const handleClose = (state: boolean) => {
-    setShow(state);
-  };
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  return {
-    options,
-    show,
-    setShow,
-    handleChange,
-    handleClose,
-  };
+  const years = Array.from({ length: getYear(new Date()) + 1 - 1900 }, (_, i) => getYear(new Date()) - i);
+  const months = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+
+  return { selectedDate, setSelectedDate, month, handleMonthChange, years, months };
 };

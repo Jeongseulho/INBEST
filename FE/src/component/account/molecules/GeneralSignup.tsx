@@ -1,14 +1,8 @@
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 import InputDatePicker from "../atoms/InputDatePicker";
-interface SignupFormValue {
-  email: string;
-  password: string;
-  name: string;
-  nickName: string;
-  birth: string;
-}
+import { SignupFormValue } from "../../../type/SignupForm";
 
 /* eslint-disable max-lines-per-function */
 const GeneralLogin = () => {
@@ -81,31 +75,31 @@ const GeneralLogin = () => {
           />
         </div>
       </div>
-      <div className="w-10/12 mt-4 grid grid-flow-col gap-2">
+      <div className="w-10/12 mt-4 grid grid-cols-2 gap-2">
         <div>
           <label htmlFor="birth" className="mt-5 text-left">
             <p className="my-2 font-regular">생년월일</p>
           </label>
           <div className="flex justify-between items-center">
-            <Controller
-              control={control}
-              name="birth"
-              render={({ field: { onChange, value } }) => <InputDatePicker onChange={onChange} value={value} />}
-            />
+            <InputDatePicker control={control} />
           </div>
         </div>
         <div>
-          <label htmlFor="nickName" className="mt-5 text-left">
-            <p className="my-2 font-regular">닉네임</p>
-          </label>
-
-          <input
-            id="nickName"
-            type="text"
-            placeholder="이메일을 입력해 주세요"
-            className="signup-input w-full"
-            {...register("nickName")}
-          />
+          <p className="my-2 font-regular">성별</p>
+          <div className="grid grid-cols-3">
+            <div className="flex items-center">
+              <input {...register("gender")} id="male" type="radio" value={1} className="me-2" />
+              <label htmlFor="male">남</label>
+            </div>
+            <div>
+              <input {...register("gender")} id="female" type="radio" value={2} className="me-2" />
+              <label htmlFor="female">여</label>
+            </div>
+            <div>
+              <input {...register("gender")} id="none" type="radio" value={0} className="me-2" />
+              <label htmlFor="none">선택안함</label>
+            </div>
+          </div>
         </div>
       </div>
       <div className="w-10/12 mt-4">
