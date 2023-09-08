@@ -10,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.CorsFilter;
 
 import com.jrjr.inbest.jwt.filter.JwtAuthenticationFilter;
@@ -47,6 +46,10 @@ public class SecurityConfig {
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable);
 
+		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
+			.addFilterBefore(corsFilter, JwtExceptionFilter.class);
+
 		http.authorizeHttpRequests((authorizeHttpRequests) ->
 			authorizeHttpRequests
 				.anyRequest().permitAll());
@@ -55,17 +58,13 @@ public class SecurityConfig {
 			httpSecurityLogoutConfigurer.logoutSuccessUrl("/login")
 		);
 
-		http.addFilterBefore(corsFilter, LogoutFilter.class)
-			.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
-
 		http.exceptionHandling(
 			httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(
 				jwtAccessDeniedHandler));
 
 		http.oauth2Login((oAuth2LoginConfigurer) ->
 			oAuth2LoginConfigurer
-				.loginPage("/login")
+				// .loginPage("/login")
 				.userInfoEndpoint((userInfoEndpointConfig) ->
 					userInfoEndpointConfig.userService(oAuth2UserService))
 				.successHandler(oAuth2AuthenticationSuccessHandler)
