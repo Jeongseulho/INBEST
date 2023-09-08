@@ -4,4 +4,4 @@ spring:
   application:
     name: user
   config:
-    import: configserver:http://13.124.142.120:9090
+    import: optional:configserver:http://13.124.142.120:9090
