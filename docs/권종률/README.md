@@ -19,3 +19,7 @@
 ## 0907
 ![image](https://github.com/KwonJongryul/mirror/assets/122791001/b31ae176-3dd6-4a74-862b-80dd89c4af15)
 회원가입폼 작성
+
+## 0908
+![image](https://github.com/KwonJongryul/mirror/assets/122791001/5f2c31b3-629b-404f-a84d-28a97f5378f8)
+회원가입폼 작성중
