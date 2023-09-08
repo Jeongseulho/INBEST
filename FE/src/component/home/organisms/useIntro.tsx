@@ -3,7 +3,7 @@ import { useInView } from "react-intersection-observer";
 
 export const useIntro = (setCurStep: React.Dispatch<React.SetStateAction<number>>) => {
   const { ref, inView } = useInView({
-    threshold: 0.1,
+    threshold: 0.4,
   });
 
   useEffect(() => {
