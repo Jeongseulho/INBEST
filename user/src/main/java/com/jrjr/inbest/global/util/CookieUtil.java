@@ -33,7 +33,7 @@ public class CookieUtil {
 	}
 
 	public static void deleteCookie(HttpServletResponse response, String name) {
-		ResponseCookie responseCookie = ResponseCookie.from(name, null)
+		ResponseCookie responseCookie = ResponseCookie.from(name, "")
 			.path("/")
 			.sameSite("None")
 			.maxAge(0)
