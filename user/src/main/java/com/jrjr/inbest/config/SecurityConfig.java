@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,37 +39,37 @@ public class SecurityConfig {
 	private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
 	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().requestMatchers("/api/**", "/favicon.ico");
+	}
+
+	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http
-			.csrf(AbstractHttpConfigurer::disable)
-			.sessionManagement((sessionManagement) ->
-				sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		http.csrf(AbstractHttpConfigurer::disable)
+			.sessionManagement(
+				httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
+					SessionCreationPolicy.STATELESS))
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable);
-
-		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
-			.addFilterBefore(corsFilter, JwtExceptionFilter.class);
-
-		http.authorizeHttpRequests((authorizeHttpRequests) ->
-			authorizeHttpRequests
-				.anyRequest().permitAll());
-
-		http.logout(httpSecurityLogoutConfigurer ->
-			httpSecurityLogoutConfigurer.logoutSuccessUrl("/login")
-		);
 
 		http.exceptionHandling(
 			httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(
 				jwtAccessDeniedHandler));
 
+		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
+			.addFilterBefore(corsFilter, JwtExceptionFilter.class);
+
 		http.oauth2Login((oAuth2LoginConfigurer) ->
 			oAuth2LoginConfigurer
-				// .loginPage("/login")
+				.loginPage("/login")
 				.userInfoEndpoint((userInfoEndpointConfig) ->
 					userInfoEndpointConfig.userService(oAuth2UserService))
 				.successHandler(oAuth2AuthenticationSuccessHandler)
-				.failureHandler(oAuth2AuthenticationFailureHandler)
+				.failureHandler(oAuth2AuthenticationFailureHandler));
+
+		http.authorizeHttpRequests((authorize) -> authorize
+			.anyRequest().authenticated()
 		);
 
 		return http.build();
