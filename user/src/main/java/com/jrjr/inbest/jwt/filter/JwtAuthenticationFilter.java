@@ -29,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 		@NonNull FilterChain filterChain) throws ServletException, IOException {
 		log.info("JwtAuthenticationFilter 실행");
+		log.info("request.getRequestURI(): {}", request.getRequestURI());
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		log.info("accessToken: {}", accessToken.orElse("accessToken 없음"));
@@ -73,8 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		// accessToken 재발급
 		LoginDto loginDto = jwtProvider.getUserInfoFromToken(refreshToken);
 		AccessTokenDto accessTokenDto = jwtProvider.generateAccessToken(loginDto.getEmail(), loginDto.getRole());
-		response.setHeader("grantType", accessTokenDto.getGrantType());
-		response.setHeader("accessToken", accessTokenDto.getAccessToken());
+		response.setHeader("Authorization", accessTokenDto.getAccessToken());
 		log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
 		throw new JwtException("REISSUE_ACCESS_TOKEN");
 	}
