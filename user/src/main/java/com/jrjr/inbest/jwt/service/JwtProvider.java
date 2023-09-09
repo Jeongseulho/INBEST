@@ -129,7 +129,7 @@ public class JwtProvider {
 		RefreshToken refreshTokenEntity = refreshTokenRepository.findById(claims.getSubject())
 			.orElseThrow(() -> new JwtException("EXPIRED_REFRESH_TOKEN"));
 
-		return refreshToken.equals(refreshTokenEntity.getEmail());
+		return refreshToken.equals(refreshTokenEntity.getRefreshToken());
 	}
 
 	public LoginDto getUserInfoFromToken(String token) {
