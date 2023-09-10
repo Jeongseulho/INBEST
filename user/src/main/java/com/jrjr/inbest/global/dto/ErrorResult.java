@@ -1,4 +1,4 @@
-package com.jrjr.inbest.global.handler;
+package com.jrjr.inbest.global.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
