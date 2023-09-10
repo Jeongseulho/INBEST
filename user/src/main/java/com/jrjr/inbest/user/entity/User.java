@@ -41,7 +41,6 @@ public class User extends BaseEntity {
 	private String birthday;
 
 	@ColumnDefault("0")
-	@Column(nullable = false)
 	private Integer gender;
 
 	private LocalDateTime deletedDate;
