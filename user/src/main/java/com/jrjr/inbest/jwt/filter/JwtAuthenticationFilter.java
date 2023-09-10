@@ -7,12 +7,15 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.jrjr.inbest.global.util.CookieUtil;
+import com.jrjr.inbest.jwt.dto.AccessTokenDto;
 import com.jrjr.inbest.jwt.service.JwtProvider;
+import com.jrjr.inbest.login.dto.LoginDto;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,9 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtProvider jwtProvider;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-		FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+		@NonNull FilterChain filterChain) throws ServletException, IOException {
 		log.info("JwtAuthenticationFilter 실행");
+		log.info("request.getRequestURI(): {}", request.getRequestURI());
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		log.info("accessToken: {}", accessToken.orElse("accessToken 없음"));
@@ -33,29 +37,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		Optional<String> refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
 		log.info("refreshToken: {}", refreshToken.orElse("refreshToken 없음"));
 
-		// 1. refreshToken 이 없으면, 로그아웃
-		if (refreshToken.isEmpty()) {
-			log.info("refreshToken.isEmpty() 실행 - 로그아웃");
-			throw new JwtException("EXPIRED_REFRESH_TOKEN");
-		}
-
-		// 1. accessToken 이 없으면
+		// accessToken 없을 때 -> refreshToken 검사 후 재발급
 		if (accessToken.isEmpty()) {
 			log.info("accessToken.isEmpty() 실행");
-			// if(jwtProvider.isValidToken(refreshToken))
-			// 1.1 refreshToken 정상 -> accessToken 재발급
-			// 1.2 refreshToken 손상 or 만료 -> 로그아웃
+			if (refreshToken.isEmpty()) {
+				throw new JwtException("EXPIRED_REFRESH_TOKEN");
+			}
+			this.reissueAccessToken(response, refreshToken.get());
 		}
 
-		// 2. accessToken 이 있으면
+		// accessToken 있을 때 -> 손상: 로그아웃, 만료: 재발급
 		if (accessToken.isPresent()) {
 			log.info("accessToken.isPresent() 실행");
-			// 2.1 accessToken 손상 -> 로그아웃 (JwtExceptionFilter 예외처리)
-			// 2.2 accessToken 만료
-			// 2.2.1 refreshToken 정상 -> accessToken 재발급
-			// 2.2.2 refreshToken 손상 or 만료 -> 로그아웃
+			// accessToken: 손상 x, 만료 o -> accessToken 재발급
+			if (!jwtProvider.isValidToken(accessToken.get())) {
+				if (refreshToken.isEmpty()) {
+					throw new JwtException("EXPIRED_REFRESH_TOKEN");
+				}
+				this.reissueAccessToken(response, refreshToken.get());
+			}
 		}
 
+		// accessToken 이 정상이라면, 정상 로직 진행
 		filterChain.doFilter(request, response);
+	}
+
+	private void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {
+		// refreshToken 만료
+		if (!jwtProvider.isValidToken(refreshToken)) {
+			throw new JwtException("EXPIRED_REFRESH_TOKEN");
+		}
+		// redis 에 저장된 refreshToken 과 비교
+		if (!jwtProvider.compareRefreshTokens(refreshToken)) {
+			throw new JwtException("INVALID_TOKEN");
+		}
+		// accessToken 재발급
+		LoginDto loginDto = jwtProvider.getUserInfoFromToken(refreshToken);
+		AccessTokenDto accessTokenDto = jwtProvider.generateAccessToken(loginDto.getEmail(), loginDto.getRole());
+		response.setHeader("Authorization", accessTokenDto.getAccessToken());
+		log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
+		throw new JwtException("REISSUE_ACCESS_TOKEN");
 	}
 }

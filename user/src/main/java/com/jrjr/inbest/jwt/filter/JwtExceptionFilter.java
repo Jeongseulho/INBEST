@@ -42,8 +42,16 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 
+		if (exception.getMessage().equals("INVALID_TOKEN")) {
+			errorCode = ErrorCode.INVALID_TOKEN; // 로그아웃
+		}
+
+		if (exception.getMessage().equals("REISSUE_ACCESS_TOKEN")) {
+			errorCode = ErrorCode.REISSUE_ACCESS_TOKEN; // 재요청
+		}
+
 		if (exception.getMessage().equals("EXPIRED_REFRESH_TOKEN")) {
-			errorCode = ErrorCode.EXPIRED_REFRESH_TOKEN;
+			errorCode = ErrorCode.EXPIRED_REFRESH_TOKEN; // 로그아웃
 		}
 
 		String responseBody = objectMapper.writeValueAsString(errorCode);
