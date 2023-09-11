@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.inbest.email.service.EmailService;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,8 +24,7 @@ public class EmailController {
 	private final EmailService emailService;
 
 	@GetMapping("/verify")
-	public ResponseEntity<Map<String, Object>> sendVerificationCode(
-		@RequestParam(value = "email") String email, HttpServletResponse response) {
+	public ResponseEntity<Map<String, Object>> sendVerificationCode(@RequestParam(value = "email") String email) {
 		log.info("EmailController - sendEmailCode 실행: {}", email);
 		Map<String, Object> resultMap = new HashMap<>();
 
