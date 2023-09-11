@@ -7,7 +7,9 @@ const Header = () => {
       <Link to="/">
         <img className="h-[9vh] mx-24 " src={temp_logo} />
       </Link>
-      <a className=" text-center text-xl">모의투자 게임</a>
+      <Link to="/invest" className=" text-center text-xl">
+        모의 투자
+      </Link>
       <a className=" text-center text-xl">랭킹</a>
       <a className=" text-center text-xl">게시판</a>
       <a className=" text-center text-xl">금융 상품 추천</a>

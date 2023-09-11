@@ -23,6 +23,7 @@ module.exports = {
         lime: "#C1E061",
         kakao: "#FEE500",
         primary: "#237bff",
+        lightRed: "#DF1525",
       },
     },
   },
