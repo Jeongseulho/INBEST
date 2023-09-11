@@ -1,3 +1,15 @@
+<details>
+<summary>3주차</summary>
+
+# 23-09-11
+- EC2 정식 서버 배포로 jenkins 설정
+- eureka, gateway, user 서비스 CI/CD 구축 완료료
+
+</details>
+
+<details>
+<summary>2주차</summary>
+
 # 23-09-08
 - pip 에러 해결
 - django를 gateway에 등록
@@ -22,3 +34,4 @@
 - Spring Cloud Netflix Eureka 구현
     - 서버 구현
     - 클라이언트 등록
+</details>
