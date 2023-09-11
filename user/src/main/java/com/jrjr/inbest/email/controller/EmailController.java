@@ -33,4 +33,17 @@ public class EmailController {
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
+	@GetMapping("/authenticate")
+	public ResponseEntity<Map<String, Object>> authenticateVerificationCode(
+		@RequestParam(value = "email") String email,
+		@RequestParam(value = "code") String code) {
+		log.info("EmailController - authenticateVerificationCode 실행: {}", email);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		emailService.authenticateVerificationCode(email, code);
+
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
 }

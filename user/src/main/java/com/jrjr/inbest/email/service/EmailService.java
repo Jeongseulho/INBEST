@@ -9,4 +9,6 @@ public interface EmailService {
 	String generateVerificationCode(String email);
 
 	Content createContent(String message);
+
+	void authenticateVerificationCode(String email, String code);
 }

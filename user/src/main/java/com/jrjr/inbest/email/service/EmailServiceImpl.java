@@ -1,5 +1,7 @@
 package com.jrjr.inbest.email.service;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.jrjr.inbest.email.entity.EmailVerificationCode;
+import com.jrjr.inbest.email.exception.InvalidVerificationCodeException;
 import com.jrjr.inbest.email.repository.EmailVerificationCodeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -82,5 +85,19 @@ public class EmailServiceImpl implements EmailService {
 		return new Content()
 			.withCharset("UTF-8")
 			.withData(message);
+	}
+
+	@Override
+	public void authenticateVerificationCode(String email, String code) {
+		log.debug("EmailServiceImpl - authenticateVerificationCode 실행: {}", email);
+
+		Optional<EmailVerificationCode> emailVerificationCode = emailVerificationCodeRepository.findById(email);
+		if (emailVerificationCode.isEmpty()) {
+			throw new InvalidVerificationCodeException("회원 정보 없음");
+		}
+
+		if (!emailVerificationCode.get().getCode().equals(code)) {
+			throw new InvalidVerificationCodeException("이메일 인증 코드 불일치");
+		}
 	}
 }
