@@ -2,7 +2,7 @@
  * @type {import('tailwindcss').Config}
  */
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", "./node_modules/tailwind-datepicker-react/dist/**/*.js"],
   theme: {
     extend: {
       fontFamily: {
@@ -21,6 +21,8 @@ module.exports = {
         mainMoreLight: "#ADF777",
         bright: "#EDFDE8",
         lime: "#C1E061",
+        kakao: "#FEE500",
+        primary: "#237bff",
       },
     },
   },

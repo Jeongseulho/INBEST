@@ -1,5 +1,6 @@
 interface TextInputProps {
   placeholder?: string;
+  value?: string;
 }
 
 const TextInput = ({ placeholder = "" }: TextInputProps) => {
