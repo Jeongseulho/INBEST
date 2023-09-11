@@ -6,7 +6,8 @@ eureka:
     fetch-registry: true
     service-url:
       defalutZone: http://j9d110.p.ssafy.io:8761/eureka/
-
+  instance:
+    hostname: j9d110.p.ssafy.io
 spring:
   application:
     name: gateway-service
@@ -19,4 +20,3 @@ spring:
             - Path=/client-service/**
           filters:
             - RewritePath=/client-service/(?<segment>.*), /$\{segment}          
-            
