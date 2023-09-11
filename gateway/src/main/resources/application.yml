@@ -11,12 +11,12 @@ eureka:
 spring:
   application:
     name: gateway-service
-  # cloud:
-  #   gateway:
-  #     routes:
-  #       - id: client-service
-  #         uri: lb://CLIENT-SERVICE
-  #         predicates:
-  #           - Path=/client-service/**
-  #         filters:
-  #           - RewritePath=/client-service/(?<segment>.*), /$\{segment}
+  cloud:
+    gateway:
+      routes:
+        - id: client-service
+          uri: lb://CLIENT-SERVICE
+          predicates:
+            - Path=/client-service/**
+          filters:
+            - RewritePath=/client-service/(?<segment>.*), /$\{segment}
