@@ -23,3 +23,8 @@
 ## 0908
 ![image](https://github.com/KwonJongryul/mirror/assets/122791001/5f2c31b3-629b-404f-a84d-28a97f5378f8)
 회원가입폼 작성중
+
+## 0911
+![image](https://github.com/KwonJongryul/mirror/assets/122791001/4526386f-ae34-4341-bd04-5765d0ac482e)
+![image](https://github.com/KwonJongryul/mirror/assets/122791001/fa71f35e-6729-4343-afa8-55050fe9fd57)
+회원가입, 로그인 폼 완성, 애니메이션 완성
