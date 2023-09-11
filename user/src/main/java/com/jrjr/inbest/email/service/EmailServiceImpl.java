@@ -9,7 +9,8 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
-import com.amazonaws.services.simpleemail.model.SendEmailResult;
+import com.jrjr.inbest.email.entity.EmailVerificationCode;
+import com.jrjr.inbest.email.repository.EmailVerificationCodeRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class EmailServiceImpl implements EmailService {
 
 	private final AmazonSimpleEmailService amazonSimpleEmailService;
+	private final EmailVerificationCodeRepository emailVerificationCodeRepository;
 
 	static final String SOURCE_EMAIL = "inbest110@gmail.com";
 
@@ -55,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
 			.withBody(new Body()
 				.withHtml(createContent(sb.toString())));
 
-		SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(new SendEmailRequest()
+		amazonSimpleEmailService.sendEmail(new SendEmailRequest()
 			.withSource(SOURCE_EMAIL)
 			.withDestination(destination)
 			.withMessage(message));
@@ -63,7 +65,16 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public String generateVerificationCode(String email) {
-		return RandomStringUtils.randomAlphanumeric(6);
+		log.debug("EmailServiceImpl - generateVerificationCode 실행: {}", email);
+
+		String code = RandomStringUtils.randomAlphanumeric(6);
+		emailVerificationCodeRepository.save(
+			EmailVerificationCode.builder()
+				.email(email)
+				.code(code)
+				.build());
+
+		return code;
 	}
 
 	@Override
