@@ -4,7 +4,7 @@ import HorizonLine from "../atoms/HorizonLine";
 
 const LoginForm = () => {
   return (
-    <div className="w-3/5 h-5/6 bg-gray-50 p-6 m-4 drop-shadow-md rounded-md flex justify-center items-center">
+    <div className="w-3/5 min-h-[70vh] bg-gray-50 p-6 m-4 drop-shadow-md rounded-md flex justify-center items-center">
       <div className="h-4/5 flex items-center">
         <div>
           <div>

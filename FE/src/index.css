@@ -80,13 +80,31 @@ body{
   @apply h-full;
 }
 
-#greenbox{
+/* #greenbox{
   z-index: 9999;
   position: absolute;
-  @apply right-0;
+  transition: all 0.5s ease-in-out;
   @apply bg-mainDark;
   @apply w-[50vw];
   @apply h-full
-
-
+} */
+#greenbox{
+  z-index: 9999;
+  position: absolute;
+  transition: all 0.5s ease-in-out;
+  
+  @apply w-[50vw];
+  @apply h-full;
+  
+  @apply bg-mainDark;
+  
 }
+.animate__animated.animate__fadeInRight, .animate__animated.animate__fadeInLeft {
+  --animate-duration: 0.5s;
+}
+
+.show-login{
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 30% 100%);
+}
+.show-signup{
+  clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);}
