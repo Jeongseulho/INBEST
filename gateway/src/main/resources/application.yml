@@ -6,17 +6,17 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defalutZone: http://j9d110.p.ssafy.io:8761/eureka
+      defalutZone: http://j9d110.p.ssafy.io:8761/eureka/
 
 spring:
   application:
     name: apigateway-service
-  cloud:
-    gateway:
-      routes:
-        - id: client-service
-          uri: lb://CLIENT-SERVICE
-          predicates:
-            - Path=/client-service/**
-          filters:
-            - RewritePath=/client-service/(?<segment>.*), /$\{segment}
+  # cloud:
+  #   gateway:
+  #     routes:
+  #       - id: client-service
+  #         uri: lb://CLIENT-SERVICE
+  #         predicates:
+  #           - Path=/client-service/**
+  #         filters:
+  #           - RewritePath=/client-service/(?<segment>.*), /$\{segment}
