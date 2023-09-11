@@ -79,3 +79,11 @@ body{
   @apply w-full;
   @apply h-full;
 }
+
+#decrease-triangle {
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+}
+
+#increase-trianlge {
+  clip-path: polygon(100% 100%, 0 100%, 50% 0);
+}
