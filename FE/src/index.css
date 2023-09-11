@@ -50,6 +50,7 @@
 
 body{
   font-family: 'medium';
+  overflow-x: hidden;
 }
 .primary-btn {
   @apply rounded-md bg-primary text-white;

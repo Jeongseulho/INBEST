@@ -1,10 +1,10 @@
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { useState } from "react";
-interface PassWordInputProps {
+interface Props {
   placeholder?: string;
 }
 
-const PassWordInput = ({ placeholder = "" }: PassWordInputProps) => {
+const PassWordInput = ({ placeholder = "" }: Props) => {
   const [showPassWord, setShowPassWord] = useState(false);
 
   const onToggleShowPassWord = () => {
