@@ -19,3 +19,4 @@ spring:
             - Path=/client-service/**
           filters:
             - RewritePath=/client-service/(?<segment>.*), /$\{segment}          
+            
