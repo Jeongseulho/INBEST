@@ -4,10 +4,9 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
-    service-url:
-      defalutZone: http://j9d110.p.ssafy.io:8761/eureka/
-  instance:
-    hostname: j9d110.p.ssafy.io
+    serviceUrl:
+      defaultZone: http://j9d110.p.ssafy.io:8761/eureka/
+
 spring:
   application:
     name: gateway-service
@@ -19,4 +18,4 @@ spring:
           predicates:
             - Path=/client-service/**
           filters:
-            - RewritePath=/client-service/(?<segment>.*), /$\{segment}          
+            - RewritePath=/client-service/(?<segment>.*), /$\{segment}
