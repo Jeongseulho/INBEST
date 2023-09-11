@@ -1,5 +1,6 @@
 interface Props {
   placeholder?: string;
+  value?: string;
 }
 
 const TextInput = ({ placeholder = "" }: Props) => {

@@ -6,6 +6,6 @@ interface ButtonProps {
 
 const Button = ({ width = 10, textContent, color }: ButtonProps) => {
   console.log(width, textContent, color);
-  return <div className="">{textContent}</div>;
+  return <button className="">{textContent}</button>;
 };
 export default Button;
