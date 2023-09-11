@@ -81,7 +81,11 @@ body{
 
 #greenbox{
   z-index: 9999;
-  width: 100vh;
-  @apply h-full;
-  @apply bg-mainDark
+  position: absolute;
+  @apply right-0;
+  @apply bg-mainDark;
+  @apply w-[50vw];
+  @apply h-full
+
+
 }
