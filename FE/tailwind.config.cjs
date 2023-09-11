@@ -15,8 +15,11 @@ module.exports = {
       },
       colors: {
         main: "#6CE061",
-        light: "#6FFF8C",
-        lima: "#ADF777",
+        mainDark: "#47B04F",
+        mainMoreDark: "##00A347",
+        mainLight: "#A0DF92",
+        mainMoreLight: "#ADF777",
+        bright: "#EDFDE8",
         lime: "#C1E061",
       },
     },
