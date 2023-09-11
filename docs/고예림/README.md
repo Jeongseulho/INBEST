@@ -1,3 +1,11 @@
+# 23-09-08
+- pip 에러 해결
+- django를 gateway에 등록
+
+# 23-09-07
+- branch 별로 프로젝트 생성
+- branch 별로 eureka 및 gateway 등록 
+
 # 23-09-06
 - 실제 서비스를 eureka server와 gateway에 등록
     - springboot service 등록
