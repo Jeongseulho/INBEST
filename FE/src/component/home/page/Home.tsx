@@ -7,7 +7,7 @@ const Home = () => {
   const [curStep, setCurStep] = useState(0);
 
   return (
-    <main>
+    <main className=" bg-white">
       <Intro setCurStep={setCurStep} />
       <StepSide curStep={curStep} />
       <GuideSteps setCurStep={setCurStep} />
