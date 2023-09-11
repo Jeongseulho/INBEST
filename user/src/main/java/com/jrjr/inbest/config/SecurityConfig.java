@@ -7,8 +7,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
@@ -40,7 +38,7 @@ public class SecurityConfig {
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/api/**", "/favicon.ico");
+		return (web) -> web.ignoring().requestMatchers("/api/**", "/error", "/favicon.ico");
 	}
 
 	@Bean
@@ -62,7 +60,7 @@ public class SecurityConfig {
 
 		http.oauth2Login((oAuth2LoginConfigurer) ->
 			oAuth2LoginConfigurer
-				.loginPage("/login")
+				.loginPage("/oauth/login")
 				.userInfoEndpoint((userInfoEndpointConfig) ->
 					userInfoEndpointConfig.userService(oAuth2UserService))
 				.successHandler(oAuth2AuthenticationSuccessHandler)
@@ -73,10 +71,5 @@ public class SecurityConfig {
 		);
 
 		return http.build();
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
 	}
 }

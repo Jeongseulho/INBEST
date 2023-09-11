@@ -1,7 +1,5 @@
 package com.jrjr.inbest.login.entity;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.jrjr.inbest.login.constant.Role;
 
 import jakarta.persistence.Column;
@@ -39,7 +37,6 @@ public class Login {
 	@Column(nullable = false)
 	private Long userSeq;
 
-	@ColumnDefault("'inbest'")
 	@Column(nullable = false)
 	private String provider;
 
