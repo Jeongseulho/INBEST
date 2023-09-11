@@ -4,7 +4,7 @@ import kakaoLogin from "../../../asset/image/카카오로그인.png";
 const SocialLogin = () => {
   return (
     <div className="grid grid-cols-2 w-10/12 gap-3">
-      <div className="flex items-center">
+      <div className="flex  items-center">
         <img src={naverLogin} className="cursor-pointer" alt="네이버 로그인" />
       </div>
 

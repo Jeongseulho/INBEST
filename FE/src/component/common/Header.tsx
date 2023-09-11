@@ -3,7 +3,7 @@ import temp_logo from "../../asset/image/temp_logo.png";
 
 const Header = () => {
   return (
-    <header className="w-screen h-[8vh] flex justify-between items-center bg-gray-50  bg-opacity-90">
+    <header className="w-full h-[8vh] flex justify-between items-center bg-gray-50  bg-opacity-90">
       <Link to="/">
         <img className="h-[9vh] mx-24 " src={temp_logo} />
       </Link>
