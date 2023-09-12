@@ -1,6 +1,5 @@
 import Modal from "react-modal";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
-
 interface Props {
   showModal: boolean;
   closeModal: () => void;
@@ -12,6 +11,7 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
       isOpen={showModal}
       ariaHideApp={false}
       onRequestClose={closeModal}
+      closeTimeoutMS={300}
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,
@@ -25,4 +25,5 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
     </Modal>
   );
 };
+
 export default CreateModal;

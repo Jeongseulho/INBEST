@@ -16,7 +16,7 @@ const StepPagination = ({ curStep }: Props) => {
             <div
               key={step}
               className={`${
-                curStep === step ? "w-5 bg-light" : "w-2.5 bg-neutral-600"
+                curStep === step ? "w-5 bg-main" : "w-2.5 bg-neutral-600"
               } h-2.5 transition-all duration-300 ease-in-out rounded-md 
             `}
             />
@@ -25,7 +25,7 @@ const StepPagination = ({ curStep }: Props) => {
       </div>
       <div className="flex mt-4">
         <img src={only_logo} alt="" width="60px" />
-        <h1 className="text-light ml-4">INBEST</h1>
+        <h1 className="text-main ml-4">INBEST</h1>
       </div>
     </motion.div>
   );
