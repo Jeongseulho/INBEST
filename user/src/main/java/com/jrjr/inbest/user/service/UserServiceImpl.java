@@ -1,5 +1,6 @@
 package com.jrjr.inbest.user.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -119,5 +120,18 @@ public class UserServiceImpl implements UserService {
 		}
 
 		loginEntity.get().updatePassword(passwordEncoder.encode(password));
+	}
+
+	@Transactional
+	@Override
+	public void withdraw(Long seq) {
+		log.info("UserServiceImpl - withdraw 실행: {}", seq);
+
+		Optional<User> userEntity = userRepository.findById(seq);
+		if (userEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
+		}
+
+		userEntity.get().withdraw(LocalDateTime.now());
 	}
 }

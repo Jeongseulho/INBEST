@@ -15,4 +15,6 @@ public interface UserService {
 	void checkNicknameExists(String nickname);
 
 	void updatePassword(Long seq, String password);
+
+	void withdraw(Long seq);
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +69,17 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userService.updatePassword(seq, passwordMap.get("password"));
+
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{seq}")
+	ResponseEntity<Map<String, Object>> withdraw(@PathVariable(value = "seq") Long seq) {
+		log.info("UserController - withdraw 실행: {}", seq);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		userService.withdraw(seq);
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
