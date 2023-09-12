@@ -48,4 +48,8 @@ public class Login {
 		this.userSeq = userSeq;
 		this.provider = provider;
 	}
+
+	public void updatePassword(String password) {
+		this.password = password;
+	}
 }
