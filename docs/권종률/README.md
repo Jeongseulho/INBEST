@@ -28,3 +28,7 @@
 ![image](https://github.com/KwonJongryul/mirror/assets/122791001/4526386f-ae34-4341-bd04-5765d0ac482e)
 ![image](https://github.com/KwonJongryul/mirror/assets/122791001/fa71f35e-6729-4343-afa8-55050fe9fd57)
 회원가입, 로그인 폼 완성, 애니메이션 완성
+
+## 0912
+![image](https://github.com/KwonJongryul/mirror/assets/122791001/a79fbc58-390b-4a96-924e-fb34df1339f7)
+헤더 프로필 사진, 드랍메뉴 추가
