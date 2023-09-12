@@ -9,7 +9,7 @@
 
 const ExitBtn = () => {
   return (
-    <button className="  hover:bg-lightRed hover:text-white p-2 rounded-full px-10 transition-all duration-500 border-2 border-red bg-opacity-10 text-red">
+    <button className="  hover:bg-lightRed hover:text-white p-2 rounded-full px-10 transition-all duration-500 border-2 border-red text-red">
       그룹 나가기
     </button>
   );
