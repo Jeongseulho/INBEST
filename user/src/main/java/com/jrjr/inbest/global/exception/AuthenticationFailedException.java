@@ -1,4 +1,4 @@
-package com.jrjr.inbest.login.exception;
+package com.jrjr.inbest.global.exception;
 
 public class AuthenticationFailedException extends RuntimeException {
 

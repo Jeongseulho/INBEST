@@ -1,9 +1,14 @@
 package com.jrjr.inbest.user.service;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jrjr.inbest.global.exception.AuthenticationFailedException;
+import com.jrjr.inbest.global.exception.NotFoundException;
 import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
@@ -84,5 +89,49 @@ public class UserServiceImpl implements UserService {
 				.provider("inbest")
 				.build()
 		);
+	}
+
+	@Override
+	public void checkEmailExists(String email) {
+		log.info("UserServiceImpl - checkEmailExists 실행: {}", email);
+
+		if (!userRepository.existsByEmail(email)) {
+			throw new NotFoundException("존재하지 않는 이메일");
+		}
+	}
+
+	@Override
+	public void checkNicknameExists(String nickname) {
+		log.info("UserServiceImpl - checkNicknameExists 실행: {}", nickname);
+
+		if (!userRepository.existsByNickname(nickname)) {
+			throw new NotFoundException("존재하지 않는 닉네임");
+		}
+	}
+
+	@Transactional
+	@Override
+	public void updatePassword(Long userSeq, String password) {
+		log.info("UserServiceImpl - updatePassword 실행: {}", userSeq);
+
+		Optional<Login> loginEntity = loginRepository.findByUserSeq(userSeq);
+		if (loginEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
+		}
+
+		loginEntity.get().updatePassword(passwordEncoder.encode(password));
+	}
+
+	@Transactional
+	@Override
+	public void withdraw(Long seq) {
+		log.info("UserServiceImpl - withdraw 실행: {}", seq);
+
+		Optional<User> userEntity = userRepository.findById(seq);
+		if (userEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
+		}
+
+		userEntity.get().withdraw(LocalDateTime.now());
 	}
 }

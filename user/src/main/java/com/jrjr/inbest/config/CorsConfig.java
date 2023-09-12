@@ -13,7 +13,9 @@ public class CorsConfig {
 	public CorsFilter corsFilter() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowCredentials(true);
-		config.addAllowedOrigin("http://localhost:8080");
+		config.addAllowedOrigin("http://localhost:8102");
+		config.addAllowedOrigin("http://localhost:5173");
+		config.addAllowedOrigin("https://j9d110.p.ssafy.io");
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
 		config.addExposedHeader("grantType");

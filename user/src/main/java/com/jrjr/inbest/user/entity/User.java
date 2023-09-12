@@ -54,4 +54,8 @@ public class User extends BaseEntity {
 		this.birthday = birthday;
 		this.gender = gender;
 	}
+
+	public void withdraw(LocalDateTime date) {
+		this.deletedDate = date;
+	}
 }
