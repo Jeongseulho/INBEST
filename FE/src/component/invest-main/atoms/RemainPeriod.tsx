@@ -11,7 +11,7 @@ const RemainPeriod = () => {
         <div className="h-5 bg-mainLight bg-opacity-50 rounded-3xl" />
         <div className=" w-[50%] h-5 z-10 absolute top-0 rounded-3xl bg-main"></div>
       </div>
-      <div className=" flex justify-between">
+      <div className=" flex justify-between font-regular">
         <p>2023.08.30</p>
         <p>진행도 : 25%</p>
         <p>2023.09.30</p>

@@ -10,6 +10,8 @@ import MyGroupRank from "../atoms/MyGroupRank";
 import Period from "../atoms/Period";
 import RemainPeriod from "../atoms/RemainPeriod";
 import SeedMoney from "../atoms/SeedMoney";
+import BoostModeTag from "../atoms/BoostModeTag";
+import LinkingModeTag from "../atoms/LinkingModeTag";
 
 const InvestMain = () => {
   return (
@@ -26,6 +28,8 @@ const InvestMain = () => {
       <Period />
       <RemainPeriod />
       <SeedMoney />
+      <BoostModeTag />
+      <LinkingModeTag />
     </div>
   );
 };
