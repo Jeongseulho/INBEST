@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.jrjr.inbest.email.exception.InvalidVerificationCodeException;
 import com.jrjr.inbest.global.dto.ErrorResult;
+import com.jrjr.inbest.global.exception.DuplicateException;
 import com.jrjr.inbest.login.exception.AuthenticationFailedException;
-import com.jrjr.inbest.login.exception.DuplicateException;
 
 import lombok.extern.slf4j.Slf4j;
 
