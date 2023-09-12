@@ -81,9 +81,15 @@ body{
 }
 
 #decrease-triangle {
+  background-color: #DF1525;
   clip-path: polygon(100% 0, 0 0, 50% 100%);
+  width: 10px;
+  height: 10px;
 }
 
 #increase-trianlge {
+  background-color: #00A347;
   clip-path: polygon(100% 100%, 0 100%, 50% 0);
+  width: 10px;
+  height: 10px;
 }

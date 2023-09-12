@@ -1,12 +1,12 @@
 interface Props {
-  percent: number;
+  number: number;
 }
 
-const DecreaseIcon = ({ percent }: Props) => {
+const DecreaseIcon = ({ number }: Props) => {
   return (
-    <div className=" flex items-center">
-      <div id="decrease-triangle"></div>
-      <p>{percent}</p>
+    <div className=" flex items-center rounded-full bg-red bg-opacity-10 py-1 px-3 mx-3">
+      <div id="decrease-triangle" className=" me-2"></div>
+      <p className=" text-red font-extraBold">{number}%</p>
     </div>
   );
 };

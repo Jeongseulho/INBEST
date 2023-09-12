@@ -1,9 +1,10 @@
+import calendar from "../../../asset/image/calendar.png";
 const RemainPeriod = () => {
   return (
     <div>
-      <div>
-        <p className=" font-regular text-md">모의 투자 진행도</p>
-        <img src="" />
+      <div className=" flex items-end">
+        <p className=" font-regular me-2">모의 투자 진행도</p>
+        <img src={calendar} width={40} />
       </div>
       <p className=" font-bold text-xl">12일 남았습니다.</p>
       <div className=" relative">
