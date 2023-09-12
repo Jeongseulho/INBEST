@@ -138,6 +138,7 @@ public class JwtProvider {
 
 		Optional<RefreshToken> refreshTokenEntity = refreshTokenRepository.findById(claims.getSubject());
 		if (refreshTokenEntity.isEmpty()) {
+			log.info("EXPIRED_REFRESH_TOKEN");
 			throw new JwtException("EXPIRED_REFRESH_TOKEN");
 		}
 
@@ -151,6 +152,7 @@ public class JwtProvider {
 
 		Optional<Login> loginEntity = loginRepository.findByEmail(claims.getSubject());
 		if (loginEntity.isEmpty()) {
+			log.info("INVALID_TOKEN");
 			throw new JwtException("INVALID_TOKEN");
 		}
 
