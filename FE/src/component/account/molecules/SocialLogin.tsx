@@ -10,7 +10,7 @@ const SocialLogin = () => {
       <a
         href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
           import.meta.env.VITE_APP_KAKAO_API_KEY
-        }&redirect_uri=`}
+        }&redirect_uri=${import.meta.env.VITE_APP_REDIRECT_URI}`}
       >
         <div className="flex items-center bg-kakao rounded-md">
           <img src={kakaoLogin} className="cursor-pointer w-full" alt="카카오 로그인" />

@@ -14,8 +14,9 @@ const Header = () => {
       <a className=" text-center text-xl">금융 사전</a>
       <a className=" text-center text-xl">관리자 페이지</a>
       <Link to="/login" className=" text-center me-56 text-xl">
-        로그인/ 프로필 사진
+        로그인
       </Link>
+      <div className=" hover:cursor-pointer">프로필 사진</div>
     </header>
   );
 };
