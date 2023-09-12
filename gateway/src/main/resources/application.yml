@@ -19,3 +19,9 @@ spring:
             - Path=/user-service/**
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: news-service
+          uri: lb://NEWS-SERVICE
+          predicates:
+            - Path=/news-service/**
+          filters:
+            - RewritePath=/news-service/(?<segment>.*), /$\{segment}
