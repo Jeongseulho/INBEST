@@ -1,5 +1,6 @@
 package com.jrjr.inbest.oauth.handler;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-		Authentication authentication) {
+		Authentication authentication) throws IOException {
 		log.info("OAuth2AuthenticationSuccessHandler 실행 - OAuth2 인증 성공");
 
 		log.info("authentication.getName(): {}", authentication.getName());
@@ -46,5 +47,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		response.setHeader("Authorization", accessTokenDto.getAccessToken());
 
 		CookieUtil.createCookie(response, "refreshToken", refreshToken);
+
+		// getRedirectStrategy().sendRedirect(request, response, "http://localhost:8102/test");
+		getRedirectStrategy().sendRedirect(request, response, "http://localhost:5173");
 	}
 }

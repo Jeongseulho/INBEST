@@ -2,9 +2,16 @@ package com.jrjr.inbest.jwt.service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -93,6 +100,7 @@ public class JwtProvider {
 
 	public boolean isValidToken(String token) {
 		log.info("JwtProvider - isValidToken 실행");
+
 		try {
 			Jwts.parserBuilder()
 				.setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
@@ -100,16 +108,17 @@ public class JwtProvider {
 				.parseClaimsJws(token);
 			return true;
 		} catch (ExpiredJwtException e) {
-			log.info("EXPIRED_TOKEN", e);
+			log.info("EXPIRED_TOKEN");
 			return false;
 		} catch (Exception e) {
-			log.info("INVALID_TOKEN", e);
+			log.info("INVALID_TOKEN");
 			throw new JwtException("INVALID_TOKEN");
 		}
 	}
 
 	public Claims getClaims(String token) {
 		log.info("JwtProvider - getClaims 실행");
+
 		try {
 			return Jwts.parserBuilder()
 				.setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
@@ -117,31 +126,52 @@ public class JwtProvider {
 				.parseClaimsJws(token)
 				.getBody();
 		} catch (Exception e) {
-			log.info("INVALID_TOKEN", e);
+			log.info("INVALID_TOKEN");
 			throw new JwtException("INVALID_TOKEN");
 		}
 	}
 
 	public boolean compareRefreshTokens(String refreshToken) {
 		log.info("JwtProvider - compareRefreshTokens 실행");
+
 		Claims claims = this.getClaims(refreshToken);
 
-		RefreshToken refreshTokenEntity = refreshTokenRepository.findById(claims.getSubject())
-			.orElseThrow(() -> new JwtException("EXPIRED_REFRESH_TOKEN"));
+		Optional<RefreshToken> refreshTokenEntity = refreshTokenRepository.findById(claims.getSubject());
+		if (refreshTokenEntity.isEmpty()) {
+			log.info("EXPIRED_REFRESH_TOKEN");
+			throw new JwtException("EXPIRED_REFRESH_TOKEN");
+		}
 
-		return refreshToken.equals(refreshTokenEntity.getRefreshToken());
+		return refreshToken.equals(refreshTokenEntity.get().getRefreshToken());
 	}
 
 	public LoginDto getUserInfoFromToken(String token) {
 		log.info("JwtProvider - getUserInfoFromToken 실행");
+
 		Claims claims = this.getClaims(token);
 
-		Login loginEntity = loginRepository.findByEmail(claims.getSubject())
-			.orElseThrow(() -> new JwtException("INVALID_TOKEN"));
+		Optional<Login> loginEntity = loginRepository.findByEmail(claims.getSubject());
+		if (loginEntity.isEmpty()) {
+			log.info("INVALID_TOKEN");
+			throw new JwtException("INVALID_TOKEN");
+		}
 
 		return LoginDto.builder()
-			.email(loginEntity.getEmail())
-			.role(loginEntity.getRole())
+			.email(loginEntity.get().getEmail())
+			.role(loginEntity.get().getRole())
 			.build();
+	}
+
+	public Authentication getAuthentication(String accessToken) {
+		log.info("JwtProvider - getAuthentication 실행");
+
+		Claims claims = this.getClaims(accessToken);
+		String role = claims.get("role").toString();
+		log.debug("role: {}", role);
+
+		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role);
+
+		UserDetails userDetails = new User(claims.getSubject(), "", authorities);
+		return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
 	}
 }

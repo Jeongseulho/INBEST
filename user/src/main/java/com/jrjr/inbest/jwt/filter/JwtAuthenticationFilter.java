@@ -3,6 +3,8 @@ package com.jrjr.inbest.jwt.filter;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -56,10 +58,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				}
 				this.reissueAccessToken(response, refreshToken.get());
 			}
+			log.info("AccessToken 정상 - 권한 저장");
+			Authentication authentication = jwtProvider.getAuthentication(accessToken.get());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			filterChain.doFilter(request, response);
 		}
-
-		// accessToken 이 정상이라면, 정상 로직 진행
-		filterChain.doFilter(request, response);
 	}
 
 	private void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {

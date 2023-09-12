@@ -38,7 +38,9 @@ public class SecurityConfig {
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/api/**", "/error", "/favicon.ico");
+		// return (web) -> web.ignoring().requestMatchers("/api/**", "/error", "/favicon.ico");
+		return (web) -> web.ignoring().requestMatchers("/error", "/favicon.ico",
+			"/login/login", "/login/logout", "/users", "/inquiry-nickname", "/inquiry-email", "/test");
 	}
 
 	@Bean
@@ -60,7 +62,6 @@ public class SecurityConfig {
 
 		http.oauth2Login((oAuth2LoginConfigurer) ->
 			oAuth2LoginConfigurer
-				.loginPage("/oauth/login")
 				.userInfoEndpoint((userInfoEndpointConfig) ->
 					userInfoEndpointConfig.userService(oAuth2UserService))
 				.successHandler(oAuth2AuthenticationSuccessHandler)
