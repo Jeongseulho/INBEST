@@ -1,9 +1,12 @@
 package com.jrjr.inbest.user.service;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jrjr.inbest.global.exception.AuthenticationFailedException;
 import com.jrjr.inbest.global.exception.NotFoundException;
 import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
@@ -103,5 +106,18 @@ public class UserServiceImpl implements UserService {
 		if (!userRepository.existsByNickname(nickname)) {
 			throw new NotFoundException("존재하지 않는 닉네임");
 		}
+	}
+
+	@Transactional
+	@Override
+	public void updatePassword(Long userSeq, String password) {
+		log.info("UserServiceImpl - updatePassword 실행: {}", userSeq);
+
+		Optional<Login> loginEntity = loginRepository.findByUserSeq(userSeq);
+		if (loginEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
+		}
+
+		loginEntity.get().updatePassword(passwordEncoder.encode(password));
 	}
 }

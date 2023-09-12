@@ -13,4 +13,6 @@ public interface UserService {
 	void checkEmailExists(String email);
 
 	void checkNicknameExists(String nickname);
+
+	void updatePassword(Long seq, String password);
 }

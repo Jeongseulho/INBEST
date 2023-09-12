@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +56,18 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userService.checkNicknameExists(nickname);
+
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@PutMapping("/{seq}/password")
+	ResponseEntity<Map<String, Object>> updatePassword(@PathVariable(value = "seq") Long seq,
+		@RequestBody Map<String, String> passwordMap) {
+		log.info("UserController - updatePassword 실행: {}", seq);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		userService.updatePassword(seq, passwordMap.get("password"));
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
