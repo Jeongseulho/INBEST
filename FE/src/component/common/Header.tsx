@@ -95,7 +95,7 @@ const Header = () => {
           </Menu.Items>
         </Transition>
       </Menu>
-      <ProfileUpdate showModal={showModal} />
+      <ProfileUpdate showModal={showModal} setShowModal={setShowModal} />
     </header>
   );
 };

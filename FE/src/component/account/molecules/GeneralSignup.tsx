@@ -7,9 +7,13 @@ import { SignupFormValue } from "../../../type/SignupForm";
 /* eslint-disable max-lines-per-function */
 const GeneralLogin = () => {
   const [showPassWord, setShowPassWord] = useState(false);
+  const [showPassWord2, setShowPassWord2] = useState(false);
 
-  const onToggleShowPassWord = () => {
-    setShowPassWord((prev) => !prev);
+  const onToggleShowPassWord = (order: number) => {
+    if (order === 1) {
+      return setShowPassWord((prev) => !prev);
+    }
+    return setShowPassWord2((prev) => !prev);
   };
   const {
     control,
@@ -135,7 +139,7 @@ const GeneralLogin = () => {
           />
           <div
             className="absolute cursor-pointer top-1/2 transform -translate-y-1/2 right-2"
-            onClick={onToggleShowPassWord}
+            onClick={() => onToggleShowPassWord(1)}
           >
             {showPassWord ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
@@ -148,15 +152,15 @@ const GeneralLogin = () => {
         <div className="relative">
           <input
             id="signupPassword2"
-            type={showPassWord ? "text" : "password"}
+            type={showPassWord2 ? "text" : "password"}
             placeholder="비밀번호를 다시 입력해 주세요"
             className="w-full signup-input"
           />
           <div
             className="absolute cursor-pointer top-1/2 transform -translate-y-1/2 right-2"
-            onClick={onToggleShowPassWord}
+            onClick={() => onToggleShowPassWord(2)}
           >
-            {showPassWord ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+            {showPassWord2 ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
         </div>
       </div>
