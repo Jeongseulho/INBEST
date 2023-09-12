@@ -1,7 +1,5 @@
 package com.jrjr.inbest.user.service;
 
-import java.util.Optional;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,11 +89,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void checkNicknameDuplicate(String nickname) {
-		log.info("UserServiceImpl - join 실행: {}", nickname);
+		log.info("UserServiceImpl - checkNicknameDuplicate 실행: {}", nickname);
 
-		Optional<User> userEntity = userRepository.findByNickname(nickname);
-		if (userEntity.isPresent()) {
-			throw new DuplicateException("이미 사용중인 닉네임");
+		if (userRepository.existsByNickname(nickname)) {
+			throw new DuplicateException("이미 사용 중인 닉네임");
 		}
 	}
 }
