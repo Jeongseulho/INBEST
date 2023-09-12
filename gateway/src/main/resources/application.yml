@@ -13,9 +13,9 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: client-service
-          uri: lb://CLIENT-SERVICE
+        - id: user-service
+          uri: lb://USER-SERVICE
           predicates:
-            - Path=/client-service/**
+            - Path=/user-service/**
           filters:
-            - RewritePath=/client-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
