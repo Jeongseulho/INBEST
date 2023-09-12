@@ -5,8 +5,10 @@ import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.user.dto.JoinDto;
 
 public interface UserService {
-	
+
 	Login join(OAuth2UserInfo oAuth2UserInfo, String registrationId);
 
 	void join(JoinDto joinDto);
+
+	void checkNicknameDuplicate(String nickname);
 }
