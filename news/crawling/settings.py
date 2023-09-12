@@ -132,6 +132,6 @@ def register_with_eureka():
     eureka_client.init(
         eureka_server=EUREKA_SERVER,
         app_name="news-service",
-        instance_port=8000,  # Django 애플리케이션의 포트
+        instance_port=8200,  # Django 애플리케이션의 포트
     )
 register_with_eureka()
