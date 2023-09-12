@@ -18,6 +18,7 @@ const InputDatePicker = ({ control }: { control: Control<SignupFormValue> }) => 
         render={({ field: { onChange } }) => (
           <ReactDatePicker
             onChange={(date) => {
+              if (!date) return;
               setSelectedDate(date);
               onChange(format(date, "yyyy-MM-dd"));
             }}
