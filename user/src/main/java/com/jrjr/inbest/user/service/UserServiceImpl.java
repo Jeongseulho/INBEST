@@ -4,7 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jrjr.inbest.global.exception.DuplicateException;
+import com.jrjr.inbest.global.exception.NotFoundException;
 import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
@@ -88,20 +88,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void checkEmailDuplicate(String email) {
-		log.info("UserServiceImpl - checkEmailDuplicate 실행: {}", email);
+	public void checkEmailExists(String email) {
+		log.info("UserServiceImpl - checkEmailExists 실행: {}", email);
 
-		if (userRepository.existsByEmail(email)) {
-			throw new DuplicateException("이미 사용 중인 이메일");
+		if (!userRepository.existsByEmail(email)) {
+			throw new NotFoundException("존재하지 않는 이메일");
 		}
 	}
 
 	@Override
-	public void checkNicknameDuplicate(String nickname) {
-		log.info("UserServiceImpl - checkNicknameDuplicate 실행: {}", nickname);
+	public void checkNicknameExists(String nickname) {
+		log.info("UserServiceImpl - checkNicknameExists 실행: {}", nickname);
 
-		if (userRepository.existsByNickname(nickname)) {
-			throw new DuplicateException("이미 사용 중인 닉네임");
+		if (!userRepository.existsByNickname(nickname)) {
+			throw new NotFoundException("존재하지 않는 닉네임");
 		}
 	}
 }

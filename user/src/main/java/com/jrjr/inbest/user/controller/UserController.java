@@ -38,22 +38,22 @@ public class UserController {
 	}
 
 	@GetMapping("/inquiry-email")
-	ResponseEntity<Map<String, Object>> checkEmailDuplicate(@RequestParam String email) {
-		log.info("UserController - checkEmailDuplicate 실행: {}", email);
+	ResponseEntity<Map<String, Object>> checkEmailExists(@RequestParam String email) {
+		log.info("UserController - checkEmailExists 실행: {}", email);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userService.checkEmailDuplicate(email);
+		userService.checkEmailExists(email);
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
 	@GetMapping("/inquiry-nickname")
-	ResponseEntity<Map<String, Object>> checkNicknameDuplicate(@RequestParam String nickname) {
-		log.info("UserController - checkNicknameDuplicate 실행: {}", nickname);
+	ResponseEntity<Map<String, Object>> checkNicknameExists(@RequestParam String nickname) {
+		log.info("UserController - checkNicknameExists 실행: {}", nickname);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userService.checkNicknameDuplicate(nickname);
+		userService.checkNicknameExists(nickname);
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
