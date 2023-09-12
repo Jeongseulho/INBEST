@@ -80,18 +80,13 @@ body{
   @apply h-full;
 }
 
-/* #greenbox{
-  z-index: 9999;
-  position: absolute;
-  transition: all 0.5s ease-in-out;
-  @apply bg-mainDark;
-  @apply w-[50vw];
-  @apply h-full
-} */
+
+
+/* 로그인창 애니메이션 */
 #greenbox{
   z-index: 9999;
   position: absolute;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
   
   @apply w-[50vw];
   @apply h-full;
