@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.jrjr.inbest.email.exception.InvalidVerificationCodeException;
 import com.jrjr.inbest.global.dto.ErrorResult;
 import com.jrjr.inbest.global.exception.DuplicateException;
+import com.jrjr.inbest.global.exception.NotFoundException;
 import com.jrjr.inbest.login.exception.AuthenticationFailedException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,13 @@ public class ExControllerAdvice {
 		log.info("InvalidVerificationCodeException: {}", e.getMessage());
 		ErrorResult errorResult = new ErrorResult("false", "INVALID_CODE");
 		return new ResponseEntity<>(errorResult, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<ErrorResult> notFoundException(NotFoundException e) {
+		log.info("notFoundException: {}", e.getMessage());
+		ErrorResult errorResult = new ErrorResult("false", "NOT_FOUND");
+		return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler
