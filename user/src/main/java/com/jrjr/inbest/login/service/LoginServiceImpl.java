@@ -73,6 +73,8 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// redis 에서 refreshToken 삭제
-		refreshTokenRepository.deleteById(inputLoginDto.getEmail());
+		if (refreshTokenRepository.existsById(inputLoginDto.getEmail())) {
+			refreshTokenRepository.deleteById(inputLoginDto.getEmail());
+		}
 	}
 }

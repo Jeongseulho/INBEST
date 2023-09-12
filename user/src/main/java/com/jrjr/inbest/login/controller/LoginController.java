@@ -62,6 +62,6 @@ public class LoginController {
 		CookieUtil.deleteCookie(response, "refreshToken"); // cookie 에서 refreshToken 삭제
 
 		resultMap.put("success", true);
-		return new ResponseEntity<>(resultMap, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
