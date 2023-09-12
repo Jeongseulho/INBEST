@@ -6,11 +6,15 @@ import { Menu, Transition } from "@headlessui/react";
 import { FiLogOut } from "react-icons/fi";
 import { AiFillProfile } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
+import ProfileUpdate from "../account/page/ProfileUpdate";
+import { useState } from "react";
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Header = () => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <header className="w-full h-[8vh] flex justify-between items-center bg-gray-50  bg-opacity-90">
       <Link to="/">
@@ -60,16 +64,17 @@ const Header = () => {
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
-                  <a
-                    href="#"
+                  <div
                     className={classNames(
                       active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       " px-4 py-2 flex items-center"
                     )}
                   >
                     <BsPencilSquare />
-                    <span className="ms-3">회원정보 수정</span>
-                  </a>
+                    <span className="ms-3">
+                      <button onClick={() => setShowModal(() => true)}>회원정보수정</button>
+                    </span>
+                  </div>
                 )}
               </Menu.Item>
               <Menu.Item>
@@ -90,6 +95,7 @@ const Header = () => {
           </Menu.Items>
         </Transition>
       </Menu>
+      <ProfileUpdate showModal={showModal} />
     </header>
   );
 };
