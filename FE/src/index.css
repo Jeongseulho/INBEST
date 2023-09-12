@@ -93,3 +93,7 @@ body{
   width: 10px;
   height: 10px;
 }
+
+.shadow-component {
+  @apply shadow-xl bg-white rounded-2xl;
+}

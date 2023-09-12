@@ -12,6 +12,8 @@ import RemainPeriod from "../atoms/RemainPeriod";
 import SeedMoney from "../atoms/SeedMoney";
 import BoostModeTag from "../atoms/BoostModeTag";
 import LinkingModeTag from "../atoms/LinkingModeTag";
+import MyGroup from "../molecules/MyGroup";
+import JoinableGroup from "../molecules/JoinableGroup";
 
 const InvestMain = () => {
   return (
@@ -30,6 +32,8 @@ const InvestMain = () => {
       <SeedMoney />
       <BoostModeTag />
       <LinkingModeTag />
+      <MyGroup />
+      <JoinableGroup />
     </div>
   );
 };
