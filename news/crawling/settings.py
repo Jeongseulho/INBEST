@@ -79,19 +79,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'mongo_db':{
-        'ENGINE': 'django',
-        'ENFORCE_SCHEMA': True,
-        'NAME': 'S09P22D110',
-        'CLIENT': {
-            'host': '127.0.0.1',
-            'port': 27017,
-            'username': 'S09P22D110',
-            'password': "KbnJjY3PZQ",
-            'authSource': 'admin',
-            'authMechanism': 'SCRAM-SHA-1'
-        }
     }
 }
 
@@ -138,7 +125,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EUREKA_SERVER = 'http://192.168.100.148:8761/eureka/'
+EUREKA_SERVER = 'http://j9d110.p.ssafy.io:8761/eureka/'
 
 def register_with_eureka():
     # EUREKA_CLIENT 설정 및 서버에 등록.

@@ -1,0 +1,254 @@
+import json
+import random
+from urllib2 import URLError
+from urlparse import urljoin
+from eureka_client import requests
+import ec2metadata
+import logging
+import dns.resolver
+from eureka_client.requests import EurekaHTTPException
+import sys
+
+
+logger = logging.getLogger('eureka.client')
+
+
+class EurekaClientException(Exception):
+    pass
+
+
+class EurekaRegistrationFailedException(EurekaClientException):
+    pass
+
+
+class EurekaUpdateFailedException(EurekaClientException):
+    pass
+
+
+class EurekaHeartbeatFailedException(EurekaClientException):
+    pass
+
+
+class EurekaGetFailedException(EurekaClientException):
+    pass
+
+
+class EurekaClient(object):
+    def __init__(self, app_name, eureka_url=None, use_dns=True, region=None,
+                 eureka_domain_name=None, context="eureka/v2",
+                 eureka_port=None, host_name=None, data_center="Amazon",
+                 ip_address=None, vip_address=None, secure_vip_address=None,
+                 port=None, secure_port=None, prefer_same_zone=True,
+                 health_check_url=None, secure_health_check_url=None,
+                 app_group_name=None, asg_name=None, metadata=None):
+        super(EurekaClient, self).__init__()
+        self.app_name = app_name
+        self.eureka_url = eureka_url
+        self.data_center = data_center
+        if not host_name and data_center == "Amazon":
+            self.host_name = ec2metadata.get("public-hostname")
+        else:
+            self.host_name = host_name
+        # Virtual host name by which the clients identifies this service
+        self.ip_address = ip_address
+        self.vip_address = vip_address
+        self.secure_vip_address = secure_vip_address
+        self.port = port
+        self.secure_port = secure_port
+        self.use_dns = use_dns
+        # Region where eureka is deployed - For AWS specify one of the AWS regions, for other datacenters specify a
+        # arbitrary string indicating the region.
+        self.region = region
+        # Prefer a eureka server in same zone or not
+        self.prefer_same_zone = prefer_same_zone
+        # Domain name, if using DNS
+        self.eureka_domain_name = eureka_domain_name
+        #if eureka runs on a port that is not 80, this will go into the urls to eureka
+        self.eureka_port = eureka_port
+        # Relative URL to eureka
+        self.context = context
+        self.health_check_url = health_check_url
+        self.secure_health_check_url = secure_health_check_url
+        self.app_group_name = app_group_name
+        self.asg_name = asg_name
+        self.metadata = metadata
+        self.eureka_urls = self.get_eureka_urls()
+
+    def _get_txt_records_from_dns(self, domain):
+        records = dns.resolver.query(domain, 'TXT')
+        for record in records:
+            for string in record.strings:
+                yield string
+
+    def _get_zone_urls_from_dns(self, domain):
+        for zone in self._get_txt_records_from_dns(domain):
+            yield zone
+
+    def get_zones_from_dns(self):
+        return {
+            zone_url.split(".")[0]: list(self._get_zone_urls_from_dns("txt.%s" % zone_url)) for zone_url in list(
+                self._get_zone_urls_from_dns('txt.%s.%s' % (self.region, self.eureka_domain_name))
+            )
+        }
+
+    def get_eureka_urls(self):
+        if self.eureka_url:
+            return [self.eureka_url]
+        elif self.use_dns:
+            zone_dns_map = self.get_zones_from_dns()
+            zones = zone_dns_map.keys()
+            assert len(zones) > 0, "No availability zones found for, please add them explicitly"
+            if self.prefer_same_zone:
+                if self.get_instance_zone() in zones:
+                    zones = [zones.pop(zones.index(self.get_instance_zone()))] + zones  # Add our zone as the first element
+                else:
+                    logger.warn("No match for the zone %s in the list of available zones %s" % (
+                        self.get_instance_zone(), zones)
+                    )
+            service_urls = []
+            for zone in zones:
+                eureka_instances = zone_dns_map[zone]
+                random.shuffle(eureka_instances)  # Shuffle order for load balancing
+                for eureka_instance in eureka_instances:
+                    server_uri = "http://%s" % eureka_instance
+                    if self.eureka_port:
+                        server_uri += ":%s" % self.eureka_port
+                    eureka_instance_url = urljoin(server_uri, self.context, "/")
+                    if not eureka_instance_url.endswith("/"):
+                        eureka_instance_url = "%s/" % eureka_instance_url
+                    service_urls.append(eureka_instance_url)
+            primary_server = service_urls.pop(0)
+            random.shuffle(service_urls)
+            service_urls.insert(0, primary_server)
+            logger.info("This client will talk to the following serviceUrls in order: %s" % service_urls)
+            return service_urls
+
+    def get_instance_zone(self):
+        if self.data_center == "Amazon":
+            return ec2metadata.get('availability-zone')
+        else:
+            raise NotImplementedError("%s does not implement DNS lookups" % self.data_center)
+
+    def register(self, initial_status="STARTING"):
+        data_center_info = {
+            'name': self.data_center,
+            '@class': 'com.netflix.appinfo.DataCenterInfo'
+        }
+        if self.data_center == "Amazon":
+            data_center_info['metadata'] = {
+                'ami-launch-index': ec2metadata.get('ami-launch-index'),
+                'local-hostname': ec2metadata.get('local-hostname'),
+                'availability-zone': ec2metadata.get('availability-zone'),
+                'instance-id': ec2metadata.get('instance-id'),
+                'public-ipv4': ec2metadata.get('public-ipv4'),
+                'public-hostname': ec2metadata.get('public-hostname'),
+                'ami-manifest-path': ec2metadata.get('ami-manifest-path'),
+                'local-ipv4': ec2metadata.get('local-ipv4'),
+                'ami-id': ec2metadata.get('ami-id'),
+                'instance-type': ec2metadata.get('instance-type'),
+            }
+        instance_data = {
+            'instance': {
+                'hostName': self.host_name,
+                'app': self.app_name,
+                'ipAddr': self.ip_address,
+                'vipAddress': self.vip_address or '',
+                'secureVipAddress': self.secure_vip_address or '',
+                'status': initial_status,
+                'dataCenterInfo': data_center_info,
+                'healthCheckUrl': self.health_check_url,
+                'secureHealthCheckUrl': self.secure_health_check_url,
+                'appGroupName': self.app_group_name,
+                'asgName': self.asg_name,
+                'metadata': self.metadata,
+            }
+        }
+        if self.port:
+            instance_data['instance']['port'] = {
+                "$": self.port,
+                "@enabled": True
+            }
+        if self.secure_port:
+            instance_data['instance']['securePort'] = {
+                "$": self.secure_port,
+                "@enabled": True
+            }
+
+        success = False
+        for eureka_url in self.eureka_urls:
+            try:
+                r = requests.post(urljoin(eureka_url, "apps/%s" % self.app_name), json.dumps(instance_data),
+                                  headers={'Content-Type': 'application/json'})
+                r.raise_for_status()
+                success = True
+                break
+            except (EurekaHTTPException, URLError):
+                pass
+        if not success:
+            raise EurekaRegistrationFailedException("Did not receive correct reply from any instances"), None, sys.exc_info()[2]
+
+    def update_status(self, new_status):
+        instance_id = self.host_name
+        if self.data_center == "Amazon":
+            instance_id = ec2metadata.get('instance-id')
+        success = False
+        for eureka_url in self.eureka_urls:
+            try:
+                r = requests.put(urljoin(eureka_url, "apps/%s/%s/status?value=%s" % (
+                    self.app_name,
+                    instance_id,
+                    new_status
+                )))
+                r.raise_for_status()
+                success = True
+                break
+            except (EurekaHTTPException, URLError) as e:
+                pass
+        if not success:
+            raise EurekaUpdateFailedException("Did not receive correct reply from any instances"), None, sys.exc_info()[2]
+
+    def heartbeat(self):
+        instance_id = self.host_name
+        if self.data_center == "Amazon":
+            instance_id = ec2metadata.get('instance-id')
+        success = False
+        for eureka_url in self.eureka_urls:
+            try:
+                r = requests.put(urljoin(eureka_url, "apps/%s/%s" % (self.app_name, instance_id)))
+                r.raise_for_status()
+                success = True
+                break
+            except (EurekaHTTPException, URLError) as e:
+                pass
+        if not success:
+            raise EurekaHeartbeatFailedException("Did not receive correct reply from any instances"), None, sys.exc_info()[2]
+
+    #a generic get request, since most of the get requests for discovery will take a similar form
+    def _get_from_any_instance(self, endpoint):
+        for eureka_url in self.eureka_urls:
+            try:
+                url = urljoin(eureka_url, endpoint)
+                r = requests.get(url, headers={'Accept': 'application/json'})
+                r.raise_for_status()
+                return r.json()
+            except (EurekaHTTPException, URLError):
+                pass
+        raise EurekaGetFailedException("Failed to GET %s from all instances" % endpoint), None, sys.exc_info()[2]
+
+    def get_apps(self):
+        return self._get_from_any_instance("apps")
+
+    def get_app(self, app_id):
+        return self._get_from_any_instance("apps/%s" % app_id)
+
+    def get_vip(self, vip_address):
+        return self._get_from_any_instance("vips/%s" % vip_address)
+
+    def get_svip(self, vip_address):
+        return self._get_from_any_instance("svips/%s" % vip_address)
+
+    def get_instance(self, instance_id):
+        return self._get_from_any_instance("instances/%s" % instance_id)
+
+    def get_app_instance(self, app_id, instance_id):
+        return self._get_from_any_instance("apps/%s/%s" % (app_id, instance_id))

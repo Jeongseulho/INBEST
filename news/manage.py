@@ -3,7 +3,7 @@
 import os
 import sys
 
-import py_eureka_client.eureka_client as eureka_client
+# import py_eureka_client.eureka_client as eureka_client
 from django.conf import settings
 
 # Eureka client 등록
