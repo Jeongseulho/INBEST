@@ -1,40 +1,22 @@
-import JoinableGroups from "../organisms/JoinableGroups";
-import MyGroups from "../organisms/MyGroups";
-import ExitBtn from "../atoms/ExitBtn";
-import StartBtn from "../atoms/StartBtn";
-import JoinBtn from "../atoms/JoinBtn";
-import CheckResultBtn from "../atoms/CheckResultBtn";
-import CurMoney from "../atoms/CurMoney";
-import MeanTier from "../atoms/MeanTier";
-import MyGroupRank from "../atoms/MyGroupRank";
-import Period from "../atoms/Period";
-import RemainPeriod from "../atoms/RemainPeriod";
-import SeedMoney from "../atoms/SeedMoney";
-import BoostModeTag from "../atoms/BoostModeTag";
-import LinkingModeTag from "../atoms/LinkingModeTag";
-import MyGroup from "../molecules/MyGroup";
-import JoinableGroup from "../molecules/JoinableGroup";
+import CreateModal from "../organisms/CreateModal";
+import { useState } from "react";
 
 const InvestMain = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
-    <div>
-      <JoinableGroups />
-      <MyGroups />
-      <ExitBtn />
-      <StartBtn />
-      <JoinBtn />
-      <CheckResultBtn />
-      <CurMoney />
-      <MeanTier />
-      <MyGroupRank />
-      <Period />
-      <RemainPeriod />
-      <SeedMoney />
-      <BoostModeTag />
-      <LinkingModeTag />
-      <MyGroup />
-      <JoinableGroup />
-    </div>
+    <>
+      <button onClick={openModal}>모달 띄우기</button>
+      <CreateModal closeModal={closeModal} showModal={showModal} />
+    </>
   );
 };
 export default InvestMain;
