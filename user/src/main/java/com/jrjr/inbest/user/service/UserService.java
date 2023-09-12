@@ -10,5 +10,7 @@ public interface UserService {
 
 	void join(JoinDto joinDto);
 
+	void checkEmailDuplicate(String email);
+
 	void checkNicknameDuplicate(String nickname);
 }

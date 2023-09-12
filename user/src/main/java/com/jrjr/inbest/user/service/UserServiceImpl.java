@@ -88,6 +88,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void checkEmailDuplicate(String email) {
+		log.info("UserServiceImpl - checkEmailDuplicate 실행: {}", email);
+
+		if (userRepository.existsByEmail(email)) {
+			throw new DuplicateException("이미 사용 중인 이메일");
+		}
+	}
+
+	@Override
 	public void checkNicknameDuplicate(String nickname) {
 		log.info("UserServiceImpl - checkNicknameDuplicate 실행: {}", nickname);
 

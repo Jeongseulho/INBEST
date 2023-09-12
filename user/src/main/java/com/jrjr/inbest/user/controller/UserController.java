@@ -37,6 +37,17 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@GetMapping("/inquiry-email")
+	ResponseEntity<Map<String, Object>> checkEmailDuplicate(@RequestParam String email) {
+		log.info("UserController - checkEmailDuplicate 실행: {}", email);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		userService.checkEmailDuplicate(email);
+
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
 	@GetMapping("/inquiry-nickname")
 	ResponseEntity<Map<String, Object>> checkNicknameDuplicate(@RequestParam String nickname) {
 		log.info("UserController - checkNicknameDuplicate 실행: {}", nickname);
