@@ -84,7 +84,7 @@ body{
 
 /* 로그인창 애니메이션 */
 #greenbox{
-  z-index: 9999;
+  z-index: 10;
   position: absolute;
   transition: all 0.3s ease-in-out;
   
