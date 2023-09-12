@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.jrjr.inbest.global.exception.DuplicateException;
 import com.jrjr.inbest.jwt.repository.RefreshTokenRepository;
 import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.exception.AuthenticationFailedException;
-import com.jrjr.inbest.login.exception.DuplicateException;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.UserRepository;
