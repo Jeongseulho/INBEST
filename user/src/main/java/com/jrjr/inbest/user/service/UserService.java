@@ -1,5 +1,7 @@
 package com.jrjr.inbest.user.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.user.dto.JoinDto;
@@ -20,4 +22,6 @@ public interface UserService {
 	void withdraw(Long seq, String email);
 
 	UserDto getUserInfo(Long seq);
+
+	UserDto updateUserInfo(Long seq, MultipartFile file, UserDto userDto, String email);
 }

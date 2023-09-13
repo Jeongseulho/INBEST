@@ -3,10 +3,13 @@ package com.jrjr.inbest.user.service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
 import com.jrjr.inbest.global.exception.NotFoundException;
 import com.jrjr.inbest.login.constant.Role;
@@ -29,6 +32,10 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
+	private final AmazonS3 amazonS3;
+
+	@Value(value = "${cloud.aws.s3.bucket}")
+	private String bucketName;
 
 	@Transactional
 	@Override
@@ -156,5 +163,25 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return userEntity.get().convertToUserDto(userEntity.get());
+	}
+
+	@Override
+	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) {
+		log.info("UserServiceImpl - updateUserInfo 실행: {}", seq);
+
+		Optional<User> userEntity = userRepository.findById(seq);
+		if (userEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
+		}
+
+		if (!userEntity.get().getEmail().equals(inputEmail)) {
+			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
+		}
+
+		if (!file.isEmpty()) {
+			log.info("이미지 저장");
+		}
+
+		return userEntity.get().convertToUserDto(userEntity.get()); // 임시
 	}
 }
