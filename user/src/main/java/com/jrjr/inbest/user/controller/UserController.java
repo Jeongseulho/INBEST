@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.inbest.jwt.service.JwtProvider;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -100,6 +101,9 @@ public class UserController {
 		log.info("UserController - getProfile 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
+		UserDto userInfo = userService.getUserInfo(seq);
+
+		resultMap.put("UserInfo", userInfo);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}

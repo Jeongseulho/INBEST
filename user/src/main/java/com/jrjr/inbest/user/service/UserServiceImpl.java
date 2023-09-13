@@ -14,6 +14,7 @@ import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.UserRepository;
 
@@ -77,6 +78,8 @@ public class UserServiceImpl implements UserService {
 				.birthyear(birthyear)
 				.birthday(birthday)
 				.gender(joinDto.getGender())
+				.profileImgOriginalName("logo.png")
+				.profileImgSearchName("logo.png")
 				.build()
 		);
 
@@ -141,5 +144,17 @@ public class UserServiceImpl implements UserService {
 		}
 
 		userEntity.get().withdraw(LocalDateTime.now());
+	}
+
+	@Override
+	public UserDto getUserInfo(Long seq) {
+		log.info("UserServiceImpl - getUserInfo 실행: {}", seq);
+
+		Optional<User> userEntity = userRepository.findById(seq);
+		if (userEntity.isEmpty()) {
+			throw new NotFoundException("조회 회원 정보 없음");
+		}
+
+		return userEntity.get().convertToUserDto(userEntity.get());
 	}
 }
