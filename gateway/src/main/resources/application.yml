@@ -11,22 +11,27 @@ spring:
   application:
     name: gateway-service
   cloud:
+    loadbalancer.ribbon.enabled: false
     gateway:
+      # 서비스 디스커버리에 등록된 서비스를 기반으로 게이트웨이가 경로를 생성하도록 설정한다.
+      discovery.locator:
+        enabled: true
+        lowerCaseServiceId: true
       routes:
         - id: user-service
-          uri: http://j9d110.p.ssafy.io:8102
+          uri: lb://user-service
           predicates:
             - Path=/user-service/**
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: news-service
-          uri: http://j9d110.p.ssafy.io:8200
+          uri: lb://news-service
           predicates:
             - Path=/news-service/**
           filters:
             - RewritePath=/news-service/(?<segment>.*), /$\{segment}
         - id: invest-service
-          uri: lb://INVEST-SERVICE
+          uri: lb://invest-service
           predicates:
             - Path=/invest-service/**
           filters:
