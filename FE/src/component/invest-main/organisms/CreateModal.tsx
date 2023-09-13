@@ -1,11 +1,27 @@
 import Modal from "react-modal";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
+import InitGroup from "../molecules/InitGroup";
+import SettingPeriod from "../molecules/SettingPeriod";
+import SettingLinkingMode from "../molecules/SettingLinkingMode";
+1;
+
 interface Props {
   showModal: boolean;
   closeModal: () => void;
+  step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CreateModal = ({ showModal, closeModal }: Props) => {
+const CreateModal = ({ showModal, closeModal, step, setStep }: Props) => {
+  const onNextStep = () => {
+    setStep((prev) => prev + 1);
+  };
+
+  const CreateModalStepComponent = [
+    <InitGroup onNextStep={onNextStep} closeModal={closeModal} />,
+    <SettingPeriod onNextStep={onNextStep} />,
+    <SettingLinkingMode onNextStep={onNextStep} />,
+  ];
   return (
     <Modal
       isOpen={showModal}
@@ -21,7 +37,7 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
         overlay: OVERLAY_MODAL_STYLE,
       }}
     >
-      <h1>모달</h1>
+      {CreateModalStepComponent[step]}
     </Modal>
   );
 };
