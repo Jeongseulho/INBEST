@@ -31,7 +31,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 		@NonNull FilterChain filterChain) throws ServletException, IOException {
 		log.info("JwtAuthenticationFilter 실행");
-		log.info("request.getRequestURI(): {}", request.getRequestURI());
+
+		String uri = request.getRequestURI();
+		log.info("request.getRequestURI(): {}", uri);
+
+		if (uri.startsWith("/error") || uri.startsWith("/favicon.ico") || uri.startsWith("/login/login")
+			|| uri.startsWith("/login/logout") || uri.startsWith("/users") || uri.startsWith("/users/inquiry-nickname")
+			|| uri.startsWith("/users/inquiry-email") || uri.startsWith("/test")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		log.info("accessToken: {}", accessToken.orElse("accessToken 없음"));
