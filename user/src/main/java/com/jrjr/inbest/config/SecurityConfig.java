@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,13 +36,6 @@ public class SecurityConfig {
 	private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
 	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer() {
-		// return (web) -> web.ignoring().requestMatchers("/api/**", "/error", "/favicon.ico");
-		return (web) -> web.ignoring().requestMatchers("/error", "/favicon.ico",
-			"/login/login", "/login/logout", "/users", "/inquiry-nickname", "/inquiry-email", "/test");
-	}
-
-	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 			.sessionManagement(
@@ -68,6 +60,10 @@ public class SecurityConfig {
 				.failureHandler(oAuth2AuthenticationFailureHandler));
 
 		http.authorizeHttpRequests((authorize) -> authorize
+			.requestMatchers("/error", "/favicon.ico").permitAll()
+			.requestMatchers("/login/login", "/login/logout").permitAll()
+			.requestMatchers("/users", "/users/inquiry-nickname", "/users/inquiry-email").permitAll()
+			.requestMatchers("/test").permitAll()
 			.anyRequest().authenticated()
 		);
 
