@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jrjr.inbest.jwt.service.JwtProvider;
 import com.jrjr.inbest.user.dto.JoinDto;
@@ -102,6 +103,23 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		UserDto userInfo = userService.getUserInfo(seq);
+
+		resultMap.put("UserInfo", userInfo);
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@PostMapping("{seq}")
+	ResponseEntity<Map<String, Object>> updateProfile(@PathVariable(value = "seq") Long seq,
+		@RequestParam(value = "file", required = false) MultipartFile file,
+		@RequestBody UserDto userDto,
+		HttpServletRequest request) {
+		log.info("UserController - updateProfile 실행: {}", seq);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
+		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
+		UserDto userInfo = userService.updateUserInfo(seq, file, userDto, email);
 
 		resultMap.put("UserInfo", userInfo);
 		resultMap.put("success", true);
