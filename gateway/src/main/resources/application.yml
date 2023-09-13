@@ -26,7 +26,7 @@ spring:
           filters:
             - RewritePath=/news-service/(?<segment>.*), /$\{segment}
         - id: invest-service
-          uri: http://j9d110.p.ssafy.io:8103
+          uri: lb://INVEST-SERVICE
           predicates:
             - Path=/invest-service/**
           filters:
