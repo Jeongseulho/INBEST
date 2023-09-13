@@ -39,8 +39,9 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 			.sessionManagement(
-				httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
-					SessionCreationPolicy.STATELESS))
+				httpSecuritySessionManagementConfigurer ->
+					httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
+						SessionCreationPolicy.STATELESS))
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable);
 
@@ -63,6 +64,7 @@ public class SecurityConfig {
 			.requestMatchers("/error", "/favicon.ico").permitAll()
 			.requestMatchers("/login/login", "/login/logout").permitAll()
 			.requestMatchers("/users", "/users/inquiry-nickname", "/users/inquiry-email").permitAll()
+			.requestMatchers("/email/**").permitAll()
 			.requestMatchers("/test").permitAll()
 			.anyRequest().authenticated()
 		);
