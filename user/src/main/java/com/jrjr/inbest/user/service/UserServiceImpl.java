@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
 			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
 		}
 
-		if (!file.isEmpty()) {
+		if (file != null) {
 			log.info("=== 저장할 이미지 생성 시작 ===");
 
 			if (!amazonS3.doesBucketExistV2(bucketName)) {
