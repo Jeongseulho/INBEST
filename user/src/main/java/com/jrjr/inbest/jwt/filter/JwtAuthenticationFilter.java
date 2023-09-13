@@ -36,9 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		log.info("request.getRequestURI(): {}", uri);
 
 		if (uri.startsWith("/error") || uri.startsWith("/favicon.ico") || uri.startsWith("/login/login")
-			|| uri.startsWith("/login/logout") || uri.startsWith("/users") || uri.startsWith("/users/inquiry-nickname")
+			|| uri.startsWith("/login/logout") || uri.startsWith("/users/inquiry-nickname")
 			|| uri.startsWith("/users/inquiry-email") || uri.startsWith("/email") || uri.startsWith(
-			"/test")) {
+			"/test") || uri.equals("/users")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
