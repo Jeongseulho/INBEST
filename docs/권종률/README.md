@@ -32,3 +32,9 @@
 ## 0912
 ![image](https://github.com/KwonJongryul/mirror/assets/122791001/a79fbc58-390b-4a96-924e-fb34df1339f7)
 헤더 프로필 사진, 드랍메뉴 추가
+
+## 0913
+![image](https://github.com/KwonJongryul/mirror/assets/122791001/dfe101c0-e603-4b67-ac0d-855c3bf08df1)
+![image](https://github.com/KwonJongryul/mirror/assets/122791001/655cd37c-07d7-46b6-b389-7350d52303c9)
+react hook form을 이용한 회원가입폼 유효성 검사
+회원정보 변경 modal에 react-cropper 추가
