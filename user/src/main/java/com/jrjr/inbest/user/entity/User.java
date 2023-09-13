@@ -85,4 +85,20 @@ public class User extends BaseEntity {
 	public void withdraw(LocalDateTime date) {
 		this.deletedDate = date;
 	}
+
+	public void updateProfileImg(String originName, String searchName) {
+		this.profileImgOriginalName = originName;
+		this.profileImgSearchName = searchName;
+	}
+
+	public void updateUserInfo(UserDto userDto) {
+		this.email = userDto.getEmail();
+		this.name = userDto.getName();
+		this.nickname = userDto.getNickname();
+		this.gender = userDto.getGender();
+		if (userDto.getBirth() != null) {
+			this.birthyear = userDto.getBirth().substring(0, 4);
+			this.birthday = userDto.getBirth().substring(5, 7) + userDto.getBirth().substring(8);
+		}
+	}
 }
