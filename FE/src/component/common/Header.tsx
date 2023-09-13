@@ -31,10 +31,8 @@ const Header = () => {
       </Link>
       {/* <div className=" hover:cursor-pointer">프로필 사진</div> */}
       <Menu as="div" className="relative inline-block text-left me-10">
-        <div>
-          <Menu.Button className="flex justify-center items-center">
-            <img src={defaultImg} className="h-12 w-12 rounded-full" />
-          </Menu.Button>
+        <div style={{ width: "64px", height: "64px" }} className="flex justify-center items-center">
+          <Menu.Button as="img" src={defaultImg} className="rounded-full hover:cursor-pointer" width={50} height={50} />
         </div>
 
         <Transition

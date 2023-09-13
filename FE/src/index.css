@@ -55,6 +55,9 @@ body{
 .primary-btn {
   @apply rounded-md bg-primary text-white;
 }
+.disable-btn {
+  @apply rounded-md bg-gray-600 text-white;
+}
 .signup-input{
   @apply border-gray-400 border p-2 rounded-md;
 }
@@ -103,3 +106,14 @@ body{
 }
 .show-signup{
   clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);}
+
+.ReactModal__Overlay{
+  z-index: 60;
+}
+
+.errorMessage{
+  @apply 
+  text-sm
+  text-red-600
+  font-regular
+}

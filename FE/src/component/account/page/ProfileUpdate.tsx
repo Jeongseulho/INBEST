@@ -37,28 +37,16 @@ const ProfileUpdate = ({
         }}
       >
         <div>
-          <h1>회원정보 변경</h1>
+          <h3 className="text-center mb-5">회원정보 변경</h3>
           <form action="">
             <Cropper
               src="https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg"
               // Cropper.js options
-              style={{ height: 400, width: "100%", zIndex: 9999 }}
+              style={{ height: 400, width: "100%" }}
               aspectRatio={1 / 1}
-              guides={false}
               crop={onCrop}
               ref={cropperRef}
-              dragMode="move"
-              modal
               zoomTo={0.5}
-              initialAspectRatio={1}
-              preview=".img-preview"
-              viewMode={1}
-              minCropBoxHeight={10}
-              minCropBoxWidth={10}
-              background={false}
-              responsive={true}
-              autoCropArea={1}
-              checkOrientation={false}
             />
           </form>
         </div>
