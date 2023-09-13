@@ -126,7 +126,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EUREKA_SERVER = 'http://j9d110.p.ssafy.io:8761/eureka/'
+EUREKA_SERVER = 'http://13.124.168.191:8761/eureka/'
 
 def register_with_eureka():
     # EUREKA_CLIENT 설정 및 서버에 등록.
