@@ -63,6 +63,7 @@ public class SecurityConfig {
 			.requestMatchers("/error", "/favicon.ico").permitAll()
 			.requestMatchers("/login/login", "/login/logout").permitAll()
 			.requestMatchers("/users", "/users/inquiry-nickname", "/users/inquiry-email").permitAll()
+			.requestMatchers("/email/**").permitAll()
 			.requestMatchers("/test").permitAll()
 			.anyRequest().authenticated()
 		);
