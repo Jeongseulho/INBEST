@@ -74,7 +74,7 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
-		String email = jwtProvider.getUserInfoFromToken(accessToken.get()).getEmail();
+		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
 		userService.updatePassword(seq, email, passwordMap.get("password"));
 
 		resultMap.put("success", true);
@@ -88,8 +88,17 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
-		String email = jwtProvider.getUserInfoFromToken(accessToken.get()).getEmail();
+		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
 		userService.withdraw(seq, email);
+
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/{seq}")
+	ResponseEntity<Map<String, Object>> getProfile(@PathVariable(value = "seq") Long seq) {
+		log.info("UserController - getProfile 실행: {}", seq);
+		Map<String, Object> resultMap = new HashMap<>();
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
