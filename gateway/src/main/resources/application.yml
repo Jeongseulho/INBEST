@@ -14,19 +14,19 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: lb://USER-SERVICE
+          uri: http://j9d110.p.ssafy.io:8102
           predicates:
             - Path=/user-service/**
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: news-service
-          uri: lb://NEWS-SERVICE
+          uri: http://j9d110.p.ssafy.io:8200
           predicates:
             - Path=/news-service/**
           filters:
             - RewritePath=/news-service/(?<segment>.*), /$\{segment}
         - id: invest-service
-          uri: lb://INVEST-SERVICE
+          uri: http://j9d110.p.ssafy.io:8103
           predicates:
             - Path=/invest-service/**
           filters:
