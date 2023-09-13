@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void updatePassword(Long userSeq, String password) {
+	public void updatePassword(Long userSeq, String inputEmail, String password) {
 		log.info("UserServiceImpl - updatePassword 실행: {}", userSeq);
 
 		Optional<Login> loginEntity = loginRepository.findByUserSeq(userSeq);
@@ -119,17 +119,25 @@ public class UserServiceImpl implements UserService {
 			throw new AuthenticationFailedException("회원 정보 없음");
 		}
 
+		if (!loginEntity.get().getEmail().equals(inputEmail)) {
+			throw new AuthenticationFailedException("토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치");
+		}
+
 		loginEntity.get().updatePassword(passwordEncoder.encode(password));
 	}
 
 	@Transactional
 	@Override
-	public void withdraw(Long seq) {
+	public void withdraw(Long seq, String inputEmail) {
 		log.info("UserServiceImpl - withdraw 실행: {}", seq);
 
 		Optional<User> userEntity = userRepository.findById(seq);
 		if (userEntity.isEmpty()) {
 			throw new AuthenticationFailedException("회원 정보 없음");
+		}
+
+		if (!userEntity.get().getEmail().equals(inputEmail)) {
+			throw new AuthenticationFailedException("토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치");
 		}
 
 		userEntity.get().withdraw(LocalDateTime.now());

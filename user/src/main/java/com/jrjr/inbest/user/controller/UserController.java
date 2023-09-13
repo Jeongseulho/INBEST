@@ -2,6 +2,7 @@ package com.jrjr.inbest.user.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jrjr.inbest.jwt.service.JwtProvider;
 import com.jrjr.inbest.user.dto.JoinDto;
 import com.jrjr.inbest.user.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final UserService userService;
+	private final JwtProvider jwtProvider;
 
 	@PostMapping("")
 	ResponseEntity<Map<String, Object>> join(@RequestBody JoinDto joinDto) {
@@ -64,22 +68,28 @@ public class UserController {
 
 	@PutMapping("/{seq}/password")
 	ResponseEntity<Map<String, Object>> updatePassword(@PathVariable(value = "seq") Long seq,
-		@RequestBody Map<String, String> passwordMap) {
+		@RequestBody Map<String, String> passwordMap,
+		HttpServletRequest request) {
 		log.info("UserController - updatePassword 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userService.updatePassword(seq, passwordMap.get("password"));
+		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
+		String email = jwtProvider.getUserInfoFromToken(accessToken.get()).getEmail();
+		userService.updatePassword(seq, email, passwordMap.get("password"));
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{seq}")
-	ResponseEntity<Map<String, Object>> withdraw(@PathVariable(value = "seq") Long seq) {
+	ResponseEntity<Map<String, Object>> withdraw(@PathVariable(value = "seq") Long seq,
+		HttpServletRequest request) {
 		log.info("UserController - withdraw 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userService.withdraw(seq);
+		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
+		String email = jwtProvider.getUserInfoFromToken(accessToken.get()).getEmail();
+		userService.withdraw(seq, email);
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
