@@ -1,9 +1,14 @@
 <details>
 <summary>3주차</summary>
 
+# 23-09-12
+- eureka에 service-url인식안되는 문제 해결
+    - service-url -> serviceUrl로 변경
+- django 서비스 CI/CD 구축 완료
+
 # 23-09-11
 - EC2 정식 서버 배포로 jenkins 설정
-- eureka, gateway, user 서비스 CI/CD 구축 완료료
+- eureka, gateway, user 서비스 CI/CD 구축 완료
 
 </details>
 
