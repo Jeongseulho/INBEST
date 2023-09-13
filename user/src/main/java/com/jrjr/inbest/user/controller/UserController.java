@@ -1,5 +1,6 @@
 package com.jrjr.inbest.user.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -113,7 +114,7 @@ public class UserController {
 	ResponseEntity<Map<String, Object>> updateProfile(@PathVariable(value = "seq") Long seq,
 		@RequestParam(value = "file", required = false) MultipartFile file,
 		@RequestBody UserDto userDto,
-		HttpServletRequest request) {
+		HttpServletRequest request) throws IOException {
 		log.info("UserController - updateProfile 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
