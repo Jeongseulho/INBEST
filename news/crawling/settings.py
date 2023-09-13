@@ -12,11 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import py_eureka_client.eureka_client as eureka_client
-<<<<<<< HEAD
 import socket
-=======
-# from py_eureka_client.eureka_client import init as eureka_init
->>>>>>> 965760c5a2400fe32f85fb716268325a4064c00b
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
