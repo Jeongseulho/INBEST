@@ -1,5 +1,7 @@
 package com.jrjr.inbest.user.service;
 
+import java.io.IOException;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jrjr.inbest.login.entity.Login;
@@ -23,5 +25,5 @@ public interface UserService {
 
 	UserDto getUserInfo(Long seq);
 
-	UserDto updateUserInfo(Long seq, MultipartFile file, UserDto userDto, String email);
+	UserDto updateUserInfo(Long seq, MultipartFile file, UserDto userDto, String email) throws IOException;
 }

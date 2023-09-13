@@ -1,8 +1,12 @@
 package com.jrjr.inbest.user.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -165,8 +169,10 @@ public class UserServiceImpl implements UserService {
 		return userEntity.get().convertToUserDto(userEntity.get());
 	}
 
+	@Transactional
 	@Override
-	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) {
+	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) throws
+		IOException {
 		log.info("UserServiceImpl - updateUserInfo 실행: {}", seq);
 
 		Optional<User> userEntity = userRepository.findById(seq);
@@ -179,9 +185,37 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (!file.isEmpty()) {
-			log.info("이미지 저장");
+			log.info("=== 저장할 이미지 생성 시작 ===");
+
+			if (!amazonS3.doesBucketExistV2(bucketName)) {
+				amazonS3.createBucket(bucketName);
+			}
+
+			String newOriginalName = file.getOriginalFilename();
+			log.info("new 원본 파일 이름: {}", newOriginalName);
+
+			assert newOriginalName != null;
+			UUID uuid = UUID.randomUUID();
+			String extend = newOriginalName.substring(newOriginalName.lastIndexOf('.'));
+			String newSearchName = uuid + extend;
+			log.info("new 랜덤 파일 이름: {}", newSearchName);
+
+			File newProfileImgFile = File.createTempFile(uuid.toString(), extend);
+			FileUtils.copyInputStreamToFile(file.getInputStream(), newProfileImgFile);
+			log.debug("=== 저장할 이미지 생성 완료 ===");
+
+			String oldSearchName = userEntity.get().getProfileImgSearchName();
+
+			userEntity.get().updateProfileImg(newOriginalName, newSearchName);
+			log.info("DB 이미지 업데이트 완료");
+
+			amazonS3.deleteObject(bucketName, "profile/" + oldSearchName);
+			amazonS3.putObject(bucketName, "profile/" + newSearchName, newProfileImgFile);
+			log.info("S3 이미지 업데이트 완료");
 		}
 
-		return userEntity.get().convertToUserDto(userEntity.get()); // 임시
+		userEntity.get().updateUserInfo(inputUserDto);
+
+		return userEntity.get().convertToUserDto(userEntity.get());
 	}
 }
