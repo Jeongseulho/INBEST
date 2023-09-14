@@ -35,10 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String uri = request.getRequestURI();
 		log.info("request.getRequestURI(): {}", uri);
 
-		if (uri.startsWith("/error") || uri.startsWith("/favicon.ico") || uri.startsWith("/login/login")
-			|| uri.startsWith("/login/logout") || uri.startsWith("/users/inquiry-nickname")
-			|| uri.startsWith("/users/inquiry-email") || uri.startsWith("/email") || uri.startsWith("/test")
-			|| uri.startsWith("/swagger-ui") || uri.startsWith("/v3")|| uri.equals("/users")) {
+		if (uri.equals("/users") || uri.startsWith("/login/login") || uri.startsWith("/login/logout")
+			|| uri.startsWith("/users/inquiry-nickname") || uri.startsWith("/users/inquiry-email")
+			|| uri.startsWith("/email") || uri.startsWith("/swagger-ui") || uri.startsWith("/v3")
+			|| uri.startsWith("/error") || uri.startsWith("/favicon.ico") || uri.startsWith("/test")) {
+			log.info("토큰 검사 예외 url!");
 			filterChain.doFilter(request, response);
 			return;
 		}
