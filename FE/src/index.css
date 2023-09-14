@@ -53,7 +53,7 @@ body{
   overflow-x: hidden;
 }
 .primary-btn {
-  @apply rounded-md bg-primary text-white;
+  @apply bg-primary text-white hover:text-primary py-2 rounded-full px-10 transition-all duration-500 border-2 border-primary hover:bg-opacity-10;
 }
 .signup-input{
   @apply border-gray-400 border p-2 rounded-md;
@@ -109,4 +109,16 @@ body{
 
 .ReactModal__Overlay--before-close {
   opacity: 0;
+}
+
+.main-dark-btn{
+  @apply rounded-full text-white bg-mainDark py-2 px-10 transition-colors duration-500 hover:text-mainDark border-2 border-mainDark hover:bg-opacity-10
+}
+
+.light-red-btn {
+  @apply bg-lightRed text-white hover:text-lightRed py-2 rounded-full px-10 transition-all duration-500 border-2 border-lightRed hover:bg-opacity-10
+}
+
+.gray-btn{
+  @apply rounded-full bg-gray-200 py-2 px-10 text-black transition-all duration-500 border-2 border-gray-200 hover:bg-opacity-10
 }

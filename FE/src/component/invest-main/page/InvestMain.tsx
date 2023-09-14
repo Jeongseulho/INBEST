@@ -1,19 +1,8 @@
 import CreateModal from "../organisms/CreateModal";
-import { useState } from "react";
+import { useInvestMain } from "./useInvestMain";
 
 const InvestMain = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [step, setStep] = useState(0);
-
-  const openModal = () => {
-    setStep(0);
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
+  const { showModal, step, openModal, closeModal, setStep } = useInvestMain();
   return (
     <>
       <button onClick={openModal}>모달 띄우기</button>
