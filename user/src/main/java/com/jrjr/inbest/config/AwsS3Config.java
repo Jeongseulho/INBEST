@@ -7,25 +7,25 @@ import org.springframework.context.annotation.Configuration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 @Configuration
-public class AwsSesConfig {
+public class AwsS3Config {
 
-	@Value("${cloud.aws.ses.access-key}")
+	@Value("${cloud.aws.s3.access-key}")
 	private String accessKey;
 
-	@Value("${cloud.aws.ses.secret-key}")
+	@Value("${cloud.aws.s3.secret-key}")
 	private String secretKey;
 
 	@Bean
-	public AmazonSimpleEmailService amazonSimpleEmailService() {
+	public AmazonS3 amazonS3() {
 		final BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 		final AWSStaticCredentialsProvider awsStaticCredentialsProvider = new AWSStaticCredentialsProvider(
 			basicAwsCredentials);
 
-		return AmazonSimpleEmailServiceClientBuilder.standard()
+		return AmazonS3ClientBuilder.standard()
 			.withCredentials(awsStaticCredentialsProvider)
 			.withRegion(Regions.AP_NORTHEAST_2)
 			.build();
