@@ -171,6 +171,29 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
+	public void updateDefaultImg(Long seq, String inputEmail) {
+		log.info("UserServiceImpl - updateDefaultImg 실행: {}", seq);
+
+		Optional<User> userEntity = userRepository.findById(seq);
+		if (userEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
+		}
+
+		if (!userEntity.get().getEmail().equals(inputEmail)) {
+			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
+		}
+
+		String oldSearchName = userEntity.get().getProfileImgSearchName();
+
+		userEntity.get().updateProfileImg();
+		log.info("DB 기본 이미지로 변경 완료");
+
+		amazonS3.deleteObject(bucketName, "profile/" + oldSearchName);
+		log.info("S3 이미지 삭제 완료");
+	}
+
+	@Transactional
+	@Override
 	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) throws
 		IOException {
 		log.info("UserServiceImpl - updateUserInfo 실행: {}", seq);

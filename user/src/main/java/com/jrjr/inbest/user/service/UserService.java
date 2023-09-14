@@ -25,5 +25,7 @@ public interface UserService {
 
 	UserDto getUserInfo(Long seq);
 
+	void updateDefaultImg(Long seq, String email);
+
 	UserDto updateUserInfo(Long seq, MultipartFile file, UserDto userDto, String email) throws IOException;
 }
