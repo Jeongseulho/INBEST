@@ -129,7 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 def register_with_eureka():
     # EUREKA_CLIENT 설정 및 서버에 등록.
     eureka_client.init(
-        eureka_server='http://13.124.168.191:8761/eureka/',
+        eureka_server='http://j9d110.p.ssafy.io:8761/',
         app_name="news-service",
         instance_port=8200,  # Django 애플리케이션의 포트
     )
