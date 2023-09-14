@@ -30,11 +30,18 @@ export const useCreateModal = () => {
 
   const [groupSetting, dispatch] = useReducer(reducer, initGroupSetting);
 
+  const resetStepAndGroupSetting = () => {
+    setTimeout(() => {
+      setStep(0);
+      dispatch({ type: "RESET" });
+    }, 300);
+  };
+
   return {
     onNextStep,
     groupSetting,
     dispatch,
     step,
-    setStep,
+    resetStepAndGroupSetting,
   };
 };

@@ -12,11 +12,31 @@ interface Props {
 }
 
 const CreateModal = ({ showModal, closeModal }: Props) => {
-  const { onNextStep, groupSetting, dispatch, step, setStep } = useCreateModal();
+  const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting } = useCreateModal();
 
   const CreateModalStepComponent = [
-    <InitGroup onNextStep={onNextStep} closeModal={closeModal} />,
-    <SettingPeriod onNextStep={onNextStep} period={groupSetting.period} dispatch={dispatch} closeModal={closeModal} />,
+    <InitGroup onNextStep={onNextStep} closeModal={closeModal} resetStepAndGroupSetting={resetStepAndGroupSetting} />,
+    <SettingPeriod
+      onNextStep={onNextStep}
+      period={groupSetting.period}
+      dispatch={dispatch}
+      closeModal={closeModal}
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+    />,
+    <SettingPeriod
+      onNextStep={onNextStep}
+      period={groupSetting.period}
+      dispatch={dispatch}
+      closeModal={closeModal}
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+    />,
+    <SettingPeriod
+      onNextStep={onNextStep}
+      period={groupSetting.period}
+      dispatch={dispatch}
+      closeModal={closeModal}
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+    />,
   ];
 
   return (
@@ -25,10 +45,7 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
       ariaHideApp={false}
       onRequestClose={() => {
         closeModal();
-        setTimeout(() => {
-          setStep(0);
-          dispatch({ type: "RESET" });
-        }, 300);
+        resetStepAndGroupSetting();
       }}
       closeTimeoutMS={300}
       style={{

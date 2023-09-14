@@ -7,8 +7,9 @@ interface Props {
   period: Period;
   dispatch: React.Dispatch<{ type: string; payload: Period }>;
   closeModal: () => void;
+  resetStepAndGroupSetting: () => void;
 }
-const SettingPeriod = ({ onNextStep, period, dispatch, closeModal }: Props) => {
+const SettingPeriod = ({ onNextStep, period, dispatch, closeModal, resetStepAndGroupSetting }: Props) => {
   const { activeTag, setActiveTag } = useActiveTag();
 
   return (
@@ -56,7 +57,13 @@ const SettingPeriod = ({ onNextStep, period, dispatch, closeModal }: Props) => {
         </p>
       </div>
       <div className=" flex justify-center absolute bottom-0 w-full">
-        <button onClick={closeModal} className=" ms-10 me-5 gray-btn">
+        <button
+          onClick={() => {
+            closeModal();
+            resetStepAndGroupSetting();
+          }}
+          className=" ms-10 me-5 gray-btn"
+        >
           취소
         </button>
         <button onClick={onNextStep} className=" me-10 ms-5 main-dark-btn">
