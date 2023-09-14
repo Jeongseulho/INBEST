@@ -24,6 +24,10 @@ import com.jrjr.inbest.user.dto.JoinDto;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,11 +36,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "회원가입/마이페이지", description = "회원 API")
 public class UserController {
 
 	private final UserService userService;
 	private final JwtProvider jwtProvider;
 
+	@Operation(summary = "회원가입",
+		description = "필수 값: email, password, name, nickname\n"
+			+ "선택 값: birth, gender")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200")
+	})
 	@PostMapping("")
 	ResponseEntity<Map<String, Object>> join(@RequestBody JoinDto joinDto) {
 		log.info("UserController - join 실행: {}", joinDto.getEmail());
@@ -48,6 +59,11 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "이메일 존재 유무 확인")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "존재하는 이메일"),
+		@ApiResponse(responseCode = "404", description = "존재하지 않는 이메일")
+	})
 	@GetMapping("/inquiry-email")
 	ResponseEntity<Map<String, Object>> checkEmailExists(@RequestParam String email) {
 		log.info("UserController - checkEmailExists 실행: {}", email);
@@ -59,6 +75,11 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "닉네임 존재 유무 확인")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "존재하는 닉네임"),
+		@ApiResponse(responseCode = "404", description = "존재하지 않는 닉네임")
+	})
 	@GetMapping("/inquiry-nickname")
 	ResponseEntity<Map<String, Object>> checkNicknameExists(@RequestParam String nickname) {
 		log.info("UserController - checkNicknameExists 실행: {}", nickname);
@@ -70,6 +91,12 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "비밀번호 변경", description = "필수 값: password")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200"),
+		@ApiResponse(responseCode = "401",
+			description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치)")
+	})
 	@PutMapping("/{seq}/password")
 	ResponseEntity<Map<String, Object>> updatePassword(@PathVariable(value = "seq") Long seq,
 		@RequestBody Map<String, String> passwordMap,
@@ -85,6 +112,12 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "회원 탈퇴")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200"),
+		@ApiResponse(responseCode = "401",
+			description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치)")
+	})
 	@DeleteMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> withdraw(@PathVariable(value = "seq") Long seq,
 		HttpServletRequest request) {
@@ -99,6 +132,12 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "회원 정보 조회")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200",
+			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
+		@ApiResponse(responseCode = "404", description = "조회 회원 정보 없음")
+	})
 	@GetMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> getProfile(@PathVariable(value = "seq") Long seq) {
 		log.info("UserController - getProfile 실행: {}", seq);
@@ -111,9 +150,14 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "프로필 이미지: 기본 이미지로 변경")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200"),
+		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치)")
+	})
 	@PutMapping("/{seq}/img")
 	ResponseEntity<Map<String, Object>> updateProfileDefaultImg(@PathVariable(value = "seq") Long seq,
-		HttpServletRequest request) throws IOException {
+		HttpServletRequest request) {
 		log.info("UserController - updateProfileDefaultImg 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
@@ -125,6 +169,12 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "프로필 정보 업데이트")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200",
+			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
+		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치)")
+	})
 	@PutMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> updateProfile(@PathVariable(value = "seq") Long seq,
 		@RequestParam(value = "file", required = false) MultipartFile file,
