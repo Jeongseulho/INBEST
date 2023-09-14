@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.inbest.email.service.EmailService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,10 +23,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/email")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "이메일 인증 코드 전송/확인", description = "이메일 API")
 public class EmailController {
 
 	private final EmailService emailService;
 
+	@Operation(summary = "이메일 인증 코드 전송")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "이메일 인증 코드 전송 성공"),
+	})
 	@GetMapping("/verify")
 	public ResponseEntity<Map<String, Object>> sendVerificationCode(@RequestParam(value = "email") String email) {
 		log.info("EmailController - sendEmailCode 실행: {}", email);
@@ -34,6 +43,11 @@ public class EmailController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "이메일 인증 코드 확인")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "이메일 인증 코드 확인 성공"),
+		@ApiResponse(responseCode = "401", description = "INVALID_CODE (회원 정보 없음, 이메일 인증 코드 불일치)"),
+	})
 	@GetMapping("/authenticate")
 	public ResponseEntity<Map<String, Object>> authenticateVerificationCode(
 		@RequestParam(value = "email") String email,
