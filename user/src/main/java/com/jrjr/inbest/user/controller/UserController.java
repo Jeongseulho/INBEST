@@ -169,7 +169,8 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "프로필 정보 업데이트")
+	@Operation(summary = "프로필 정보 업데이트",
+		description = "필수 값: name, nickname 선택 값: birth, gender, MultipartFile")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
