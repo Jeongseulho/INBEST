@@ -36,8 +36,8 @@ spring:
           uri: lb://invest-service
           predicates:
             - Path=/invest-service/**
-          filters:
-            - RewritePath=/invest-service/(?<segment>.*), /$\{segment}
+          # filters:
+          #   - RewritePath=/invest-service/(?<segment>.*), /$\{segment}
 management:
   endpoints:
     web:
