@@ -2,8 +2,8 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import InputDatePicker from "../atoms/InputDatePicker";
-import { SignupFormValue } from "../../../type/SignupForm";
-import { useGeneralLogin } from "./useGeneralLogin";
+import { SignupFormValue } from "../../../type/Accounts";
+import { useGeneralSignup } from "./useGeneralSignup";
 
 const GeneralLogin = () => {
   const {
@@ -17,7 +17,7 @@ const GeneralLogin = () => {
     onSignup,
     isSentNickName,
     reTry,
-  } = useGeneralLogin();
+  } = useGeneralSignup();
   const [showPassWord, setShowPassWord] = useState(false);
   const [showPassWord2, setShowPassWord2] = useState(false);
 
@@ -53,8 +53,8 @@ const GeneralLogin = () => {
             id="signupEmail"
             type="text"
             onKeyPress={(e) => {
-              e.preventDefault();
               if (e.key === "Enter") {
+                e.preventDefault();
                 const emailValue = getValues("email");
                 if (emailValue === "") {
                   setError("email", {
@@ -135,7 +135,7 @@ const GeneralLogin = () => {
                 인증하기
               </button>
             </div>
-            <div className="errorMessage">{errors.email?.message}</div>
+            <div className="errorMessage">{errors.code?.message}</div>
           </>
         )}
         {isSentEmailCode && (
@@ -245,19 +245,21 @@ const GeneralLogin = () => {
               중복확인
             </button>
           </div>
-          <p className="text-left text-xs font-regular mt-1">
-            닉네임을 변경하시려면
-            <span
-              className="font-semiBold underline hover:cursor-pointer ms-1 text-primary"
-              onClick={() => {
-                reset({ nickname: "" });
-                reTryNickName();
-              }}
-            >
-              여기
-            </span>
-            를 눌러주세요
-          </p>
+          {isSentNickName && (
+            <p className="text-left text-xs font-regular mt-1">
+              닉네임을 변경하시려면
+              <span
+                className="font-semiBold underline hover:cursor-pointer ms-1 text-primary"
+                onClick={() => {
+                  reset({ nickname: "" });
+                  reTryNickName();
+                }}
+              >
+                여기
+              </span>
+              를 눌러주세요
+            </p>
+          )}
         </div>
       </div>
       <div className="w-10/12 mt-4 grid grid-cols-2 gap-2">

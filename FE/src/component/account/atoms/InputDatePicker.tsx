@@ -5,7 +5,7 @@ import { getMonth, getYear, format } from "date-fns";
 import { AiFillCaretLeft, AiFillCaretRight, AiFillCalendar } from "react-icons/ai";
 import { ko } from "date-fns/locale";
 import { Controller, Control } from "react-hook-form";
-import { SignupFormValue } from "../../../type/SignupForm";
+import { SignupFormValue } from "../../../type/Accounts";
 
 const InputDatePicker = ({ control }: { control: Control<SignupFormValue> }) => {
   const { selectedDate, setSelectedDate, month, handleMonthChange, years, months } = useInputDatePicker();

@@ -1,6 +1,6 @@
 import { apiInstance } from "./index";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
-import { SignupSubmitFormValue } from "../type/SignupForm";
+import { SignupSubmitFormValue, LoginFormValue, LoginResultValue } from "../type/Accounts";
 const api = apiInstance();
 
 export const checkEmail = async (email: string): Promise<ApiSuccessMessage | void> => {
@@ -23,5 +23,9 @@ export const checkNickname = async (nickname: string): Promise<ApiSuccessMessage
 };
 export const signup = async (user: SignupSubmitFormValue): Promise<ApiSuccessMessage | void> => {
   const { data } = await api.post("/users", user);
+  return data;
+};
+export const login = async (user: LoginFormValue): Promise<LoginResultValue | void> => {
+  const { data } = await api.post("/login/login", user);
   return data;
 };
