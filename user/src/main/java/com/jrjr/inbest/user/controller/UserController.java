@@ -111,7 +111,7 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@PutMapping("{seq}/img")
+	@PutMapping("/{seq}/img")
 	ResponseEntity<Map<String, Object>> updateProfileDefaultImg(@PathVariable(value = "seq") Long seq,
 		HttpServletRequest request) throws IOException {
 		log.info("UserController - updateProfileDefaultImg 실행: {}", seq);
@@ -125,7 +125,7 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@PutMapping("{seq}")
+	@PutMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> updateProfile(@PathVariable(value = "seq") Long seq,
 		@RequestParam(value = "file", required = false) MultipartFile file,
 		@ModelAttribute UserDto userDto,
