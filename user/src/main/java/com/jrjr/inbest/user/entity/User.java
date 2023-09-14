@@ -86,6 +86,11 @@ public class User extends BaseEntity {
 		this.deletedDate = date;
 	}
 
+	public void updateProfileImg() {
+		this.profileImgOriginalName = "logo.png";
+		this.profileImgSearchName = "logo.png";
+	}
+
 	public void updateProfileImg(String originName, String searchName) {
 		this.profileImgOriginalName = originName;
 		this.profileImgSearchName = searchName;
