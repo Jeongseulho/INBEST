@@ -1,5 +1,5 @@
 export interface ProfileUpdateFormValue {
   password: string;
-  nickName: string;
+  nickname: string;
   profileImg: FileList;
 }

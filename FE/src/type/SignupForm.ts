@@ -1,12 +1,15 @@
 import { Male, Female, NoneGender } from "./Gender";
 
-export interface SignupFormValue {
+export interface SignupSubmitFormValue {
   email: string;
   password: string;
-  checkPassword: string;
-  checkEmail: string;
   name: string;
-  nickName: string;
+  nickname: string;
   birth: string;
   gender: [Male, Female, NoneGender];
+}
+
+export interface SignupFormValue extends SignupSubmitFormValue {
+  checkPassword: string;
+  code: string;
 }

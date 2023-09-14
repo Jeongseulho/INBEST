@@ -6,7 +6,18 @@ import { SignupFormValue } from "../../../type/SignupForm";
 import { useGeneralLogin } from "./useGeneralLogin";
 
 const GeneralLogin = () => {
-  const { isConfirmEmail, isSentEmailCode, onCheckEmail } = useGeneralLogin();
+  const {
+    isConfirmEmail,
+    isSentEmailCode,
+    onCheckEmail,
+    onConfirmEmail,
+    showCodeform,
+    oncheckNickname,
+    reTryNickName,
+    onSignup,
+    isSentNickName,
+    reTry,
+  } = useGeneralLogin();
   const [showPassWord, setShowPassWord] = useState(false);
   const [showPassWord2, setShowPassWord2] = useState(false);
 
@@ -22,11 +33,12 @@ const GeneralLogin = () => {
     handleSubmit,
     getValues,
     setError,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm<SignupFormValue>();
   return (
     <form
-      onSubmit={handleSubmit((data: SignupFormValue) => console.log(data))}
+      onSubmit={handleSubmit((data: SignupFormValue) => onSignup(data))}
       className="flex flex-col items-center justify-center"
     >
       <div className="w-10/12 mt-4">
@@ -37,6 +49,7 @@ const GeneralLogin = () => {
         </label>
         <div className="flex justify-between items-center">
           <input
+            disabled={isSentEmailCode}
             id="signupEmail"
             type="text"
             onKeyPress={(e) => {
@@ -49,7 +62,13 @@ const GeneralLogin = () => {
                     message: "이메일을 입력해 주세요",
                   });
                   return;
+                } else if (isSentEmailCode) {
+                  return;
                 }
+                setError("email", {
+                  type: "emailerror",
+                  message: "",
+                });
                 onCheckEmail(emailValue);
                 console.log(emailValue);
               }
@@ -79,29 +98,38 @@ const GeneralLogin = () => {
                 });
                 return;
               }
+              setError("email", {
+                type: "emailerror",
+                message: "",
+              });
               onCheckEmail(emailValue);
               console.log(emailValue);
             }}
           >
-            인증하기
+            전송하기
           </button>
         </div>
         <div className="errorMessage">{errors.email?.message}</div>
-        {isSentEmailCode && (
+        {showCodeform && (
           <>
             <div className="flex justify-between items-center">
               <input
+                disabled={isConfirmEmail}
                 type="text"
                 placeholder="인증코드를 입력해 주세요"
                 className="signup-input w-full"
-                {...register("checkEmail")}
+                {...register("code", {
+                  required: "인증코드를 입력해 주세요",
+                })}
               />
-
               <button
-                className="primary-btn w-24 h-10 m-2"
+                className={`${isConfirmEmail ? "disable-btn" : "primary-btn"} w-24 h-10 m-2`}
                 type="button"
-                onClick={() => {
-                  // const emailValue = getValues("email");
+                disabled={isConfirmEmail}
+                onClick={async () => {
+                  const emailValue = getValues("email");
+                  const codeValue = getValues("code");
+                  onConfirmEmail(emailValue, codeValue);
                 }}
               >
                 인증하기
@@ -109,6 +137,21 @@ const GeneralLogin = () => {
             </div>
             <div className="errorMessage">{errors.email?.message}</div>
           </>
+        )}
+        {isSentEmailCode && (
+          <p className="text-left text-sm font-regular">
+            이메일을 새로 인증하시려면
+            <span
+              className="font-semiBold underline hover:cursor-pointer ms-1 text-primary"
+              onClick={() => {
+                reset({ code: "" });
+                reTry();
+              }}
+            >
+              여기
+            </span>
+            를 눌러주세요
+          </p>
         )}
       </div>
       <div className="w-10/12 mt-4 grid grid-flow-col gap-2">
@@ -126,13 +169,17 @@ const GeneralLogin = () => {
               className="signup-input w-full"
               {...register("name", {
                 required: "이름은 필수 입력 사항입니다.",
+                pattern: {
+                  value: /^([가-힣]*|[a-zA-Z]*|[ぁ-んァ-ヶー]*)$/,
+                  message: "이름을 확인해 주세요",
+                },
               })}
             />
           </div>
           <div className="errorMessage">{errors.name?.message}</div>
         </div>
         <div>
-          <label htmlFor="nickName" className="mt-5 text-left">
+          <label htmlFor="nickname" className="mt-5 text-left">
             <p className="my-2 font-regular">
               닉네임<span className="text-red-600">*</span>
             </p>
@@ -140,28 +187,77 @@ const GeneralLogin = () => {
           <div className="flex justify-between">
             <div>
               <input
-                id="nickName"
+                disabled={isSentNickName}
+                id="nickname"
                 type="text"
                 placeholder="닉네임을 입력해 주세요"
                 className="signup-input w-full"
-                {...register("nickName", {
+                {...register("nickname", {
                   required: "닉네임은 필수 입력 사항입니다.",
                 })}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const nickNameValue = getValues("nickname");
+                    console.log(nickNameValue);
+                    if (nickNameValue === "") {
+                      setError("nickname", {
+                        type: "nickNameError",
+                        message: "닉네임을 입력해 주세요",
+                      });
+                      return;
+                    }
+                    setError("nickname", {
+                      type: "nickNameError",
+                      message: "",
+                    });
+                    oncheckNickname(nickNameValue);
+                    console.log(nickNameValue);
+                  }
+                }}
               />
-              <div className="errorMessage">{errors.nickName?.message}</div>
+
+              <div className="errorMessage">{errors.nickname?.message}</div>
             </div>
 
             <button
-              className="primary-btn w-24 h-10 ms-2"
+              className={`${isSentNickName ? "disable-btn" : "primary-btn"} w-24 h-10 ms-2`}
               type="button"
+              disabled={isSentNickName}
               onClick={() => {
-                const nickNameValue = getValues("nickName");
+                const nickNameValue = getValues("nickname");
+
+                if (nickNameValue === "") {
+                  setError("nickname", {
+                    type: "nickNameError",
+                    message: "닉네임을 입력해 주세요",
+                  });
+                  return;
+                }
+                setError("nickname", {
+                  type: "nickNameError",
+                  message: "",
+                });
+                oncheckNickname(nickNameValue);
                 console.log(nickNameValue);
               }}
             >
               중복확인
             </button>
           </div>
+          <p className="text-left text-xs font-regular mt-1">
+            닉네임을 변경하시려면
+            <span
+              className="font-semiBold underline hover:cursor-pointer ms-1 text-primary"
+              onClick={() => {
+                reset({ nickname: "" });
+                reTryNickName();
+              }}
+            >
+              여기
+            </span>
+            를 눌러주세요
+          </p>
         </div>
       </div>
       <div className="w-10/12 mt-4 grid grid-cols-2 gap-2">
@@ -220,7 +316,6 @@ const GeneralLogin = () => {
               },
             })}
           />
-          <div className="errorMessage">{errors.password?.message}</div>
 
           <div
             className="absolute cursor-pointer top-1/2 transform -translate-y-1/2 right-2"
@@ -229,6 +324,7 @@ const GeneralLogin = () => {
             {showPassWord ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
           </div>
         </div>
+        <div className="errorMessage">{errors.password?.message}</div>
       </div>
       <div className="w-10/12 mt-4">
         <label htmlFor="signupPassword2" className="mt-5 text-left">
