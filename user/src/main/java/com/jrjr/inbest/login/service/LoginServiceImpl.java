@@ -11,6 +11,7 @@ import com.jrjr.inbest.jwt.repository.RefreshTokenRepository;
 import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
+import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.UserRepository;
 
@@ -28,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
 	private final RefreshTokenRepository refreshTokenRepository;
 
 	@Override
-	public LoginDto login(LoginDto inputLoginDto) {
+	public UserDto login(LoginDto inputLoginDto) {
 		log.info("LoginServiceImpl - login 실행");
 
 		Optional<Login> loginEntity = loginRepository.findByEmail(inputLoginDto.getEmail());
@@ -52,9 +53,11 @@ public class LoginServiceImpl implements LoginService {
 			throw new DuplicateException("이미 로그인 중인 계정");
 		}
 
-		return LoginDto.builder()
-			.email(loginEntity.get().getEmail())
-			.role(loginEntity.get().getRole())
+		return UserDto.builder()
+			.email(userEntity.get().getEmail())
+			.seq(userEntity.get().getSeq())
+			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
+			.provider(loginEntity.get().getProvider())
 			.build();
 	}
 

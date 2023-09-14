@@ -1,5 +1,7 @@
 package com.jrjr.inbest.user.dto;
 
+import com.jrjr.inbest.login.constant.Role;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +31,8 @@ public class UserDto {
 	private String profileImgSearchName;
 
 	private String profileImgOriginalName;
+
+	private String provider;
+
+	private Role role;
 }

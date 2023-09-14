@@ -1,10 +1,11 @@
 package com.jrjr.inbest.login.service;
 
 import com.jrjr.inbest.login.dto.LoginDto;
+import com.jrjr.inbest.user.dto.UserDto;
 
 public interface LoginService {
 
-	LoginDto login(LoginDto loginDto);
+	UserDto login(LoginDto loginDto);
 
 	void logout(LoginDto loginDto);
 }
