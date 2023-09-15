@@ -35,15 +35,15 @@ public class SecurityConfig {
 	private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 	private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-	private static final String[] AUTH_WHITELIST_LOGIN = {
-		"/login/login", "/login/logout"
+	private static final String[] AUTH_WHITELIST_LOGIN = { // 로그인, 로그아웃 관련
+		"/login/inbest", "/login/logout"
 	};
 
-	private static final String[] AUTH_WHITELIST_JOIN = {
+	private static final String[] AUTH_WHITELIST_JOIN = { // 회원가입 관련
 		"/users", "/users/inquiry-nickname", "/users/inquiry-email", "/email/**"
 	};
 
-	private static final String[] AUTH_WHITELIST_SWAGGER = {
+	private static final String[] AUTH_WHITELIST_SWAGGER = { // Swagger 관련
 		"/swagger-ui.html", "/swagger-ui/**", "/v3/**"
 	};
 
@@ -77,7 +77,6 @@ public class SecurityConfig {
 			.requestMatchers(AUTH_WHITELIST_LOGIN).permitAll()
 			.requestMatchers(AUTH_WHITELIST_JOIN).permitAll()
 			.requestMatchers(AUTH_WHITELIST_SWAGGER).permitAll()
-			.requestMatchers("/test").permitAll()
 			.anyRequest().authenticated()
 		);
 
