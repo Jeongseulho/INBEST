@@ -25,19 +25,8 @@ public class CookieUtil {
 	public static void createCookie(HttpServletResponse response, String name, String value) {
 		ResponseCookie responseCookie = ResponseCookie.from(name, value)
 			.path("/")
-			.sameSite("None")
-			.httpOnly(true)
-			// .secure(true)
-			.build();
-		response.setHeader("Set-Cookie", responseCookie.toString());
-	}
-
-	public static void createCookieLax(HttpServletResponse response, String name, String value) {
-		ResponseCookie responseCookie = ResponseCookie.from(name, value)
-			.path("/")
 			.sameSite("Lax")
 			.httpOnly(true)
-			// .secure(true)
 			.build();
 		response.setHeader("Set-Cookie", responseCookie.toString());
 	}
@@ -45,9 +34,8 @@ public class CookieUtil {
 	public static void deleteCookie(HttpServletResponse response, String name) {
 		ResponseCookie responseCookie = ResponseCookie.from(name, "")
 			.path("/")
-			.sameSite("None")
+			.sameSite("Lax")
 			.maxAge(0)
-			// .secure(true)
 			.build();
 		response.setHeader("Set-Cookie", responseCookie.toString());
 	}

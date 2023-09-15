@@ -48,11 +48,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		response.setHeader("Authorization", accessTokenDto.getAccessToken());
 
-		CookieUtil.createCookieLax(response, "refreshToken", refreshToken);
+		CookieUtil.createCookie(response, "refreshToken", refreshToken);
 
-		// getRedirectStrategy().sendRedirect(request, response, "http://j9d110.p.ssafy.io:8102");
 		response.sendRedirect(
-			UriComponentsBuilder.fromUriString("http://j9d110.p.ssafy.io:8102")
+			// UriComponentsBuilder.fromUriString("http://j9d110.p.ssafy.io:8102")
+			UriComponentsBuilder.fromUriString("http://localhost:5173")
 				.queryParam("Authorization", accessTokenDto.getAccessToken())
 				.build()
 				.encode(StandardCharsets.UTF_8)
