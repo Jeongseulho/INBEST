@@ -37,7 +37,8 @@ public class LoginController {
 
 	@Operation(summary = "일반 로그인", description = "필수 값: email, password")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
+		@ApiResponse(responseCode = "200",
+			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
 		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치)"),
 		@ApiResponse(responseCode = "409", description = "이미 로그인 중인 계정")
 	})
@@ -45,6 +46,37 @@ public class LoginController {
 	public ResponseEntity<Map<String, Object>> loginInbest(@RequestBody LoginDto inputLoginDto,
 		HttpServletResponse response) {
 		log.info("LoginController - loginInbest 실행");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		// 인증 후 권한 확인
+		UserDto userDto = loginService.login(inputLoginDto);
+
+		// refreshToken 생성 후 cookie 저장
+		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
+
+		// accessToken 생성 후 반환
+		AccessTokenDto accessTokenDto
+			= jwtProvider.generateAccessToken(userDto.getEmail(), userDto.getRole());
+
+		resultMap.put("success", true);
+		resultMap.put("grantType", accessTokenDto.getGrantType());
+		resultMap.put("accessToken", accessTokenDto.getAccessToken());
+		resultMap.put("seq", userDto.getSeq());
+		resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
+		resultMap.put("role", userDto.getRole());
+		resultMap.put("provider", userDto.getProvider());
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "카카오 로그인", description = "필수 값: 인가 코드")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200",
+			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환")
+	})
+	@PostMapping("/kakao")
+	public ResponseEntity<Map<String, Object>> loginKakao(@RequestBody LoginDto inputLoginDto,
+		HttpServletResponse response) {
+		log.info("LoginController - loginKakao 실행");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		// 인증 후 권한 확인
