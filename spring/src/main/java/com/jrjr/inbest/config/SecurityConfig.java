@@ -73,7 +73,7 @@ public class SecurityConfig {
 				.failureHandler(oAuth2AuthenticationFailureHandler));
 
 		http.authorizeHttpRequests((authorize) -> authorize
-			.requestMatchers("", "/error", "/favicon.ico").permitAll()
+			.requestMatchers("/", "/error", "/favicon.ico").permitAll()
 			.requestMatchers(AUTH_WHITELIST_LOGIN).permitAll()
 			.requestMatchers(AUTH_WHITELIST_JOIN).permitAll()
 			.requestMatchers(AUTH_WHITELIST_SWAGGER).permitAll()
