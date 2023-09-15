@@ -27,7 +27,7 @@ public class CookieUtil {
 			.path("/")
 			.sameSite("None")
 			.httpOnly(true)
-			.secure(true)
+			// .secure(true)
 			.build();
 		response.setHeader("Set-Cookie", responseCookie.toString());
 	}
@@ -37,7 +37,7 @@ public class CookieUtil {
 			.path("/")
 			.sameSite("None")
 			.maxAge(0)
-			.secure(true)
+			// .secure(true)
 			.build();
 		response.setHeader("Set-Cookie", responseCookie.toString());
 	}
