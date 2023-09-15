@@ -26,6 +26,10 @@ public class UserDto {
 
 	private String birth;
 
+	private String birthyear;
+
+	private String birthday;
+
 	private Integer gender;
 
 	private String profileImgSearchName;
