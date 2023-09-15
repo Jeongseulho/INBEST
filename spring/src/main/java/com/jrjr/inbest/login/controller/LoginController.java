@@ -68,39 +68,6 @@ public class LoginController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "카카오 로그인", description = "필수 값: 인가 코드")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200",
-			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환")
-	})
-	@PostMapping("/kakao")
-	public ResponseEntity<Map<String, Object>> loginKakao(@RequestBody Map<String, String> tokendMap,
-		HttpServletResponse response) {
-		log.info("LoginController - loginKakao 실행");
-		Map<String, Object> resultMap = new HashMap<>();
-
-		// 인가 코드로 사용자 정보 조회
-
-		// 인증 후 권한 확인
-		// UserDto userDto = loginService.login(inputLoginDto);
-		//
-		// // refreshToken 생성 후 cookie 저장
-		// CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
-		//
-		// // accessToken 생성 후 반환
-		// AccessTokenDto accessTokenDto
-		// 	= jwtProvider.generateAccessToken(userDto.getEmail(), userDto.getRole());
-		//
-		// resultMap.put("success", true);
-		// resultMap.put("grantType", accessTokenDto.getGrantType());
-		// resultMap.put("accessToken", accessTokenDto.getAccessToken());
-		// resultMap.put("seq", userDto.getSeq());
-		// resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
-		// resultMap.put("role", userDto.getRole());
-		// resultMap.put("provider", userDto.getProvider());
-		return new ResponseEntity<>(resultMap, HttpStatus.OK);
-	}
-
 	@Operation(summary = "로그아웃", description = "필수 값: email, password")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "성공"),
