@@ -48,7 +48,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		response.setHeader("Authorization", accessTokenDto.getAccessToken());
 
-		CookieUtil.createCookie(response, "refreshToken", refreshToken);
+		CookieUtil.createCookieLax(response, "refreshToken", refreshToken);
 
 		// getRedirectStrategy().sendRedirect(request, response, "http://j9d110.p.ssafy.io:8102");
 		response.sendRedirect(
