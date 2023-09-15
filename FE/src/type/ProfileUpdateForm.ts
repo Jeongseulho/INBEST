@@ -1,5 +1,7 @@
 export interface ProfileUpdateFormValue {
-  password: string;
-  nickname: string;
   profileImg: FileList;
+  name: string;
+  nickname: string;
+  gender: string;
+  birth: string;
 }

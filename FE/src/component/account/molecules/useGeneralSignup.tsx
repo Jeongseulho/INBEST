@@ -19,10 +19,12 @@ export const useGeneralSignup = () => {
       setIsSentEmailCode(true);
       await checkEmail(email);
       toast.error("이미 존재하는 메일입니다.");
+      setIsSentEmailCode(false);
     } catch (err: unknown) {
       setIsSentEmailCode(false);
       if (!(err as AxiosError)?.response) {
         toast.error("문제가 발생하였습니다. 다시 시도해 주세요");
+        setIsSentEmailCode(false);
         return;
       }
       const { status } = (err as AxiosError).response!;
@@ -31,6 +33,7 @@ export const useGeneralSignup = () => {
           onSendEmail(email);
           break;
         default:
+          setIsSentEmailCode(false);
           toast.error("문제가 발생하였습니다. 다시 시도해 주세요");
       }
       console.log(err);
@@ -109,6 +112,14 @@ export const useGeneralSignup = () => {
   };
 
   const onSignup = async (data: SignupFormValue) => {
+    if (!isConfirmEmail) {
+      toast.error("이메일 인증을 완료해 주세요");
+      return;
+    }
+    if (!isConfirmNickName) {
+      toast.error("닉네임 중복검사를 완료해 주세요");
+      return;
+    }
     console.log(data);
 
     try {
