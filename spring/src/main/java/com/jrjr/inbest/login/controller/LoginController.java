@@ -15,6 +15,7 @@ import com.jrjr.inbest.jwt.dto.AccessTokenDto;
 import com.jrjr.inbest.jwt.service.JwtProvider;
 import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.service.LoginService;
+import com.jrjr.inbest.login.service.OAuthLoginService;
 import com.jrjr.inbest.user.dto.UserDto;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,13 +35,13 @@ public class LoginController {
 
 	private final LoginService loginService;
 	private final JwtProvider jwtProvider;
+	private final OAuthLoginService oAuthLoginService;
 
 	@Operation(summary = "일반 로그인", description = "필수 값: email, password")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
-		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치)"),
-		@ApiResponse(responseCode = "409", description = "이미 로그인 중인 계정")
+		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치)")
 	})
 	@PostMapping("/inbest")
 	public ResponseEntity<Map<String, Object>> loginInbest(@RequestBody LoginDto inputLoginDto,
@@ -50,6 +51,38 @@ public class LoginController {
 
 		// 인증 후 권한 확인
 		UserDto userDto = loginService.login(inputLoginDto);
+
+		// refreshToken 생성 후 cookie 저장
+		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
+
+		// accessToken 생성 후 반환
+		AccessTokenDto accessTokenDto
+			= jwtProvider.generateAccessToken(userDto.getEmail(), userDto.getRole());
+
+		resultMap.put("success", true);
+		resultMap.put("grantType", accessTokenDto.getGrantType());
+		resultMap.put("accessToken", accessTokenDto.getAccessToken());
+		resultMap.put("seq", userDto.getSeq());
+		resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
+		resultMap.put("role", userDto.getRole());
+		resultMap.put("provider", userDto.getProvider());
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "카카오 소셜 로그인", description = "필수 값: 카카오 인가 코드")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200",
+			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
+		@ApiResponse(responseCode = "401", description = "INVALID_USER (다른 경로를 통해 회원가입)")
+	})
+	@PostMapping("/kakao")
+	public ResponseEntity<Map<String, Object>> loginKakao(@RequestBody Map<String, String> tokenMap,
+		HttpServletResponse response) {
+		log.info("LoginController - loginKakao 실행");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		// 인증 후 권한 확인
+		UserDto userDto = oAuthLoginService.login(tokenMap.get("authorizeCode"));
 
 		// refreshToken 생성 후 cookie 저장
 		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
