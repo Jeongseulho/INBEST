@@ -13,13 +13,13 @@ const PeriodSettingTag = ({ text, dispatch, activeTag, tagNum, setActiveTag, pay
     <button
       className={` ${
         activeTag === tagNum && "bg-lightPrimary bg-opacity-40"
-      } w-20 flex items-center justify-around rounded-full border-2 border-gray-300 py-1`}
+      } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
       onClick={() => {
         setActiveTag(tagNum);
         dispatch({ type: "PERIOD", payload });
       }}
     >
-      {text === "가속모드" ? <p className=" text-primary ">{text}</p> : <p className=" text-black ">{text}</p>}
+      <p className={`${text === "가속모드" ? "text-primary" : "text-black"}`}>{text}</p>
     </button>
   );
 };

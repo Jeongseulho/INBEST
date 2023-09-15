@@ -5,6 +5,7 @@ import SettingPeriod from "../molecules/SettingPeriod";
 import { useCreateModal } from "./useCreateModal";
 import ProgressCircle from "../molecules/ProgressCircle";
 import group from "../../../asset/image/group.png";
+import SettingSeedMoney from "../molecules/SettingSeedMoney";
 
 interface Props {
   showModal: boolean;
@@ -23,16 +24,9 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
       closeModal={closeModal}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
     />,
-    <SettingPeriod
+    <SettingSeedMoney
       onNextStep={onNextStep}
-      period={groupSetting.period}
-      dispatch={dispatch}
-      closeModal={closeModal}
-      resetStepAndGroupSetting={resetStepAndGroupSetting}
-    />,
-    <SettingPeriod
-      onNextStep={onNextStep}
-      period={groupSetting.period}
+      seedMoney={groupSetting.seedMoney}
       dispatch={dispatch}
       closeModal={closeModal}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
@@ -52,10 +46,11 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
         content: {
           ...CONTENT_MODAL_STYLE,
           width: "500px",
-          height: "500px",
+          height: step === 3 ? "700px" : "500px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          transition: "all 0.3s ease",
         },
         overlay: OVERLAY_MODAL_STYLE,
       }}

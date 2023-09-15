@@ -1,60 +1,64 @@
-import { Period } from "../../../type/GroupSetting";
-import PeriodSettingTag from "../atoms/PeriodSettingTag";
+import { SeedMoney } from "../../../type/GroupSetting";
+import SeedMoneySettingTag from "../atoms/SeedMoneySettingTag";
 import { useActiveTag } from "./useActiveTag";
+import { formatNumberToWon } from "../../../util/formatMoney";
 
 interface Props {
   onNextStep: () => void;
-  period: Period;
-  dispatch: React.Dispatch<{ type: string; payload: Period }>;
+  seedMoney: SeedMoney;
+  dispatch: React.Dispatch<{ type: string; payload: SeedMoney }>;
   closeModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const SettingPeriod = ({ onNextStep, period, dispatch, closeModal, resetStepAndGroupSetting }: Props) => {
+
+const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, closeModal, resetStepAndGroupSetting }: Props) => {
   const { activeTag, setActiveTag } = useActiveTag();
 
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
-        <h3 className=" text-center text-dark">모의 투자 기간을 설정해주세요</h3>
-        <h3>{period === "accelerateMode" ? "가속 모드" : period + " 일"}</h3>
+        <h3 className=" text-center text-dark">시드머니를 설정해주세요</h3>
+        <h3>{seedMoney === "linkingMode" ? "계좌연동모드" : formatNumberToWon(seedMoney)}</h3>
         <div className=" flex w-full justify-around">
-          <PeriodSettingTag
-            text="7일"
+          <SeedMoneySettingTag
+            text="천만원"
             dispatch={dispatch}
             activeTag={activeTag}
             setActiveTag={setActiveTag}
             tagNum={0}
-            payload={7}
+            payload={10000000}
           />
-          <PeriodSettingTag
-            text="14일"
-            dispatch={dispatch}
-            activeTag={activeTag}
-            setActiveTag={setActiveTag}
-            tagNum={1}
-            payload={14}
-          />
-          <PeriodSettingTag
-            text="30일"
+
+          <SeedMoneySettingTag
+            text="1억원"
             dispatch={dispatch}
             activeTag={activeTag}
             setActiveTag={setActiveTag}
             tagNum={2}
-            payload={30}
+            payload={100000000}
           />
-          <PeriodSettingTag
-            text="가속모드"
+
+          <SeedMoneySettingTag
+            text="10억원"
             dispatch={dispatch}
             activeTag={activeTag}
             setActiveTag={setActiveTag}
-            tagNum={3}
-            payload={"accelerateMode"}
+            tagNum={4}
+            payload={1000000000}
+          />
+          <SeedMoneySettingTag
+            text="계좌연동모드"
+            dispatch={dispatch}
+            activeTag={activeTag}
+            setActiveTag={setActiveTag}
+            tagNum={5}
+            payload={"linkingMode"}
           />
         </div>
         <p className=" text-myGray text-center">
-          가속 모드란?
+          계좌연동모드란?
           <br />
-          과거 1년간의 데이터를 기반으로 1시간동안 모의 투자를 진행합니다.
+          본인의 계좌를 기반으로 시드머니를 설정합니다.
         </p>
       </div>
       <div className=" flex justify-center absolute bottom-0 w-full">
@@ -74,4 +78,4 @@ const SettingPeriod = ({ onNextStep, period, dispatch, closeModal, resetStepAndG
     </div>
   );
 };
-export default SettingPeriod;
+export default SettingSeedMoney;
