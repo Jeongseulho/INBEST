@@ -21,7 +21,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 public class SwaggerConfig {
 
 	@Bean
-	public OpenAPI openAPI() {
+	public OpenAPI openApi() {
 		SecurityRequirement securityRequirement = new SecurityRequirement().addList("Authorization");
 
 		SecurityScheme securityScheme = new SecurityScheme()
