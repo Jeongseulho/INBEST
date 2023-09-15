@@ -1,4 +1,4 @@
-package com.jrjr.inbest.config;
+package com.jrjr.inbest.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 public class SwaggerConfig {
 
 	@Bean
-	public OpenAPI openAPI() {
+	public OpenAPI openApi() {
 		SecurityRequirement securityRequirement = new SecurityRequirement().addList("Authorization");
 
 		SecurityScheme securityScheme = new SecurityScheme()

@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
-import com.jrjr.inbest.global.exception.DuplicateException;
 import com.jrjr.inbest.jwt.repository.RefreshTokenRepository;
 import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.entity.Login;
@@ -46,11 +45,6 @@ public class LoginServiceImpl implements LoginService {
 		// 비밀번호 일치 확인
 		if (!passwordEncoder.matches(inputLoginDto.getPassword(), loginEntity.get().getPassword())) {
 			throw new AuthenticationFailedException("비밀번호 불일치");
-		}
-
-		// 중복 로그인 방지
-		if (refreshTokenRepository.existsById(inputLoginDto.getEmail())) {
-			throw new DuplicateException("이미 로그인 중인 계정");
 		}
 
 		return UserDto.builder()
