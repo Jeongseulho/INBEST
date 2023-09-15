@@ -17,11 +17,8 @@ public class CorsConfig {
 		config.addAllowedOrigin("http://localhost:5173");
 		config.addAllowedOrigin("http://localhost:5174");
 		config.addAllowedOrigin("http://j9d110.p.ssafy.io:8102");
-		config.addAllowedOrigin("https://j9d110.p.ssafy.io");
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
-		config.addExposedHeader("grantType");
-		config.addExposedHeader("accessToken");
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
