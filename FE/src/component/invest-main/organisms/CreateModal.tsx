@@ -6,6 +6,8 @@ import { useCreateModal } from "./useCreateModal";
 import ProgressCircle from "../molecules/ProgressCircle";
 import group from "../../../asset/image/group.png";
 import SettingSeedMoney from "../molecules/SettingSeedMoney";
+import SettingInvite from "../molecules/SettingInvite";
+import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
 
 interface Props {
   showModal: boolean;
@@ -31,6 +33,13 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
       closeModal={closeModal}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
     />,
+    <SettingInvite
+      onNextStep={onNextStep}
+      closeModal={closeModal}
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+      invitedUserSeq={groupSetting.invitedUserSeq}
+      dispatch={dispatch}
+    />,
   ];
 
   return (
@@ -46,7 +55,7 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
         content: {
           ...CONTENT_MODAL_STYLE,
           width: "500px",
-          height: step === 3 ? "700px" : "500px",
+          height: step === GROUP_CREATE_STEP_MAP.INVITE_USER ? "700px" : "500px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -55,7 +64,7 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
         overlay: OVERLAY_MODAL_STYLE,
       }}
     >
-      {step === 0 ? <img src={group} width={120} /> : <ProgressCircle step={step} />}
+      {step === GROUP_CREATE_STEP_MAP.INIT_GROUP ? <img src={group} width={120} /> : <ProgressCircle step={step} />}
       {CreateModalStepComponent[step]}
     </Modal>
   );

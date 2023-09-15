@@ -1,3 +1,5 @@
+import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
+
 interface Props {
   step: number;
 }
@@ -12,21 +14,29 @@ const ProgressCircle = ({ step }: Props) => {
       ></div>
       <div
         className=" transition-all duration-500 absolute top-0 left-0 w-24 h-24 border-4 border-transparent border-t-main border-opacity-100 rounded-[50%]"
-        style={{ transform: ` ${step === 1 ? "rotate(45deg)" : "rotate(135deg)"}` }}
-      ></div>
-      <div
-        className=" transition-all duration-500 absolute top-0 left-0 w-24 h-24 border-4 border-transparent border-t-main border-opacity-100 rounded-[50%]"
-        style={{ transform: ` ${step === 1 ? "rotate(45deg)" : step === 2 ? "rotate(135deg)" : "rotate(225deg)"}` }}
+        style={{ transform: ` ${step === GROUP_CREATE_STEP_MAP.SET_PERIOD ? "rotate(45deg)" : "rotate(135deg)"}` }}
       ></div>
       <div
         className=" transition-all duration-500 absolute top-0 left-0 w-24 h-24 border-4 border-transparent border-t-main border-opacity-100 rounded-[50%]"
         style={{
           transform: ` ${
-            step === 1
+            step === GROUP_CREATE_STEP_MAP.SET_PERIOD
               ? "rotate(45deg)"
-              : step === 2
+              : step === GROUP_CREATE_STEP_MAP.SET_SEED_MONEY
               ? "rotate(135deg)"
-              : step === 3
+              : "rotate(225deg)"
+          }`,
+        }}
+      ></div>
+      <div
+        className=" transition-all duration-500 absolute top-0 left-0 w-24 h-24 border-4 border-transparent border-t-main border-opacity-100 rounded-[50%]"
+        style={{
+          transform: ` ${
+            step === GROUP_CREATE_STEP_MAP.SET_PERIOD
+              ? "rotate(45deg)"
+              : step === GROUP_CREATE_STEP_MAP.SET_SEED_MONEY
+              ? "rotate(135deg)"
+              : step === GROUP_CREATE_STEP_MAP.INVITE_USER
               ? "rotate(225deg)"
               : "rotate(315deg)"
           }`,
