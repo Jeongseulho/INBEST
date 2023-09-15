@@ -20,12 +20,12 @@ spring:
         enabled: true
         lowerCaseServiceId: true
       routes:
-        - id: user-service
-          uri: lb://user-service
+        - id: spring-service
+          uri: lb://spring-service
           predicates:
-            - Path=/user-service/**
+            - Path=/spring-service/**
           filters:
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/spring-service/(?<segment>.*), /$\{segment}
         - id: news-service
           uri: lb://news-service
           predicates:
