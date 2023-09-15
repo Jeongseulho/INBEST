@@ -74,10 +74,12 @@ public class LoginController {
 			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환")
 	})
 	@PostMapping("/kakao")
-	public ResponseEntity<Map<String, Object>> loginKakao(@RequestBody LoginDto inputLoginDto,
+	public ResponseEntity<Map<String, Object>> loginKakao(@RequestBody Map<String, String> tokendMap,
 		HttpServletResponse response) {
 		log.info("LoginController - loginKakao 실행");
 		Map<String, Object> resultMap = new HashMap<>();
+
+		// 인가 코드로 사용자 정보 조회
 
 		// 인증 후 권한 확인
 		UserDto userDto = loginService.login(inputLoginDto);
