@@ -1,4 +1,4 @@
-package com.jrjr.inbest.config;
+package com.jrjr.inbest.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
