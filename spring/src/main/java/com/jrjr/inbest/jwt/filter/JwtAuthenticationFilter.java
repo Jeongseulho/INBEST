@@ -30,17 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 		@NonNull FilterChain filterChain) throws ServletException, IOException {
-		log.info("JwtAuthenticationFilter 실행");
-
 		String uri = request.getRequestURI();
-		log.info("request.getRequestURI(): {}", uri);
+		log.info("JwtAuthenticationFilter 실행, 요청 uri : {}", uri);
 
-		if (uri.equals("/") || uri.equals("/users") || uri.startsWith("/login/inbest") || uri.startsWith(
-			"/login/logout")
+		if (uri.startsWith("/login") || uri.equals("/users") || uri.startsWith("/email")
 			|| uri.startsWith("/users/inquiry-nickname") || uri.startsWith("/users/inquiry-email")
-			|| uri.startsWith("/email") || uri.startsWith("/swagger-ui") || uri.startsWith("/v3")
-			|| uri.startsWith("/error") || uri.startsWith("/favicon.ico")) {
-			log.info("토큰 검사 예외 url!");
+			|| uri.startsWith("/swagger-ui") || uri.startsWith("/v3")
+		) {
+			log.info("토큰 검사 예외 url");
 			filterChain.doFilter(request, response);
 			return;
 		}

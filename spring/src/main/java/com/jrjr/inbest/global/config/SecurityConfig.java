@@ -36,7 +36,7 @@ public class SecurityConfig {
 	private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
 	private static final String[] AUTH_WHITELIST_LOGIN = { // 로그인, 로그아웃 관련
-		"/login/inbest", "/login/logout"
+		"/login/**" // "/inbest", "/naver", "/kakao", "/logout"
 	};
 
 	private static final String[] AUTH_WHITELIST_JOIN = { // 회원가입 관련
@@ -73,7 +73,6 @@ public class SecurityConfig {
 				.failureHandler(oAuth2AuthenticationFailureHandler));
 
 		http.authorizeHttpRequests((authorize) -> authorize
-			.requestMatchers("/", "/error", "/favicon.ico").permitAll()
 			.requestMatchers(AUTH_WHITELIST_LOGIN).permitAll()
 			.requestMatchers(AUTH_WHITELIST_JOIN).permitAll()
 			.requestMatchers(AUTH_WHITELIST_SWAGGER).permitAll()
