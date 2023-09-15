@@ -1,12 +1,14 @@
 package com.jrjr.inbest.oauth.handler;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.jrjr.inbest.global.util.CookieUtil;
 import com.jrjr.inbest.jwt.dto.AccessTokenDto;
@@ -48,6 +50,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		CookieUtil.createCookie(response, "refreshToken", refreshToken);
 
-		getRedirectStrategy().sendRedirect(request, response, "http://j9d110.p.ssafy.io:8102");
+		// getRedirectStrategy().sendRedirect(request, response, "http://j9d110.p.ssafy.io:8102");
+		response.sendRedirect(
+			UriComponentsBuilder.fromUriString("http://j9d110.p.ssafy.io:8102")
+				.queryParam("Authorization", accessTokenDto.getAccessToken())
+				.build()
+				.encode(StandardCharsets.UTF_8)
+				.toUriString()
+		);
 	}
 }
