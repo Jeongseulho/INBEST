@@ -46,12 +46,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		String refreshToken = jwtProvider.generateRefreshToken(authentication.getName());
 		log.info("refreshToken: {}", refreshToken);
 
-		response.setHeader("Authorization", accessTokenDto.getAccessToken());
-
 		CookieUtil.createCookie(response, "refreshToken", refreshToken);
 
 		response.sendRedirect(
-			// UriComponentsBuilder.fromUriString("http://j9d110.p.ssafy.io:8102")
 			UriComponentsBuilder.fromUriString("http://localhost:5173")
 				.queryParam("Authorization", accessTokenDto.getAccessToken())
 				.build()
