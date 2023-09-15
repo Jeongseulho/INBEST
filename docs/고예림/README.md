@@ -1,6 +1,18 @@
 <details>
 <summary>3주차</summary>
 
+# 23-09-14
+- Redis 배포
+- 배포 서버 gateway의 lb 안되는 현상 해결
+    - 각 eureka client의 host 변경으로 해결
+- gunicorn으로 시도하려다, django CI/CD 복구
+- rabbitMQ 배포 
+
+# 23-09-13
+- 배포 서버에서 gateway 안되는 문제
+    - loadbalancing 안할 경우 정상 작동하는 것 발견
+
+
 # 23-09-12
 - eureka에 service-url인식안되는 문제 해결
     - service-url -> serviceUrl로 변경
