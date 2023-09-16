@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jrjr.inbest.global.exception.AuthenticationFailedException;
 import com.jrjr.inbest.global.util.CookieUtil;
 import com.jrjr.inbest.jwt.dto.AccessTokenDto;
 import com.jrjr.inbest.jwt.service.JwtProvider;
@@ -37,84 +39,26 @@ public class LoginController {
 	private final JwtProvider jwtProvider;
 	private final OAuthLoginService kakaoLoginServiceImpl, naverLoginServiceImpl;
 
-	@Operation(summary = "일반 로그인", description = "필수 값: email, password")
+	@Operation(summary = "로그인", description = "일반 로그인 필수 값: email, password, 소셜 로그인 필수 값: authorizeCode")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
-		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치")
+		@ApiResponse(responseCode = "401", description = "올바르지 않은 provider, 회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치, 가입 경로 불일치")
 	})
-	@PostMapping("/inbest")
-	public ResponseEntity<Map<String, Object>> loginInbest(@RequestBody LoginDto inputLoginDto,
+	@PostMapping("/login/{provider}")
+	public ResponseEntity<Map<String, Object>> login(@PathVariable(value = "provider") String provider,
+		@RequestBody LoginDto inputLoginDto,
 		HttpServletResponse response) {
-		log.info("LoginController - loginInbest 실행");
+		log.info("LoginController - login 실행");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		// 인증 후 권한 확인
-		UserDto userDto = loginService.login(inputLoginDto);
-
-		// refreshToken 생성 후 cookie 저장
-		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
-
-		// accessToken 생성 후 반환
-		AccessTokenDto accessTokenDto
-			= jwtProvider.generateAccessToken(userDto.getEmail(), userDto.getRole());
-
-		resultMap.put("success", true);
-		resultMap.put("grantType", accessTokenDto.getGrantType());
-		resultMap.put("accessToken", accessTokenDto.getAccessToken());
-		resultMap.put("seq", userDto.getSeq());
-		resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
-		resultMap.put("role", userDto.getRole());
-		resultMap.put("provider", userDto.getProvider());
-		return new ResponseEntity<>(resultMap, HttpStatus.OK);
-	}
-
-	@Operation(summary = "카카오 소셜 로그인", description = "필수 값: 카카오 인가 코드")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200",
-			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
-		@ApiResponse(responseCode = "401", description = "탈퇴한 회원, 가입 경로 불일치")
-	})
-	@PostMapping("/kakao")
-	public ResponseEntity<Map<String, Object>> loginKakao(@RequestBody Map<String, String> tokenMap,
-		HttpServletResponse response) {
-		log.info("LoginController - loginKakao 실행");
-		Map<String, Object> resultMap = new HashMap<>();
-
-		// 인증 후 권한 확인
-		UserDto userDto = kakaoLoginServiceImpl.login(tokenMap.get("authorizeCode"));
-
-		// refreshToken 생성 후 cookie 저장
-		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
-
-		// accessToken 생성 후 반환
-		AccessTokenDto accessTokenDto
-			= jwtProvider.generateAccessToken(userDto.getEmail(), userDto.getRole());
-
-		resultMap.put("success", true);
-		resultMap.put("grantType", accessTokenDto.getGrantType());
-		resultMap.put("accessToken", accessTokenDto.getAccessToken());
-		resultMap.put("seq", userDto.getSeq());
-		resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
-		resultMap.put("role", userDto.getRole());
-		resultMap.put("provider", userDto.getProvider());
-		return new ResponseEntity<>(resultMap, HttpStatus.OK);
-	}
-
-	@Operation(summary = "네이버 소셜 로그인", description = "필수 값: 네이버 인가 코드")
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200",
-			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
-		@ApiResponse(responseCode = "401", description = "탈퇴한 회원, 가입 경로 불일치")
-	})
-	@PostMapping("/naver")
-	public ResponseEntity<Map<String, Object>> loginNaver(@RequestBody Map<String, String> tokenMap,
-		HttpServletResponse response) {
-		log.info("LoginController - loginNaver 실행");
-		Map<String, Object> resultMap = new HashMap<>();
-
-		// 인증 후 권한 확인
-		UserDto userDto = naverLoginServiceImpl.login(tokenMap.get("authorizeCode"));
+		// 인증
+		UserDto userDto = switch (provider) {
+			case "inbest" -> loginService.login(inputLoginDto);
+			case "kakao" -> kakaoLoginServiceImpl.login(inputLoginDto.getAuthorizeCode());
+			case "naver" -> naverLoginServiceImpl.login(inputLoginDto.getAuthorizeCode());
+			default -> throw new AuthenticationFailedException("올바르지 않은 provider");
+		};
 
 		// refreshToken 생성 후 cookie 저장
 		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
