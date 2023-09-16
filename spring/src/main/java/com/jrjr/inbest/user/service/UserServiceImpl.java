@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -109,9 +110,9 @@ public class UserServiceImpl implements UserService {
 		String birthyear = null;
 		String birthday = null;
 		if (joinDto.getBirth() != null) {
-			birthyear = joinDto.getBirth().substring(0, 4);
-			birthday = joinDto.getBirth().substring(5, 7)
-				+ joinDto.getBirth().substring(8);
+			StringTokenizer st = new StringTokenizer(joinDto.getBirth(), "-");
+			birthyear = st.nextToken();
+			birthday = st.nextToken() + st.nextToken();
 		}
 		log.info("birthyear: {}", birthyear);
 		log.info("birthday: {}", birthday);
