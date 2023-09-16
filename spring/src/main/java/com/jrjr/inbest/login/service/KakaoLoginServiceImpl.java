@@ -1,24 +1,34 @@
 package com.jrjr.inbest.login.service;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import net.minidev.json.JSONObject;
 
+import com.jrjr.inbest.global.exception.AuthenticationFailedException;
+import com.jrjr.inbest.login.entity.Login;
+import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.user.dto.UserDto;
+import com.jrjr.inbest.user.entity.User;
+import com.jrjr.inbest.user.repository.UserRepository;
+import com.jrjr.inbest.user.service.UserService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class KakaoLoginServiceImpl implements OAuthLoginService {
 
-	@Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
-	private String tokenUri;
-
-	@Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
-	private String userInfoUri;
+	private final LoginRepository loginRepository;
+	private final UserRepository userRepository;
+	private final UserService userService;
 
 	@Value("${spring.security.oauth2.client.registration.kakao.client-id}")
 	private String clientId;
@@ -26,21 +36,16 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 	@Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
 	private String clientSecret;
 
-	@Value("${spring.security.oauth2.client.registration.kakao.scope}")
-	private String scope;
-
 	@Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
 	private String redirectUri;
 
 	@Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}")
 	private String authorizationGrantType;
 
+	@Transactional
 	@Override
-	public UserDto login(String authorizeCode2) {
+	public UserDto login(String authorizeCode) {
 		log.info("KakaoLoginServiceImpl - login 실행");
-
-		String authorizeCode = this.tmp();
-		log.info("authorizeCode: {}", authorizeCode);
 
 		// 인가 코드를 통해 accessToken 획득
 		String accessToken = this.getOAuthAccessToken(authorizeCode);
@@ -48,44 +53,44 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 
 		// accessToken 을 통해 회원이 허용한 정보 조회
 		UserDto userDto = this.getOAuthUserInfo(accessToken);
-		log.info("userInfo: {}", userDto);
+		log.info("email: {}", userDto.getEmail());
 
-		// 1. 이메일을 통해 가입 정보 확인
-		// 1-1. 가입 정보가 없다면, 회원 가입 진행
-		// 2. 로그인 진행
-		// 2-1. 탈퇴한 이력이 있는지 확인
-		// 2-1-1. 탈퇴한 이력이 있다면, 데이터 삭제 후, 회원 가입 진행
-		// 2-2. provider 확인
-		return null;
-	}
+		Optional<Login> loginEntity = loginRepository.findByEmail(userDto.getEmail());
+		Optional<User> userEntity = userRepository.findByEmail(userDto.getEmail());
 
-	public String tmp() {
-		log.info("KakaoLoginServiceImpl - tmp 실행");
+		// 가입 정보가 없다면, 회원가입 진행
+		if (loginEntity.isEmpty() || userEntity.isEmpty()) {
+			log.info("가입 정보 없음, 회원가입 진행");
+			return userService.join(userDto);
+		}
 
-		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8102");
-		JSONObject authorizeCode = webClient.get()
-			.uri(uriBuilder -> uriBuilder
-				.path("/oauth/authorize")
-				.queryParam("client_id", clientId)
-				.queryParam("redirect_uri", redirectUri)
-				.queryParam("response_type", "code")
-				.build()
-			)
-			.retrieve()
-			.bodyToMono(JSONObject.class)
-			.block();
+		// 탈퇴 획인
+		if (userEntity.get().getDeletedDate() != null) {
+			throw new AuthenticationFailedException("탈퇴한 회원");
+		}
 
-		return (String)authorizeCode.get("code");
+		// 가입 경로 일치 확인
+		if (!loginEntity.get().getProvider().equals("kakao")) {
+			throw new AuthenticationFailedException("가입 경로 불일치");
+		}
+
+		return UserDto.builder()
+			.email(userEntity.get().getEmail())
+			.seq(userEntity.get().getSeq())
+			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
+			.role(loginEntity.get().getRole())
+			.provider(loginEntity.get().getProvider())
+			.build();
 	}
 
 	@Override
 	public String getOAuthAccessToken(String authorizeCode) {
 		log.info("KakaoLoginServiceImpl - getOAuthAccessToken 실행");
 
-		WebClient webClient = WebClient.create();
+		WebClient webClient = WebClient.create("https://kauth.kakao.com");
 		JSONObject tokenInfo = webClient.post()
 			.uri(uriBuilder -> uriBuilder
-				.path(tokenUri)
+				.path("/oauth/token")
 				.queryParam("grant_type", authorizationGrantType)
 				.queryParam("client_id", clientId)
 				.queryParam("redirect_uri", redirectUri)
@@ -104,10 +109,10 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 	public UserDto getOAuthUserInfo(String accessToken) {
 		log.info("KakaoLoginServiceImpl - getOAuthUserInfo 실행");
 
-		WebClient webClient = WebClient.create();
-		JSONObject userInfo = webClient.get()
+		WebClient webClient = WebClient.create("https://kapi.kakao.com");
+		JSONObject response = webClient.get()
 			.uri(uriBuilder -> uriBuilder
-				.path("https://kapi.kakao.com/v1/user/access_token_info")
+				.path("/v2/user/me")
 				.build()
 			)
 			.header("Authorization", "Bearer " + accessToken)
@@ -115,12 +120,20 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 			.bodyToMono(JSONObject.class)
 			.block();
 
+		Map<String, Object> userInfo = (Map<String, Object>)response.get("kakao_account");
+		log.info("email: {}", userInfo.get("email"));
+		log.info("name: {}", userInfo.get("name"));
+		log.info("gender: {}", userInfo.getOrDefault("gender", 0).equals("male") ? 1 : 2);
+		log.info("birthyear: {}", userInfo.getOrDefault("birthyear", null));
+		log.info("birthday: {}", userInfo.getOrDefault("birthday", null));
+
 		return UserDto.builder()
 			.email((String)userInfo.get("email"))
 			.name((String)userInfo.get("name"))
 			.gender(userInfo.getOrDefault("gender", 0).equals("male") ? 1 : 2)
 			.birthyear((String)userInfo.getOrDefault("birthyear", null))
 			.birthday((String)userInfo.getOrDefault("birthday", null))
+			.provider("kakao")
 			.build();
 	}
 }
