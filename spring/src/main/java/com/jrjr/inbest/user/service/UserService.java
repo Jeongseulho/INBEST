@@ -13,6 +13,8 @@ public interface UserService {
 
 	Login join(OAuth2UserInfo oAuth2UserInfo, String registrationId);
 
+	UserDto join(UserDto userDto);
+
 	void join(JoinDto joinDto);
 
 	void checkEmailExists(String email);

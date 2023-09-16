@@ -68,6 +68,41 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
+	public UserDto join(UserDto userDto) {
+		log.info("UserServiceImpl - join 실행: {}", userDto.getProvider());
+		User user = userRepository.save(
+			User.builder()
+				.email(userDto.getEmail())
+				.name(userDto.getName())
+				.nickname(userDto.getEmail())
+				.birthyear(userDto.getBirthyear())
+				.birthday(userDto.getBirthday())
+				.gender(userDto.getGender())
+				.profileImgOriginalName("logo.png")
+				.profileImgSearchName("logo.png")
+				.build()
+		);
+
+		Login login = loginRepository.save(
+			Login.builder()
+				.email(userDto.getEmail())
+				.role(Role.ROLE_USER)
+				.userSeq(user.getSeq())
+				.provider(userDto.getProvider())
+				.build()
+		);
+
+		return UserDto.builder()
+			.email(user.getEmail())
+			.seq(user.getSeq())
+			.profileImgSearchName(user.getProfileImgSearchName())
+			.role(login.getRole())
+			.provider(login.getProvider())
+			.build();
+	}
+
+	@Transactional
+	@Override
 	public void join(JoinDto joinDto) {
 		log.info("UserServiceImpl - join 실행: inbest");
 
