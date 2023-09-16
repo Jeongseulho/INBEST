@@ -26,6 +26,10 @@ export const signup = async (user: SignupSubmitFormValue): Promise<ApiSuccessMes
   return data;
 };
 export const login = async (user: LoginFormValue): Promise<LoginResultValue | void> => {
-  const { data } = await api.post("/login/login", user);
+  const { data } = await api.post("/login/login/inbest", user);
+  return data;
+};
+export const oauthlogin = async (authorizeCode: string, provider: string): Promise<LoginResultValue | void> => {
+  const { data } = await api.post(`/login/login/${provider}`, { authorizeCode });
   return data;
 };

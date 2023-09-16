@@ -13,7 +13,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="login" element={<LoginSignup />} />
-          <Route path="login/oauth" element={<Oauth />} />
+          <Route path="login/oauth/kakao" element={<Oauth />} />
+          <Route path="login/oauth/naver" element={<Oauth />} />
         </Routes>
       </Layout>
     </BrowserRouter>
