@@ -20,7 +20,7 @@ public class ExControllerAdvice {
 	@ExceptionHandler
 	public ResponseEntity<ErrorResult> authenticationExHandler(AuthenticationFailedException ex) {
 		log.info("AuthenticationFailedException: {}", ex.getMessage());
-		ErrorResult errorResult = new ErrorResult("false", "INVALID_USER");
+		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
 		return new ResponseEntity<>(errorResult, HttpStatus.UNAUTHORIZED);
 	}
 
