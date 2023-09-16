@@ -2,7 +2,7 @@ import { SeedMoney } from "../../../type/GroupSetting";
 
 interface Props {
   text: string;
-  dispatch: React.Dispatch<{ type: string; payload: SeedMoney }>;
+  dispatch: React.Dispatch<{ type: "SEED_MONEY"; payload: SeedMoney }>;
   activeTag: number;
   setActiveTag: React.Dispatch<React.SetStateAction<number>>;
   tagNum: number;

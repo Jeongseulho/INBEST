@@ -5,7 +5,7 @@ import { useActiveTag } from "./useActiveTag";
 interface Props {
   onNextStep: () => void;
   period: Period;
-  dispatch: React.Dispatch<{ type: string; payload: Period }>;
+  dispatch: React.Dispatch<{ type: "PERIOD"; payload: Period }>;
   closeModal: () => void;
   resetStepAndGroupSetting: () => void;
 }

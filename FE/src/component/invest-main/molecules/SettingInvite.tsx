@@ -1,54 +1,62 @@
 import UserItem from "../atoms/UserItem";
 import UserTag from "../atoms/UserTag";
+import { GroupInviteUser } from "../../../type/GroupSetting";
+import { useEffect } from "react";
+
+type Action =
+  | { type: "ADD_INVITE"; payload: GroupInviteUser }
+  | { type: "DELETE_INVITE"; payload: GroupInviteUser }
+  | { type: "ALL_USER"; payload: GroupInviteUser[] };
 interface Props {
   onNextStep: () => void;
-  dispatch: React.Dispatch<{ type: string; payload: number }>;
-  invitedUserSeq: number[];
+  dispatch: React.Dispatch<Action>;
+  inviteUsers: GroupInviteUser[] | [];
+  unInviteUsers: GroupInviteUser[] | [];
   closeModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const SettingInvite = ({ onNextStep, closeModal, resetStepAndGroupSetting }: Props) => {
-  const data = [
-    {
-      userSeq: 1,
-      nickname: "닉네임1",
-      email: "email1",
-      profileImg: "",
-    },
-    {
-      userSeq: 2,
-      nickname: "닉네임2",
-      email: "email2",
-      profileImg: "",
-    },
-    {
-      userSeq: 3,
-      nickname: "닉네임3",
-      email: "email3",
-      profileImg: "",
-    },
-    {
-      userSeq: 4,
-      nickname: "닉네임4",
-      email: "email4",
-      profileImg: "",
-    },
-  ];
+const SettingInvite = ({
+  onNextStep,
+  closeModal,
+  resetStepAndGroupSetting,
+  dispatch,
+  inviteUsers,
+  unInviteUsers,
+}: Props) => {
+  useEffect(() => {
+    dispatch({
+      type: "ALL_USER",
+      payload: [
+        {
+          userSeq: 1,
+          nickname: "닉네임1",
+          profileImg: "",
+        },
+        {
+          userSeq: 2,
+          nickname: "닉네임2",
+          profileImg: "",
+        },
+        {
+          userSeq: 3,
+          nickname: "닉네임3",
+          profileImg: "",
+        },
+        {
+          userSeq: 4,
+          nickname: "닉네임4",
+          profileImg: "",
+        },
+      ],
+    });
+  }, []);
+
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
         <h3 className=" text-center text-dark">어떤 사람을 초대할까요?</h3>
 
-        <div className=" w-full">
-          <p className=" font-regular text-left">초대 목록</p>
-          <div className=" flex flex-wrap">
-            {data.map((user) => (
-              <UserTag nickname={user.nickname} profileImg={user.profileImg} />
-            ))}
-          </div>
-        </div>
-
-        <div className=" flex flex-col">
+        <div className=" flex flex-col w-full">
           <label htmlFor="nickname-search" className="text-left">
             <p className="my-2 font-regular">유저 검색</p>
             <input
@@ -59,8 +67,29 @@ const SettingInvite = ({ onNextStep, closeModal, resetStepAndGroupSetting }: Pro
             />
           </label>
           <div className=" flex flex-wrap">
-            {data.map((user) => (
-              <UserItem nickname={user.nickname} email={user.email} profileImg={user.profileImg} />
+            {unInviteUsers.map((user) => (
+              <UserItem
+                key={user.userSeq}
+                nickname={user.nickname}
+                profileImg={user.profileImg}
+                dispatch={dispatch}
+                payload={user}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className=" w-full">
+          <p className=" my-2 font-regular text-left">초대 목록</p>
+          <div className=" flex flex-wrap">
+            {inviteUsers.map((user) => (
+              <UserTag
+                key={user.userSeq}
+                nickname={user.nickname}
+                profileImg={user.profileImg}
+                dispatch={dispatch}
+                payload={user}
+              />
             ))}
           </div>
         </div>

@@ -2,7 +2,7 @@ import { Period } from "../../../type/GroupSetting";
 
 interface Props {
   text: string;
-  dispatch: React.Dispatch<{ type: string; payload: Period }>;
+  dispatch: React.Dispatch<{ type: "PERIOD"; payload: Period }>;
   activeTag: number;
   setActiveTag: React.Dispatch<React.SetStateAction<number>>;
   tagNum: number;

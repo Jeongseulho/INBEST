@@ -6,7 +6,7 @@ import { formatNumberToWon } from "../../../util/formatMoney";
 interface Props {
   onNextStep: () => void;
   seedMoney: SeedMoney;
-  dispatch: React.Dispatch<{ type: string; payload: SeedMoney }>;
+  dispatch: React.Dispatch<{ type: "SEED_MONEY"; payload: SeedMoney }>;
   closeModal: () => void;
   resetStepAndGroupSetting: () => void;
 }

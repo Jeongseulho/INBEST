@@ -37,7 +37,8 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
       onNextStep={onNextStep}
       closeModal={closeModal}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
-      invitedUserSeq={groupSetting.invitedUserSeq}
+      inviteUsers={groupSetting.inviteUsers}
+      unInviteUsers={groupSetting.unInviteUsers}
       dispatch={dispatch}
     />,
   ];
