@@ -16,7 +16,7 @@ export const useCreateModal = () => {
 
   const reducer = (
     groupSetting: GroupSetting,
-    action: { type: string; payload?: Period | SeedMoney | number }
+    action: { type: string; payload?: Period | SeedMoney }
   ): GroupSetting => {
     switch (action.type) {
       case "PERIOD":
