@@ -29,8 +29,8 @@ public class SecurityConfig {
 	private final JwtProvider jwtProvider;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-	private static final String[] AUTH_WHITELIST_LOGIN = { // 로그인, 로그아웃 관련
-		"/login/login/**", "/login/logout"
+	private static final String[] AUTH_WHITELIST_LOGIN = { // 로그인 관련
+		"/login/login/**"
 	};
 
 	private static final String[] AUTH_WHITELIST_JOIN = { // 회원가입 관련
