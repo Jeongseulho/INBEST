@@ -2,6 +2,7 @@ package com.jrjr.inbest.login.service;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -124,12 +125,19 @@ public class NaverLoginServiceImpl implements OAuthLoginService {
 		log.info("birthyear: {}", userInfo.getOrDefault("birthyear", null));
 		log.info("birthday: {}", userInfo.getOrDefault("birthday", null));
 
+		String birthday = null;
+		if (userInfo.get("birthday") != null) {
+			StringTokenizer st = new StringTokenizer((String)userInfo.get("birthday"), "-");
+			birthday = st.nextToken() + st.nextToken();
+			log.info("birthyear: {}", birthday);
+		}
+
 		return UserDto.builder()
 			.email((String)userInfo.get("email"))
 			.name((String)userInfo.get("name"))
 			.gender(userInfo.getOrDefault("gender", 0).equals("male") ? 1 : 2)
 			.birthyear((String)userInfo.getOrDefault("birthyear", null))
-			.birthday((String)userInfo.getOrDefault("birthday", null))
+			.birthday(birthday)
 			.provider("naver")
 			.build();
 	}
