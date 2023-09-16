@@ -55,6 +55,9 @@ body{
 .primary-btn {
   @apply bg-primary text-white hover:text-primary py-2 rounded-full px-10 transition-all duration-500 border-2 border-primary hover:bg-opacity-10;
 }
+.disable-btn {
+  @apply rounded-md bg-gray-600 text-white;
+}
 .signup-input{
   @apply border-gray-400 border p-2 rounded-md;
 }
@@ -87,7 +90,7 @@ body{
   height: 10px;
 }
 
-#increase-trianlge {
+#increase-triangle {
   background-color: #00A347;
   clip-path: polygon(100% 100%, 0 100%, 50% 0);
   width: 10px;
@@ -121,4 +124,70 @@ body{
 
 .gray-btn{
   @apply rounded-full bg-gray-200 py-2 px-10 text-black transition-all duration-500 border-2 border-gray-200 hover:bg-opacity-10
+}
+
+
+/* 로그인창 애니메이션 */
+#greenbox{
+  z-index: 10;
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+  
+  @apply w-[50vw];
+  @apply h-full;
+  
+  @apply bg-mainDark;
+  
+}
+.animate__animated.animate__fadeInRight, .animate__animated.animate__fadeInLeft {
+  --animate-duration: 0.5s;
+}
+
+.show-login{
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 30% 100%);
+}
+.show-signup{
+  clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);}
+
+
+  /* 리액트 모달 자꾸 깔려서 만든 css */
+.ReactModal__Overlay{
+  z-index: 60;
+}
+
+/* 리액트 훅 폼 에러메세지 */
+.errorMessage{
+  @apply 
+  text-sm
+  text-red-600
+  font-regular
+}
+
+/* 크로퍼 둥글게 */
+.cropper-crop-box, .cropper-view-box {
+  border-radius: 50%;
+}
+
+.cropper-view-box {
+  box-shadow: 0 0 0 1px #39f;
+  outline: 0;
+}
+
+
+/* 스크롤바 전체 기본 꾸미기 */
+::-webkit-scrollbar {
+  width: 10px;  /* 세로축 스크롤바 폭 너비 */
+  height: 20px;  /* 가로축 스크롤바 폭 너비 */
+}
+
+/* 스크롤바 막대 꾸미기 */
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+  @apply border-mainDark;
+  border-radius: 12px 12px 12px 12px;
+}
+
+/* 스크롤바 트랙 꾸미기 */
+::-webkit-scrollbar-track {
+  @apply bg-gray-300
 }
