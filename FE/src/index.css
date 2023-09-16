@@ -53,7 +53,7 @@ body{
   overflow-x: hidden;
 }
 .primary-btn {
-  @apply rounded-md bg-primary text-white;
+  @apply bg-primary text-white hover:text-primary py-2 rounded-full px-10 transition-all duration-500 border-2 border-primary hover:bg-opacity-10;
 }
 .disable-btn {
   @apply rounded-md bg-gray-600 text-white;
@@ -83,6 +83,48 @@ body{
   @apply h-full;
 }
 
+#decrease-triangle {
+  background-color: #DF1525;
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+  width: 10px;
+  height: 10px;
+}
+
+#increase-triangle {
+  background-color: #00A347;
+  clip-path: polygon(100% 100%, 0 100%, 50% 0);
+  width: 10px;
+  height: 10px;
+}
+
+.shadow-component {
+  @apply shadow-xl bg-white rounded-2xl;
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: all 300ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+.main-dark-btn{
+  @apply rounded-full text-white bg-mainDark py-2 px-10 transition-colors duration-500 hover:text-mainDark border-2 border-mainDark hover:bg-opacity-10
+}
+
+.light-red-btn {
+  @apply bg-lightRed text-white hover:text-lightRed py-2 rounded-full px-10 transition-all duration-500 border-2 border-lightRed hover:bg-opacity-10
+}
+
+.gray-btn{
+  @apply rounded-full bg-gray-200 py-2 px-10 text-black transition-all duration-500 border-2 border-gray-200 hover:bg-opacity-10
+}
 
 
 /* 로그인창 애니메이션 */

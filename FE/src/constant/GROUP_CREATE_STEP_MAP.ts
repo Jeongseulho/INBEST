@@ -1,0 +1,6 @@
+export const GROUP_CREATE_STEP_MAP = {
+  INIT_GROUP: 0,
+  SET_PERIOD: 1,
+  SET_SEED_MONEY: 2,
+  INVITE_USER: 3,
+};
