@@ -2,6 +2,7 @@ package com.jrjr.inbest.login.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,18 +79,21 @@ public class LoginController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "로그아웃", description = "필수 값: email, password")
+	@Operation(summary = "로그아웃", description = "필수 값: email")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "성공"),
-		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 비밀번호 불일치"),
+		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 로그아웃하려는 계정의 이메일 불일치"),
 	})
 	@PostMapping("/logout")
 	public ResponseEntity<Map<String, Object>> logout(@RequestBody LoginDto inputLoginDto,
+		HttpServletRequest request,
 		HttpServletResponse response) {
 		log.info("LoginController - logout 실행");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		loginService.logout(inputLoginDto); // 인증 후 redis 에서 refreshToken 삭제
+		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
+		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
+		loginService.logout(inputLoginDto, email); // 인증 후 redis 에서 refreshToken 삭제
 		CookieUtil.deleteCookie(response, "refreshToken"); // cookie 에서 refreshToken 삭제
 
 		resultMap.put("success", true);
