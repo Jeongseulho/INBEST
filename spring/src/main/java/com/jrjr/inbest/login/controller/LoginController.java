@@ -35,13 +35,13 @@ public class LoginController {
 
 	private final LoginService loginService;
 	private final JwtProvider jwtProvider;
-	private final OAuthLoginService oAuthLoginService;
+	private final OAuthLoginService kakaoLoginServiceImpl, naverLoginServiceImpl;
 
 	@Operation(summary = "일반 로그인", description = "필수 값: email, password")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
-		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치)")
+		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치")
 	})
 	@PostMapping("/inbest")
 	public ResponseEntity<Map<String, Object>> loginInbest(@RequestBody LoginDto inputLoginDto,
@@ -73,7 +73,7 @@ public class LoginController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
-		@ApiResponse(responseCode = "401", description = "INVALID_USER (다른 경로를 통해 회원가입)")
+		@ApiResponse(responseCode = "401", description = "탈퇴한 회원, 가입 경로 불일치")
 	})
 	@PostMapping("/kakao")
 	public ResponseEntity<Map<String, Object>> loginKakao(@RequestBody Map<String, String> tokenMap,
@@ -82,7 +82,39 @@ public class LoginController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		// 인증 후 권한 확인
-		UserDto userDto = oAuthLoginService.login(tokenMap.get("authorizeCode"));
+		UserDto userDto = kakaoLoginServiceImpl.login(tokenMap.get("authorizeCode"));
+
+		// refreshToken 생성 후 cookie 저장
+		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
+
+		// accessToken 생성 후 반환
+		AccessTokenDto accessTokenDto
+			= jwtProvider.generateAccessToken(userDto.getEmail(), userDto.getRole());
+
+		resultMap.put("success", true);
+		resultMap.put("grantType", accessTokenDto.getGrantType());
+		resultMap.put("accessToken", accessTokenDto.getAccessToken());
+		resultMap.put("seq", userDto.getSeq());
+		resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
+		resultMap.put("role", userDto.getRole());
+		resultMap.put("provider", userDto.getProvider());
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "네이버 소셜 로그인", description = "필수 값: 네이버 인가 코드")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200",
+			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
+		@ApiResponse(responseCode = "401", description = "탈퇴한 회원, 가입 경로 불일치")
+	})
+	@PostMapping("/naver")
+	public ResponseEntity<Map<String, Object>> loginNaver(@RequestBody Map<String, String> tokenMap,
+		HttpServletResponse response) {
+		log.info("LoginController - loginNaver 실행");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		// 인증 후 권한 확인
+		UserDto userDto = naverLoginServiceImpl.login(tokenMap.get("authorizeCode"));
 
 		// refreshToken 생성 후 cookie 저장
 		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
@@ -104,7 +136,7 @@ public class LoginController {
 	@Operation(summary = "로그아웃", description = "필수 값: email, password")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "성공"),
-		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 비밀번호 불일치)"),
+		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 비밀번호 불일치"),
 	})
 	@PostMapping("/logout")
 	public ResponseEntity<Map<String, Object>> logout(@RequestBody LoginDto inputLoginDto,
