@@ -57,17 +57,16 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public void logout(LoginDto inputLoginDto) {
+	public void logout(LoginDto inputLoginDto, String email) {
 		log.info("LoginServiceImpl - logout 실행");
+
+		if (!inputLoginDto.getEmail().equals(email)) {
+			throw new AuthenticationFailedException("토큰의 이메일과 로그아웃하려는 계정의 이메일 불일치");
+		}
 
 		Optional<Login> loginEntity = loginRepository.findByEmail(inputLoginDto.getEmail());
 		if (loginEntity.isEmpty()) {
 			throw new AuthenticationFailedException("회원 정보 없음");
-		}
-
-		// 비밀번호 일치 확인
-		if (!passwordEncoder.matches(inputLoginDto.getPassword(), loginEntity.get().getPassword())) {
-			throw new AuthenticationFailedException("비밀번호 불일치");
 		}
 
 		// redis 에서 refreshToken 삭제
