@@ -51,6 +51,7 @@ public class LoginServiceImpl implements LoginService {
 			.email(userEntity.get().getEmail())
 			.seq(userEntity.get().getSeq())
 			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
+			.role(loginEntity.get().getRole())
 			.provider(loginEntity.get().getProvider())
 			.build();
 	}
