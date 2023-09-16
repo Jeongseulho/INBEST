@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String uri = request.getRequestURI();
 		log.info("JwtAuthenticationFilter 실행, 요청 uri : {}", uri);
 
-		if (uri.startsWith("/login") || uri.equals("/users") || uri.startsWith("/email")
+		if (uri.startsWith("/login/login") || uri.equals("/users") || uri.startsWith("/email")
 			|| uri.startsWith("/users/inquiry-nickname") || uri.startsWith("/users/inquiry-email")
 			|| uri.startsWith("/swagger-ui") || uri.startsWith("/v3")
 		) {

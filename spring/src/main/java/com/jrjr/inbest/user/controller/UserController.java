@@ -43,8 +43,7 @@ public class UserController {
 	private final JwtProvider jwtProvider;
 
 	@Operation(summary = "회원가입",
-		description = "필수 값: email, password, name, nickname\n"
-			+ "선택 값: birth, gender")
+		description = "필수 값: email, password, name, nickname 선택 값: birth, gender")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200")
 	})
@@ -94,8 +93,7 @@ public class UserController {
 	@Operation(summary = "비밀번호 변경", description = "필수 값: password")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200"),
-		@ApiResponse(responseCode = "401",
-			description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치)")
+		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치")
 	})
 	@PutMapping("/{seq}/password")
 	ResponseEntity<Map<String, Object>> updatePassword(@PathVariable(value = "seq") Long seq,
@@ -115,8 +113,7 @@ public class UserController {
 	@Operation(summary = "회원 탈퇴")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200"),
-		@ApiResponse(responseCode = "401",
-			description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치)")
+		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치")
 	})
 	@DeleteMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> withdraw(@PathVariable(value = "seq") Long seq,
@@ -134,8 +131,7 @@ public class UserController {
 
 	@Operation(summary = "회원 정보 조회")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200",
-			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
+		@ApiResponse(responseCode = "200", description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
 		@ApiResponse(responseCode = "404", description = "조회 회원 정보 없음")
 	})
 	@GetMapping("/{seq}")
@@ -153,7 +149,7 @@ public class UserController {
 	@Operation(summary = "프로필 이미지: 기본 이미지로 변경")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200"),
-		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치)")
+		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치")
 	})
 	@PutMapping("/{seq}/img")
 	ResponseEntity<Map<String, Object>> updateProfileDefaultImg(@PathVariable(value = "seq") Long seq,
@@ -172,9 +168,8 @@ public class UserController {
 	@Operation(summary = "프로필 정보 업데이트",
 		description = "필수 값: name, nickname 선택 값: birth, gender, MultipartFile")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200",
-			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
-		@ApiResponse(responseCode = "401", description = "INVALID_USER (회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치)")
+		@ApiResponse(responseCode = "200", description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
+		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치")
 	})
 	@PutMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> updateProfile(@PathVariable(value = "seq") Long seq,
