@@ -8,6 +8,7 @@ import group from "../../../asset/image/group.png";
 import SettingSeedMoney from "../molecules/SettingSeedMoney";
 import SettingInvite from "../molecules/SettingInvite";
 import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
+import SettingTitle from "../molecules/SettingTitle";
 
 interface Props {
   showModal: boolean;
@@ -40,6 +41,12 @@ const CreateModal = ({ showModal, closeModal }: Props) => {
       inviteUsers={groupSetting.inviteUsers}
       unInviteUsers={groupSetting.unInviteUsers}
       dispatch={dispatch}
+    />,
+    <SettingTitle
+      closeModal={closeModal}
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+      dispatch={dispatch}
+      title={groupSetting.title}
     />,
   ];
 

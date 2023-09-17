@@ -8,6 +8,7 @@ type Action =
   | { type: "ADD_INVITE"; payload: GroupInviteUser }
   | { type: "DELETE_INVITE"; payload: GroupInviteUser }
   | { type: "ALL_USER"; payload: GroupInviteUser[] }
+  | { type: "TITLE"; payload: string }
   | { type: "RESET" };
 
 export const useCreateModal = () => {
@@ -21,6 +22,7 @@ export const useCreateModal = () => {
     seedMoney: 10000000,
     unInviteUsers: [],
     inviteUsers: [],
+    title: "",
   };
 
   const reducer = (groupSetting: GroupSetting, action: Action): GroupSetting => {
@@ -51,7 +53,8 @@ export const useCreateModal = () => {
           ),
           unInviteUsers: [...groupSetting.unInviteUsers, action.payload as GroupInviteUser],
         };
-
+      case "TITLE":
+        return { ...groupSetting, title: action.payload as string };
       case "RESET":
         return initGroupSetting;
       default:

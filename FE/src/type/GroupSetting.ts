@@ -11,4 +11,5 @@ export interface GroupSetting {
   seedMoney: SeedMoney;
   unInviteUsers: GroupInviteUser[] | [];
   inviteUsers: GroupInviteUser[] | [];
+  title: string;
 }
