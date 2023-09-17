@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { login } from "../../../api/account";
-import { LoginFormValue } from "../../../type/Accounts";
+import { LoginFormValue, LoginResultValue } from "../../../type/Accounts";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../../store/store";
@@ -10,11 +10,17 @@ export const useGeneralLogin = () => {
 
   const onLongin = async (user: LoginFormValue) => {
     try {
-      const res = await login(user);
+      const res: LoginResultValue = await login(user);
       toast.success("로그인 되었습니다.");
-      navigate("/");
       console.log(res);
-      setAccessToken(res.accessToken);
+      const { accessToken: resAccessToken, ...others } = res;
+      if (accessToken) {
+        setAccessToken(accessToken);
+      }
+      setUserInfo(others);
+      navigate("/");
+      console.log(accessToken);
+      console.log(userInfo);
     } catch (err) {
       if (!(err as AxiosError)?.response) {
         toast.error("문제가 발생하였습니다. 다시 시도해 주세요.");

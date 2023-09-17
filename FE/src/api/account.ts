@@ -25,11 +25,16 @@ export const signup = async (user: SignupSubmitFormValue): Promise<ApiSuccessMes
   const { data } = await api.post("/users", user);
   return data;
 };
-export const login = async (user: LoginFormValue): Promise<LoginResultValue | void> => {
+export const login = async (user: LoginFormValue): Promise<LoginResultValue> => {
   const { data } = await api.post("/login/login/inbest", user);
   return data;
 };
-export const oauthlogin = async (authorizeCode: string, provider: string): Promise<LoginResultValue | void> => {
+export const oauthlogin = async (authorizeCode: string, provider: string): Promise<LoginResultValue> => {
   const { data } = await api.post(`/login/login/${provider}`, { authorizeCode });
+  return data;
+};
+
+export const logoutKakao = async (authorizeCode: string): Promise<ApiSuccessMessage> => {
+  const { data } = await api.post("/login/logout", { authorizeCode });
   return data;
 };

@@ -23,8 +23,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="login" element={<LoginSignup />} />
               <Route path="/invest" element={<InvestMain />} />
-              <Route path="login/oauth/kakao" element={<Oauth />} />
-              <Route path="login/oauth/naver" element={<Oauth />} />
+              <Route path="login/oauth2/code/kakao" element={<Oauth />} />
+              <Route path="login/oauth2/code/naver" element={<Oauth />} />
             </Routes>
           </Layout>
         </AnimatePresence>

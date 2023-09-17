@@ -19,7 +19,7 @@ export interface LoginFormValue {
 }
 
 export interface LoginResultValue extends ApiSuccessMessage {
-  accessToken: string;
+  accessToken?: string;
   seq: number;
   profileImgSearchName: string;
   role: string;

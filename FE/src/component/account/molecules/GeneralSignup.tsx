@@ -138,7 +138,7 @@ const GeneralLogin = () => {
             <div className="errorMessage">{errors.code?.message}</div>
           </>
         )}
-        {isSentEmailCode && (
+        {isConfirmEmail && (
           <p className="text-left text-sm font-regular">
             이메일을 새로 인증하시려면
             <span

@@ -1,9 +1,8 @@
 import Modal from "react-modal";
 import "animate.css";
 import { ProfileUpdateFormValue } from "../../../type/ProfileUpdateForm";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import Cropper, { ReactCropperElement } from "react-cropper";
+import Cropper from "react-cropper";
 import { useProfileUpdate } from "./useProfileUpdate";
 import "cropperjs/dist/cropper.css";
 import tempimg from "../../../asset/image/default_image.png";
@@ -14,21 +13,18 @@ const ProfileUpdate = ({
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { beforeCropUrl, setImgInfo, imgInfo, isChanged, setIsChanged } = useProfileUpdate();
-  const cropperRef = useRef<ReactCropperElement>(null);
-  const selectImg = useRef<HTMLInputElement | null>(null);
-  const onCrop = () => {
-    const cropper = cropperRef.current?.cropper;
-    cropper?.getCroppedCanvas().toBlob((blob) => {
-      const formData = new FormData();
-      formData.append("file", blob!);
-      console.log(blob);
-      console.log(formData);
-      for (const [value] of formData.entries()) {
-        console.log(value);
-      }
-    });
-  };
+  const {
+    beforeCropUrl,
+    setImgInfo,
+    imgInfo,
+    isChanged,
+    setIsChanged,
+    selectImg,
+    onCrop,
+    cropperRef,
+    cropImg,
+    isCropped,
+  } = useProfileUpdate();
   const {
     control,
     register,
@@ -52,7 +48,7 @@ const ProfileUpdate = ({
           <form onSubmit={handleSubmit((data) => console.log(data))}>
             <div className="text-center">
               <div className="flex justify-center">
-                <img src={isChanged ? beforeCropUrl! : tempimg} alt="유저이미지" className="w-48 h-48 rounded-full" />
+                <img src={isCropped ? cropImg! : tempimg} alt="유저이미지" className="w-48 h-48 rounded-full" />
               </div>
               <div className="bg-gray-200 mt-3 px-3 flex items-center mx-auto font-regular rounded-md text-sm w-2/3 border-2 border-gray-400 h-10">
                 <span className="align-middle whitespace-nowrap overflow-hidden overflow-ellipsis">
