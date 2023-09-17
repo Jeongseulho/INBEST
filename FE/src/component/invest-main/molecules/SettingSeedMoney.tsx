@@ -7,11 +7,11 @@ interface Props {
   onNextStep: () => void;
   seedMoney: SeedMoney;
   dispatch: React.Dispatch<{ type: "SEED_MONEY"; payload: SeedMoney }>;
-  closeModal: () => void;
+  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
 
-const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, closeModal, resetStepAndGroupSetting }: Props) => {
+const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, closeCreateModal, resetStepAndGroupSetting }: Props) => {
   const { activeTag, setActiveTag } = useActiveTag();
 
   return (
@@ -64,7 +64,7 @@ const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, closeModal, resetSt
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeModal();
+            closeCreateModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

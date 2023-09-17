@@ -1,11 +1,11 @@
 interface Props {
-  closeModal: () => void;
+  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
   dispatch: React.Dispatch<{ type: "TITLE"; payload: string }>;
   title: string;
 }
 
-const SettingTitle = ({ closeModal, resetStepAndGroupSetting, dispatch, title }: Props) => {
+const SettingTitle = ({ closeCreateModal, resetStepAndGroupSetting, dispatch, title }: Props) => {
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
@@ -28,7 +28,7 @@ const SettingTitle = ({ closeModal, resetStepAndGroupSetting, dispatch, title }:
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeModal();
+            closeCreateModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

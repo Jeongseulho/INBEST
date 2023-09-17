@@ -12,12 +12,12 @@ interface Props {
   dispatch: React.Dispatch<Action>;
   inviteUsers: GroupInviteUser[] | [];
   unInviteUsers: GroupInviteUser[] | [];
-  closeModal: () => void;
+  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
 const SettingInvite = ({
   onNextStep,
-  closeModal,
+  closeCreateModal,
   resetStepAndGroupSetting,
   dispatch,
   inviteUsers,
@@ -99,7 +99,7 @@ const SettingInvite = ({
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeModal();
+            closeCreateModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

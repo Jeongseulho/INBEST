@@ -6,10 +6,10 @@ interface Props {
   onNextStep: () => void;
   period: Period;
   dispatch: React.Dispatch<{ type: "PERIOD"; payload: Period }>;
-  closeModal: () => void;
+  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const SettingPeriod = ({ onNextStep, period, dispatch, closeModal, resetStepAndGroupSetting }: Props) => {
+const SettingPeriod = ({ onNextStep, period, dispatch, closeCreateModal, resetStepAndGroupSetting }: Props) => {
   const { activeTag, setActiveTag } = useActiveTag();
 
   return (
@@ -60,7 +60,7 @@ const SettingPeriod = ({ onNextStep, period, dispatch, closeModal, resetStepAndG
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeModal();
+            closeCreateModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"
