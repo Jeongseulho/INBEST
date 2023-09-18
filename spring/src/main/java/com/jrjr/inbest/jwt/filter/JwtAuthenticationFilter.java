@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.jrjr.inbest.global.util.CookieUtil;
 import com.jrjr.inbest.jwt.dto.AccessTokenDto;
 import com.jrjr.inbest.jwt.service.JwtProvider;
 import com.jrjr.inbest.login.dto.LoginDto;
@@ -45,7 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		log.info("accessToken: {}", accessToken.orElse("accessToken 없음"));
 
-		Optional<String> refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
+		// Optional<String> refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
+		Optional<String> refreshToken = jwtProvider.resolveRefreshToken(request);
 		log.info("refreshToken: {}", refreshToken.orElse("refreshToken 없음"));
 
 		// accessToken 없을 때 -> refreshToken 검사 후 재발급
