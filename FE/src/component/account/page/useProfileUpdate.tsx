@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRef } from "react";
 import { ReactCropperElement } from "react-cropper";
+
 export const useProfileUpdate = () => {
   const [imgInfo, setImgInfo] = useState<FileList | null>(null);
   const [beforeCropUrl, setBeforeCropUrl] = useState<string | null>(null);
@@ -21,8 +22,16 @@ export const useProfileUpdate = () => {
       }
       setCropImg(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
       setIsCropped(true);
+      setIsChanged(false);
     });
   };
+
+  // copper에 취소 버튼
+  const onCancel = () => {
+    setIsChanged(false);
+  };
+  const [isDefaultImg, setIsDefaultImg] = useState(false);
+
   useEffect(() => {
     if (imgInfo && imgInfo.length > 0) {
       setBeforeCropUrl(URL.createObjectURL(imgInfo[0]));
@@ -30,6 +39,13 @@ export const useProfileUpdate = () => {
       setBeforeCropUrl(null);
     }
   }, [imgInfo]);
+
+  useEffect(() => {
+    console.log("modalMOunt");
+    return console.log("mdaols");
+  }, []);
+
+  useEffect(() => {});
   return {
     imgInfo,
     setImgInfo,
@@ -41,5 +57,8 @@ export const useProfileUpdate = () => {
     cropperRef,
     cropImg,
     isCropped,
+    onCancel,
+    setIsDefaultImg,
+    isDefaultImg,
   };
 };

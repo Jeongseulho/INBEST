@@ -1,8 +1,9 @@
 import { apiInstance } from "./index";
+import { instanceWithAuth } from "./interceptors";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
-import { SignupSubmitFormValue, LoginFormValue, LoginResultValue } from "../type/Accounts";
+import { SignupSubmitFormValue, LoginFormValue, LoginResultValue, GetUserInfo } from "../type/Accounts";
 const api = apiInstance();
-
+const apiWithAuth = instanceWithAuth();
 export const checkEmail = async (email: string): Promise<ApiSuccessMessage | void> => {
   const { data } = await api.get("/users/inquiry-email", { params: { email: email } });
   return data;
@@ -34,7 +35,11 @@ export const oauthlogin = async (authorizeCode: string, provider: string): Promi
   return data;
 };
 
-export const logoutKakao = async (authorizeCode: string): Promise<ApiSuccessMessage> => {
-  const { data } = await api.post("/login/logout", { authorizeCode });
+export const logout = async (): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.post("/login/logout");
+  return data;
+};
+export const getUserInfo = async (seq: number): Promise<GetUserInfo> => {
+  const { data } = await apiWithAuth.get(`/users/${seq}`);
   return data;
 };

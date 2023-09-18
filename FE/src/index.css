@@ -58,6 +58,12 @@ body{
 .disable-btn {
   @apply rounded-md bg-gray-600 text-white;
 }
+.jongRyul-primary {
+  @apply rounded-md bg-primary text-white;
+}
+.jongRyul-gray{
+  @apply rounded-md bg-gray-200;
+}
 .signup-input{
   @apply border-gray-400 border p-2 rounded-md;
 }

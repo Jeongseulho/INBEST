@@ -6,16 +6,17 @@ import { useNavigate } from "react-router-dom";
 import useStore from "../../../store/store";
 export const useGeneralLogin = () => {
   const navigate = useNavigate();
-  const { accessToken, userInfo, setAccessToken, setUserInfo } = useStore();
+  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = useStore();
 
   const onLongin = async (user: LoginFormValue) => {
     try {
       const res: LoginResultValue = await login(user);
       toast.success("로그인 되었습니다.");
       console.log(res);
-      const { accessToken: resAccessToken, ...others } = res;
-      if (accessToken) {
-        setAccessToken(accessToken);
+      const { accessToken: resAccessToken, refreshToken, ...others } = res;
+      if (resAccessToken) {
+        setAccessToken(resAccessToken);
+        setRefreshToken(refreshToken!);
       }
       setUserInfo(others);
       navigate("/");
