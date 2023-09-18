@@ -25,7 +25,7 @@ public class CookieUtil {
 	public static void createCookie(HttpServletResponse response, String name, String value) {
 		ResponseCookie responseCookie = ResponseCookie.from(name, value)
 			.path("/")
-			.sameSite("Lax")
+			.sameSite("None")
 			.httpOnly(true)
 			.build();
 		response.setHeader("Set-Cookie", responseCookie.toString());
@@ -34,7 +34,7 @@ public class CookieUtil {
 	public static void deleteCookie(HttpServletResponse response, String name) {
 		ResponseCookie responseCookie = ResponseCookie.from(name, "")
 			.path("/")
-			.sameSite("Lax")
+			.sameSite("None")
 			.maxAge(0)
 			.build();
 		response.setHeader("Set-Cookie", responseCookie.toString());

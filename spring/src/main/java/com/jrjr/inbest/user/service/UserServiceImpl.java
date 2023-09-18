@@ -79,8 +79,8 @@ public class UserServiceImpl implements UserService {
 				.birthyear(userDto.getBirthyear())
 				.birthday(userDto.getBirthday())
 				.gender(userDto.getGender())
-				.profileImgOriginalName("logo.png")
-				.profileImgSearchName("logo.png")
+				.profileImgOriginalName("DefaultProfile.png")
+				.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
 				.build()
 		);
 
@@ -125,8 +125,8 @@ public class UserServiceImpl implements UserService {
 				.birthyear(birthyear)
 				.birthday(birthday)
 				.gender(joinDto.getGender())
-				.profileImgOriginalName("logo.png")
-				.profileImgSearchName("logo.png")
+				.profileImgOriginalName("DefaultProfile.png")
+				.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
 				.build()
 		);
 

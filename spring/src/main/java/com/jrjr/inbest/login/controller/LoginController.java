@@ -44,7 +44,7 @@ public class LoginController {
 	@Operation(summary = "로그인", description = "일반 로그인 필수 값: email, password, 소셜 로그인 필수 값: authorizeCode")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
-			description = "grantType, accessToken, seq, profileImgSearchName, role, provider 반환"),
+			description = "grantType, accessToken, refreshToken, seq, profileImgSearchName, role, provider 반환"),
 		@ApiResponse(responseCode = "401", description = "올바르지 않은 provider, 회원 정보 없음, 탈퇴한 회원, 비밀번호 불일치, 가입 경로 불일치")
 	})
 	@PostMapping("/login/{provider}")
@@ -63,7 +63,10 @@ public class LoginController {
 		};
 
 		// refreshToken 생성 후 cookie 저장
-		CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
+		// CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
+
+		// refreshToken 생성
+		String refreshToken = jwtProvider.generateRefreshToken(userDto.getEmail());
 
 		// accessToken 생성 후 반환
 		AccessTokenDto accessTokenDto
@@ -72,6 +75,7 @@ public class LoginController {
 		resultMap.put("success", true);
 		resultMap.put("grantType", accessTokenDto.getGrantType());
 		resultMap.put("accessToken", accessTokenDto.getAccessToken());
+		resultMap.put("refreshToken", refreshToken);
 		resultMap.put("seq", userDto.getSeq());
 		resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
 		resultMap.put("role", userDto.getRole());
