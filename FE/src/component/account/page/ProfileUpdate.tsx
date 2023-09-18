@@ -1,6 +1,6 @@
 import Modal from "react-modal";
 import "animate.css";
-import { ProfileUpdateFormValue } from "../../../type/ProfileUpdateForm";
+import { SignupFormValue } from "../../../type/Accounts";
 import { useForm } from "react-hook-form";
 import Cropper from "react-cropper";
 import defaltImg from "../../../asset/image/default_image.png";
@@ -9,7 +9,7 @@ import "cropperjs/dist/cropper.css";
 import useStore from "../../../store/store";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
 import { GetUserInfo } from "../../../type/Accounts";
-
+import InputDatePicker from "../atoms/InputDatePicker";
 const ProfileUpdate = ({
   showModal,
   setShowModal,
@@ -33,12 +33,18 @@ const ProfileUpdate = ({
     onCancel,
     setIsDefaultImg,
     isDefaultImg,
+    onCheckNickname,
+    setIsChangedNickname,
+    isCheckedNickname,
   } = useProfileUpdate();
   const { userInfo } = useStore();
   const {
     handleSubmit,
+    getValues,
+    register,
+    control,
     formState: { errors },
-  } = useForm();
+  } = useForm<SignupFormValue>();
 
   return (
     <>
@@ -78,21 +84,23 @@ const ProfileUpdate = ({
                   기본이미지로 변경
                 </button>
               )}
-              <div className="bg-gray-200 mt-3 px-3 flex items-center mx-auto font-regular rounded-md text-sm w-2/3 border-2 border-gray-400 h-10">
-                <span className="align-middle whitespace-nowrap overflow-hidden overflow-ellipsis">
-                  {imgInfo && imgInfo.length > 0 && imgInfo[0].name}
-                </span>
-              </div>
-              <button
-                className="jongRyul-primary  w-20 h-8
+              <div className="flex">
+                <div className="bg-gray-200 mt-3 px-3 flex items-center mx-auto font-regular rounded-md text-sm w-full border-2 border-gray-400 h-10">
+                  <span className="align-middle whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    {imgInfo && imgInfo.length > 0 && imgInfo[0].name}
+                  </span>
+                </div>
+                <button
+                  className="jongRyul-primary  w-24 h-10 ms-3
 								my-3"
-                onClick={(e) => {
-                  e.preventDefault();
-                  selectImg.current?.click();
-                }}
-              >
-                사진 찾기
-              </button>
+                  onClick={(e) => {
+                    e.preventDefault();
+                    selectImg.current?.click();
+                  }}
+                >
+                  사진 찾기
+                </button>
+              </div>
               <input
                 onChange={(e) => {
                   if (!e.target.files || e.target.files.length === 0) {
@@ -149,15 +157,80 @@ const ProfileUpdate = ({
               </div>
             )}
             <div>
-              <p className="text-xl font-bold">닉네임</p>
+              <p>닉네임</p>
               <div className="flex my-2">
-                <input type="text" className="signup-input w-full" defaultValue={myInfo?.nickname} />
-                <button className="ms-3 w-24 jongRyul-primary">중복확인</button>
+                <input
+                  type="text"
+                  disabled={isCheckedNickname}
+                  className="signup-input w-full"
+                  placeholder="닉네임을 입력해 주세요"
+                  defaultValue={myInfo?.nickname}
+                  {...register("nickname", {
+                    required: "닉네임은 필수 입력 사항입니다.",
+                  })}
+                  onChange={(e) => {
+                    if (e.target.value === myInfo?.nickname) {
+                      setIsChangedNickname(false);
+                    } else {
+                      setIsChangedNickname(true);
+                    }
+                  }}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      onCheckNickname(getValues("nickname"));
+                    }
+                  }}
+                />
+                <button
+                  className="ms-3 w-24 jongRyul-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onCheckNickname(getValues("nickname"));
+                  }}
+                >
+                  중복확인
+                </button>
               </div>
+              <div className="grid grid-cols-2">
+                <div>
+                  <label htmlFor="birth" className="mt-5 text-left">
+                    <p className="my-2 font-regular">생년월일</p>
+                  </label>
+                  <div className="flex justify-between items-center">
+                    <InputDatePicker control={control} originValue={myInfo?.birth!} />
+                  </div>
+                </div>
+                <div>
+                  <p className="my-2 font-regular ms-3">성별</p>
+
+                  <div className="flex justify-between items-center signup-input w-full mx-3">
+                    <div className="flex">
+                      <input {...register("gender")} id="male" type="radio" value={1} className="me-2" />
+                      <label htmlFor="male">남</label>
+                    </div>
+                    <div className="flex">
+                      <input {...register("gender")} id="female" type="radio" value={2} className="me-2" />
+                      <label htmlFor="female">여</label>
+                    </div>
+                    <div className="flex">
+                      <input {...register("gender")} defaultChecked id="none" type="radio" value={0} className="me-2" />
+                      <label htmlFor="none">선택안함</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center mt-20">
+              <button className="jongRyul-gray w-24 h-12 me-3" onClick={() => setShowModal(false)}>
+                닫기
+              </button>
+              <button className="jongRyul-primary w-24 h-12 ms-3" onClick={() => setShowModal(false)}>
+                변경하기
+              </button>
             </div>
           </form>
         </div>
-        <button onClick={() => setShowModal(false)}>닫기</button>
       </Modal>
     </>
   );

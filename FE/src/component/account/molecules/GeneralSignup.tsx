@@ -272,7 +272,7 @@ const GeneralLogin = () => {
             <p className="my-2 font-regular">생년월일</p>
           </label>
           <div className="flex justify-between items-center">
-            <InputDatePicker control={control} />
+            <InputDatePicker originValue={null} control={control} />
           </div>
         </div>
         <div className="grid grid-rows-2">

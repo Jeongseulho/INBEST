@@ -7,9 +7,14 @@ import { ko } from "date-fns/locale";
 import { Controller, Control } from "react-hook-form";
 import { SignupFormValue } from "../../../type/Accounts";
 
-const InputDatePicker = ({ control }: { control: Control<SignupFormValue> }) => {
+const InputDatePicker = ({
+  control,
+  originValue,
+}: {
+  control: Control<SignupFormValue>;
+  originValue: string | null;
+}) => {
   const { selectedDate, setSelectedDate, month, handleMonthChange, years, months } = useInputDatePicker();
-
   return (
     <div className=" relative">
       <Controller
@@ -22,7 +27,7 @@ const InputDatePicker = ({ control }: { control: Control<SignupFormValue> }) => 
               setSelectedDate(date);
               onChange(format(date!, "yyyy-MM-dd"));
             }}
-            selected={selectedDate}
+            selected={selectedDate ? selectedDate : originValue ? new Date(originValue) : selectedDate}
             dateFormat={"yyyy-MM-dd"}
             maxDate={new Date()}
             locale={ko}

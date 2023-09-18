@@ -11,6 +11,7 @@ import useStore from "../../store/store";
 import { logout } from "../../api/account";
 import { getUserInfo } from "../../api/account";
 import { GetUserInfo } from "../../type/Accounts";
+import { ApiGetUserInfo } from "../../type/Accounts";
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -94,7 +95,8 @@ const Header = () => {
                             onClick={async () => {
                               try {
                                 const res = await getUserInfo(userInfo!.seq);
-                                setMyInfo(res);
+                                setMyInfo(res.UserInfo);
+                                console.log(myInfo);
                                 setShowModal(() => true);
                                 console.log(res);
                               } catch (err) {

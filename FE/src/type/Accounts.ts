@@ -36,3 +36,8 @@ export interface GetUserInfo {
   gender: number;
   profileImgSearchName: string;
 }
+
+export interface ApiGetUserInfo {
+  UserInfo: GetUserInfo;
+  success: boolean;
+}
