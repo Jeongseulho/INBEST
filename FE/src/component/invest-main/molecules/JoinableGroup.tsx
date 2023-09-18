@@ -11,7 +11,7 @@ interface Props {
 
 const JoinableGroup = ({ index, title, isBoostMode, groupMemberCnt, groupLeaderProfileImg }: Props) => {
   return (
-    <div className=" flex justify-between w-full">
+    <div className=" px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer">
       <p className=" w-2">{index}</p>
       <p className=" w-24">{title}</p>
       {isBoostMode ? <BoostModeTag /> : <NormalModeTag />}
