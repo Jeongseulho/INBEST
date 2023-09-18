@@ -1,6 +1,6 @@
 import { create } from "zustand"; // create로 zustand를 불러옵니다.
 import { LoginResultValue } from "../type/Accounts";
-import { devtools, persist } from "zustand/middleware";
+import { devtools, persist, createJSONStorage } from "zustand/middleware";
 interface LoginInfo {
   accessToken: string | null;
   setAccessToken: (token: string | null) => void;
@@ -20,7 +20,7 @@ const useStore = create<LoginInfo>()(
         setUserInfo: (user: LoginResultValue | null) => set({ userInfo: user }),
         setRefreshToken: (refreshToken: string | null) => set({ refreshToken }),
       }),
-      { name: "userStore" }
+      { name: "userStore", storage: createJSONStorage(() => sessionStorage) }
     )
   )
 );

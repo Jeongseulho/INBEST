@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import useStore from "../store/store";
 
 export const setInterceptors = (instance: AxiosInstance) => {
-  // 요청 인터셉터를 설정합니다.
   instance.interceptors.request.use(
     (config) => {
       const { accessToken } = useStore.getState();
@@ -49,9 +48,6 @@ export const setInterceptors = (instance: AxiosInstance) => {
         setUserInfo(null);
         return toast.error("세션이 만료되었습니다. 다시 로그인 해주세요.");
       }
-      // 액세스 토큰이 만료된 경우 새로운 액세스 토큰을 요청합니다.
-
-      // 그 외의 경우 originalRequest의 catch로 에러를 전달합니다.
     }
   );
 
