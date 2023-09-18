@@ -7,5 +7,5 @@ public interface LoginService {
 
 	UserDto login(LoginDto loginDto);
 
-	void logout(LoginDto loginDto, String email);
+	void logout(String email);
 }
