@@ -191,3 +191,7 @@ body{
 ::-webkit-scrollbar-track {
   @apply bg-gray-300
 }
+
+.rc-slider-mark-text {
+  width: 25px;
+}

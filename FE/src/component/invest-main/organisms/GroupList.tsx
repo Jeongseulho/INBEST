@@ -3,7 +3,7 @@ import Group from "../molecules/Group";
 const GroupList = () => {
   const data = [
     {
-      index: 1,
+      seq: 1,
       title: "title1",
       isBoostMode: true,
       groupMemberCnt: 1,
@@ -13,7 +13,7 @@ const GroupList = () => {
       period: 1,
     },
     {
-      index: 2,
+      seq: 2,
       title: "title2",
       isBoostMode: false,
       groupMemberCnt: 2,
@@ -23,7 +23,7 @@ const GroupList = () => {
       period: 1,
     },
     {
-      index: 3,
+      seq: 3,
       title: "title3",
       isBoostMode: true,
       groupMemberCnt: 3,
@@ -33,7 +33,7 @@ const GroupList = () => {
       period: 1,
     },
     {
-      index: 4,
+      seq: 4,
       title: "title4",
       isBoostMode: false,
       groupMemberCnt: 4,
@@ -57,9 +57,10 @@ const GroupList = () => {
         <p className="w-16">진행 기간</p>
       </div>
 
-      {data.map((group) => (
+      {data.map((group, index) => (
         <Group
-          index={group.index}
+          key={group.seq}
+          index={index}
           title={group.title}
           isBoostMode={group.isBoostMode}
           groupMemberCnt={group.groupMemberCnt}

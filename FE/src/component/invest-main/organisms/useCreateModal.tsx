@@ -18,8 +18,8 @@ export const useCreateModal = () => {
   };
 
   const initGroupSetting: GroupSetting = {
-    period: 7,
-    seedMoney: 10000000,
+    period: 1,
+    seedMoney: 0,
     unInviteUsers: [],
     inviteUsers: [],
     title: "",
@@ -28,33 +28,29 @@ export const useCreateModal = () => {
   const reducer = (groupSetting: GroupSetting, action: Action): GroupSetting => {
     switch (action.type) {
       case "PERIOD":
-        return { ...groupSetting, period: action.payload as Period };
+        return { ...groupSetting, period: action.payload };
       case "SEED_MONEY":
-        return { ...groupSetting, seedMoney: action.payload as SeedMoney };
+        return { ...groupSetting, seedMoney: action.payload };
       case "ALL_USER":
         return {
           ...groupSetting,
-          unInviteUsers: action.payload as GroupInviteUser[],
+          unInviteUsers: action.payload,
           inviteUsers: [],
         };
       case "ADD_INVITE":
         return {
           ...groupSetting,
-          inviteUsers: [...groupSetting.inviteUsers, action.payload as GroupInviteUser],
-          unInviteUsers: groupSetting.unInviteUsers.filter(
-            (user) => user.userSeq !== (action.payload as GroupInviteUser).userSeq
-          ),
+          inviteUsers: [...groupSetting.inviteUsers, action.payload],
+          unInviteUsers: groupSetting.unInviteUsers.filter((user) => user.userSeq !== action.payload.userSeq),
         };
       case "DELETE_INVITE":
         return {
           ...groupSetting,
-          inviteUsers: groupSetting.inviteUsers.filter(
-            (user) => user.userSeq !== (action.payload as GroupInviteUser).userSeq
-          ),
-          unInviteUsers: [...groupSetting.unInviteUsers, action.payload as GroupInviteUser],
+          inviteUsers: groupSetting.inviteUsers.filter((user) => user.userSeq !== action.payload.userSeq),
+          unInviteUsers: [...groupSetting.unInviteUsers, action.payload],
         };
       case "TITLE":
-        return { ...groupSetting, title: action.payload as string };
+        return { ...groupSetting, title: action.payload };
       case "RESET":
         return initGroupSetting;
       default:
