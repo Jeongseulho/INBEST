@@ -1,6 +1,6 @@
 import coin from "../../../asset/image/coin.png";
 
-const SeedMoney = () => {
+const SeedMoneyTag = () => {
   return (
     <div>
       <div className=" flex items-end">
@@ -11,4 +11,4 @@ const SeedMoney = () => {
     </div>
   );
 };
-export default SeedMoney;
+export default SeedMoneyTag;

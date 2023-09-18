@@ -1,22 +1,22 @@
-import LinkingModeTag from "../atoms/LinkingModeTag";
 import BoostModeTag from "../atoms/BoostModeTag";
-import SeedMoney from "../atoms/SeedMoney";
-import MeanTier from "../atoms/MeanTier";
-import Period from "../atoms/Period";
+import NormalModeTag from "../atoms/NormalModeTag";
 
-const JoinableGroup = () => {
+interface Props {
+  index: number;
+  title: string;
+  isBoostMode: boolean;
+  groupMemberCnt: number;
+  groupLeaderProfileImg: string;
+}
+
+const JoinableGroup = ({ index, title, isBoostMode, groupMemberCnt, groupLeaderProfileImg }: Props) => {
   return (
-    <div className=" shadow-component flex flex-col">
-      <div>
-        <h3>그룹 이름</h3>
-      </div>
-      <div className=" flex items-center justify-start">
-        <LinkingModeTag />
-        <BoostModeTag />
-      </div>
-      <SeedMoney />
-      <MeanTier />
-      <Period />
+    <div className=" flex justify-between w-full">
+      <p className=" w-2">{index}</p>
+      <p className=" w-24">{title}</p>
+      {isBoostMode ? <BoostModeTag /> : <NormalModeTag />}
+      <p className=" w-16">{groupMemberCnt}</p>
+      <img className=" w-12 h-12 rounded-full" src={groupLeaderProfileImg} />
     </div>
   );
 };
