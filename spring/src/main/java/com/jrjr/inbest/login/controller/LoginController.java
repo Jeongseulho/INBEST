@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
-import com.jrjr.inbest.global.util.CookieUtil;
 import com.jrjr.inbest.jwt.dto.AccessTokenDto;
 import com.jrjr.inbest.jwt.service.JwtProvider;
 import com.jrjr.inbest.login.dto.LoginDto;
@@ -89,16 +88,15 @@ public class LoginController {
 		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 로그아웃하려는 계정의 이메일 불일치"),
 	})
 	@PostMapping("/logout")
-	public ResponseEntity<Map<String, Object>> logout(@RequestBody LoginDto inputLoginDto,
-		HttpServletRequest request,
+	public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request,
 		HttpServletResponse response) {
 		log.info("LoginController - logout 실행");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
-		loginService.logout(inputLoginDto, email); // 인증 후 redis 에서 refreshToken 삭제
-		CookieUtil.deleteCookie(response, "refreshToken"); // cookie 에서 refreshToken 삭제
+		loginService.logout(email); // 인증 후 redis 에서 refreshToken 삭제
+		// CookieUtil.deleteCookie(response, "refreshToken"); // cookie 에서 refreshToken 삭제
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
