@@ -1,15 +1,16 @@
 interface Props {
   text: string;
   payload: number[];
+  period: number[];
+  dispatch: React.Dispatch<{ type: "PERIOD"; payload: number[] }>;
 }
-const PeriodFilterTag = ({ text, payload }: Props) => {
+const PeriodFilterTag = ({ text, payload, period, dispatch }: Props) => {
   return (
     <button
       className={` ${
-        activeTag === tagNum && "bg-lightPrimary bg-opacity-40"
+        period[0] === payload[0] && period[1] === payload[1] && "bg-lightPrimary bg-opacity-40"
       } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
       onClick={() => {
-        setActiveTag(tagNum);
         dispatch({ type: "PERIOD", payload });
       }}
     >

@@ -23,9 +23,9 @@ const PeriodFilterBar = ({ period, dispatch }: Props) => {
   };
 
   return (
-    <div className=" border-2 rounded-lg absolute py-4 px-10 w-full pb-10">
+    <div className=" border-2 rounded-lg py-4 px-10 w-full pb-10">
       <div className=" flex flex-col w-full items-center ">
-        <p className=" mb-4">{`${period[0]}일 ~ ${period[1]}일`}</p>
+        <p className=" mb-4 mr-4">{`${period[0]}일 ~ ${period[1]}일`}</p>
         <Slider
           range
           min={MIN_PERIOD}

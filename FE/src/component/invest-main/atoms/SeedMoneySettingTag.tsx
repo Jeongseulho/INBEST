@@ -3,19 +3,16 @@ import { SeedMoney } from "../../../type/GroupSetting";
 interface Props {
   text: string;
   dispatch: React.Dispatch<{ type: "SEED_MONEY"; payload: SeedMoney }>;
-  activeTag: number;
-  setActiveTag: React.Dispatch<React.SetStateAction<number>>;
-  tagNum: number;
   payload: SeedMoney;
+  seedMoney: SeedMoney;
 }
-const SeedMoneySettingTag = ({ text, dispatch, activeTag, tagNum, setActiveTag, payload }: Props) => {
+const SeedMoneySettingTag = ({ text, dispatch, seedMoney, payload }: Props) => {
   return (
     <button
       className={` ${
-        activeTag === tagNum && "bg-lightPrimary bg-opacity-40"
+        seedMoney === payload && "bg-lightPrimary bg-opacity-40"
       } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
       onClick={() => {
-        setActiveTag(tagNum);
         dispatch({ type: "SEED_MONEY", payload });
       }}
     >

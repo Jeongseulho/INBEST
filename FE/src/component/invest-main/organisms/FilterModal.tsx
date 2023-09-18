@@ -63,7 +63,7 @@ const FilterModal = ({ showFilterModal, closeFilterModal }: Props) => {
             평균티어
           </div>
         </div>
-        {activeTab === FILTER_MODAL_TAB.PERIOD && <FilterPeriodTab groupFilter={groupFilter} dispatch={dispatch} />}
+        {activeTab === FILTER_MODAL_TAB.PERIOD && <FilterPeriodTab period={groupFilter.period} dispatch={dispatch} />}
         {activeTab === FILTER_MODAL_TAB.SEED_MONEY && <FilterSeedMoneyTab />}
         {activeTab === FILTER_MODAL_TAB.MEAN_TIER && <FilterTierTab />}
 

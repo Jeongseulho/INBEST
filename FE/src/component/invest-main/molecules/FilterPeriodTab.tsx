@@ -1,24 +1,21 @@
 import PeriodFilterBar from "../atoms/PeriodFilterBar";
-import { GroupFilter } from "../../../type/GroupFilter";
 import PeriodFilterTag from "../atoms/PeriodFilterTag";
-import { useActiveTag } from "../molecules/useActiveTag";
 
 interface Props {
-  groupFilter: GroupFilter;
+  period: number[];
   dispatch: React.Dispatch<{ type: "PERIOD"; payload: number[] }>;
 }
 
-const FilterPeriodTab = ({ groupFilter, dispatch }: Props) => {
-  const { activeTag, setActiveTag } = useActiveTag();
+const FilterPeriodTab = ({ period, dispatch }: Props) => {
   return (
     <div className="border-b-2 border-opacity-30 h-3/5 mt-6">
       <p className=" text-xl mb-2">기간 필터링</p>
-      <PeriodFilterBar period={groupFilter.period} dispatch={dispatch} />
-      <div className="flex">
-        <PeriodFilterTag text="1주" />
-        <PeriodFilterTag text="2주" />
-        <PeriodFilterTag text="3주" />
-        <PeriodFilterTag text="4주" />
+      <PeriodFilterBar period={period} dispatch={dispatch} />
+      <div className="flex mt-6 gap-2">
+        <PeriodFilterTag text="1주 이하" period={period} payload={[1, 7]} dispatch={dispatch} />
+        <PeriodFilterTag text="1주 ~ 2주" period={period} payload={[7, 14]} dispatch={dispatch} />
+        <PeriodFilterTag text="2주 ~ 3주" period={period} payload={[14, 21]} dispatch={dispatch} />
+        <PeriodFilterTag text="3주 ~ 4주" period={period} payload={[21, 28]} dispatch={dispatch} />
       </div>
     </div>
   );
