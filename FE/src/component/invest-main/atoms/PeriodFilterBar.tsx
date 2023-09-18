@@ -6,17 +6,15 @@ import { Period } from "../../../type/GroupFilter";
 interface Props {
   period: Period;
   dispatch: React.Dispatch<{ type: "PERIOD"; payload: Period }>;
-  previousPeriod: number[];
+  prevPeriod: number[];
 }
 
-const PeriodFilterBar = ({ period, dispatch, previousPeriod }: Props) => {
+const PeriodFilterBar = ({ period, dispatch, prevPeriod }: Props) => {
   return (
     <div className=" border-2 rounded-lg py-4 px-10 w-full pb-10">
       <div className=" flex flex-col w-full items-center ">
         <p className=" mb-4 mr-4">
-          {period === "boostMode"
-            ? `${previousPeriod[0]}일 ~ ${previousPeriod[1]}일`
-            : `${period[0]}일 ~ ${period[1]}일`}
+          {period === "boostMode" ? `${prevPeriod[0]}일 ~ ${prevPeriod[1]}일` : `${period[0]}일 ~ ${period[1]}일`}
         </p>
         <Slider
           range
@@ -37,7 +35,7 @@ const PeriodFilterBar = ({ period, dispatch, previousPeriod }: Props) => {
               dispatch({ type: "PERIOD", payload });
             }
           }}
-          value={period === "boostMode" ? previousPeriod : period}
+          value={period === "boostMode" ? prevPeriod : period}
           disabled={period === "boostMode"}
         />
       </div>

@@ -1,8 +1,7 @@
 import PeriodFilterBar from "../atoms/PeriodFilterBar";
 import PeriodFilterTag from "../atoms/PeriodFilterTag";
 import { Period } from "../../../type/GroupFilter";
-import { useState } from "react";
-import { MIN_PERIOD, MAX_PERIOD } from "../../../constant/FILTER_MIN_MAX";
+import { useFilterPeriodTab } from "./useFilterPeriodTab";
 
 interface Props {
   period: Period;
@@ -10,20 +9,11 @@ interface Props {
 }
 
 const FilterPeriodTab = ({ period, dispatch }: Props) => {
-  const [previousPeriod, setPreviousPeriod] = useState<number[]>([MIN_PERIOD, MAX_PERIOD]);
-  const onChangeCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setPreviousPeriod(period as number[]);
-      dispatch({ type: "PERIOD", payload: "boostMode" });
-    } else {
-      dispatch({ type: "PERIOD", payload: previousPeriod });
-    }
-  };
-
+  const { onChangeCheckboxChange, prevPeriod } = useFilterPeriodTab(period, dispatch);
   return (
     <div className="border-b-2 border-opacity-30 h-3/5 mt-6">
       <p className=" text-xl mb-2">기간 필터링</p>
-      <PeriodFilterBar period={period} dispatch={dispatch} previousPeriod={previousPeriod} />
+      <PeriodFilterBar period={period} dispatch={dispatch} prevPeriod={prevPeriod} />
       <div className="flex mt-6 mb-2 gap-2">
         <PeriodFilterTag text="1주 이하" period={period} payload={[1, 7]} dispatch={dispatch} />
         <PeriodFilterTag text="1주 ~ 2주" period={period} payload={[7, 14]} dispatch={dispatch} />
