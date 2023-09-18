@@ -9,7 +9,7 @@ interface Props {
   groupLeaderProfileImg: string;
 }
 
-const JoinableGroup = ({ index, title, isBoostMode, groupMemberCnt, groupLeaderProfileImg }: Props) => {
+const Group = ({ index, title, isBoostMode, groupMemberCnt, groupLeaderProfileImg }: Props) => {
   return (
     <div className=" px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer">
       <p className=" w-2">{index}</p>
@@ -20,4 +20,4 @@ const JoinableGroup = ({ index, title, isBoostMode, groupMemberCnt, groupLeaderP
     </div>
   );
 };
-export default JoinableGroup;
+export default Group;
