@@ -2,6 +2,7 @@ import CreateModal from "../organisms/CreateModal";
 import { useInvestMain } from "./useInvestMain";
 import FilterModal from "../organisms/FilterModal";
 import GroupList from "../organisms/GroupList";
+import MyGroupList from "../organisms/MyGroupList";
 
 const InvestMain = () => {
   const { showCreateModal, openCreateModal, closeCreateModal, showFilterModal, openFilterModal, closeFilterModal } =
@@ -13,6 +14,7 @@ const InvestMain = () => {
       <button onClick={openFilterModal}>filter 모달</button>
       <FilterModal showFilterModal={showFilterModal} closeFilterModal={closeFilterModal} />
       <GroupList />
+      <MyGroupList />
     </>
   );
 };
