@@ -1,8 +1,10 @@
+import { Period } from "../../../type/GroupFilter";
+
 interface Props {
   text: string;
-  payload: number[];
-  period: number[];
-  dispatch: React.Dispatch<{ type: "PERIOD"; payload: number[] }>;
+  payload: Period;
+  period: Period;
+  dispatch: React.Dispatch<{ type: "PERIOD"; payload: Period }>;
 }
 const PeriodFilterTag = ({ text, payload, period, dispatch }: Props) => {
   return (

@@ -8,10 +8,11 @@ import {
   MIN_MEAN_TIER,
   MAX_MEAN_TIER,
 } from "../../../constant/FILTER_MIN_MAX";
+import { Period, SeedMoney } from "../../../type/GroupFilter";
 
 type Action =
-  | { type: "PERIOD"; payload: number[] }
-  | { type: "SEED_MONEY"; payload: number[] }
+  | { type: "PERIOD"; payload: Period }
+  | { type: "SEED_MONEY"; payload: SeedMoney }
   | { type: "MEAN_TIER"; payload: number[] };
 
 export const useFilterModal = () => {
