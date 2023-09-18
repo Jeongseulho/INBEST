@@ -131,7 +131,7 @@ def register_with_eureka():
     eureka_client.init(
         eureka_server='http://j9d110.p.ssafy.io:8761/',
         app_name="news-service",
-        instance_ip_network="172.17.0.11/16",    # 컨테이너 ip 네트워크
+#       instance_ip_network="172.17.0.11/16",    # 컨테이너 ip 네트워크
         instance_port=8200,  # Django 애플리케이션의 포트
     )
 register_with_eureka()
