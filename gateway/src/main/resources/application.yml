@@ -1,49 +1,7 @@
-server:
-  port: 8101
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    serviceUrl:
-      defaultZone: http://j9d110.p.ssafy.io:8761/eureka/
-
 spring:
+  profiles:
+    active: prod
   application:
-    name: gateway-service
-  cloud:
-    loadbalancer:
-      ribbon:
-        enabled: false
-    gateway:
-      # 서비스 디스커버리에 등록된 서비스를 기반으로 게이트웨이가 경로를 생성하도록 설정한다.
-      discovery.locator:
-        enabled: true
-        lowerCaseServiceId: true
-      routes:
-        - id: spring-service
-          uri: lb://spring-service
-          predicates:
-            - Path=/spring-service/**
-          filters:
-            - RewritePath=/spring-service/(?<segment>.*), /$\{segment}
-        - id: news-service
-          uri: lb://news-service
-          predicates:
-            - Path=/news-service/**
-          filters:
-            - RewritePath=/news-service/(?<segment>.*), /$\{segment}
-        - id: invest-service
-          uri: lb://invest-service
-          predicates:
-            - Path=/invest-service/**
-          filters:
-            - RewritePath=/invest-service/(?<segment>.*), /$\{segment}
-management:
-  endpoints:
-    web:
-      exposure:
-        include:
-          - "gateway"
-  endpoint:
-    gateway:
-      enabled: true
+    name: gateway
+  config:
+    import: optional:configserver:http://j9d110.p.ssafy.io:9090
