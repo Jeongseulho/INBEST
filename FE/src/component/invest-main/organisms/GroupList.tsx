@@ -9,7 +9,7 @@ const GroupList = () => {
       groupMemberCnt: 1,
       groupLeaderProfileImg: "leader1",
       seedMoney: 10000,
-      meanTier: "플래",
+      meanTierImg: "",
       period: 1,
     },
     {
@@ -19,7 +19,7 @@ const GroupList = () => {
       groupMemberCnt: 2,
       groupLeaderProfileImg: "leader2",
       seedMoney: 10000,
-      meanTier: "다이아",
+      meanTierImg: "",
       period: 1,
     },
     {
@@ -29,7 +29,7 @@ const GroupList = () => {
       groupMemberCnt: 3,
       groupLeaderProfileImg: "leader3",
       seedMoney: 10000,
-      meanTier: "실버",
+      meanTierImg: "",
       period: 1,
     },
     {
@@ -39,7 +39,7 @@ const GroupList = () => {
       groupMemberCnt: 4,
       groupLeaderProfileImg: "leader4",
       seedMoney: 10000,
-      meanTier: "골드",
+      meanTierImg: "",
       period: 1,
     },
   ];
@@ -54,7 +54,7 @@ const GroupList = () => {
         <p className="w-16">그룹장</p>
         <p className="w-16">시드 머니</p>
         <p className="w-16">평균 티어</p>
-        <p className="w-10">기간</p>
+        <p className="w-16">진행 기간</p>
       </div>
 
       {data.map((group) => (
@@ -65,7 +65,7 @@ const GroupList = () => {
           groupMemberCnt={group.groupMemberCnt}
           groupLeaderProfileImg={group.groupLeaderProfileImg}
           seedMoney={group.seedMoney}
-          meanTier={group.meanTier}
+          meanTierImg={group.meanTierImg}
           period={group.period}
         />
       ))}

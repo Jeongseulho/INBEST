@@ -8,7 +8,7 @@ interface Props {
   groupMemberCnt: number;
   groupLeaderProfileImg: string;
   seedMoney: number;
-  meanTier: string;
+  meanTierImg: string;
   period: number;
 }
 
@@ -19,7 +19,7 @@ const Group = ({
   groupMemberCnt,
   groupLeaderProfileImg,
   seedMoney,
-  meanTier,
+  meanTierImg,
   period,
 }: Props) => {
   return (
@@ -28,10 +28,10 @@ const Group = ({
       <p className="w-24">{title}</p>
       {isBoostMode ? <BoostModeTag /> : <NormalModeTag />}
       <p className="w-16">{groupMemberCnt}</p>
-      <img className=" w-16" src={groupLeaderProfileImg} />
+      <img className=" w-16 h-16" src={groupLeaderProfileImg} />
       <p className=" w-16">{seedMoney}</p>
-      <p className=" w-16">{meanTier}</p>
-      <p className=" w-10">{period} 일</p>
+      <img className=" w-16 h-16" src={meanTierImg} />
+      <p className=" w-16">{period} 일</p>
     </div>
   );
 };
