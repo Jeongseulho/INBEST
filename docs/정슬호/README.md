@@ -218,6 +218,23 @@ const { data } = useQuery('recentFeeds', getRecentFeeds, {
 # 📌to do
 - 그룹 생성 모달 로직 계속
 
+#### 2023/9/18(월)
+
+# 📌what i did
+- 그룹 목록 및 그룹 목록 필터링 모달
+
+# 📌issue & solution
+## 📖 range slider
+### 💢 issue
+처음에는 순수 css로 직접 구현하려고 했는 range slider 막상 해보려니 굉장히 손이 많이 가고 복잡했다
+### 👀 solution
+프로젝트 진도가 빠른편은 아니라 rc-slider라는 라이브러리를 사용하여 빠르게 구현하였다. 최대 최소 값 및 cross 안되게 해주기, disable 상태해주기, step 설정 등등 직접 구현했으면 2,3일은 썼을 듯 하다...
+
+# 📌to do
+- 그룹 생성 모달에서 input 넣어서 직접 입력 되도록 수정
+- 모의 투자 내부 UI 구성
+
+
 
 
 </details>
