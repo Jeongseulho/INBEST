@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-nyj498$!206ft5cc-f_6fym=b0vp7=jvc$4d7uk1qyb#z8*m0('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -71,13 +71,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'finance.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 's09p22d110',
+        'USER': 's09p22d110',
+        'PASSWORD': 'M2hFMrhLIv',
+        'HOST': 'stg-yswa-kr-practice-db-master.mariadb.database.azure.com',
+        'PORT': '3306',
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'test',
+    #     'USER': 'root',
+    #     'PASSWORD': '1234',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306'
     }
 }
 
