@@ -69,5 +69,7 @@ public class LoginServiceImpl implements LoginService {
 		if (refreshTokenRepository.existsById(email)) {
 			refreshTokenRepository.deleteById(email);
 		}
+
+		log.info("로그아웃 성공: {}", email);
 	}
 }
