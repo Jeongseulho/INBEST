@@ -19,6 +19,7 @@ public class CorsConfig {
 		config.addAllowedOrigin("http://j9d110.p.ssafy.io:8102");
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
+		config.addExposedHeader("Authorization");
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
