@@ -13,7 +13,7 @@ const FilterSeedMoneyTab = ({ seedMoney, dispatch }: Props) => {
 
   return (
     <div className="border-b-2 border-opacity-30 h-3/5 mt-6">
-      <p className=" text-xl mb-2">기간 필터링</p>
+      <p className=" text-xl mb-2">시드머니 필터링</p>
       <SeedMoneyFilterBar seedMoney={seedMoney} dispatch={dispatch} prevSeedMoney={prevSeedMoney} />
       <div className="flex mt-6 mb-2 gap-2">
         <SeedMoneyFilterTag

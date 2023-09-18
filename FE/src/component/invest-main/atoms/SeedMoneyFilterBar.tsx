@@ -14,10 +14,10 @@ const SeedMoneyFilterBar = ({ seedMoney, dispatch, prevSeedMoney }: Props) => {
   return (
     <div className=" border-2 rounded-lg py-4 px-10 w-full pb-10">
       <div className=" flex flex-col w-full items-center ">
-        <p className=" mb-4 mr-4">
+        <p className=" mb-4 mr-4 text-xl">
           {seedMoney === "linkingMode"
-            ? `${formatNumberToWon(prevSeedMoney[0])}원 ~ ${formatNumberToWon(prevSeedMoney[1])}원`
-            : `${formatNumberToWon(seedMoney[0])}원 ~ ${formatNumberToWon(seedMoney[1])}원`}
+            ? `${formatNumberToWon(prevSeedMoney[0])} ~ ${formatNumberToWon(prevSeedMoney[1])}`
+            : `${formatNumberToWon(seedMoney[0])} ~ ${formatNumberToWon(seedMoney[1])}`}
         </p>
         <Slider
           range

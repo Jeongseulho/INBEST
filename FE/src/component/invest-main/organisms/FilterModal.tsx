@@ -67,7 +67,9 @@ const FilterModal = ({ showFilterModal, closeFilterModal }: Props) => {
         {activeTab === FILTER_MODAL_TAB.SEED_MONEY && (
           <FilterSeedMoneyTab seedMoney={groupFilter.seedMoney} dispatch={dispatch} />
         )}
-        {activeTab === FILTER_MODAL_TAB.MEAN_TIER && <FilterTierTab />}
+        {activeTab === FILTER_MODAL_TAB.MEAN_TIER && (
+          <FilterTierTab meanTier={groupFilter.meanTier} dispatch={dispatch} />
+        )}
 
         <button className=" absolute bottom-1 right-2 rounded-xl text-white bg-mainDark py-4 px-24 transition-colors duration-500 hover:text-mainDark border-2 border-mainDark hover:bg-opacity-10">
           결과보기

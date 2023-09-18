@@ -13,7 +13,7 @@ const PeriodFilterBar = ({ period, dispatch, prevPeriod }: Props) => {
   return (
     <div className=" border-2 rounded-lg py-4 px-10 w-full pb-10">
       <div className=" flex flex-col w-full items-center ">
-        <p className=" mb-4 mr-4">
+        <p className=" mb-4 mr-4 text-xl">
           {period === "boostMode" ? `${prevPeriod[0]}일 ~ ${prevPeriod[1]}일` : `${period[0]}일 ~ ${period[1]}일`}
         </p>
         <Slider
