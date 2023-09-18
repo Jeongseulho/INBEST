@@ -27,7 +27,7 @@ const FilterPeriodTab = ({ period, dispatch }: Props) => {
           checked={period === "boostMode"}
           onChange={onChangeCheckboxChange}
         />
-        <p className=" text-xl">계좌 연동 모드</p>
+        <p className=" text-xl">가속 모드</p>
       </div>
     </div>
   );

@@ -64,7 +64,9 @@ const FilterModal = ({ showFilterModal, closeFilterModal }: Props) => {
           </div>
         </div>
         {activeTab === FILTER_MODAL_TAB.PERIOD && <FilterPeriodTab period={groupFilter.period} dispatch={dispatch} />}
-        {activeTab === FILTER_MODAL_TAB.SEED_MONEY && <FilterSeedMoneyTab />}
+        {activeTab === FILTER_MODAL_TAB.SEED_MONEY && (
+          <FilterSeedMoneyTab seedMoney={groupFilter.seedMoney} dispatch={dispatch} />
+        )}
         {activeTab === FILTER_MODAL_TAB.MEAN_TIER && <FilterTierTab />}
 
         <button className=" absolute bottom-1 right-2 rounded-xl text-white bg-mainDark py-4 px-24 transition-colors duration-500 hover:text-mainDark border-2 border-mainDark hover:bg-opacity-10">
