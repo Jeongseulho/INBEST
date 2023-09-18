@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import temp_logo from "../../asset/image/temp_logo.png";
-import defaultImg from "../../asset/image/default_image.png";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { FiLogOut } from "react-icons/fi";

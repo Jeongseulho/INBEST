@@ -26,8 +26,6 @@ const ProfileUpdate = ({
     isCropped,
   } = useProfileUpdate();
   const {
-    control,
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm();
