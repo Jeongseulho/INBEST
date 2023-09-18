@@ -47,3 +47,67 @@ react hook form을 이용한 회원가입폼 유효성 검사
     이름 숫자글자 혼용불가
     이메일 재발송 기능 추가
     닉네임 중복 제출 불가 기능 추가, 재검사 추가
+
+## 0917
+로그인, 로그아웃 변경된 로직 맞춰서 새로 구현
+```
+import { AxiosError, AxiosResponse, AxiosInstance } from "axios";
+import { toast } from "react-toastify";
+import useStore from "../store/store";
+
+export const setInterceptors = (instance: AxiosInstance) => {
+  instance.interceptors.request.use(
+    (config) => {
+      const { accessToken } = useStore.getState();
+      const { refreshToken } = useStore.getState();
+      if (accessToken) {
+        config.headers!["Authorization"] = `Bearer ${accessToken}`;
+        config.headers!["RefreshToken"] = refreshToken;
+      }
+      return config;
+    },
+    (error: AxiosError) => {
+      return Promise.reject(error);
+    }
+  );
+
+  // 응답 인터셉터를 설정합니다.
+  instance.interceptors.response.use(
+    (response: AxiosResponse) => {
+      return response;
+    },
+    async (error: AxiosError) => {
+      const { accessToken } = useStore.getState();
+      const { setAccessToken } = useStore.getState();
+      const { setRefreshToken } = useStore.getState();
+      const { setUserInfo } = useStore.getState();
+      const { config } = error;
+      const { data } = error.response!;
+      const { message } = data as { message: string };
+
+      if (message === "REISSUE_ACCESS_TOKEN") {
+        const originRequest = config!;
+        setAccessToken(error.response!.headers.authorization);
+
+        originRequest!.headers.Authorization = `Bearer ${accessToken}`;
+        return instance(originRequest);
+      } else if (message === "ACCESS_DENIED") {
+        return toast.error("권한이 부족합니다.");
+      } else {
+        console.log(message);
+        window.location.assign("/login");
+        setAccessToken(null);
+        setRefreshToken(null);
+        setUserInfo(null);
+        return toast.error("세션이 만료되었습니다. 다시 로그인 해주세요.");
+      }
+    }
+  );
+
+  return instance;
+};
+
+```
+인터셉터를 이용한 accessToken 재발급 구현
+![image](https://github.com/KwonJongryul/mirror/assets/122791001/2236f70c-ae51-4601-9215-b3cbd941c899)
+회원정보 변경 레이아웃 구현
