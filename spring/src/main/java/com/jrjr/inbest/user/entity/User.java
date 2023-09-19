@@ -18,11 +18,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Slf4j
 public class User extends BaseEntity {
 
 	@Id
@@ -98,22 +100,28 @@ public class User extends BaseEntity {
 	}
 
 	public void updateUserInfo(UserDto userDto) {
+		log.info("updateUserInfo 시작");
 		// 닉네임
+		log.info("getNickname ");
 		if (userDto.getNickname() != null) {
 			this.nickname = userDto.getNickname();
 		}
+		log.info("getGender ");
 		// 성별
 		if (userDto.getGender() != null) {
 			this.gender = userDto.getGender();
 		} else {
 			this.gender = 0;
 		}
+		log.info("getBirth 시작");
 		// 생일
 		if (userDto.getBirth() != null) {
+			log.info("getBirth 있음");
 			StringTokenizer st = new StringTokenizer(userDto.getBirth());
 			this.birthyear = st.nextToken();
 			this.birthday = st.nextToken() + st.nextToken();
 		} else {
+			log.info("getBirth 없음");
 			this.birthyear = null;
 			this.birthday = null;
 		}
