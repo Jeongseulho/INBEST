@@ -177,6 +177,7 @@ public class UserController {
 		@ModelAttribute UserDto userDto,
 		HttpServletRequest request) throws IOException {
 		log.info("UserController - updateProfile 실행: {}", seq);
+		log.info("input paremeter : " + userDto.toString());
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
