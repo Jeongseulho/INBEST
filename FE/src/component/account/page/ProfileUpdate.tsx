@@ -182,15 +182,22 @@ const ProfileUpdate = ({
                       setIsChangedNickname(true);
                     }
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      // Enter 키 누르면 사진사라지는 현상제거
+                    }
+                  }}
                   onKeyUp={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-                      onCheckNickname(getValues("nickname"));
+                      onCheckNickname(e.currentTarget.value);
                     }
                   }}
                 />
                 <button
-                  className="ms-3 w-24 jongRyul-primary"
+                  className={`ms-3 w-24 ${isCheckedNickname ? "jongRyul-gray" : "jongRyul-primary"}`}
+                  disabled={isCheckedNickname}
                   onClick={(e) => {
                     e.preventDefault();
                     onCheckNickname(getValues("nickname"));

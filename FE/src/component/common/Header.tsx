@@ -5,25 +5,29 @@ import { Menu, Transition } from "@headlessui/react";
 import { FiLogOut } from "react-icons/fi";
 import { AiFillProfile } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
+import { RiLockPasswordLine } from "react-icons/ri";
 import ProfileUpdate from "../account/page/ProfileUpdate";
 import { useState } from "react";
 import userStore from "../../store/userStore";
 import { logout } from "../../api/account";
 import { getUserInfo } from "../../api/account";
 import { GetUserInfo } from "../../type/Accounts";
+import PasswordUpdate from "../account/page/PasswordUpdate";
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 const Header = () => {
   const [myInfo, setMyInfo] = useState<GetUserInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const accessToken = userStore((state) => state.accessToken);
   const userInfo = userStore((state) => state.userInfo);
   const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
   return (
     <header className="w-full h-[8vh] flex justify-between items-center bg-gray-50  bg-opacity-90">
       <Link to="/">
-        <img className="h-[9vh] mx-24 " src={temp_logo} />
+        <img className="h-[8vh] mx-24 " src={temp_logo} />
       </Link>
       <div className="grid grid-flow-col gap-24 me-20">
         <Link to="/invest" className=" text-center text-xl">
@@ -111,6 +115,27 @@ const Header = () => {
                   </Menu.Item>
                   <Menu.Item>
                     {({ active }) => (
+                      <div
+                        className={classNames(
+                          active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                          " px-4 py-2 flex items-center"
+                        )}
+                      >
+                        <RiLockPasswordLine />
+                        <span className="ms-3">
+                          <button
+                            onClick={() => {
+                              setShowPasswordModal(() => true);
+                            }}
+                          >
+                            비밀번호 변경
+                          </button>
+                        </span>
+                      </div>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
                       <a
                         href="#"
                         className={classNames(
@@ -144,6 +169,7 @@ const Header = () => {
         )}
       </div>
       <ProfileUpdate myInfo={myInfo} showModal={showModal} setShowModal={setShowModal} />
+      <PasswordUpdate showModal={showPasswordModal} setShowModal={setShowPasswordModal} />
     </header>
   );
 };

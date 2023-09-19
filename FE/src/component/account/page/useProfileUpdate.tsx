@@ -26,14 +26,19 @@ export const useProfileUpdate = () => {
 
   // 닉네임 중복확인
   const onCheckNickname = async (nickname: string) => {
-    if (nickname === "") return toast.error("닉네임을 입력해 주세요.");
+    console.log(nickname);
+    console.log(/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]*$/.test(nickname));
+    if (nickname === "") {
+      toast.error("닉네임을 입력해 주세요.");
+      return;
+    }
     if (!/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]*$/.test(nickname)) {
       toast.error("특수문자는 사용할 수 없습니다.");
       return;
     }
     try {
       await checkNickname(nickname);
-      toast.error("이미 존재하는 닉네임입니다");
+      return toast.error("이미 존재하는 닉네임입니다");
     } catch (err: unknown) {
       const { status } = (err as AxiosError).response!;
       switch (status) {
@@ -66,18 +71,11 @@ export const useProfileUpdate = () => {
   const onCrop = () => {
     const cropper = cropperRef.current?.cropper;
     cropper?.getCroppedCanvas().toBlob((blob) => {
-      const formData = new FormData();
-      formData.append("file", blob!);
-      console.log(blob);
-      console.log(formData);
       setCroppedImgBlob(blob);
-      for (const [value] of formData.entries()) {
-        console.log(value);
-      }
-      setCropImg(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
-      setIsCropped(true);
-      setIsChanged(false);
-    });
+    }, "image/png");
+    setCropImg(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+    setIsCropped(true);
+    setIsChanged(false);
   };
 
   // copper에 취소 버튼
@@ -89,22 +87,30 @@ export const useProfileUpdate = () => {
   // 최종 제출
   const onUpdate = async (data: UpdateUser, originBirth: string | null) => {
     console.log(data);
+    console.log(croppedImgBlob);
     if (isChangedNickname && !isCheckedNickname) {
       return toast.error("닉네임 중복검사를 완료해 주세요.");
     }
     const formData = new FormData();
     if (croppedImgBlob) {
-      formData.append("file", croppedImgBlob);
+      formData.append("file", croppedImgBlob, "tmp.png");
     }
-    const user = {
-      nickname: data.nickname,
-      gender: data.gender,
-      birth: data.birth ?? originBirth,
-    };
+    // const userDto = {
+    //   nickname: data.nickname,
+    //   gender: data.gender,
+    //   birth: data.birth ?? originBirth,
+    // };
 
-    formData.append("data", JSON.stringify(user));
+    formData.append("nickname", data.nickname);
+    formData.append("gender", data.gender.toString());
+    // data.birth? formData.append("birth", data.birth ?? originBirth);
+    // console.log(typeof originBirth, originBirth);
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
     try {
-      await upadateUserInfo(userInfo!.seq, formData);
+      const res = await upadateUserInfo(userInfo!.seq, formData);
+      console.log(res);
     } catch (err) {
       console.log(err);
     }

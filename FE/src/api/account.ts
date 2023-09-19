@@ -1,14 +1,7 @@
 import { apiInstance } from "./index";
 import { instanceWithAuth } from "./interceptors";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
-import {
-  SignupSubmitFormValue,
-  LoginFormValue,
-  LoginResultValue,
-  ApiGetUserInfo,
-  GetUserInfo,
-  UpdateUser,
-} from "../type/Accounts";
+import { SignupSubmitFormValue, LoginFormValue, LoginResultValue, ApiGetUserInfo, GetUserInfo } from "../type/Accounts";
 const api = apiInstance();
 const apiWithAuth = instanceWithAuth();
 export const checkEmail = async (email: string): Promise<ApiSuccessMessage | void> => {
@@ -54,6 +47,13 @@ export const upadateUserInfo = async (seq: number, user: FormData): Promise<GetU
   const headers = {
     "Content-Type": "multipart/form-data",
   };
-  const { data } = await apiWithAuth.put(`/users/${seq}`, user, { headers });
+  const { data } = await apiWithAuth.put(`/users/${seq}`, user, {
+    headers: headers,
+  });
+  return data;
+};
+
+export const passwordUpdate = async (seq: number, password: string): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.put(`/users/${seq}/password`, password);
   return data;
 };
