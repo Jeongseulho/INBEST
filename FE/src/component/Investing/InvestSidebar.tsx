@@ -61,70 +61,73 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
   };
 
   return (
-    <Sidebar
-      backgroundColor={theme.sidebar.backgroundColor}
-      rootStyles={{
-        color: theme.sidebar.color,
-        minWidth: "210px",
-        width: "210px",
-        minHeight: "92vh",
-        backgroundColor: "#ffffff",
-      }}
-    >
-      <Menu menuItemStyles={menuItemStyles}>
-        <MenuItem
-          icon={<TbDeviceDesktopAnalytics />}
-          active={activeTab === INVESTING_TAB.INFO}
-          onClick={() => setActiveTab(INVESTING_TAB.INFO)}
-        >
-          그룹 현황
-        </MenuItem>
-        <MenuItem
-          icon={<BsFilePerson />}
-          active={activeTab === INVESTING_TAB.MY_INFO}
-          onClick={() => setActiveTab(INVESTING_TAB.MY_INFO)}
-        >
-          내 현황
-        </MenuItem>
-        <SubMenu label="투자" icon={<LiaCoinsSolid />}>
+    <div className=" bg-white">
+      <h3 className=" my-10 text-center font-regular text-dark">그룹 이름</h3>
+      <Sidebar
+        backgroundColor={theme.sidebar.backgroundColor}
+        rootStyles={{
+          color: theme.sidebar.color,
+          minWidth: "190px",
+          width: "10%",
+          minHeight: "92vh",
+          backgroundColor: "#ffffff",
+        }}
+      >
+        <Menu menuItemStyles={menuItemStyles}>
           <MenuItem
-            icon={<AiOutlineFileSearch />}
-            active={activeTab === INVESTING_TAB.SEARCH}
-            onClick={() => setActiveTab(INVESTING_TAB.SEARCH)}
+            icon={<TbDeviceDesktopAnalytics />}
+            active={activeTab === INVESTING_TAB.INFO}
+            onClick={() => setActiveTab(INVESTING_TAB.INFO)}
           >
-            통합 검색
+            그룹 현황
           </MenuItem>
           <MenuItem
-            icon={<GiSouthKorea />}
-            active={activeTab === INVESTING_TAB.DOMESTIC}
-            onClick={() => setActiveTab(INVESTING_TAB.DOMESTIC)}
+            icon={<BsFilePerson />}
+            active={activeTab === INVESTING_TAB.MY_INFO}
+            onClick={() => setActiveTab(INVESTING_TAB.MY_INFO)}
           >
-            국내 주식
+            내 현황
           </MenuItem>
+          <SubMenu label="투자" icon={<LiaCoinsSolid />}>
+            <MenuItem
+              icon={<AiOutlineFileSearch />}
+              active={activeTab === INVESTING_TAB.SEARCH}
+              onClick={() => setActiveTab(INVESTING_TAB.SEARCH)}
+            >
+              통합 검색
+            </MenuItem>
+            <MenuItem
+              icon={<GiSouthKorea />}
+              active={activeTab === INVESTING_TAB.DOMESTIC}
+              onClick={() => setActiveTab(INVESTING_TAB.DOMESTIC)}
+            >
+              국내 주식
+            </MenuItem>
+            <MenuItem
+              icon={<BsGlobeAmericas />}
+              active={activeTab === INVESTING_TAB.ABROAD}
+              onClick={() => setActiveTab(INVESTING_TAB.ABROAD)}
+            >
+              해외 주식
+            </MenuItem>
+            <MenuItem
+              icon={<BsCurrencyBitcoin />}
+              active={activeTab === INVESTING_TAB.CRYPTO}
+              onClick={() => setActiveTab(INVESTING_TAB.CRYPTO)}
+            >
+              가상 자산
+            </MenuItem>
+          </SubMenu>
           <MenuItem
-            icon={<BsGlobeAmericas />}
-            active={activeTab === INVESTING_TAB.ABROAD}
-            onClick={() => setActiveTab(INVESTING_TAB.ABROAD)}
+            icon={<BsNewspaper />}
+            active={activeTab === INVESTING_TAB.NEWS}
+            onClick={() => setActiveTab(INVESTING_TAB.NEWS)}
           >
-            해외 주식
+            뉴스
           </MenuItem>
-          <MenuItem
-            icon={<BsCurrencyBitcoin />}
-            active={activeTab === INVESTING_TAB.CRYPTO}
-            onClick={() => setActiveTab(INVESTING_TAB.CRYPTO)}
-          >
-            가상 자산
-          </MenuItem>
-        </SubMenu>
-        <MenuItem
-          icon={<BsNewspaper />}
-          active={activeTab === INVESTING_TAB.NEWS}
-          onClick={() => setActiveTab(INVESTING_TAB.NEWS)}
-        >
-          뉴스
-        </MenuItem>
-      </Menu>
-    </Sidebar>
+        </Menu>
+      </Sidebar>
+    </div>
   );
 };
 export default InvestSidebar;
