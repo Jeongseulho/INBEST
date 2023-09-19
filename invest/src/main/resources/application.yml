@@ -1,7 +1,54 @@
+#spring:
+#  profiles:
+#    active: prod
+#  application:
+#    name: invest
+#  config:
+#    import: optional:configserver:http://j9d110.p.ssafy.io:9090
+server:
+  port: 8103
 spring:
-  profiles:
-    active: prod
   application:
-    name: invest
-  config:
-    import: optional:configserver:http://j9d110.p.ssafy.io:9090
+    name: invest-service
+  rabbitmq:
+    host: 13.124.168.191
+    port: 5672
+    username: jrjr
+    password: wnfjdwnfjd
+  datasource:
+    url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S09P22D110?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    driverClassName: org.mariadb.jdbc.Driver
+    username: S09P22D110
+    password: M2hFMrhLIv
+    hikari:
+      maximum-pool-size: 3
+  jpa:
+    hibernate:
+      ddl-auto: create
+      show_sql: true
+  data:
+    mongodb:
+      uri: mongodb+srv://S09P22D110:KbnJjY3PZQ@ssafy.ngivl.mongodb.net/S09P22D110?authSource=admin
+    redis:
+      host: j9d110.p.ssafy.io
+      port: 6380
+      password: wnfjdwnfjd
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://j9d110.p.ssafy.io:8761/eureka
+  instance:
+    hostname: j9d110.p.ssafy.io
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+      base-path : /inbest
+  endpoint:
+    gateway:
+      enabled: true
