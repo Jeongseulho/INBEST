@@ -36,7 +36,6 @@ public class JwtProvider {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final LoginRepository loginRepository;
 	private static final String HEADER_AUTHORIZATION = "Authorization";
-	private static final String HEADER_REFRESH = "RefreshToken";
 	private static final String GRANT_TYPE = "Bearer";
 
 	public AccessTokenDto generateAccessToken(String email, Role role) {
