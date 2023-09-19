@@ -7,20 +7,19 @@ import { AiFillProfile } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
 import ProfileUpdate from "../account/page/ProfileUpdate";
 import { useState } from "react";
-import useStore from "../../store/store";
+import userStore from "../../store/userStore";
 import { logout } from "../../api/account";
 import { getUserInfo } from "../../api/account";
 import { GetUserInfo } from "../../type/Accounts";
-import { ApiGetUserInfo } from "../../type/Accounts";
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 const Header = () => {
   const [myInfo, setMyInfo] = useState<GetUserInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const accessToken = useStore((state) => state.accessToken);
-  const userInfo = useStore((state) => state.userInfo);
-  const { setAccessToken, setUserInfo, setRefreshToken } = useStore();
+  const accessToken = userStore((state) => state.accessToken);
+  const userInfo = userStore((state) => state.userInfo);
+  const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
   return (
     <header className="w-full h-[8vh] flex justify-between items-center bg-gray-50  bg-opacity-90">
       <Link to="/">

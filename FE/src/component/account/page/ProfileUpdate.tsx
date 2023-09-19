@@ -6,7 +6,7 @@ import Cropper from "react-cropper";
 import defaltImg from "../../../asset/image/default_image.png";
 import { useProfileUpdate } from "./useProfileUpdate";
 import "cropperjs/dist/cropper.css";
-import useStore from "../../../store/store";
+import userStore from "../../../store/userStore";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
 import { GetUserInfo } from "../../../type/Accounts";
 import InputDatePicker from "../atoms/InputDatePicker";
@@ -37,7 +37,7 @@ const ProfileUpdate = ({
     setIsChangedNickname,
     isCheckedNickname,
   } = useProfileUpdate();
-  const { userInfo } = useStore();
+  const { userInfo } = userStore();
   const {
     handleSubmit,
     getValues,
@@ -78,14 +78,13 @@ const ProfileUpdate = ({
                     e.preventDefault();
                     setIsDefaultImg(true);
                     setImgInfo(null);
-                    selectImg.current;
                   }}
                 >
                   기본이미지로 변경
                 </button>
               )}
               <div className="flex">
-                <div className="bg-gray-200 mt-3 px-3 flex items-center mx-auto font-regular rounded-md text-sm w-full border-2 border-gray-400 h-10">
+                <div className="bg-gray-200 mt-3 px-3 flex items-center mx-auto font-regular rounded-md text-sm w-4/5 border-2 border-gray-400 h-10">
                   <span className="align-middle whitespace-nowrap overflow-hidden overflow-ellipsis">
                     {imgInfo && imgInfo.length > 0 && imgInfo[0].name}
                   </span>
@@ -192,13 +191,15 @@ const ProfileUpdate = ({
                   중복확인
                 </button>
               </div>
+              <div className="errorMessage">{errors.nickname?.message}</div>
+
               <div className="grid grid-cols-2">
                 <div>
                   <label htmlFor="birth" className="mt-5 text-left">
                     <p className="my-2 font-regular">생년월일</p>
                   </label>
                   <div className="flex justify-between items-center">
-                    <InputDatePicker control={control} originValue={myInfo?.birth!} />
+                    <InputDatePicker control={control} originValue={myInfo ? myInfo.birth : null} />
                   </div>
                 </div>
                 <div>

@@ -1,12 +1,12 @@
 import { AxiosError, AxiosResponse, AxiosInstance } from "axios";
 import { toast } from "react-toastify";
-import useStore from "../store/store";
+import userStore from "../store/userStore";
 
 export const setInterceptors = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
     (config) => {
-      const { accessToken } = useStore.getState();
-      const { refreshToken } = useStore.getState();
+      const { accessToken } = userStore.getState();
+      const { refreshToken } = userStore.getState();
       if (accessToken) {
         config.headers!["Authorization"] = `Bearer ${accessToken}`;
         config.headers!["RefreshToken"] = refreshToken;
@@ -24,10 +24,10 @@ export const setInterceptors = (instance: AxiosInstance) => {
       return response;
     },
     async (error: AxiosError) => {
-      const { accessToken } = useStore.getState();
-      const { setAccessToken } = useStore.getState();
-      const { setRefreshToken } = useStore.getState();
-      const { setUserInfo } = useStore.getState();
+      const { accessToken } = userStore.getState();
+      const { setAccessToken } = userStore.getState();
+      const { setRefreshToken } = userStore.getState();
+      const { setUserInfo } = userStore.getState();
       const { config } = error;
       const { data } = error.response!;
       const { message } = data as { message: string };

@@ -32,8 +32,8 @@ export interface GetUserInfo {
   seq: number;
   email: string;
   nickname: string;
-  birth: string;
-  gender: number;
+  birth: string | null;
+  gender: [Male, Female, NoneGender];
   profileImgSearchName: string;
 }
 

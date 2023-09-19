@@ -3,10 +3,10 @@ import { login } from "../../../api/account";
 import { LoginFormValue, LoginResultValue } from "../../../type/Accounts";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import useStore from "../../../store/store";
+import userStore from "../../../store/userStore";
 export const useGeneralLogin = () => {
   const navigate = useNavigate();
-  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = useStore();
+  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
 
   const onLongin = async (user: LoginFormValue) => {
     try {

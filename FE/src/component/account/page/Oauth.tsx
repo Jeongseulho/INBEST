@@ -2,14 +2,14 @@ import { useLocation } from "react-router-dom";
 import { oauthlogin } from "../../../api/account";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useStore from "../../../store/store";
+import userStore from "../../../store/userStore";
 import { toast } from "react-toastify";
 const Oauth = () => {
   const location = useLocation();
   const queryString = location.search;
   const params = new URLSearchParams(queryString);
   const provider = location.pathname.slice(-5);
-  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = useStore();
+  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
   const navigate = useNavigate();
   const authorizeCode = params.get("code");
 

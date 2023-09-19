@@ -9,7 +9,7 @@ interface LoginInfo {
   refreshToken: string | null;
   setRefreshToken: (token: string | null) => void;
 }
-const useStore = create<LoginInfo>()(
+const userStore = create<LoginInfo>()(
   devtools(
     persist(
       (set) => ({
@@ -25,4 +25,4 @@ const useStore = create<LoginInfo>()(
   )
 );
 
-export default useStore;
+export default userStore;
