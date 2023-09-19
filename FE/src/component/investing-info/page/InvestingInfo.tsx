@@ -10,7 +10,7 @@ interface Props {
 const InvestingInfo = ({ groupCode }: Props) => {
   console.log(groupCode);
   return (
-    <div className=" grid grid-cols-3 grid-rows-2 gap-10">
+    <div className=" grid grid-cols-9 grid-rows-4 gap-10">
       <Ranking />
       <Period />
       <SeedMoney />
