@@ -121,3 +121,12 @@
 ## 1. django - MariaDB 연결
 
 ## 2. django - MongoDB 연결
+
+
+# 09-19(화)
+
+## 1. company data DB에 생성
+
+## 2. company table에 기업코드, 산업코드 추가
+
+## 3. 산업코드 table 생성 및 연결
