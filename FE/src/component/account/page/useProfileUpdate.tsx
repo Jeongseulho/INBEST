@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useRef } from "react";
 import { ReactCropperElement } from "react-cropper";
-import { checkNickname } from "../../../api/account";
+import { checkNickname, upadateUserInfo } from "../../../api/account";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import { UpdateUser } from "../../../type/Accounts";
+import userStore from "../../../store/userStore";
 export const useProfileUpdate = () => {
+  const { userInfo } = userStore();
   // input에 담은 이미지 정보
-  const [imgInfo, setImgInfo] = useState<FileList | null>(null);
+  const [imgInfo, setImgInfo] = useState<File | null>(null);
   // 자르기전 이미지 url(input에 담은거 변환, cropper에 보여줘야됨)
   const [beforeCropUrl, setBeforeCropUrl] = useState<string | null>(null);
   // input파일 바뀌었는지(copper 보여줄지 결정하는 함수)
@@ -16,13 +19,14 @@ export const useProfileUpdate = () => {
   const cropperRef = useRef<ReactCropperElement>(null);
   const selectImg = useRef<HTMLInputElement | null>(null);
   const [cropImg, setCropImg] = useState<string | undefined>("");
-
+  const [croppedImgBlob, setCroppedImgBlob] = useState<Blob | null>(null);
   // 닉네임 바뀌었는데 중복검사 안했으면 못바꾸게 해야됨
   const [isChangedNickname, setIsChangedNickname] = useState(false);
   const [isCheckedNickname, setIsCheckedNickname] = useState(false);
 
   // 닉네임 중복확인
   const onCheckNickname = async (nickname: string) => {
+    if (nickname === "") return toast.error("닉네임을 입력해 주세요.");
     if (!/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]*$/.test(nickname)) {
       toast.error("특수문자는 사용할 수 없습니다.");
       return;
@@ -44,7 +48,21 @@ export const useProfileUpdate = () => {
       }
     }
   };
-
+  // 닫으면 다 리셋해야됨
+  const onReset = () => {
+    setImgInfo(null);
+    // 자르기전 이미지 url(input에 담은거 변환, cropper에 보여줘야됨)
+    setBeforeCropUrl(null);
+    // input파일 바뀌었는지(copper 보여줄지 결정하는 함수)
+    setIsChanged(false);
+    // 잘랐는지
+    setIsCropped(false);
+    setCropImg("");
+    // 닉네임 바뀌었는데 중복검사 안했으면 못바꾸게 해야됨
+    setIsChangedNickname(false);
+    setCroppedImgBlob(null);
+    setIsCheckedNickname(false);
+  };
   const onCrop = () => {
     const cropper = cropperRef.current?.cropper;
     cropper?.getCroppedCanvas().toBlob((blob) => {
@@ -52,6 +70,7 @@ export const useProfileUpdate = () => {
       formData.append("file", blob!);
       console.log(blob);
       console.log(formData);
+      setCroppedImgBlob(blob);
       for (const [value] of formData.entries()) {
         console.log(value);
       }
@@ -67,9 +86,33 @@ export const useProfileUpdate = () => {
   };
   const [isDefaultImg, setIsDefaultImg] = useState(false);
 
+  // 최종 제출
+  const onUpdate = async (data: UpdateUser, originBirth: string | null) => {
+    console.log(data);
+    if (isChangedNickname && !isCheckedNickname) {
+      return toast.error("닉네임 중복검사를 완료해 주세요.");
+    }
+    const formData = new FormData();
+    if (croppedImgBlob) {
+      formData.append("file", croppedImgBlob);
+    }
+    const user = {
+      nickname: data.nickname,
+      gender: data.gender,
+      birth: data.birth ?? originBirth,
+    };
+
+    formData.append("data", JSON.stringify(user));
+    try {
+      await upadateUserInfo(userInfo!.seq, formData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    if (imgInfo && imgInfo.length > 0) {
-      setBeforeCropUrl(URL.createObjectURL(imgInfo[0]));
+    if (imgInfo) {
+      setBeforeCropUrl(URL.createObjectURL(imgInfo));
     } else {
       setBeforeCropUrl(null);
     }
@@ -93,5 +136,7 @@ export const useProfileUpdate = () => {
     onCheckNickname,
     isCheckedNickname,
     setIsChangedNickname,
+    onReset,
+    onUpdate,
   };
 };

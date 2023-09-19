@@ -41,3 +41,9 @@ export interface ApiGetUserInfo {
   UserInfo: GetUserInfo;
   success: boolean;
 }
+
+export interface UpdateUser {
+  nickname: string;
+  birth: string;
+  gender: [Male, Female, NoneGender];
+}

@@ -3,13 +3,14 @@ import "animate.css";
 import { SignupFormValue } from "../../../type/Accounts";
 import { useForm } from "react-hook-form";
 import Cropper from "react-cropper";
-import defaltImg from "../../../asset/image/default_image.png";
+import defaultImg from "../../../asset/image/default_image.png";
 import { useProfileUpdate } from "./useProfileUpdate";
 import "cropperjs/dist/cropper.css";
 import userStore from "../../../store/userStore";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
 import { GetUserInfo } from "../../../type/Accounts";
 import InputDatePicker from "../atoms/InputDatePicker";
+import { useEffect } from "react";
 const ProfileUpdate = ({
   showModal,
   setShowModal,
@@ -36,6 +37,8 @@ const ProfileUpdate = ({
     onCheckNickname,
     setIsChangedNickname,
     isCheckedNickname,
+    onUpdate,
+    onReset,
   } = useProfileUpdate();
   const { userInfo } = userStore();
   const {
@@ -43,9 +46,13 @@ const ProfileUpdate = ({
     getValues,
     register,
     control,
+    setError,
+    reset,
     formState: { errors },
   } = useForm<SignupFormValue>();
-
+  useEffect(() => {
+    console.log(imgInfo);
+  }, [imgInfo]);
   return (
     <>
       <Modal
@@ -61,11 +68,11 @@ const ProfileUpdate = ({
       >
         <div>
           <h3 className="text-center my-10">회원정보 변경</h3>
-          <form onSubmit={handleSubmit((data) => console.log(data))}>
+          <form onSubmit={handleSubmit((data) => onUpdate(data, myInfo?.birth ?? null))}>
             <div className="text-center">
               <div className="flex justify-center">
                 <img
-                  src={isDefaultImg ? defaltImg : isCropped ? cropImg! : userInfo?.profileImgSearchName}
+                  src={isDefaultImg ? defaultImg : isCropped ? cropImg! : userInfo?.profileImgSearchName}
                   alt="유저이미지"
                   className="w-48 h-48 rounded-full shadow-lg"
                 />
@@ -86,7 +93,7 @@ const ProfileUpdate = ({
               <div className="flex">
                 <div className="bg-gray-200 mt-3 px-3 flex items-center mx-auto font-regular rounded-md text-sm w-4/5 border-2 border-gray-400 h-10">
                   <span className="align-middle whitespace-nowrap overflow-hidden overflow-ellipsis">
-                    {imgInfo && imgInfo.length > 0 && imgInfo[0].name}
+                    {imgInfo && imgInfo.name}
                   </span>
                 </div>
                 <button
@@ -102,12 +109,12 @@ const ProfileUpdate = ({
               </div>
               <input
                 onChange={(e) => {
-                  if (!e.target.files || e.target.files.length === 0) {
-                    setImgInfo(null);
+                  console.log(e.target.files);
+                  if (!e.target.files || e.target.files.length === 0 || !e.target) {
                     setIsChanged(false);
                     return;
                   }
-                  setImgInfo(e.target.files);
+                  setImgInfo(e.target.files[0]);
                   setIsChanged(true);
                   setIsDefaultImg(false);
                 }}
@@ -139,6 +146,7 @@ const ProfileUpdate = ({
                       e.preventDefault();
                       onCrop();
                       setIsDefaultImg(false);
+                      if (selectImg.current) selectImg.current.value = "";
                     }}
                   >
                     자르기
@@ -223,10 +231,25 @@ const ProfileUpdate = ({
               </div>
             </div>
             <div className="text-center mt-20">
-              <button className="jongRyul-gray w-24 h-12 me-3" onClick={() => setShowModal(false)}>
+              <button
+                className="jongRyul-gray w-24 h-12 me-3"
+                onClick={() => {
+                  onReset();
+                  setShowModal(false);
+                  setError("nickname", {
+                    type: "nicknameerror",
+                    message: "",
+                  });
+                  reset();
+                }}
+              >
                 닫기
               </button>
-              <button className="jongRyul-primary w-24 h-12 ms-3" onClick={() => setShowModal(false)}>
+              <button
+                className="jongRyul-primary w-24 h-12 ms-3"
+                type="submit"
+                // onClick={() => setShowModal(false)}
+              >
                 변경하기
               </button>
             </div>
