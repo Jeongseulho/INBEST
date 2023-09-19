@@ -65,7 +65,7 @@ public class JwtProvider {
 			.accessToken(accessToken)
 			.build();
 	}
-	
+
 	public Optional<String> resolveAccessToken(HttpServletRequest request) {
 		log.info("JwtProvider - resolveAccessToken 실행");
 
