@@ -1,10 +1,12 @@
 <details>
 <summary>4주차</summary>
+
 # 23-09-19
-- RabbitMq 원리 및 학습
+- Message Broker 원리 및 학습
 - RabbitMq Config 설정
 
 # 23-09-18
+- RabbitMq 원리 및 학습
 - RabiitMq 디버깅
 
 </details>
