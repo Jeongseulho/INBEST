@@ -8,46 +8,58 @@ import group from "../../../asset/image/group.png";
 import SettingSeedMoney from "../molecules/SettingSeedMoney";
 import SettingInvite from "../molecules/SettingInvite";
 import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
+import SettingTitle from "../molecules/SettingTitle";
 
 interface Props {
-  showModal: boolean;
-  closeModal: () => void;
+  showCreateModal: boolean;
+  closeCreateModal: () => void;
 }
 
-const CreateModal = ({ showModal, closeModal }: Props) => {
+const CreateModal = ({ showCreateModal, closeCreateModal }: Props) => {
   const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting } = useCreateModal();
 
   const CreateModalStepComponent = [
-    <InitGroup onNextStep={onNextStep} closeModal={closeModal} resetStepAndGroupSetting={resetStepAndGroupSetting} />,
+    <InitGroup
+      onNextStep={onNextStep}
+      closeCreateModal={closeCreateModal}
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+    />,
     <SettingPeriod
       onNextStep={onNextStep}
       period={groupSetting.period}
       dispatch={dispatch}
-      closeModal={closeModal}
+      closeCreateModal={closeCreateModal}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
     />,
     <SettingSeedMoney
       onNextStep={onNextStep}
       seedMoney={groupSetting.seedMoney}
       dispatch={dispatch}
-      closeModal={closeModal}
+      closeCreateModal={closeCreateModal}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
     />,
     <SettingInvite
       onNextStep={onNextStep}
-      closeModal={closeModal}
+      closeCreateModal={closeCreateModal}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
-      invitedUserSeq={groupSetting.invitedUserSeq}
+      inviteUsers={groupSetting.inviteUsers}
+      unInviteUsers={groupSetting.unInviteUsers}
       dispatch={dispatch}
+    />,
+    <SettingTitle
+      closeCreateModal={closeCreateModal}
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+      dispatch={dispatch}
+      title={groupSetting.title}
     />,
   ];
 
   return (
     <Modal
-      isOpen={showModal}
+      isOpen={showCreateModal}
       ariaHideApp={false}
       onRequestClose={() => {
-        closeModal();
+        closeCreateModal();
         resetStepAndGroupSetting();
       }}
       closeTimeoutMS={300}

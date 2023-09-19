@@ -1,55 +1,24 @@
 import { Period } from "../../../type/GroupSetting";
 import PeriodSettingTag from "../atoms/PeriodSettingTag";
-import { useActiveTag } from "./useActiveTag";
 
 interface Props {
   onNextStep: () => void;
   period: Period;
-  dispatch: React.Dispatch<{ type: string; payload: Period }>;
-  closeModal: () => void;
+  dispatch: React.Dispatch<{ type: "PERIOD"; payload: Period }>;
+  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const SettingPeriod = ({ onNextStep, period, dispatch, closeModal, resetStepAndGroupSetting }: Props) => {
-  const { activeTag, setActiveTag } = useActiveTag();
-
+const SettingPeriod = ({ onNextStep, period, dispatch, closeCreateModal, resetStepAndGroupSetting }: Props) => {
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
         <h3 className=" text-center text-dark">모의 투자 기간을 설정해주세요</h3>
-        <h3>{period === "accelerateMode" ? "가속 모드" : period + " 일"}</h3>
+        <h3>{period === "boostMode" ? "가속 모드" : period + " 일"}</h3>
         <div className=" flex w-full justify-around">
-          <PeriodSettingTag
-            text="7일"
-            dispatch={dispatch}
-            activeTag={activeTag}
-            setActiveTag={setActiveTag}
-            tagNum={0}
-            payload={7}
-          />
-          <PeriodSettingTag
-            text="14일"
-            dispatch={dispatch}
-            activeTag={activeTag}
-            setActiveTag={setActiveTag}
-            tagNum={1}
-            payload={14}
-          />
-          <PeriodSettingTag
-            text="30일"
-            dispatch={dispatch}
-            activeTag={activeTag}
-            setActiveTag={setActiveTag}
-            tagNum={2}
-            payload={30}
-          />
-          <PeriodSettingTag
-            text="가속모드"
-            dispatch={dispatch}
-            activeTag={activeTag}
-            setActiveTag={setActiveTag}
-            tagNum={3}
-            payload={"accelerateMode"}
-          />
+          <PeriodSettingTag text="7일" dispatch={dispatch} payload={7} period={period} />
+          <PeriodSettingTag text="14일" dispatch={dispatch} payload={14} period={period} />
+          <PeriodSettingTag text="28일" dispatch={dispatch} payload={30} period={period} />
+          <PeriodSettingTag text="가속모드" dispatch={dispatch} payload={"boostMode"} period={period} />
         </div>
         <p className=" text-myGray text-center">
           가속 모드란?
@@ -60,7 +29,7 @@ const SettingPeriod = ({ onNextStep, period, dispatch, closeModal, resetStepAndG
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeModal();
+            closeCreateModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

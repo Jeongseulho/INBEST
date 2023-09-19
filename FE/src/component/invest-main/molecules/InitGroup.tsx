@@ -1,9 +1,9 @@
 interface Props {
   onNextStep: () => void;
-  closeModal: () => void;
+  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const InitGroup = ({ onNextStep, closeModal, resetStepAndGroupSetting }: Props) => {
+const InitGroup = ({ onNextStep, closeCreateModal, resetStepAndGroupSetting }: Props) => {
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
@@ -18,7 +18,7 @@ const InitGroup = ({ onNextStep, closeModal, resetStepAndGroupSetting }: Props) 
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeModal();
+            closeCreateModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

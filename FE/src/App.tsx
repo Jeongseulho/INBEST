@@ -16,9 +16,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AnimatePresence>
-          <ToastContainer />
-          <Layout>
+        <ToastContainer />
+        <Layout>
+          <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="login" element={<LoginSignup />} />
@@ -26,8 +26,8 @@ function App() {
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
             </Routes>
-          </Layout>
-        </AnimatePresence>
+          </AnimatePresence>
+        </Layout>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </QueryClientProvider>

@@ -1,12 +1,20 @@
 import CreateModal from "../organisms/CreateModal";
 import { useInvestMain } from "./useInvestMain";
+import FilterModal from "../organisms/FilterModal";
+import GroupList from "../organisms/GroupList";
+import MyGroupList from "../organisms/MyGroupList";
 
 const InvestMain = () => {
-  const { showModal, openModal, closeModal } = useInvestMain();
+  const { showCreateModal, openCreateModal, closeCreateModal, showFilterModal, openFilterModal, closeFilterModal } =
+    useInvestMain();
   return (
     <>
-      <button onClick={openModal}>모달 띄우기</button>
-      <CreateModal closeModal={closeModal} showModal={showModal} />
+      <button onClick={openCreateModal}>모달 띄우기</button>
+      <CreateModal closeCreateModal={closeCreateModal} showCreateModal={showCreateModal} />
+      <button onClick={openFilterModal}>filter 모달</button>
+      <FilterModal showFilterModal={showFilterModal} closeFilterModal={closeFilterModal} />
+      <GroupList />
+      <MyGroupList />
     </>
   );
 };

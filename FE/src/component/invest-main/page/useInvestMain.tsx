@@ -1,19 +1,31 @@
 import { useState } from "react";
 
 export const useInvestMain = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
-  const openModal = () => {
-    setShowModal(true);
+  const openCreateModal = () => {
+    setShowCreateModal(true);
   };
 
-  const closeModal = () => {
-    setShowModal(false);
+  const closeCreateModal = () => {
+    setShowCreateModal(false);
+  };
+
+  const openFilterModal = () => {
+    setShowFilterModal(true);
+  };
+
+  const closeFilterModal = () => {
+    setShowFilterModal(false);
   };
 
   return {
-    showModal,
-    openModal,
-    closeModal,
+    showCreateModal,
+    openCreateModal,
+    closeCreateModal,
+    showFilterModal,
+    openFilterModal,
+    closeFilterModal,
   };
 };
