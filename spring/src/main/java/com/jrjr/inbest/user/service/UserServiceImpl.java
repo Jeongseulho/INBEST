@@ -42,6 +42,9 @@ public class UserServiceImpl implements UserService {
 	@Value(value = "${cloud.aws.s3.bucket}")
 	private String bucketName;
 
+	@Value(value = "${cloud.aws.s3.profile}")
+	private String profileUrl;
+
 	@Transactional
 	@Override
 	public Login join(OAuth2UserInfo oAuth2UserInfo, String registrationId) {
@@ -267,7 +270,7 @@ public class UserServiceImpl implements UserService {
 
 			userEntity.get()
 				.updateProfileImg(newOriginalName,
-					"https://in-best.s3.ap-northeast-2.amazonaws.com/profile/" + newSearchName);
+					profileUrl + newSearchName);
 			log.info("DB 이미지 업데이트 완료");
 
 			amazonS3.deleteObject(bucketName, "profile/" + oldSearchName);
