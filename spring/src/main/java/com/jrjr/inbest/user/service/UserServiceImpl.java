@@ -277,9 +277,10 @@ public class UserServiceImpl implements UserService {
 			amazonS3.putObject(bucketName, "profile/" + newSearchName, newProfileImgFile);
 			log.info("S3 이미지 업데이트 완료");
 		}
-
+		log.info(userEntity.toString());
 		userEntity.get().updateUserInfo(inputUserDto);
 
+		log.info("유저 변경 종료");
 		return userEntity.get().convertToUserDto(userEntity.get());
 	}
 }
