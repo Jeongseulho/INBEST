@@ -86,7 +86,7 @@ const GeneralLogin = () => {
 
           {/* 이메일 인증 로직 */}
           <button
-            className={`${isSentEmailCode ? "disable-btn" : "primary-btn"} w-24 h-10 m-2`}
+            className={`${isSentEmailCode ? "disable-btn" : "jongRyul-primary"} w-24 h-10 m-2`}
             type="button"
             disabled={isSentEmailCode}
             onClick={() => {
@@ -138,7 +138,7 @@ const GeneralLogin = () => {
             <div className="errorMessage">{errors.code?.message}</div>
           </>
         )}
-        {isSentEmailCode && (
+        {isConfirmEmail && (
           <p className="text-left text-sm font-regular">
             이메일을 새로 인증하시려면
             <span
@@ -194,6 +194,10 @@ const GeneralLogin = () => {
                 className="signup-input w-full"
                 {...register("nickname", {
                   required: "닉네임은 필수 입력 사항입니다.",
+                  pattern: {
+                    value: /^[a-zA-Z0-9가-힣ぁ-んァ-ンー]*$/,
+                    message: "특수문자는 사용할 수 없습니다.",
+                  },
                 })}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
@@ -221,7 +225,7 @@ const GeneralLogin = () => {
             </div>
 
             <button
-              className={`${isSentNickName ? "disable-btn" : "primary-btn"} w-24 h-10 ms-2`}
+              className={`${isSentNickName ? "disable-btn" : "jongRyul-primary "} w-24 h-10 ms-2`}
               type="button"
               disabled={isSentNickName}
               onClick={() => {
@@ -268,7 +272,7 @@ const GeneralLogin = () => {
             <p className="my-2 font-regular">생년월일</p>
           </label>
           <div className="flex justify-between items-center">
-            <InputDatePicker control={control} />
+            <InputDatePicker originValue={null} control={control} />
           </div>
         </div>
         <div className="grid grid-rows-2">
