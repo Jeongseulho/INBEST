@@ -1,6 +1,7 @@
 package com.jrjr.inbest.user.entity;
 
 import java.time.LocalDateTime;
+import java.util.StringTokenizer;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -97,12 +98,24 @@ public class User extends BaseEntity {
 	}
 
 	public void updateUserInfo(UserDto userDto) {
-		this.name = userDto.getName();
-		this.nickname = userDto.getNickname();
-		this.gender = userDto.getGender();
+		// 닉네임
+		if (userDto.getNickname() != null) {
+			this.nickname = userDto.getNickname();
+		}
+		// 성별
+		if (userDto.getGender() != null) {
+			this.gender = userDto.getGender();
+		} else {
+			this.gender = 0;
+		}
+		// 생일
 		if (userDto.getBirth() != null) {
-			this.birthyear = userDto.getBirth().substring(0, 4);
-			this.birthday = userDto.getBirth().substring(5, 7) + userDto.getBirth().substring(8);
+			StringTokenizer st = new StringTokenizer(userDto.getBirth());
+			this.birthyear = st.nextToken();
+			this.birthday = st.nextToken() + st.nextToken();
+		} else {
+			this.birthyear = null;
+			this.birthday = null;
 		}
 	}
 }
