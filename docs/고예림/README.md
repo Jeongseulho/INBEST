@@ -1,5 +1,20 @@
 <details>
+<summary>4주차</summary>
+# 23-09-19
+- RabbitMq 원리 및 학습
+- RabbitMq Config 설정
+
+# 23-09-18
+- RabiitMq 디버깅
+
+</details>
+
+
+<details>
 <summary>3주차</summary>
+
+# 23-09-15
+- 
 
 # 23-09-14
 - Redis 배포
