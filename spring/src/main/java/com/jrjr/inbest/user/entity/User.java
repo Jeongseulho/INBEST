@@ -118,4 +118,9 @@ public class User extends BaseEntity {
 			this.birthday = null;
 		}
 	}
+
+	public String toString() {
+		return "User Entity : seq " + this.seq + " 닉네임 : " + this.nickname + " 성별 : " + this.gender + " 프로필 사진 : "
+			+ this.profileImgSearchName;
+	}
 }

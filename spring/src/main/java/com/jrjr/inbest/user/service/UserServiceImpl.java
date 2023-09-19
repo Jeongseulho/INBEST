@@ -236,13 +236,22 @@ public class UserServiceImpl implements UserService {
 	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) throws
 		IOException {
 		log.info("UserServiceImpl - updateUserInfo 실행: {}", seq);
+		log.info("수정할 유저 정보 " + inputUserDto);
+		log.info("수정할 파일 VVVVVV");
 
+		if (file == null) {
+			log.info("파일 없음");
+		} else {
+			log.info("파일 이름 : " + file.getOriginalFilename());
+		}
 		Optional<User> userEntity = userRepository.findById(seq);
 		if (userEntity.isEmpty()) {
+			log.info("회원 정보 없음");
 			throw new AuthenticationFailedException("회원 정보 없음");
 		}
 
 		if (!userEntity.get().getEmail().equals(inputEmail)) {
+			log.info("이메일 불일치");
 			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
 		}
 
@@ -279,6 +288,8 @@ public class UserServiceImpl implements UserService {
 		}
 		log.info(userEntity.toString());
 		userEntity.get().updateUserInfo(inputUserDto);
+		log.info("업데이트 성공");
+		log.info(userEntity.toString());
 
 		log.info("유저 변경 종료");
 		return userEntity.get().convertToUserDto(userEntity.get());
