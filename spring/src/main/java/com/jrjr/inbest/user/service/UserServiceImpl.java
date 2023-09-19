@@ -265,7 +265,9 @@ public class UserServiceImpl implements UserService {
 
 			String oldSearchName = userEntity.get().getProfileImgSearchName();
 
-			userEntity.get().updateProfileImg(newOriginalName, newSearchName);
+			userEntity.get()
+				.updateProfileImg(newOriginalName,
+					"https://in-best.s3.ap-northeast-2.amazonaws.com/profile/" + newSearchName);
 			log.info("DB 이미지 업데이트 완료");
 
 			amazonS3.deleteObject(bucketName, "profile/" + oldSearchName);
