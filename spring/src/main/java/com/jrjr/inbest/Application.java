@@ -24,7 +24,8 @@ public class Application {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 					.allowedOrigins("http://j9d110.p.ssafy.io/", "http://localhost:5173")
-					.allowedMethods("*");
+					.allowedMethods("GET", "POST", "PUT")
+					.allowCredentials(true);
 			}
 		};
 	}
