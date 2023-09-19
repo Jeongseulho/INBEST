@@ -241,5 +241,16 @@ const { data } = useQuery('recentFeeds', getRecentFeeds, {
 - 그룹 생성 모달에서 input 넣어서 직접 입력 되도록 수정
 - 모의 투자 내부 UI 구성
 
+#### 2023/9/19(화)
+
+# 📌what i did
+- 모의투자 진행중 페이지 sidebar
+- 모의투자 진행중 페이지 grid css
+
+# 📌to do
+- 모의 투자 내부 UI 구성
+- 백 엔드 소켓 구현 완료시, 모의 투자 메인 페이지에서 소켓 통신 및 api 구현
+
+
 </details>
 
