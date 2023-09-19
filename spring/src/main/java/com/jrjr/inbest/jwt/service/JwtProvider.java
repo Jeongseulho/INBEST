@@ -2,16 +2,9 @@ package com.jrjr.inbest.jwt.service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,7 +18,6 @@ import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -99,35 +91,6 @@ public class JwtProvider {
 		return Optional.empty();
 	}
 
-	public Optional<String> resolveRefreshToken(HttpServletRequest request) {
-		log.info("JwtProvider - resolveRefreshToken 실행");
-
-		String bearerToken = request.getHeader(HEADER_REFRESH);
-		if (StringUtils.hasText(bearerToken)) {
-			return Optional.of(bearerToken);
-		}
-
-		return Optional.empty();
-	}
-
-	public boolean isValidToken(String token) {
-		log.info("JwtProvider - isValidToken 실행");
-
-		try {
-			Jwts.parserBuilder()
-				.setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
-				.build()
-				.parseClaimsJws(token);
-			return true;
-		} catch (ExpiredJwtException e) {
-			log.info("EXPIRED_TOKEN");
-			return false;
-		} catch (Exception e) {
-			log.info("INVALID_TOKEN");
-			throw new JwtException("INVALID_TOKEN");
-		}
-	}
-
 	public Claims getClaims(String token) {
 		log.info("JwtProvider - getClaims 실행");
 
@@ -141,20 +104,6 @@ public class JwtProvider {
 			log.info("INVALID_TOKEN");
 			throw new JwtException("INVALID_TOKEN");
 		}
-	}
-
-	public boolean compareRefreshTokens(String refreshToken) {
-		log.info("JwtProvider - compareRefreshTokens 실행");
-
-		Claims claims = this.getClaims(refreshToken);
-
-		Optional<RefreshToken> refreshTokenEntity = refreshTokenRepository.findById(claims.getSubject());
-		if (refreshTokenEntity.isEmpty()) {
-			log.info("EXPIRED_REFRESH_TOKEN");
-			throw new JwtException("EXPIRED_REFRESH_TOKEN");
-		}
-
-		return refreshToken.equals(refreshTokenEntity.get().getRefreshToken());
 	}
 
 	public LoginDto getUserInfoFromToken(String token) {
@@ -172,18 +121,5 @@ public class JwtProvider {
 			.email(loginEntity.get().getEmail())
 			.role(loginEntity.get().getRole())
 			.build();
-	}
-
-	public Authentication getAuthentication(String accessToken) {
-		log.info("JwtProvider - getAuthentication 실행");
-
-		Claims claims = this.getClaims(accessToken);
-		String role = claims.get("role").toString();
-		log.debug("role: {}", role);
-
-		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role);
-
-		UserDetails userDetails = new User(claims.getSubject(), "", authorities);
-		return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
 	}
 }
