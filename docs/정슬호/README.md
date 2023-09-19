@@ -218,6 +218,13 @@ const { data } = useQuery('recentFeeds', getRecentFeeds, {
 # 📌to do
 - 그룹 생성 모달 로직 계속
 
+</details>
+
+# 4주차
+
+<details>
+<summary>접기/펼치기</summary>
+
 #### 2023/9/18(월)
 
 # 📌what i did
@@ -233,9 +240,6 @@ const { data } = useQuery('recentFeeds', getRecentFeeds, {
 # 📌to do
 - 그룹 생성 모달에서 input 넣어서 직접 입력 되도록 수정
 - 모의 투자 내부 UI 구성
-
-
-
 
 </details>
 
