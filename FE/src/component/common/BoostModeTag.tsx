@@ -6,7 +6,7 @@ const BoostModeTag = () => {
       <p className="text-primary text-sm">가속 모드</p>
       <div className="group relative">
         <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
-        <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-12 left-1/2 transform -translate-x-1/2 w-52">
+        <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-8 left-1/2 transform -translate-x-1/2 w-52">
           가속 모드에 대한 설명입니다.
         </span>
       </div>
