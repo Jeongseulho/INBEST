@@ -60,10 +60,11 @@ public class SecurityConfig {
 			.addFilterBefore(corsFilter, JwtExceptionFilter.class);
 
 		http.authorizeHttpRequests((authorize) -> authorize
-			.requestMatchers(AUTH_WHITELIST_LOGIN).permitAll()
-			.requestMatchers(AUTH_WHITELIST_JOIN).permitAll()
-			.requestMatchers(AUTH_WHITELIST_SWAGGER).permitAll()
-			.anyRequest().authenticated()
+			// .requestMatchers(AUTH_WHITELIST_LOGIN).permitAll()
+			// .requestMatchers(AUTH_WHITELIST_JOIN).permitAll()
+			// .requestMatchers(AUTH_WHITELIST_SWAGGER).permitAll()
+			// .anyRequest().authenticated()
+			.anyRequest().permitAll()
 		);
 
 		return http.build();
