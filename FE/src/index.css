@@ -10,8 +10,17 @@
   h3 {
     @apply text-3xl;
   }
+  h4 {
+    @apply text-2xl;
+  }
   a {
     @apply cursor-pointer;
+  }
+  h5{
+    @apply text-xl;
+  }
+  p{
+    @apply font-regular;
   }
 }
 

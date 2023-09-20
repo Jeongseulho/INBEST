@@ -1,4 +1,4 @@
-import BoostModeTag from "../atoms/BoostModeTag";
+import BoostModeTag from "../../common/BoostModeTag";
 import NormalModeTag from "../atoms/NormalModeTag";
 
 interface Props {
