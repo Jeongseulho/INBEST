@@ -13,7 +13,6 @@ api_key = "36509c5feed29d3468703dc40d3a64536d7cf944"
 # 모든 Company 모델의 company_code를 가져옴
 company_codes = Company.objects.values_list('company_code', flat=True)[:1]
 
-
 for company_code in company_codes:
     # 요청 파라미터 설정
     params = {

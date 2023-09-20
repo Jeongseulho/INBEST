@@ -10,7 +10,6 @@ django.setup()
 
 # Opendart API 엔드포인트 URL
 url = "https://opendart.fss.or.kr/api/corpCode.xml"
-
 api_key = "ac30ceeeb8ac94447e5e065876a5783d79e5b3ec"
 
 # 요청 파라미터 설정
