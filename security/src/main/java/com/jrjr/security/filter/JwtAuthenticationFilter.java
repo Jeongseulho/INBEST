@@ -1,7 +1,7 @@
 package com.jrjr.security.filter;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.StringTokenizer;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.jrjr.security.dto.AccessTokenDto;
 import com.jrjr.security.dto.LoginDto;
 import com.jrjr.security.service.JwtProvider;
+import com.jrjr.security.service.UriService;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -25,28 +26,32 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtProvider jwtProvider;
+	private final UriService uriService;
 
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 		@NonNull FilterChain filterChain) throws ServletException, IOException {
-		String uri = request.getRequestURI();
-		log.info("JwtAuthenticationFilter 실행, 요청 uri : {}", uri);
+		log.info("JwtAuthenticationFilter 실행, uri : {}", request.getParameter("uri"));
+		StringTokenizer st = new StringTokenizer(request.getParameter("uri"), "/", true);
 
-		if (uri.startsWith("/login/login") || uri.equals("/users") || uri.startsWith("/email")
-			|| uri.startsWith("/users/inquiry-nickname") || uri.startsWith("/users/inquiry-email")
-			|| uri.startsWith("/swagger-ui") || uri.startsWith("/v3")
-		) {
+		for (int i = 0; i < 4; i++) {
+			st.nextToken();
+		}
+
+		StringBuilder sb = new StringBuilder();
+		while (st.hasMoreTokens()) {
+			sb.append(st.nextToken());
+		}
+		String uri = sb.toString();
+
+		if (uriService.matchUri(uri)) {
 			log.info("토큰 검사 예외 url");
 			filterChain.doFilter(request, response);
 			return;
 		}
 
-		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
-		log.info("accessToken: {}", accessToken.orElse("accessToken 없음"));
-
-		// Optional<String> refreshToken = CookieUtil.getCookieValue(request, "refreshToken");
-		Optional<String> refreshToken = jwtProvider.resolveRefreshToken(request);
-		log.info("refreshToken: {}", refreshToken.orElse("refreshToken 없음"));
+		String accessToken = request.getParameter("accessToken");
+		String refreshToken = request.getParameter("refreshToken");
 
 		// accessToken 없을 때 -> refreshToken 검사 후 재발급
 		if (accessToken.isEmpty()) {
@@ -54,24 +59,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (refreshToken.isEmpty()) {
 				throw new JwtException("EXPIRED_REFRESH_TOKEN");
 			}
-			this.reissueAccessToken(response, refreshToken.get());
+			this.reissueAccessToken(response, refreshToken);
 		}
 
 		// accessToken 있을 때 -> 손상: 로그아웃, 만료: 재발급
-		if (accessToken.isPresent()) {
-			log.info("accessToken.isPresent() 실행");
-			// accessToken: 손상 x, 만료 o -> accessToken 재발급
-			if (!jwtProvider.isValidToken(accessToken.get())) {
-				if (refreshToken.isEmpty()) {
-					throw new JwtException("EXPIRED_REFRESH_TOKEN");
-				}
-				this.reissueAccessToken(response, refreshToken.get());
+		log.info("accessToken.isPresent() 실행");
+		// accessToken: 손상 x, 만료 o -> accessToken 재발급
+		if (!jwtProvider.isValidToken(accessToken)) {
+			if (refreshToken.isEmpty()) {
+				throw new JwtException("EXPIRED_REFRESH_TOKEN");
 			}
-			log.info("AccessToken 정상 - 권한 저장");
-			Authentication authentication = jwtProvider.getAuthentication(accessToken.get());
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-			filterChain.doFilter(request, response);
+			this.reissueAccessToken(response, refreshToken);
 		}
+		log.info("AccessToken 정상 - 권한 저장");
+		Authentication authentication = jwtProvider.getAuthentication(accessToken);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		filterChain.doFilter(request, response);
 	}
 
 	private void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {
