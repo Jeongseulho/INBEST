@@ -67,7 +67,7 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
         backgroundColor={theme.sidebar.backgroundColor}
         rootStyles={{
           color: theme.sidebar.color,
-          minWidth: "190px",
+          minWidth: "220px",
           width: "10%",
           minHeight: "92vh",
           backgroundColor: "#ffffff",

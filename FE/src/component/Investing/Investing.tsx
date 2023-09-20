@@ -21,7 +21,7 @@ const Investing = () => {
       <InvestingLayout>
         {activeTab === INVESTING_TAB.INFO && <InvestingInfo groupCode={groupCode} />}
         {activeTab === INVESTING_TAB.MY_INFO && <InvestingMyInfo groupCode={groupCode} />}
-        {activeTab === INVESTING_TAB.SEARCH && <InvestingSearch groupCode={groupCode} />}
+        {activeTab === INVESTING_TAB.SEARCH && <InvestingSearch />}
         {activeTab === INVESTING_TAB.DOMESTIC && <InvestingDomestic groupCode={groupCode} />}
         {activeTab === INVESTING_TAB.ABROAD && <InvestingAbroad groupCode={groupCode} />}
         {activeTab === INVESTING_TAB.CRYPTO && <InvestingCrypto groupCode={groupCode} />}
