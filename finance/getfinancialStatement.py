@@ -28,7 +28,7 @@ for company_code in company_codes:
     if response.status_code == 200:
         statement = response.json()
 
-        for item in statement['list']:
+        for item in statement.get('list', []):
             account_name = item.get('account_nm')
             amount = item.get('thstrm_amount')
 
@@ -36,14 +36,25 @@ for company_code in company_codes:
                 # 해당 계정명이 "유동자산"인 경우 current_assets 필드에 저장
                 try:
                     company = Company.objects.get(company_code=company_code)
-                except Company.DoesNotExist:
-                    print(f"Company 인스턴스가 없습니다. (company_code: {company_code})")
-                else:
-                    FinancialStatement.objects.create(
+                    financial_statement = FinancialStatement(
                         company_seq=company,
                         current_assets=amount,
-                        # 다른 필드에 대한 처리도 추가할 수 있음
                     )
+                    financial_statement.save()
+                except Company.DoesNotExist:
+                    print(f"Company 인스턴스가 없습니다. (company_code: {company_code})")
+
+            elif account_name == "비유동자산":
+                # 해당 계정명이 "비유동자산"인 경우 non_current_assets 필드에 저장
+                try:
+                    company = Company.objects.get(company_code=company_code)
+                    financial_statement = FinancialStatement(
+                        company_seq=company,
+                        non_current_assets=amount,
+                    )
+                    financial_statement.save()
+                except Company.DoesNotExist:
+                    print(f"Company 인스턴스가 없습니다. (company_code: {company_code})")
                     
     else:
         print(f"API 호출 실패 (company_code: {company_code}):", response.status_code)
