@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 				.birthday(userDto.getBirthday())
 				.gender(userDto.getGender())
 				.profileImgOriginalName("DefaultProfile.png")
-				.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
+				.profileImgSearchName(profileUrl + "DefaultProfile.png")
 				.build()
 		);
 
@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
 				.birthday(birthday)
 				.gender(joinDto.getGender())
 				.profileImgOriginalName("DefaultProfile.png")
-				.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
+				.profileImgSearchName(profileUrl + "DefaultProfile.png")
 				.build()
 		);
 
@@ -286,10 +286,8 @@ public class UserServiceImpl implements UserService {
 			amazonS3.putObject(bucketName, "profile/" + newSearchName, newProfileImgFile);
 			log.info("S3 이미지 업데이트 완료");
 		}
-		log.info(userEntity.toString());
 		userEntity.get().updateUserInfo(inputUserDto);
 		log.info("업데이트 성공");
-		log.info(userEntity.toString());
 
 		log.info("유저 변경 종료");
 		return userEntity.get().convertToUserDto(userEntity.get());

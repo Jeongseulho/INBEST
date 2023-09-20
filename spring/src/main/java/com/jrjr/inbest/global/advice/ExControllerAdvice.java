@@ -21,6 +21,7 @@ public class ExControllerAdvice {
 	public ResponseEntity<ErrorResult> authenticationExHandler(AuthenticationFailedException ex) {
 		log.info("AuthenticationFailedException: {}", ex.getMessage());
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
+		ex.printStackTrace();
 		return new ResponseEntity<>(errorResult, HttpStatus.UNAUTHORIZED);
 	}
 
@@ -28,6 +29,7 @@ public class ExControllerAdvice {
 	public ResponseEntity<ErrorResult> duplicateExHandler(DuplicateException ex) {
 		log.info("DuplicateException: {}", ex.getMessage());
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
+		ex.printStackTrace();
 		return new ResponseEntity<>(errorResult, HttpStatus.CONFLICT);
 	}
 
@@ -35,6 +37,7 @@ public class ExControllerAdvice {
 	public ResponseEntity<ErrorResult> invalidVerificationCodeException(InvalidVerificationCodeException ex) {
 		log.info("InvalidVerificationCodeException: {}", ex.getMessage());
 		ErrorResult errorResult = new ErrorResult("false", "INVALID_CODE");
+		ex.printStackTrace();
 		return new ResponseEntity<>(errorResult, HttpStatus.UNAUTHORIZED);
 	}
 
@@ -42,6 +45,7 @@ public class ExControllerAdvice {
 	public ResponseEntity<ErrorResult> notFoundException(NotFoundException ex) {
 		log.info("notFoundException: {}", ex.getMessage());
 		ErrorResult errorResult = new ErrorResult("false", "NOT_FOUND");
+		ex.printStackTrace();
 		return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
 	}
 
@@ -49,6 +53,7 @@ public class ExControllerAdvice {
 	public ResponseEntity<ErrorResult> serverExHandler(Exception ex) {
 		log.error("Exception: {}", ex.getMessage());
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
+		ex.printStackTrace();
 		return new ResponseEntity<>(errorResult, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
