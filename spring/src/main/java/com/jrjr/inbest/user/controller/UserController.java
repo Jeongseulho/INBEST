@@ -131,7 +131,8 @@ public class UserController {
 
 	@Operation(summary = "회원 정보 조회")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
+		@ApiResponse(responseCode = "200",
+			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
 		@ApiResponse(responseCode = "404", description = "조회 회원 정보 없음")
 	})
 	@GetMapping("/{seq}")
@@ -168,7 +169,8 @@ public class UserController {
 	@Operation(summary = "프로필 정보 업데이트",
 		description = "필수 값: name, nickname 선택 값: birth, gender, MultipartFile")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
+		@ApiResponse(responseCode = "200",
+			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
 		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치")
 	})
 	@PutMapping("/{seq}")
@@ -177,7 +179,6 @@ public class UserController {
 		@ModelAttribute UserDto userDto,
 		HttpServletRequest request) throws IOException {
 		log.info("UserController - updateProfile 실행: {}", seq);
-		log.info("input paremeter : " + userDto.toString());
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
