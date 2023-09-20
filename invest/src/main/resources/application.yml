@@ -6,25 +6,29 @@
 #  config:
 #    import: optional:configserver:http://j9d110.p.ssafy.io:9090
 server:
-  port: 8103
+  port: 8105
 spring:
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://j9d110.p.ssafy.io:9090
   application:
-    name: invest-service
+    name: trading
   rabbitmq:
     host: 13.124.168.191
     port: 5672
     username: jrjr
     password: wnfjdwnfjd
   datasource:
-    url: jdbc:mariadb://stg-yswa-kr-practice-db-master.mariadb.database.azure.com:3306/S09P22D110?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mariadb://j9d110.p.ssafy.io:3306/jrjr?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
     driverClassName: org.mariadb.jdbc.Driver
-    username: S09P22D110
-    password: M2hFMrhLIv
-    hikari:
-      maximum-pool-size: 3
+    username: jrjr
+    password: wnfjdwnfjd
+#    hikari:
+#      maximum-pool-size: 1
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       show_sql: true
   data:
     mongodb:
@@ -33,6 +37,11 @@ spring:
       host: j9d110.p.ssafy.io
       port: 6380
       password: wnfjdwnfjd
+  devtools:
+    livereload:
+      enabled: false
+    restart:
+      enabled: false
 eureka:
   client:
     register-with-eureka: true
@@ -41,7 +50,7 @@ eureka:
       defaultZone: http://j9d110.p.ssafy.io:8761/eureka
   instance:
     hostname: j9d110.p.ssafy.io
-
+    instance-id: ${spring.application.name}-${server.port}
 management:
   endpoints:
     web:
@@ -52,3 +61,7 @@ management:
   endpoint:
     gateway:
       enabled: true
+
+stock:
+  url:
+    market-price: https://markets.hankyung.com/stock/
