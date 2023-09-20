@@ -112,10 +112,8 @@ public class User extends BaseEntity {
 		}
 		// 생일
 		if (userDto.getBirth() != null) {
-			log.info(userDto.toString());
-			log.info(userDto.getBirth());
 			try {
-				StringTokenizer st = new StringTokenizer(userDto.getBirth());
+				StringTokenizer st = new StringTokenizer(userDto.getBirth(), "-");
 				this.birthyear = st.nextToken();
 				this.birthday = st.nextToken() + st.nextToken();
 			} catch (Exception e) {
