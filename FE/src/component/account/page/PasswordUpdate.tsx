@@ -14,7 +14,8 @@ const ProfileUpdate = ({
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { showPassWord1, setShowPassWord1, showPassWord2, setShowPassWord2, onPasswordUpdate } = usePasswordUpdate();
+  const { showPassWord1, setShowPassWord1, showPassWord2, setShowPassWord2, onPasswordUpdate } =
+    usePasswordUpdate(setShowModal);
   const {
     handleSubmit,
     register,
@@ -87,7 +88,7 @@ const ProfileUpdate = ({
                 {showPassWord1 ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
               </div>
             </div>
-            <div className="errorMessage">{errors.password1?.message}</div>
+            <div className="errorMessage text-left">{errors.password1?.message}</div>
           </div>
           <div className="w-full mt-4">
             <label htmlFor="password" className="mt-5 text-left">

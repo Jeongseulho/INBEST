@@ -6,7 +6,7 @@ export interface SignupSubmitFormValue {
   name: string;
   nickname: string;
   birth: string;
-  gender: [Male, Female, NoneGender];
+  gender: Male | Female | NoneGender;
 }
 
 export interface SignupFormValue extends SignupSubmitFormValue {
@@ -33,7 +33,7 @@ export interface GetUserInfo {
   email: string;
   nickname: string;
   birth: string | null;
-  gender: [Male, Female, NoneGender];
+  gender: Male | Female | NoneGender;
   profileImgSearchName: string;
 }
 
@@ -45,5 +45,5 @@ export interface ApiGetUserInfo {
 export interface UpdateUser {
   nickname: string;
   birth: string;
-  gender: [Male, Female, NoneGender];
+  gender: Male | Female | NoneGender;
 }

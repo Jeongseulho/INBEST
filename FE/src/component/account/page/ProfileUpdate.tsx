@@ -11,6 +11,7 @@ import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODA
 import { GetUserInfo } from "../../../type/Accounts";
 import InputDatePicker from "../atoms/InputDatePicker";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 const ProfileUpdate = ({
   showModal,
   setShowModal,
@@ -36,6 +37,7 @@ const ProfileUpdate = ({
     isDefaultImg,
     onCheckNickname,
     setIsChangedNickname,
+    isChangedNickname,
     isCheckedNickname,
     onUpdate,
     onReset,
@@ -68,7 +70,22 @@ const ProfileUpdate = ({
       >
         <div>
           <h3 className="text-center my-10">회원정보 변경</h3>
-          <form onSubmit={handleSubmit((data) => onUpdate(data, myInfo?.birth ?? null))}>
+          <form
+            onSubmit={handleSubmit((data) => {
+              if (isChangedNickname && !isCheckedNickname) {
+                toast.error("닉네임 중복검사를 완료해 주세요.");
+                return;
+              }
+              onUpdate(data);
+              onReset();
+              setShowModal(false);
+              setError("nickname", {
+                type: "nicknameerror",
+                message: "",
+              });
+              reset();
+            })}
+          >
             <div className="text-center">
               <div className="flex justify-center">
                 <img
@@ -79,7 +96,7 @@ const ProfileUpdate = ({
               </div>
               {!isChanged && (
                 <button
-                  className="jongRyul-gray  w-36 h-8
+                  className="jongRyul-gray w-36 h-8
 								my-3 me-4"
                   onClick={(e) => {
                     e.preventDefault();
@@ -145,7 +162,6 @@ const ProfileUpdate = ({
                     onClick={(e) => {
                       e.preventDefault();
                       onCrop();
-                      setIsDefaultImg(false);
                       if (selectImg.current) selectImg.current.value = "";
                     }}
                   >
@@ -155,6 +171,7 @@ const ProfileUpdate = ({
                     className="jongRyul-gray w-16 h-8"
                     onClick={(e) => {
                       e.preventDefault();
+                      setIsDefaultImg(false);
                       onCancel();
                     }}
                   >
@@ -222,15 +239,36 @@ const ProfileUpdate = ({
 
                   <div className="flex justify-between items-center signup-input w-full mx-3">
                     <div className="flex">
-                      <input {...register("gender")} id="male" type="radio" value={1} className="me-2" />
+                      <input
+                        defaultChecked={myInfo?.gender === 1}
+                        {...register("gender")}
+                        id="male"
+                        type="radio"
+                        value={1}
+                        className="me-2"
+                      />
                       <label htmlFor="male">남</label>
                     </div>
                     <div className="flex">
-                      <input {...register("gender")} id="female" type="radio" value={2} className="me-2" />
+                      <input
+                        defaultChecked={myInfo?.gender === 2}
+                        {...register("gender")}
+                        id="female"
+                        type="radio"
+                        value={2}
+                        className="me-2"
+                      />
                       <label htmlFor="female">여</label>
                     </div>
                     <div className="flex">
-                      <input {...register("gender")} defaultChecked id="none" type="radio" value={0} className="me-2" />
+                      <input
+                        defaultChecked={myInfo?.gender === 0}
+                        {...register("gender")}
+                        id="none"
+                        type="radio"
+                        value={0}
+                        className="me-2"
+                      />
                       <label htmlFor="none">선택안함</label>
                     </div>
                   </div>

@@ -68,6 +68,9 @@ const GeneralLogin = () => {
         >
           로그인
         </button>
+        <p className="text-left mt-5">
+          <span className=" text-gray-400 hover:text-black hover:cursor-pointer  text-sm ">비밀번호를 잊으셨나요?</span>
+        </p>
       </div>
     </form>
   );

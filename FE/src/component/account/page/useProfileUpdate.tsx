@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useRef } from "react";
 import { ReactCropperElement } from "react-cropper";
-import { checkNickname, upadateUserInfo } from "../../../api/account";
+import { checkNickname, upadateUserInfo, changeDefaultImg } from "../../../api/account";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { UpdateUser } from "../../../type/Accounts";
 import userStore from "../../../store/userStore";
 export const useProfileUpdate = () => {
-  const { userInfo } = userStore();
+  const { userInfo, setUserInfo } = userStore();
   // input에 담은 이미지 정보
   const [imgInfo, setImgInfo] = useState<File | null>(null);
   // 자르기전 이미지 url(input에 담은거 변환, cropper에 보여줘야됨)
@@ -85,7 +85,7 @@ export const useProfileUpdate = () => {
   const [isDefaultImg, setIsDefaultImg] = useState(false);
 
   // 최종 제출
-  const onUpdate = async (data: UpdateUser, originBirth: string | null) => {
+  const onUpdate = async (data: UpdateUser) => {
     console.log(data);
     console.log(croppedImgBlob);
     if (isChangedNickname && !isCheckedNickname) {
@@ -95,21 +95,20 @@ export const useProfileUpdate = () => {
     if (croppedImgBlob) {
       formData.append("file", croppedImgBlob, "tmp.png");
     }
-    // const userDto = {
-    //   nickname: data.nickname,
-    //   gender: data.gender,
-    //   birth: data.birth ?? originBirth,
-    // };
 
     formData.append("nickname", data.nickname);
     formData.append("gender", data.gender.toString());
-    // data.birth? formData.append("birth", data.birth ?? originBirth);
-    // console.log(typeof originBirth, originBirth);
+    if (data.birth) formData.append("birth", data.birth);
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
     try {
+      if (isDefaultImg) {
+        await changeDefaultImg(userInfo!.seq);
+      }
       const res = await upadateUserInfo(userInfo!.seq, formData);
+
+      setUserInfo({ ...userInfo!, profileImgSearchName: res.UserInfo.profileImgSearchName });
       console.log(res);
     } catch (err) {
       console.log(err);
@@ -143,6 +142,7 @@ export const useProfileUpdate = () => {
     isCheckedNickname,
     setIsChangedNickname,
     onReset,
+    isChangedNickname,
     onUpdate,
   };
 };
