@@ -100,23 +100,18 @@ public class User extends BaseEntity {
 	}
 
 	public void updateUserInfo(UserDto userDto) {
-		log.info("updateUserInfo 시작");
 		// 닉네임
-		log.info("getNickname ");
 		if (userDto.getNickname() != null) {
 			this.nickname = userDto.getNickname();
 		}
-		log.info("getGender ");
 		// 성별
 		if (userDto.getGender() != null) {
 			this.gender = userDto.getGender();
 		} else {
 			this.gender = 0;
 		}
-		log.info("getBirth 시작");
 		// 생일
 		if (userDto.getBirth() != null) {
-			log.info("getBirth 있음");
 			log.info(userDto.toString());
 			log.info(userDto.getBirth());
 			try {
@@ -127,14 +122,8 @@ public class User extends BaseEntity {
 				e.printStackTrace();
 			}
 		} else {
-			log.info("getBirth 없음");
 			this.birthyear = null;
 			this.birthday = null;
 		}
-	}
-
-	public String toString() {
-		return "User Entity : seq " + this.seq + " 닉네임 : " + this.nickname + " 성별 : " + this.gender + " 프로필 사진 : "
-			+ this.profileImgSearchName;
 	}
 }
