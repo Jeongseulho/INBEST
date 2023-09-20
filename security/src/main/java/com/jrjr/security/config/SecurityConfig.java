@@ -14,6 +14,7 @@ import com.jrjr.security.filter.JwtAuthenticationFilter;
 import com.jrjr.security.filter.JwtExceptionFilter;
 import com.jrjr.security.handler.JwtAccessDeniedHandler;
 import com.jrjr.security.service.JwtProvider;
+import com.jrjr.security.service.UriService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class SecurityConfig {
 	private final JwtExceptionFilter jwtExceptionFilter;
 	private final JwtProvider jwtProvider;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final UriService uriService;
 
 	private static final String[] AUTH_WHITELIST_LOGIN = { // 로그인 관련
 		"/login/login/**"
@@ -55,7 +57,8 @@ public class SecurityConfig {
 			httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(
 				jwtAccessDeniedHandler));
 
-		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+		http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider, uriService),
+				UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
 			.addFilterBefore(corsFilter, JwtExceptionFilter.class);
 
