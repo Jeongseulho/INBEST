@@ -134,7 +134,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = ['http://localhost:5173', 'http://localhost:5174', 'http://j9d110.p.ssafy.io:8200']
+CORS_ORIGIN_WHITELIST = ['http://localhost:5173', 'http://localhost:5174', 'http://j9d110.p.ssafy.io:8200', 'http://j9d110.p.ssafy.io:8101', 'http://j9d110.p.ssafy.io:8102', 'http://j9d110.p.ssafy.io:8103', 'http://j9d110.p.ssafy.io:8104', 'http://j9d110.p.ssafy.io:8106']
 CORS_ALLOW_CREDENTIALS = True
 
 def register_with_eureka():
