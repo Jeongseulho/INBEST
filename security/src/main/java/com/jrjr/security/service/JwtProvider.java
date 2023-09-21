@@ -29,7 +29,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,8 +42,6 @@ public class JwtProvider {
 
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final LoginRepository loginRepository;
-	private static final String HEADER_AUTHORIZATION = "Authorization";
-	private static final String HEADER_REFRESH = "RefreshToken";
 	private static final String GRANT_TYPE = "Bearer";
 
 	public AccessTokenDto generateAccessToken(String email, Role role) {
@@ -66,23 +63,11 @@ public class JwtProvider {
 			.build();
 	}
 
-	public Optional<String> resolveAccessToken(HttpServletRequest request) {
+	public Optional<String> resolveAccessToken(String accessToken) {
 		log.info("JwtProvider - resolveAccessToken 실행");
 
-		String bearerToken = request.getHeader(HEADER_AUTHORIZATION);
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(GRANT_TYPE)) {
-			return Optional.of(bearerToken.substring(7));
-		}
-
-		return Optional.empty();
-	}
-
-	public Optional<String> resolveRefreshToken(HttpServletRequest request) {
-		log.info("JwtProvider - resolveRefreshToken 실행");
-
-		String bearerToken = request.getHeader(HEADER_REFRESH);
-		if (StringUtils.hasText(bearerToken)) {
-			return Optional.of(bearerToken);
+		if (StringUtils.hasText(accessToken) && accessToken.startsWith(GRANT_TYPE)) {
+			return Optional.of(accessToken.substring(7));
 		}
 
 		return Optional.empty();
