@@ -1,6 +1,6 @@
-package com.jrjr.security.dto;
+package com.jrjr.inbest.login.dto;
 
-import com.jrjr.security.constant.Role;
+import com.jrjr.inbest.login.constant.Role;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -21,7 +21,6 @@ public class LoginDto {
 	@Schema(description = "이메일", type = "String", example = "tbd05050@naver.com")
 	private String email;
 
-<<<<<<<< HEAD:spring/src/main/java/com/jrjr/inbest/login/dto/LoginDto.java
 	@Schema(description = "비밀번호", type = "String", example = "abc1234")
 	private String password;
 
@@ -29,7 +28,5 @@ public class LoginDto {
 	private String authorizeCode;
 
 	@Schema(hidden = true)
-========
->>>>>>>> origin/master:security/src/main/java/com/jrjr/security/dto/LoginDto.java
 	private Role role;
 }

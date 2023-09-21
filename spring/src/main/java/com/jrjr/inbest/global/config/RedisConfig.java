@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:spring/src/main/java/com/jrjr/inbest/global/config/RedisConfig.java
 package com.jrjr.inbest.global.config;
-========
-package com.jrjr.security.config;
->>>>>>>> origin/master:security/src/main/java/com/jrjr/security/config/RedisConfig.java
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
