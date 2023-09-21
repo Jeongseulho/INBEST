@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { LoginFormValue } from "../../../type/Accounts";
 import { useGeneralLogin } from "./useGeneralLogin";
-/* eslint-disable max-lines-per-function */
+import FindPassword from "../atoms/FindPassword";
+
 const GeneralLogin = () => {
   const [showPassWord, setShowPassWord] = useState(false);
 
@@ -16,7 +17,7 @@ const GeneralLogin = () => {
     formState: { isSubmitting, errors },
   } = useForm<LoginFormValue>();
 
-  const { onLongin } = useGeneralLogin();
+  const { onLongin, showModal, setShowModal } = useGeneralLogin();
   return (
     <form
       onSubmit={handleSubmit((data: LoginFormValue) => onLongin(data))}
@@ -68,6 +69,15 @@ const GeneralLogin = () => {
         >
           로그인
         </button>
+        <p className="text-left mt-5">
+          <span
+            className=" text-gray-400 hover:text-black hover:cursor-pointer  text-sm "
+            onClick={() => setShowModal(true)}
+          >
+            비밀번호를 잊으셨나요?
+          </span>
+        </p>
+        <FindPassword showModal={showModal} setShowModal={setShowModal} />
       </div>
     </form>
   );

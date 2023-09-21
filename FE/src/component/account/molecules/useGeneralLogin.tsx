@@ -4,10 +4,11 @@ import { LoginFormValue, LoginResultValue } from "../../../type/Accounts";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import userStore from "../../../store/userStore";
+import { useState } from "react";
 export const useGeneralLogin = () => {
   const navigate = useNavigate();
   const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
-
+  const [showModal, setShowModal] = useState(false);
   const onLongin = async (user: LoginFormValue) => {
     try {
       const res: LoginResultValue = await login(user);
@@ -40,5 +41,5 @@ export const useGeneralLogin = () => {
       console.log(err);
     }
   };
-  return { onLongin };
+  return { onLongin, showModal, setShowModal };
 };

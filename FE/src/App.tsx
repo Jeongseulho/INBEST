@@ -9,7 +9,7 @@ import InvestMain from "./component/invest-main/page/InvestMain";
 import { AnimatePresence } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-
+import Community from "./component/account/page/Community";
 const queryClient = new QueryClient();
 
 function App() {
@@ -25,6 +25,7 @@ function App() {
               <Route path="/invest" element={<InvestMain />} />
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
+              <Route path="/community" element={<Community />} />
             </Routes>
           </AnimatePresence>
         </Layout>
