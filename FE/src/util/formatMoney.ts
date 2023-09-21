@@ -1,6 +1,11 @@
 export function formatNumberToWon(value: number): string {
   const formatter = new Intl.NumberFormat("ko-KR");
-  return `${formatter.format(value)}₩`;
+  return `₩${formatter.format(value)}`;
+}
+
+export function formatNumberToDollar(value: number): string {
+  const formatter = new Intl.NumberFormat("en-US");
+  return `$${formatter.format(value)}`;
 }
 
 export function formatKoreanNumber(num: number): string {

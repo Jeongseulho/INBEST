@@ -1,4 +1,4 @@
-import { formatNumberToWon } from "../../util/formatMoney";
+import { formatNumberToDollar } from "../../util/formatMoney";
 import { AiFillStar } from "react-icons/ai";
 import { AiOutlineStar } from "react-icons/ai";
 import IncreaseIcon from "./IncreaseIcon";
@@ -27,7 +27,7 @@ const StockList = ({ title, stockList }: Props) => {
           <div className=" flex justify-between">
             <p className=" w-24 text-center">{stock.name}</p>
             <div className=" flex w-40 items-center justify-center">
-              <p className=" text-center">{formatNumberToWon(stock.price)}</p>
+              <p className=" text-center">{formatNumberToDollar(stock.price)}</p>
               {stock.percentage >= 0 ? (
                 <IncreaseIcon number={stock.percentage} />
               ) : (

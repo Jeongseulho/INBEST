@@ -1,6 +1,7 @@
 import StockList from "../common/StockList";
 import DecreaseGraphIcon from "../common/DecreaseGraphIcon";
 import IncreaseGraphIcon from "../common/IncreaseGraphIcon";
+import FearRadialBar from "./FearRadialBar";
 
 interface Props {
   groupCode: string | undefined;
@@ -34,6 +35,7 @@ const InvestingCrypto = ({ groupCode }: Props) => {
       <div className=" flex gap-4">
         <DecreaseGraphIcon title="가상화폐 거래량" desc="코스피란?... 하강한다고 판단한 기준.." />
         <IncreaseGraphIcon title="가상화폐 시가총액" desc="급하락 주식에 대한 설명입니다." />
+        <FearRadialBar percentage={100} />
       </div>
       <div className=" flex gap-4 w-full">
         <StockList stockList={stockList} title="많이 사고 파는 주식" />
