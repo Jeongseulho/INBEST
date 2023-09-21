@@ -13,6 +13,7 @@ interface Props {
     favorite: boolean;
   }[];
 }
+
 const StockList = ({ title, stockList }: Props) => {
   return (
     <div className=" shadow-component flex flex-col p-4 gap-2 w-1/3">
@@ -23,8 +24,8 @@ const StockList = ({ title, stockList }: Props) => {
         <p className=" w-20 text-center font-semiBold">관심 주식</p>
       </div>
       <div className=" flex flex-col gap-2">
-        {stockList.map((stock) => (
-          <div className=" flex justify-between">
+        {stockList.map((stock, index) => (
+          <div className=" flex justify-between" key={index}>
             <p className=" w-24 text-center">{stock.name}</p>
             <div className=" flex w-40 items-center justify-center">
               <p className=" text-center">{formatNumberToDollar(stock.price)}</p>
