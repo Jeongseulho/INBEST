@@ -21,6 +21,12 @@ import com.jrjr.inbest.board.dto.CommentDTO;
 import com.jrjr.inbest.board.service.BoardService;
 import com.jrjr.inbest.board.service.CommentService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,10 +34,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/boards")
+@Tag(name = "자유게시판(게시물, 댓글, 좋아요)", description = "자유게시판 API")
 public class BoardController {
 	private final BoardService boardService;
 	private final CommentService commentService;
 
+	@Operation(summary = "게시판 등록")
+	@Parameters(value = {
+		@Parameter(required = true, name = "userSeq", description = "유저 pk"),
+		@Parameter(required = true, name = "context", description = "글 내용"),
+		@Parameter(required = true, name = "title", description = "글 제목"),
+		@Parameter(required = false, name = "files", description = "글에 들어가는 파일 배열(type : File)"),
+	})
 	@PostMapping("")
 	public ResponseEntity<Map<String, Object>> insertBoard(@ModelAttribute BoardDTO boardDTO) throws Exception {
 		log.info("========== 게시판 등록 시작 ==========");
@@ -47,8 +61,13 @@ public class BoardController {
 		log.info("========== 게시판 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+	@Operation(summary = "게시판 목록 출력",description = "기간(period)와 한번에 출력하는 양(size)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
+	@Parameters(value = {
+		@Parameter(required = true, name = "pageNo", description = "페이지 번호"),
+		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
+	})
 	@GetMapping("")
-	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "page") int page,@RequestParam(name = "size") int size){
+	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "pageNo") int page,@RequestParam(name = "pageSize") int size){
 		log.info("========== 게시판 목록 검색 시작 ==========");
 		log.info("page : "+page+" size : "+size);
 
@@ -63,6 +82,12 @@ public class BoardController {
 		log.info("========== 게시판 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
+	@Operation(summary = "좋아요가 많은 게시판 목록",description = "기간(period)와 한번에 출력하는 양(pageSize)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
+	@Parameters(value = {
+		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
+		@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
+	})
 	@GetMapping("/best-likes")
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
@@ -81,7 +106,11 @@ public class BoardController {
 		log.info("========== 좋아요 많은 게시판 목록 검색 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
-
+	@Operation(summary = "게시판 상세정보")
+	// @Parameters(value = {
+	// 	@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
+	// 	@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
+	// })
 	@GetMapping("/{seq}")
 	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable (value = "seq") String seq){
 		log.info("========== 게시판 상세 정보 시작 ==========");
@@ -102,7 +131,7 @@ public class BoardController {
 		log.info("========== 게시판 상세 정보 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
-
+	@Operation(summary = "게시물 좋아요")
 	@PutMapping("/{boardSeq}/likes/{userSeq}")
 	public ResponseEntity<Map<String, Object>> updateBoardLikes(
 		@PathVariable (value = "boardSeq") String boardId,@PathVariable (value = "userSeq") Long userSeq) throws
@@ -127,6 +156,11 @@ public class BoardController {
 		log.info("========== 게시판 좋아요 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+	@Operation(summary = "댓글 등록")
+	@Parameters(value = {
+			@Parameter(required = true, name = "userSeq", description = "댓글 작성자 pk"),
+			@Parameter(required = true, name = "context", description = "댓글 내용"),
+		})
 	@PostMapping("/{boardSeq}/comments")
 	public ResponseEntity<Map<String, Object>> insertComment(
 		@ModelAttribute CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq) throws
@@ -151,6 +185,11 @@ public class BoardController {
 		log.info("========== 덧글 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+	@Operation(summary = "대댓글 등록")
+	@Parameters(value = {
+		@Parameter(required = true, name = "userSeq", description = "댓글 작성자 pk"),
+		@Parameter(required = true, name = "context", description = "댓글 내용"),
+	})
 	@PostMapping("/{boardSeq}/comments/{commentSeq}/cocomments")
 	public ResponseEntity<Map<String, Object>> insertCoComment(
 		@ModelAttribute CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq

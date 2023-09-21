@@ -41,6 +41,7 @@ public class CommentService {
 	private final UserRepository userRepository;
 	private final CommentRepository commentRepository;
 	private final CoCommentRepository coCommentRepository;
+
 	public CommentDTO insertComment(CommentDTO commentDTO,String boardId) throws Exception{
 		BoardEntity boardEntity = boardRepository.findById(boardId).orElse(null);
 
