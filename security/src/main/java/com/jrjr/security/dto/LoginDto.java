@@ -2,6 +2,7 @@ package com.jrjr.security.dto;
 
 import com.jrjr.security.constant.Role;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
