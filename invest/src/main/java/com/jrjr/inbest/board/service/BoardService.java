@@ -88,6 +88,7 @@ public class BoardService {
 
 		boardRepository.save(board);
 	}
+
 	public List<BoardDTO> findAllBoards(int page,int size){
 		Page<BoardEntity> boardEntityList = boardRepository.findAll(
 			PageRequest.of(page-1,size, Sort.Direction.DESC,"createdDate"));
@@ -113,6 +114,9 @@ public class BoardService {
 		UserDTO userDTO = userService.findBySeq(boardEntity.getUserSeq());
 		BoardDTO boardDTO = boardEntity.toBoardDTO();
 		boardDTO.setWriter(userDTO);
+
+		boardEntity.updateView();
+		boardRepository.save(boardEntity);
 
 		return boardDTO;
 	}
