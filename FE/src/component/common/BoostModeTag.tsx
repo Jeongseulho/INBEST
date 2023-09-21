@@ -1,6 +1,7 @@
 import { AiFillQuestionCircle } from "react-icons/ai";
 
 const BoostModeTag = () => {
+  // TODO: 가속 모드에 대한 설명하기
   return (
     <div className="h-8 flex items-center justify-between rounded-full border-2 border-gray-300 py-3 px-2 gap-1 relative">
       <p className="text-primary text-sm">가속 모드</p>

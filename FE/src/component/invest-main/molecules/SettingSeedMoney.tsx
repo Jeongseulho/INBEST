@@ -11,6 +11,7 @@ interface Props {
 }
 
 const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, closeCreateModal, resetStepAndGroupSetting }: Props) => {
+  // TODO: input창 추가 직접 입력 가능하도록
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">

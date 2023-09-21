@@ -1,6 +1,8 @@
 import { formatNumberToWon } from "../../util/formatMoney";
 import { AiFillStar } from "react-icons/ai";
 import { AiOutlineStar } from "react-icons/ai";
+import IncreaseIcon from "./IncreaseIcon";
+import DecreaseIcon from "./DecreaseIcon";
 
 interface Props {
   title: string;
@@ -13,7 +15,7 @@ interface Props {
 }
 const StockList = ({ title, stockList }: Props) => {
   return (
-    <div className=" shadow-component flex flex-col w-[30%] p-4 gap-2">
+    <div className=" shadow-component flex flex-col p-4 gap-2 w-1/3">
       <h4>{title}</h4>
       <div className=" flex justify-between border-y-2 ">
         <p className=" w-24 text-center font-semiBold">이름</p>
@@ -24,7 +26,14 @@ const StockList = ({ title, stockList }: Props) => {
         {stockList.map((stock) => (
           <div className=" flex justify-between">
             <p className=" w-24 text-center">{stock.name}</p>
-            <p className=" w-40 text-center">{formatNumberToWon(stock.price)}</p>
+            <div className=" flex w-40 items-center justify-center">
+              <p className=" text-center">{formatNumberToWon(stock.price)}</p>
+              {stock.percentage >= 0 ? (
+                <IncreaseIcon number={stock.percentage} />
+              ) : (
+                <DecreaseIcon number={stock.percentage} />
+              )}
+            </div>
             {stock.favorite ? (
               <AiFillStar
                 className=" w-20"

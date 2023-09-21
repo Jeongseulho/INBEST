@@ -8,7 +8,7 @@ interface Props {
 
 const DecreaseGraphIcon = ({ title, desc }: Props) => {
   return (
-    <div className=" shadow-component p-4">
+    <div className=" shadow-component p-4 flex flex-col items-center">
       <div className=" flex items-center gap-2">
         <h4>{title}</h4>
         <div className="group relative">
@@ -18,7 +18,7 @@ const DecreaseGraphIcon = ({ title, desc }: Props) => {
           </span>
         </div>
       </div>
-      <img src={decrease_graph} width={180} />
+      <img src={decrease_graph} width={120} />
     </div>
   );
 };

@@ -4,10 +4,10 @@ import { INVESTING_TAB } from "../../constant/INVESTING_TAB";
 import InvestingInfo from "../investing-info/page/InvestingInfo";
 import InvestingMyInfo from "../investing-myinfo/page/InvestingMyInfo";
 import InvestingNews from "../investing-news/page/InvestingNews";
-import InvestingDomestic from "../investing-domestic/page/InvestingDomestic";
+import InvestingDomestic from "../investing-domestic/InvestingDomestic";
 import InvestingSearch from "../investing-search/page/InvestingSearch";
-import InvestingCrypto from "../investing-crypto/page/InvestingCrypto";
-import InvestingAbroad from "../investing-abroad/page/InvestingAbroad";
+import InvestingCrypto from "../investing-crypto/InvestingCrypto";
+import InvestingAbroad from "../investing-abroad/InvestingAbroad";
 import { useParams } from "react-router-dom";
 import InvestingLayout from "../common/InvestingLayout";
 

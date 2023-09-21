@@ -1,6 +1,7 @@
 import { AiFillQuestionCircle } from "react-icons/ai";
 
 const LinkingModeTag = () => {
+  // TODO: 계좌 연동 모드에 대한 설명하기
   return (
     <div className="h-8 flex items-center justify-between rounded-full border-2 border-gray-300 py-3 px-2 gap-1">
       <p className=" text-lightRed text-sm  ">계좌 연동 모드</p>
