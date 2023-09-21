@@ -10,10 +10,11 @@ from financialData.models import Company
 
 # Opendart API 엔드포인트 URL
 url = "https://opendart.fss.or.kr/api/company.json"
-api_key = "36509c5feed29d3468703dc40d3a64536d7cf944"
+api_key = "ac30ceeeb8ac94447e5e065876a5783d79e5b3ec"
 
 # Company 모델에서 company_code가 있는 부분을
 companies  = Company.objects.filter(company_code__isnull=False)[3001:]
+checkcount = 0
 
 for company in companies:
     company_code = company.company_code
@@ -23,6 +24,8 @@ for company in companies:
         "crtfc_key": api_key,
         "corp_code" : company_code
     }
+    checkcount += 1
+    print(checkcount)
 
     response = requests.get(url, params=params)
 

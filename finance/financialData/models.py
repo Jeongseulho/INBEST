@@ -66,4 +66,3 @@ class FinancialStatement(models.Model):
     accounts_receivable_turnover = models.FloatField(default=0.0)  # 매출채권회전율
     inventory_turnover = models.FloatField(default=0.0)  # 재고자산회전율
     total_asset_turnover = models.FloatField(default=0.0)  # 총자본회전율
-    
