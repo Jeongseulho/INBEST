@@ -7,14 +7,16 @@ import DecreaseIcon from "./DecreaseIcon";
 interface Props {
   title: string;
   stockList: {
+    code: string;
     name: string;
     price: number;
     percentage: number;
     favorite: boolean;
   }[];
+  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const StockList = ({ title, stockList }: Props) => {
+const StockList = ({ title, stockList, setCompanyCode }: Props) => {
   return (
     <div className=" shadow-component flex flex-col p-4 gap-2 w-1/3">
       <h4>{title}</h4>
@@ -25,7 +27,7 @@ const StockList = ({ title, stockList }: Props) => {
       </div>
       <div className=" flex flex-col gap-2">
         {stockList.map((stock, index) => (
-          <div className=" flex justify-between" key={index}>
+          <div className=" flex justify-between" key={index} onClick={() => setCompanyCode(stock.code)}>
             <p className=" w-24 text-center">{stock.name}</p>
             <div className=" flex w-40 items-center justify-center">
               <p className=" text-center">{formatNumberToDollar(stock.price)}</p>

@@ -1,7 +1,11 @@
 import SearchInput from "../organisms/SearchInput";
 import SearchList from "../organisms/SearchList";
 
-const InvestingSearch = () => {
+interface Props {
+  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const InvestingSearch = ({ setCompanyCode }: Props) => {
   const searchList = [
     {
       logo: "",
@@ -19,7 +23,7 @@ const InvestingSearch = () => {
 
   return (
     <div className=" flex gap-4">
-      <SearchList searchList={searchList} />
+      <SearchList searchList={searchList} setCompanyCode={setCompanyCode} />
       <SearchInput />
     </div>
   );

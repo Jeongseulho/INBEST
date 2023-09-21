@@ -12,9 +12,10 @@ interface SearchItem {
 
 interface Props {
   searchList: SearchItem[];
+  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SearchList = ({ searchList }: Props) => {
+const SearchList = ({ searchList, setCompanyCode }: Props) => {
   return (
     <div className=" shadow-component flex flex-col p-6 gap-4 w-[50%]">
       <h3>검색 결과</h3>

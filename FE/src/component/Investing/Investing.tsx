@@ -8,24 +8,32 @@ import InvestingDomestic from "../investing-domestic/InvestingDomestic";
 import InvestingSearch from "../investing-search/page/InvestingSearch";
 import InvestingCrypto from "../investing-crypto/InvestingCrypto";
 import InvestingAbroad from "../investing-abroad/InvestingAbroad";
-import { useParams } from "react-router-dom";
 import InvestingLayout from "../common/InvestingLayout";
+import InvestingDetail from "../Investing-detail/page/InvestingDetail";
+import DetailPortal from "../common/DetailPortal";
+import { AnimatePresence } from "framer-motion";
 
 const Investing = () => {
   const [activeTab, setActiveTab] = useState(INVESTING_TAB.INFO);
-  const { groupCode } = useParams();
+  const [companyCode, setCompanyCode] = useState("");
 
   return (
     <div className=" flex max-w-[100vw] ">
       <InvestSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <InvestingLayout>
-        {activeTab === INVESTING_TAB.INFO && <InvestingInfo groupCode={groupCode} />}
-        {activeTab === INVESTING_TAB.MY_INFO && <InvestingMyInfo groupCode={groupCode} />}
-        {activeTab === INVESTING_TAB.SEARCH && <InvestingSearch />}
-        {activeTab === INVESTING_TAB.DOMESTIC && <InvestingDomestic groupCode={groupCode} />}
-        {activeTab === INVESTING_TAB.ABROAD && <InvestingAbroad groupCode={groupCode} />}
-        {activeTab === INVESTING_TAB.CRYPTO && <InvestingCrypto groupCode={groupCode} />}
-        {activeTab === INVESTING_TAB.NEWS && <InvestingNews groupCode={groupCode} />}
+        {activeTab === INVESTING_TAB.INFO && <InvestingInfo />}
+        {activeTab === INVESTING_TAB.MY_INFO && <InvestingMyInfo />}
+        {activeTab === INVESTING_TAB.SEARCH && <InvestingSearch setCompanyCode={setCompanyCode} />}
+        {activeTab === INVESTING_TAB.DOMESTIC && <InvestingDomestic setCompanyCode={setCompanyCode} />}
+        {activeTab === INVESTING_TAB.ABROAD && <InvestingAbroad setCompanyCode={setCompanyCode} />}
+        {activeTab === INVESTING_TAB.CRYPTO && <InvestingCrypto setCompanyCode={setCompanyCode} />}
+        {activeTab === INVESTING_TAB.NEWS && <InvestingNews />}
+
+        <DetailPortal>
+          <AnimatePresence>
+            {companyCode && <InvestingDetail companyCode={companyCode} setCompanyCode={setCompanyCode} />}
+          </AnimatePresence>
+        </DetailPortal>
       </InvestingLayout>
     </div>
   );

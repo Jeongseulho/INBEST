@@ -6,12 +6,7 @@ import MyStock from "../organisms/MyStock";
 import RecentDealStock from "../organisms/RecentDealStock";
 import RecentWatchStock from "../organisms/RecentWatchStock";
 
-interface Props {
-  groupCode: string | undefined;
-}
-
-const InvestingMyInfo = ({ groupCode }: Props) => {
-  console.log(groupCode);
+const InvestingMyInfo = () => {
   return (
     <div className=" grid grid-cols-6 grid-rows-6">
       <MyAssets />

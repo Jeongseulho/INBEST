@@ -2,28 +2,28 @@ import StockList from "../common/StockList";
 import DecreaseGraphIcon from "../common/DecreaseGraphIcon";
 import IncreaseGraphIcon from "../common/IncreaseGraphIcon";
 import FearRadialBar from "./FearRadialBar";
-
 interface Props {
-  groupCode: string | undefined;
+  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
 }
-
-const InvestingCrypto = ({ groupCode }: Props) => {
-  console.log(groupCode);
+const InvestingCrypto = ({ setCompanyCode }: Props) => {
   const stockList = [
     {
       name: "삼성전자",
+      code: "005930",
       price: 100000,
       percentage: 10,
       favorite: true,
     },
     {
       name: "삼성전자",
+      code: "005930",
       price: 10000,
       percentage: -10,
       favorite: true,
     },
     {
       name: "삼성전자",
+      code: "005930",
       price: 288900,
       percentage: 100,
       favorite: false,
@@ -38,9 +38,9 @@ const InvestingCrypto = ({ groupCode }: Props) => {
         <FearRadialBar percentage={100} />
       </div>
       <div className=" flex gap-4 w-full">
-        <StockList stockList={stockList} title="많이 사고 파는 주식" />
-        <StockList stockList={stockList} title="급상승 주식" />
-        <StockList stockList={stockList} title="시가총액 높은 주식" />
+        <StockList stockList={stockList} title="많이 사고 파는 주식" setCompanyCode={setCompanyCode} />
+        <StockList stockList={stockList} title="급상승 주식" setCompanyCode={setCompanyCode} />
+        <StockList stockList={stockList} title="시가총액 높은 주식" setCompanyCode={setCompanyCode} />
       </div>
     </div>
   );
