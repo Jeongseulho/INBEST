@@ -52,36 +52,38 @@ public class BoardService {
 		log.info(board.toString());
 		ArrayList<BoardImgEntity> boardImgEntities = new ArrayList<>();
 
-		for(MultipartFile file : boardDTO.getFiles()){
-			BoardImgDTO boardImgDTO = new BoardImgDTO();
-			String originalName = "";
-			File backgroundImgFile;
-			String backgroundImgSearchName="";
-			UUID uuid = UUID.randomUUID();
-			String extend = "";
+		if(boardDTO.getFiles() != null){
+			for(MultipartFile file : boardDTO.getFiles()){
+				BoardImgDTO boardImgDTO = new BoardImgDTO();
+				String originalName = "";
+				File backgroundImgFile;
+				String backgroundImgSearchName="";
+				UUID uuid = UUID.randomUUID();
+				String extend = "";
 
-			originalName = file.getOriginalFilename();
-			extend = originalName.substring(originalName.lastIndexOf('.'));
-			// #2 - 원본 파일 이름 저장
-			boardImgDTO.setOriginalName(originalName.substring(0,originalName.indexOf('.')));
-			boardImgDTO.setExtend(extend);
+				originalName = file.getOriginalFilename();
+				extend = originalName.substring(originalName.lastIndexOf('.'));
+				// #2 - 원본 파일 이름 저장
+				boardImgDTO.setOriginalName(originalName.substring(0,originalName.indexOf('.')));
+				boardImgDTO.setExtend(extend);
 
-			// #3 - 저장용 랜덤 파일 이름 저장
-			backgroundImgSearchName = uuid.toString();
+				// #3 - 저장용 랜덤 파일 이름 저장
+				backgroundImgSearchName = uuid.toString();
 
-			// #4 - 파일 임시 저장
-			//파일이 있으면 임시 파일 저장
-			backgroundImgFile = File.createTempFile(backgroundImgSearchName,extend);
-			FileUtils.copyInputStreamToFile(file.getInputStream(),backgroundImgFile);
-			//5 - 이미지 서버 저장
-			amazonS3.putObject(bucketName, "board/"+backgroundImgSearchName+extend, backgroundImgFile);
-			// #6 - DB 저장
-			boardImgDTO.setSearchName(backgroundImgSearchName);
-			BoardImgEntity boardImgEntity = boardImgDTO.toBoardImgEntity();
-			boardImgRepository.save(boardImgEntity);
-			boardImgEntities.add(boardImgEntity);
+				// #4 - 파일 임시 저장
+				//파일이 있으면 임시 파일 저장
+				backgroundImgFile = File.createTempFile(backgroundImgSearchName,extend);
+				FileUtils.copyInputStreamToFile(file.getInputStream(),backgroundImgFile);
+				//5 - 이미지 서버 저장
+				amazonS3.putObject(bucketName, "board/"+backgroundImgSearchName+extend, backgroundImgFile);
+				// #6 - DB 저장
+				boardImgDTO.setSearchName(backgroundImgSearchName);
+				BoardImgEntity boardImgEntity = boardImgDTO.toBoardImgEntity();
+				boardImgRepository.save(boardImgEntity);
+				boardImgEntities.add(boardImgEntity);
 
-			backgroundImgFile.delete();
+				backgroundImgFile.delete();
+			}
 		}
 
 		board.setImgList(boardImgEntities);
