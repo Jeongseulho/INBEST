@@ -1,5 +1,6 @@
 package com.jrjr.inbest.trading.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.inbest.trading.dto.TradingDTO;
-import com.jrjr.inbest.trading.enums.TradingResultType;
+import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.service.TradingService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class TradingController {
 	@PostMapping("")
 	public ResponseEntity<Map<String, Object>> addTrading(@ModelAttribute TradingDTO tradingDto){
 		log.info("========== 주식 거래 등록 시작 ==========");
+
+		// tradingDto.setCreatedDate(LocalDateTime.now());
 		tradingDto.setConclusionType(TradingResultType.READY);
 		tradingService.insertTrading(tradingDto);
 

@@ -1,6 +1,4 @@
-package com.jrjr.inbest.trading.enums;
-
-import org.springframework.stereotype.Component;
+package com.jrjr.inbest.trading.constant;
 
 public class TradingResultType {
 	public static Integer READY = 0;

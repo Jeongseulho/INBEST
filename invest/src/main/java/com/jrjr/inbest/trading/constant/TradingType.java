@@ -1,4 +1,4 @@
-package com.jrjr.inbest.trading.enums;
+package com.jrjr.inbest.trading.constant;
 
 public class TradingType {
 	public static Integer SELL = 0;

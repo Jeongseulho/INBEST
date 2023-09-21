@@ -3,15 +3,11 @@ package com.jrjr.inbest.trading.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.LastModifiedDate;
-
-import com.jrjr.inbest.global.entity.BaseEntity;
 import com.jrjr.inbest.trading.entity.RedisTradingEntity;
 import com.jrjr.inbest.trading.entity.TradingEntity;
-import com.jrjr.inbest.trading.enums.TradingResultType;
-import com.jrjr.inbest.trading.enums.TradingType;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,32 +25,43 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TradingDTO implements Serializable {
 	private Long seq;
+	@NotNull
 	private Long userSeq;
+	@NotNull
+	private Long gameSeq;
 	@Column(columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
 	private String nickname;
 	private LocalDateTime createdDate;
 	private LocalDateTime lastModifiedDate;
+	@NotNull
 	private Long amount;
+	@NotNull
 	private Long price;
-	@Column(columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
+	@NotNull
 	private String stockCode;
+	@NotNull
 	private Integer tradingType;
-	@Builder.Default
-	private Integer conclusionType = TradingResultType.READY;
+	@NotNull
+	private Integer stockType;
+	@NotNull
+	private Integer gameType;
+	private Integer conclusionType;
 
 	public TradingEntity toTradingEntity(){
-		log.info(this.toString());
+		// log.info(this.toString());
 		return TradingEntity.builder().
 			userSeq(this.userSeq).nickname(this.nickname).
 			amount(this.amount).stockCode(this.stockCode).tradingType(this.tradingType).conclusionType(this.conclusionType).
 			build();
 	}
 	public RedisTradingEntity toRedisTradingEntity(){
-		log.info(this.toString());
+		// log.info(this.toString());
 		return RedisTradingEntity.builder().
-			seq(String.valueOf(this.seq)).
+			seq(this.seq).price(price).gameSeq(gameSeq).
 			userSeq(this.userSeq).nickname(this.nickname).
-			amount(this.amount).stockCode(this.stockCode).tradingType(this.tradingType).conclusionType(this.conclusionType).
+			amount(this.amount).stockCode(this.stockCode).
+			tradingType(this.tradingType).conclusionType(this.conclusionType).
+			gameType(gameType).stockType(stockType).createdDate(createdDate).
 			build();
 	}
 }
