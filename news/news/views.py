@@ -28,13 +28,19 @@ def MainNewsList(request):
         except Exception:
             continue
 
+        try:
+            link_url = news.select_one(".sh_text a")['href']
+        except Exception:
+            continue
+
         title = news.select_one(".sh_text_headline").text.strip()
         content = news.select_one(".sh_text_lede").text.strip()
 
         data_dict = {
             'title':title,
             'content':content,
-            'image_url':image_url
+            'image_url':image_url,
+            'link_url' : link_url
         }
 
         news_data.append(data_dict)
@@ -60,6 +66,11 @@ def BreakingNewsList(request):
         except Exception:
             continue
 
+        try:
+            link_url = news.select_one(".news_node a")['href']
+        except Exception:
+            continue
+            
         title = news.select_one(".news_ttl").text.strip()
         content = news.select_one(".news_desc").text.strip()
         time = news.select_one(".time_info").text.strip()
@@ -68,7 +79,8 @@ def BreakingNewsList(request):
             'title':title,
             'content':content,
             'image_url':image_url,
-            'time' : time
+            'time' : time,
+            'link_url' : link_url
         }
 
         news_data.append(data_dict)
@@ -99,12 +111,18 @@ def IndustryByNewsList(request, category):
         except Exception:
             continue
 
+        try:
+            link_url = news.select_one(".news-con a")['href']
+        except Exception:
+            continue
+
         title = news.select_one(".tit-news").text.strip()
 
         data_dict ={
             'title': title,
             'content' : content,
             'image_url': image_url,
+            'link_url' : link_url
         }
 
         news_data.append(data_dict)
@@ -134,8 +152,17 @@ def CompanyByNewsList(request, company_code):
         title = news.select_one(".tit").text.strip()
         link = "https://finance.naver.com" + news.select_one(".tit")['href']
         time = news.select_one(".date").text.strip()
+        info = news.select_one(".info").text.strip()
+
+        url_newslogo = f'https://namu.wiki/w/{info}'
+        res_newslogo = requests.get(url_newslogo, headers=headers)
+        soup_newslogo = BeautifulSoup(res_newslogo.text, 'lxml')
+    
+
+        image_element = soup_newslogo.select_one('.fSQMAUnZ .GJItanm2')['src']
 
         translation = translator.translate(title, dest='en').text
+
 
         blob = TextBlob(translation)
         sentiment_polarity = blob.sentiment.polarity
@@ -156,9 +183,11 @@ def CompanyByNewsList(request, company_code):
 
         data_dict ={
             'title': title,
-            'link' : link,
+            'link_url' : link,
             'time': time,
-            'sentiment_analysis': sentiment_analysis
+            'sentiment_analysis': sentiment_analysis,
+            'image_url' : image_element,
+            # 'info' : info
         }
 
 
