@@ -15,9 +15,8 @@ class Company(models.Model):
     company_stock_code = models.CharField(max_length=10)
     company_real_industry_code = models.CharField(max_length=10, null=True)
 
-    company_industry_code = models.OneToOneField(
+    company_industry_code = models.ManyToManyField(
         CompanyIndustry,
-        on_delete=models.SET_NULL,
         null=True,
         related_name='company',
     )
