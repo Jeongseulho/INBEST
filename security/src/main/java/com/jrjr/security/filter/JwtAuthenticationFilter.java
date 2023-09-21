@@ -1,6 +1,7 @@
 package com.jrjr.security.filter;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import org.springframework.security.core.Authentication;
@@ -50,8 +51,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 
-		String accessToken = request.getParameter("accessToken");
+		String inputAccessToken = request.getParameter("accessToken");
 		String refreshToken = request.getParameter("refreshToken");
+
+		log.info("inputAccessToken: {}", inputAccessToken);
+		log.info("refreshToken: {}", refreshToken);
+
+		Optional<String> accessToken = jwtProvider.resolveAccessToken(inputAccessToken);
 
 		// accessToken 없을 때 -> refreshToken 검사 후 재발급
 		if (accessToken.isEmpty()) {
@@ -63,18 +69,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		// accessToken 있을 때 -> 손상: 로그아웃, 만료: 재발급
-		log.info("accessToken.isPresent() 실행");
-		// accessToken: 손상 x, 만료 o -> accessToken 재발급
-		if (!jwtProvider.isValidToken(accessToken)) {
-			if (refreshToken.isEmpty()) {
-				throw new JwtException("EXPIRED_REFRESH_TOKEN");
+		if (accessToken.isPresent()) {
+			log.info("accessToken.isPresent() 실행");
+			// accessToken: 손상 x, 만료 o -> accessToken 재발급
+			if (!jwtProvider.isValidToken(accessToken.get())) {
+				if (refreshToken.isEmpty()) {
+					throw new JwtException("EXPIRED_REFRESH_TOKEN");
+				}
+				this.reissueAccessToken(response, refreshToken);
 			}
-			this.reissueAccessToken(response, refreshToken);
+			log.info("AccessToken 정상 - 권한 저장");
+			Authentication authentication = jwtProvider.getAuthentication(accessToken.get());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			filterChain.doFilter(request, response);
 		}
-		log.info("AccessToken 정상 - 권한 저장");
-		Authentication authentication = jwtProvider.getAuthentication(accessToken);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		filterChain.doFilter(request, response);
 	}
 
 	private void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {
