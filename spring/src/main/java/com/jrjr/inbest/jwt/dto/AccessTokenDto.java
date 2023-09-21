@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class AccessTokenDto {
+
 	private String grantType;
+
 	private String accessToken;
 }
