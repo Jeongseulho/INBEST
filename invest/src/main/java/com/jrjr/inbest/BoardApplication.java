@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.jrjr.inbest.board.repository.BoardImgRepository;
 import com.jrjr.inbest.board.repository.BoardRepository;
+import com.jrjr.inbest.board.repository.CoCommentRepository;
+import com.jrjr.inbest.board.repository.CommentRepository;
 
 @SpringBootApplication
 @EnableDiscoveryClient	//유레카 등록 어노테이션
@@ -20,7 +22,7 @@ import com.jrjr.inbest.board.repository.BoardRepository;
 @EnableMongoAuditing
 @EnableJpaRepositories(excludeFilters = @ComponentScan.Filter(
 	type = FilterType.ASSIGNABLE_TYPE,
-	classes = {BoardRepository.class, BoardImgRepository.class}))
+	classes = {BoardRepository.class, BoardImgRepository.class, CommentRepository.class, CoCommentRepository.class}))
 public class BoardApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BoardApplication.class, args);

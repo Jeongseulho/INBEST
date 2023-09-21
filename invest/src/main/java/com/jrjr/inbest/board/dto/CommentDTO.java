@@ -4,15 +4,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.xml.stream.events.Comment;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jrjr.inbest.board.entity.BoardEntity;
+import com.jrjr.inbest.board.entity.CoCommentEntity;
+import com.jrjr.inbest.board.entity.CommentEntity;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,25 +25,29 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 @Builder
 @Slf4j
-public class BoardDTO implements Serializable {
+public class CommentDTO implements Serializable {
 	private String seq;
-	private Long view;
 	private Long likes;
 	private Long userSeq;
 	private String context;
-	private String title;
-	private List<MultipartFile> files;
-	private List<BoardImgDTO> imgList;
-	private List<CommentDTO> commentList;
 	private UserDTO writer;
 	private LocalDateTime createdDate;
 	private LocalDateTime lastModifiedDate;
+	private String boardId;
+	private List<CommentDTO> cocommentList;
 
-	public BoardEntity toBoardEntity(){
+	public CommentEntity toCommentEntity(){
 		log.info(this.toString());
-		return BoardEntity.builder().
-			userSeq(this.userSeq).view(this.view == null ? 0 : this.view)
-			.likes(this.likes == null ? 0 : this.likes).context(this.context).title(this.title)
+		return CommentEntity.builder().
+			userSeq(this.userSeq).likes(this.likes == null ? 0 : this.likes)
+			.context(this.context)
+			.build();
+	}
+	public CoCommentEntity toCocommentEntity(){
+		log.info(this.toString());
+		return CoCommentEntity.builder().
+			userSeq(this.userSeq).likes(this.likes == null ? 0 : this.likes)
+			.context(this.context)
 			.build();
 	}
 }

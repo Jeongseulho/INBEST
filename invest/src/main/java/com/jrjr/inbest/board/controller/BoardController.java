@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.inbest.board.dto.BoardDTO;
+import com.jrjr.inbest.board.dto.CommentDTO;
 import com.jrjr.inbest.board.service.BoardService;
+import com.jrjr.inbest.board.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/boards")
 public class BoardController {
 	private final BoardService boardService;
+	private final CommentService commentService;
 
 	@PostMapping("")
 	public ResponseEntity<Map<String, Object>> insertBoard(@ModelAttribute BoardDTO boardDTO) throws Exception {
@@ -124,5 +127,53 @@ public class BoardController {
 		log.info("========== 게시판 좋아요 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+	@PostMapping("/{boardSeq}/comments")
+	public ResponseEntity<Map<String, Object>> insertComment(
+		@ModelAttribute CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq) throws
+		Exception {
+		log.info("========== 덧글 등록 시작 ==========");
+		log.info("덧글 : "+commentDTO);
 
+		CommentDTO resultDto = commentService.insertComment(commentDTO,boardSeq);
+
+		log.info("덧글 결과 : "+resultDto);
+
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if(resultDto.getSeq() == null || resultDto.getSeq().isEmpty()){
+			resultMap.put("success",false);
+		}else{
+			resultMap.put("success",true);
+		}
+
+		resultMap.put("comment",resultDto);
+
+		log.info("========== 덧글 등록 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+	@PostMapping("/{boardSeq}/comments/{commentSeq}/cocomments")
+	public ResponseEntity<Map<String, Object>> insertCoComment(
+		@ModelAttribute CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq
+		,@PathVariable(name = "commentSeq") String commentSeq) throws
+		Exception {
+		log.info("========== 대댓글 등록 시작 ==========");
+		log.info("대댓글 : "+commentDTO);
+
+		CommentDTO resultDto = commentService.insertCocomment(commentDTO,boardSeq,commentSeq);
+
+		log.info("덧글 결과 : "+resultDto);
+
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if(resultDto.getSeq() == null || resultDto.getSeq().isEmpty()){
+			resultMap.put("success",false);
+		}else{
+			resultMap.put("success",true);
+		}
+
+		resultMap.put("comment",resultDto);
+
+		log.info("========== 대댓글 등록 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
 }

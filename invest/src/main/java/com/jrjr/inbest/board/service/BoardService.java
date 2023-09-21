@@ -17,12 +17,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.jrjr.inbest.board.dto.BoardDTO;
 import com.jrjr.inbest.board.dto.BoardImgDTO;
+import com.jrjr.inbest.board.dto.CommentDTO;
 import com.jrjr.inbest.board.dto.UserDTO;
 import com.jrjr.inbest.board.entity.BoardEntity;
 import com.jrjr.inbest.board.entity.BoardImgEntity;
+import com.jrjr.inbest.board.entity.CommentEntity;
 import com.jrjr.inbest.board.entity.UserEntity;
 import com.jrjr.inbest.board.repository.BoardImgRepository;
 import com.jrjr.inbest.board.repository.BoardRepository;
+import com.jrjr.inbest.board.repository.CommentRepository;
 import com.jrjr.inbest.board.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -141,12 +144,12 @@ public class BoardService {
 
 		List<BoardEntity> boardEntityList = boardRepository.findByCreatedDateBetween(start, end, pageRequest);
 
-		ArrayList<BoardDTO> boardDTOAList = new ArrayList<>();
+		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
 
 		for(BoardEntity boardEntity : boardEntityList){
-			boardDTOAList.add(boardEntity.toBoardDTO());
+			boardDTOList.add(boardEntity.toBoardDTO());
 		}
 
-		return boardDTOAList;
+		return boardDTOList;
 	}
 }
