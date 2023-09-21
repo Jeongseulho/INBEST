@@ -10,6 +10,7 @@ import { AnimatePresence } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Investing from "./component/Investing/Investing";
+import Community from "./component/community/page/Community";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function App() {
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
               <Route path="/invest/:groupCode" element={<Investing />} />
+              <Route path="/community" element={<Community />}></Route>
             </Routes>
           </AnimatePresence>
         </Layout>
