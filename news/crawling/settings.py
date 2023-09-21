@@ -134,9 +134,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = []
-CORS_ALLOW_CREDENTIALS = True
-
 def register_with_eureka():
     # EUREKA_CLIENT 설정 및 서버에 등록.
     eureka_client.init(
