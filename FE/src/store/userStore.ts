@@ -11,7 +11,7 @@ interface LoginInfo {
 }
 const userStore = create<LoginInfo>()(
   devtools(
-    persist(
+    persist<LoginInfo>(
       (set) => ({
         accessToken: null,
         userInfo: null,

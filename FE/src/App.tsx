@@ -9,9 +9,11 @@ import InvestMain from "./component/invest-main/page/InvestMain";
 import { AnimatePresence } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
 import CommunityList from "./component/community/organisms/CommunityList";
 import CommunityCreate from "./component/community/organisms/CommunityCreate";
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
                 <Route index element={<CommunityList />} />
                 <Route path="create" element={<CommunityCreate />}></Route>
               </Route>
+              <Route path="/invest/:groupCode" element={<Investing />} />
+              <Route path="/community" element={<Community />}></Route>
             </Routes>
           </AnimatePresence>
         </Layout>
