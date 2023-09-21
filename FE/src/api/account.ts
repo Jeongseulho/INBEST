@@ -2,8 +2,8 @@ import { apiInstance } from "./index";
 import { instanceWithAuth } from "./interceptors";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 import { SignupSubmitFormValue, LoginFormValue, LoginResultValue, ApiGetUserInfo } from "../type/Accounts";
-const api = apiInstance();
-const apiWithAuth = instanceWithAuth();
+const api = apiInstance("spring-service");
+const apiWithAuth = instanceWithAuth("spring-service");
 export const checkEmail = async (email: string): Promise<ApiSuccessMessage | void> => {
   const { data } = await api.get("/users/inquiry-email", { params: { email: email } });
   return data;

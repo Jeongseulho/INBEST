@@ -201,3 +201,17 @@ body{
 .rc-slider-mark-text {
   width: 50px;
 }
+
+.ql-editor{
+  height: 30rem;
+  @apply bg-slate-200
+}
+.ql-toolbar{
+  @apply bg-gray-100
+}
+/* .quill {
+  height: 100%;
+} */
+/* .ql-container{
+  height: 500px;
+} */

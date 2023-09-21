@@ -10,6 +10,8 @@ import { AnimatePresence } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Community from "./component/community/page/Community";
+import CommunityList from "./component/community/organisms/CommunityList";
+import CommunityCreate from "./component/community/organisms/CommunityCreate";
 const queryClient = new QueryClient();
 
 function App() {
@@ -25,7 +27,10 @@ function App() {
               <Route path="/invest" element={<InvestMain />} />
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
-              <Route path="/community" element={<Community />}></Route>
+              <Route path="community" element={<Community />}>
+                <Route index element={<CommunityList />} />
+                <Route path="create" element={<CommunityCreate />}></Route>
+              </Route>
             </Routes>
           </AnimatePresence>
         </Layout>
