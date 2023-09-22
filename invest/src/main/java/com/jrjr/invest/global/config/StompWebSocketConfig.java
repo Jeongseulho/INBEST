@@ -1,6 +1,7 @@
-package com.jrjr.invest;
+package com.jrjr.invest.global.config;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.util.AntPathMatcher;
@@ -11,6 +12,15 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+	@Value("${spring.rabbitmq.host}")
+	private String host;
+
+	@Value("${spring.rabbitmq.username}")
+	private String username;
+
+	@Value("${spring.rabbitmq.password}")
+	private String password;
 
 	// 웹소켓 핸드셰이크 커넥션을 생성할 경로
 	@Override
@@ -23,7 +33,13 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		// registry.setPathMatcher(new AntPathMatcher(".")); // URL을 / -> .으로
 		registry.setApplicationDestinationPrefixes("/pub"); // @MessageMapping으로 연결
 		// registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
-		registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
+		registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue")
+			.setRelayHost(host)
+			.setRelayPort(61613) // RabbitMQ STOMP 기본 포트
+			.setSystemLogin(username)
+			.setSystemPasscode(password)
+			.setClientLogin(username)
+			.setClientPasscode(password);
 	}
 
 

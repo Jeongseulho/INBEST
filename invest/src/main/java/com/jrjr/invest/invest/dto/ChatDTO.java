@@ -1,4 +1,4 @@
-package com.jrjr.invest;
+package com.jrjr.invest.invest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
