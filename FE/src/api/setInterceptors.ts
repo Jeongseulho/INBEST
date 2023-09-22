@@ -46,14 +46,14 @@ export const setInterceptors = (instance: AxiosInstance) => {
         setAccessToken(null);
         setRefreshToken(null);
         setUserInfo(null);
-        return toast.error("토큰이 손상되었습니다. 다시 로그인 해주세요.");
+        return alert("토큰이 손상되었습니다. 다시 로그인 해주세요.");
       } else if (message === "EXPIRED_REFRESH_TOKEN") {
         console.log(message);
         window.location.assign("/login");
         setAccessToken(null);
         setRefreshToken(null);
         setUserInfo(null);
-        return toast.error("토큰이 만료되었습니다. 다시 로그인 해주세요.");
+        return alert("토큰이 만료되었습니다. 다시 로그인 해주세요.");
       } else {
         throw error;
       }

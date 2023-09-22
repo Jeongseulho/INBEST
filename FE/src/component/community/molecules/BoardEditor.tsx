@@ -1,7 +1,7 @@
 import { useBoardEditor } from "./useBoardEditor";
 import QuillEditor from "../atoms/QuillEditor";
-const BoardEditor = () => {
-  const { quillRef, htmlContent, setHtmlContent, onSubmit } = useBoardEditor();
+const BoardEditor = ({ title }: { title: string }) => {
+  const { quillRef, htmlContent, setHtmlContent, onSubmit } = useBoardEditor(title);
   return (
     <>
       <QuillEditor quillRef={quillRef} htmlContent={htmlContent} setHtmlContent={setHtmlContent} />

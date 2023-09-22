@@ -1,18 +1,25 @@
 import { Link } from "react-router-dom";
-
+import { HiMiniPencilSquare } from "react-icons/hi2";
+import BoardOrderBtns from "../molecules/BoardOrderBtns";
+import BoardList from "../molecules/BoardList";
 const CommunityList = () => {
   return (
     <>
       <div>
-        <header>
-          <div className="flex justify-start">
+        <header className="mt-4">
+          <div className="flex justify-between">
             <Link to={"create"}>
-              <button>글 작성하기</button>
+              <div className="flex items-center px-2 text-white bg-green-600 rounded-md h-8  justify-center hover:cursor-pointer">
+                <HiMiniPencilSquare />
+                <span className="ms-1 font-regular text-sm">글 작성하기</span>
+              </div>
             </Link>
+            <BoardOrderBtns />
           </div>
-          <div></div>
         </header>
-        <main></main>
+        <main>
+          <BoardList />
+        </main>
       </div>
     </>
   );

@@ -13,7 +13,6 @@ import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
 import CommunityList from "./component/community/organisms/CommunityList";
 import CommunityCreate from "./component/community/organisms/CommunityCreate";
-
 const queryClient = new QueryClient();
 
 function App() {
@@ -31,7 +30,7 @@ function App() {
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
               <Route path="community" element={<Community />}>
                 <Route index element={<CommunityList />} />
-                <Route path="create" element={<CommunityCreate />}></Route>
+                <Route path="create" element={<CommunityCreate />} />
               </Route>
               <Route path="/invest/:groupCode" element={<Investing />} />
               <Route path="/community" element={<Community />}></Route>
