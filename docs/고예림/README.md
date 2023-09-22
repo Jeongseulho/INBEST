@@ -3,7 +3,7 @@
 
 # 23-09-22
 - rabbitmq로 pub/sub 기능 설계
-- 모의주식 투자별 그룹 생성 기능
+- 모의주식 투자별 그룹 생성 STOMP API 명세서 작성
 
 # 23-09-21
 - pub/sub 기능을 위한 rabbitmq-test 배포
