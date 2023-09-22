@@ -1,27 +1,41 @@
 <details>
 <summary>4주차</summary>
 
+# 23-09-22
+- rabbitmq로 pub/sub 기능 설계
+- 모의주식 투자별 그룹 생성 기능
+
 # 23-09-21
+- pub/sub 기능을 위한 rabbitmq-test 배포
 - connection confused 에러 해결
-- rabbitmq, activamq 학습
-- redis 복습
+- activamq, webflux 학습
+- redis 구조 복습
 
 # 23-09-20
+- stomp Config 설정
 - virtual host 학습
+- rabbitmq, stomp plugin 추가
+- rabbitmq 재배포
+
 
 # 23-09-19
-- Message Broker 원리 및 학습
+- Message Broker 추가 학습
 - RabbitMq Config 설정
 
 # 23-09-18
-- RabbitMq 원리 및 학습
-- RabiitMq 디버깅
+- RabbitMq, kafka 학습 및 비교
+- Message Broker 선택
 
 </details>
 
 
 <details>
 <summary>3주차</summary>
+
+# 23-09-15
+- 중간 발표
+- 전문가 리뷰
+- infra dockerfile 리팩토링 
 
 # 23-09-14
 - Redis 배포
