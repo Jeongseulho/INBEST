@@ -41,8 +41,8 @@ const InvestingDomestic = ({ setCompanyCode }: Props) => {
       </div>
       <div className=" flex gap-4 w-full">
         <StockList stockList={stockList} title="많이 사고 파는 주식" setCompanyCode={setCompanyCode} />
-        <StockList stockList={stockList} title="급상승 주식" />
-        <StockList stockList={stockList} title="시가총액 높은 주식" />
+        <StockList stockList={stockList} title="급상승 주식" setCompanyCode={setCompanyCode} />
+        <StockList stockList={stockList} title="시가총액 높은 주식" setCompanyCode={setCompanyCode} />
       </div>
     </div>
   );
