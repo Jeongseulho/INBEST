@@ -1,6 +1,14 @@
 <details>
 <summary>4주차</summary>
 
+# 23-09-21
+- connection confused 에러 해결
+- rabbitmq, activamq 학습
+- redis 복습
+
+# 23-09-20
+- virtual host 학습
+
 # 23-09-19
 - Message Broker 원리 및 학습
 - RabbitMq Config 설정
@@ -14,9 +22,6 @@
 
 <details>
 <summary>3주차</summary>
-
-# 23-09-15
-- 
 
 # 23-09-14
 - Redis 배포
