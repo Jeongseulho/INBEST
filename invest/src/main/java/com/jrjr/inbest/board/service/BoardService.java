@@ -96,12 +96,17 @@ public class BoardService {
 			PageRequest.of(page-1,size, Sort.Direction.DESC,"createdDate"));
 		List<BoardDTO> boardDTOList = new ArrayList<>();
 
+		log.info("========== 대상 게시물 ==========");
 		for(BoardEntity boardEntity : boardEntityList.getContent()){
 			BoardDTO boardDTO = boardEntity.toBoardDTO();
+
+			log.info(boardDTO.toString());
 			if(boardDTO.getUserSeq() !=null){
-				boardDTO.setWriter(userService.findBySeq(boardDTO.getUserSeq()));
+				UserDTO userDTO= userService.findBySeq(boardDTO.getUserSeq());
+				log.info("작성자 : "+userDTO.toString());
+				boardDTO.setWriter(userDTO);
 			}
-			boardDTOList.add(boardEntity.toBoardDTO());
+			boardDTOList.add(boardDTO);
 		}
 
 		return boardDTOList;
