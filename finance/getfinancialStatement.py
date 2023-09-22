@@ -22,8 +22,7 @@ for company_code in company_codes:
         "reprt_code" : "11011",
         "fs_div" : "OFS"
     }
-
-    print('여기야')
+    
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
