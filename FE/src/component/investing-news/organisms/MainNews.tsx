@@ -1,11 +1,15 @@
 import News from "../../investing-news/molecules/News";
 import { useMainNews } from "./useMainNews";
+import news from "../../../asset/image/news.png";
 
 const MainNews = () => {
   const { data, isLoading, isError } = useMainNews();
   return (
     <div className=" shadow-component col-span-1 row-span-2 p-4">
-      <h3 className=" mb-6">주요 뉴스</h3>
+      <div className=" flex items-center mb-4 gap-4">
+        <img src={news} width={40} />
+        <h3>주요 뉴스</h3>
+      </div>
       {isLoading ? (
         <p>로딩중...</p>
       ) : isError ? (
