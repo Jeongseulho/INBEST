@@ -1,6 +1,7 @@
 package com.jrjr.inbest.trading.scheduler;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.jrjr.inbest.trading.dto.StockDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.constant.TradingType;
 import com.jrjr.inbest.trading.repository.TradingRepository;
@@ -24,17 +26,19 @@ import com.jrjr.inbest.trading.repository.TradingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-// @Component
+@Component
 @Slf4j
 @RequiredArgsConstructor
 public class TradingScheduler {
 	private final TradingRepository tradingRepository;
 	private final RedisTemplate<String, TradingDTO> redisTradingTemplate;
+	private final RedisTemplate<String, StockDTO> redisStockTemplate;
 
 	@Value("${stock.url.market-price}")
 	public String url;
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
+
 	@Scheduled(cron = "0/10 * * * * *")
 	// @Scheduled(cron = "0 * 9-17 * * ?")
 	public void myScheduledTask() throws IOException {
@@ -44,9 +48,9 @@ public class TradingScheduler {
 		String hashKey = instanceId+"-trading-task";
 
 		//주식 매매 대기열(Redis)에서 대기중인 주식 매매를 가져옴
-		HashOperations<String, String, TradingDTO> hashOperations = redisTradingTemplate.opsForHash();
+		HashOperations<String, String, TradingDTO> tradingHashOperations = redisTradingTemplate.opsForHash();
 		Map<String,Long> marketPriceMap = new HashMap<>();
-		Map<String, TradingDTO> entries = hashOperations.entries(hashKey);
+		Map<String, TradingDTO> entries = tradingHashOperations.entries(hashKey);
 		Map<String, List<TradingDTO>> tradingByCodeMap = new HashMap<>();
 		
 		//주식 코드별 매매로 분류
@@ -81,11 +85,13 @@ public class TradingScheduler {
 					return 1;
 				}
 			});
-
+			
+			//비동기로 크롤링 실행
 			CompletableFuture.supplyAsync(()->{
 				Long marketPrice = null;
 				Document doc = null;
 				try {
+					//크롤링으로 시가와 기업 이름을 가져옴
 					doc = Jsoup.connect(url+stockCode).get();
 					Element name = doc.select(".ellip").first();
 					Element price = doc.select(".price").first();
@@ -94,10 +100,22 @@ public class TradingScheduler {
 						log.info("매매를 할수 없는 종목입니다.");
 						return null;
 					}
+
 					log.info(name.text()+" 현재 시가 : "+price.text());
+					
+					//,표를 파싱해서 숫자로 변경
 					String priceText = price.text();
 					priceText = priceText.replaceAll(",","");
 					marketPrice = Long.valueOf(priceText);
+					
+					//시가를 Redis에 저장
+					StockDTO stockDTO = StockDTO.builder()
+						.name(name.text())
+						.stockCode(stockCode)
+						.marketPrice(marketPrice)
+						.lastModifiedDate(LocalDateTime.now()).build();
+					HashOperations<String, String, StockDTO> stockHashOperations = redisStockTemplate.opsForHash();
+					stockHashOperations.put("stock",stockCode,stockDTO);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

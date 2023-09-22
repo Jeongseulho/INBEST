@@ -3,6 +3,10 @@ package com.jrjr.inbest.trading.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.jrjr.inbest.trading.entity.RedisTradingEntity;
 import com.jrjr.inbest.trading.entity.TradingEntity;
 
@@ -31,7 +35,11 @@ public class TradingDTO implements Serializable {
 	private Long gameSeq;
 	@Column(columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
 	private String nickname;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime createdDate;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime lastModifiedDate;
 	@NotNull
 	private Long amount;
