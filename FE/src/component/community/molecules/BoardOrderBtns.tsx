@@ -2,9 +2,9 @@ import { useBoardOrderBtn } from "./useBoardOrderBtn";
 const BoardOrderBtns = () => {
   const { orderList } = useBoardOrderBtn();
   return (
-    <div className="w-1/3 flex justify-between">
+    <div className="grid grid-cols-4 gap-3">
       {orderList.map((item) => (
-        <button className="rounded-2xl bg-white px-3 h-8 text-sm border border-gray-300">{item}</button>
+        <button className="rounded-2xl bg-white px-3 h-8 text-sm border border-gray-300 shadow-sm">{item}</button>
       ))}
     </div>
   );

@@ -1,6 +1,6 @@
 import { temp } from "./tempapi";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
-import { GetBoardList } from "../type/Board";
+import { Board, GetBoardList } from "../type/Board";
 const apiWithAuth = temp("boards");
 
 export const createBoard = async (userSeq: number, context: string, title: string): Promise<ApiSuccessMessage> => {
@@ -16,5 +16,9 @@ export const createBoard = async (userSeq: number, context: string, title: strin
 };
 export const getBoardList = async (pageNo: number): Promise<GetBoardList> => {
   const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10 } });
+  return data;
+};
+export const getBoardDetail = async (seq: string): Promise<Board> => {
+  const { data } = await apiWithAuth.get("", { params: { seq } });
   return data;
 };

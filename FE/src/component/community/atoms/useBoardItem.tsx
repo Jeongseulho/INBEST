@@ -1,6 +1,14 @@
-import { Board } from "../../../type/Board";
+import { getBoardDetail } from "../../../api/board";
 
-export const useBoardItem = (board: Board) => {
-  const contentText = board.context.replace(/(<([^>]+)>)/gi, "");
-  return { contentText };
+export const useBoardItem = () => {
+  const onDetailPage = async (seq: string) => {
+    try {
+      const res = await getBoardDetail(seq);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return { onDetailPage };
 };

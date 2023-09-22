@@ -17,7 +17,7 @@ const CommunityList = () => {
             <BoardOrderBtns />
           </div>
         </header>
-        <main>
+        <main className="mt-5">
           <BoardList />
         </main>
       </div>
