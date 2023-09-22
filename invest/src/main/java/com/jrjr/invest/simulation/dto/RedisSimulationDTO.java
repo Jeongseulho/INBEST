@@ -32,4 +32,6 @@ public class RedisSimulationDTO {
 	private Integer currentRank;
 
 	private Boolean leave;
+
+	private Boolean manager;
 }
