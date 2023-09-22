@@ -8,6 +8,7 @@ import requests
 from rest_framework.decorators import (api_view)
 from textblob import TextBlob
 from googletrans import Translator
+from time import sleep
 
 
 # 메인 뉴스 목록
@@ -54,7 +55,7 @@ def BreakingNewsList(request):
     url = f'https://www.mk.co.kr/news/economy/latest/'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
-    res = requests.get(url, headers=headers)
+    res = requests.get(url, headers=headers, verify=False)
     soup = BeautifulSoup(res.text, 'lxml')
 
     newslist = soup.select(".news_list .news_node")
@@ -94,7 +95,7 @@ def IndustryByNewsList(request, category):
     url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
-    res = requests.get(url, headers=headers)
+    res = requests.get(url, headers=headers, verify=False)
     soup = BeautifulSoup(res.text, 'lxml')
 
     newslist = soup.select(".list .item-box01")
