@@ -16,6 +16,7 @@ interface Props {
 }
 
 const SearchList = ({ searchList, setCompanyCode }: Props) => {
+  console.log(setCompanyCode);
   return (
     <div className=" shadow-component flex flex-col p-6 gap-4 w-[50%]">
       <h3>검색 결과</h3>

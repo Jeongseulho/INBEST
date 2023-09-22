@@ -13,6 +13,7 @@ import { logout } from "../../api/account";
 import { getUserInfo } from "../../api/account";
 import { GetUserInfo } from "../../type/Accounts";
 import PasswordUpdate from "../account/page/PasswordUpdate";
+import bell from "../../asset/image/bell.png";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -29,17 +30,17 @@ const Header = () => {
       <Link to="/">
         <img className="h-[8vh] mx-24 " src={temp_logo} />
       </Link>
-      <div className="grid grid-flow-col gap-24 me-20">
-        <Link to="/invest" className=" text-center text-xl">
+      <div className="flex w-1/2 justify-around">
+        <Link to="/invest" className=" text-center text-lg">
           모의 투자
         </Link>
-        <a className=" text-center text-xl">랭킹</a>
-        <a className=" text-center text-xl">게시판</a>
-        <a className=" text-center text-xl">금융 상품 추천</a>
-        <a className=" text-center text-xl">금융 사전</a>
-        <a className=" text-center text-xl">관리자 페이지</a>
+        <a className=" text-center text-lg">랭킹</a>
+        <a className=" text-center text-lg">게시판</a>
+        <a className=" text-center text-lg">금융 상품 추천</a>
+        <a className=" text-center text-lg">금융 사전</a>
+        <a className=" text-center text-lg">관리자 페이지</a>
       </div>
-      <div className="me-20">
+      <div className="me-20 flex items-center justify-center">
         {!accessToken && (
           <Link to="/login" className=" text-center text-xl">
             로그인
@@ -167,6 +168,7 @@ const Header = () => {
             </Transition>
           </Menu>
         )}
+        <img src={bell} width={40} />
       </div>
       <ProfileUpdate myInfo={myInfo} showModal={showModal} setShowModal={setShowModal} />
       <PasswordUpdate showModal={showPasswordModal} setShowModal={setShowPasswordModal} />
