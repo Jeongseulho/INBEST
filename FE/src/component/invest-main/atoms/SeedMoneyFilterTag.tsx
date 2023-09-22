@@ -11,7 +11,7 @@ const SeedMoneyFilterTag = ({ text, payload, seedMoney, dispatch }: Props) => {
     <button
       className={` ${
         seedMoney[0] === payload[0] && seedMoney[1] === payload[1] && "bg-lightPrimary bg-opacity-40"
-      } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
+      } px-3 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
       onClick={() => {
         dispatch({ type: "SEED_MONEY", payload });
       }}

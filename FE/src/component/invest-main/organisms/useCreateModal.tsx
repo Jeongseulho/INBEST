@@ -18,7 +18,7 @@ export const useCreateModal = () => {
   };
 
   const initGroupSetting: GroupSetting = {
-    period: 1,
+    period: 7,
     seedMoney: 0,
     unInviteUsers: [],
     inviteUsers: [],

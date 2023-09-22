@@ -1,4 +1,4 @@
-export type Period = number[] | "boostMode";
+export type Period = number[];
 export type SeedMoney = number[] | "linkingMode";
 export interface GroupFilter {
   period: Period;
