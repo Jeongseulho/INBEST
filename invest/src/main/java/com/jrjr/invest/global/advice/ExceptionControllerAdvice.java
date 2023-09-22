@@ -28,14 +28,15 @@ public class ExceptionControllerAdvice {
 	@ExceptionHandler
 	public ResponseEntity<ErrorResult> duplicateExHandler(DuplicateException ex) {
 		log.info("DuplicateException: {}", ex.getMessage());
-		ex.printStackTrace();;
+		ex.printStackTrace();
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
 		return new ResponseEntity<>(errorResult, HttpStatus.CONFLICT);
 	}
+
 	@ExceptionHandler
 	public ResponseEntity<ErrorResult> notFoundException(NotFoundException ex) {
 		log.info("notFoundException: {}", ex.getMessage());
-		ex.printStackTrace();;
+		ex.printStackTrace();
 		ErrorResult errorResult = new ErrorResult("false", "NOT_FOUND");
 		return new ResponseEntity<>(errorResult, HttpStatus.NOT_FOUND);
 	}
@@ -43,7 +44,7 @@ public class ExceptionControllerAdvice {
 	@ExceptionHandler
 	public ResponseEntity<ErrorResult> serverExHandler(Exception ex) {
 		log.error("Exception: {}", ex.getMessage());
-		ex.printStackTrace();;
+		ex.printStackTrace();
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
 		return new ResponseEntity<>(errorResult, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -52,7 +53,7 @@ public class ExceptionControllerAdvice {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<ErrorResult> notFoundPage(Exception ex) {
 		log.error("Exception: {}", ex.getMessage());
-		ex.printStackTrace();;
+		ex.printStackTrace();
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
 		return new ResponseEntity<>(errorResult, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
