@@ -49,11 +49,14 @@ public class UserController {
 	})
 	@PostMapping("")
 	ResponseEntity<Map<String, Object>> join(@RequestBody JoinDto joinDto) {
+		log.info("========== 회원 가입 시작 ==========");
 		log.info("UserController - join 실행: {}", joinDto.getEmail());
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userService.join(joinDto);
+		UserDto userDto = userService.join(joinDto);
+		userService.insertUserRankingInfo(userDto);
 
+		log.info("========== 회원 가입 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -178,13 +181,16 @@ public class UserController {
 		@RequestParam(value = "file", required = false) MultipartFile file,
 		@ModelAttribute UserDto userDto,
 		HttpServletRequest request) throws IOException {
-		log.info("UserController - updateProfile 실행: {}", seq);
+		log.info("========== 프로필 정보 업데이트 시작 ==========");
+		log.info("회원 seq: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
 		UserDto userInfo = userService.updateUserInfo(seq, file, userDto, email);
+		userService.updateUserRankingInfo(userInfo);
 
+		log.info("========== 프로필 정보 업데이트 완료 ==========");
 		resultMap.put("UserInfo", userInfo);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
