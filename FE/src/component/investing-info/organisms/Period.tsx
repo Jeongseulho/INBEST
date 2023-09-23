@@ -1,12 +1,10 @@
 import Slider from "rc-slider";
-import BoostModeTag from "../../common/BoostModeTag";
 
 const Period = () => {
   return (
     <div className=" shadow-component col-span-4 row-span-1 p-4 flex flex-col gap-7">
       <div className=" flex items-center gap-10">
         <h5>남은 기간</h5>
-        <BoostModeTag />
       </div>
       <div className=" flex flex-col gap-5">
         <div className=" flex items-center justify-between">

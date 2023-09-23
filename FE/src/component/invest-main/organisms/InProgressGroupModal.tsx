@@ -3,7 +3,7 @@ import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODA
 import modalStore from "../../../store/modalStore";
 
 const InProgressGroupModal = () => {
-  const { modalType, closeModal, groupCode } = modalStore();
+  const { modalType, closeModal, detailGroupCode } = modalStore();
   return (
     <Modal
       isOpen={modalType === "inProgressGroup"}
@@ -24,7 +24,7 @@ const InProgressGroupModal = () => {
       }}
     >
       in progress modal
-      {groupCode}
+      {detailGroupCode}
     </Modal>
   );
 };
