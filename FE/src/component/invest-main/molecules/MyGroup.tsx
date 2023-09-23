@@ -20,9 +20,9 @@ const MyGroup = ({ index, title, memberCnt, seedMoney, avgTier, progressState, g
     <div
       onClick={() => {
         if (progressState === "beforeStart") {
-          openModal("beforeStart", groupCode);
+          openModal("beforeStartGroup", groupCode);
         } else if (progressState === "inProgress") {
-          openModal("inProgress", groupCode);
+          openModal("inProgressGroup", groupCode);
         }
       }}
       className=" rounded-lg text-center px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer"
