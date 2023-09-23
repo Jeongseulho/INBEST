@@ -1,4 +1,4 @@
-package com.jrjr.invest.rank.entity;
+package com.jrjr.invest.simulation.entity;
 
 import com.jrjr.invest.global.entity.BaseEntity;
 
