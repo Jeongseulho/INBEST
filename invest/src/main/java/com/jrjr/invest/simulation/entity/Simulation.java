@@ -27,19 +27,35 @@ public class Simulation {
 	private String simulationName;
 
 	@Column(nullable = false)
-	private Integer simulationType;
+	private Boolean linkingMode;
 
 	@Column(nullable = false)
 	private LocalDateTime startTime;
 
 	@Column(nullable = false)
-	private LocalDateTime endTime;
+	private Integer period;
+
+	@Column(nullable = false)
+	private Integer memberCnt;
+
+	@Column(nullable = false)
+	private Boolean gameOver;
+
+	private Integer rate; // simulation 평균 수익률
 
 	@Builder
-	public Simulation(String simulationName, Integer simulationType, LocalDateTime startTime, LocalDateTime endTime) {
+	public Simulation(String simulationName, Boolean linkingMode, LocalDateTime startTime, Integer period,
+		Integer memberCnt, Boolean gameOver) {
 		this.simulationName = simulationName;
-		this.simulationType = simulationType;
+		this.linkingMode = linkingMode;
 		this.startTime = startTime;
-		this.endTime = endTime;
+		this.period = period;
+		this.memberCnt = memberCnt;
+		this.gameOver = gameOver;
+	}
+
+	public void updateSimulationRate(Integer rate) {
+		this.gameOver = true;
+		this.rate = rate;
 	}
 }
