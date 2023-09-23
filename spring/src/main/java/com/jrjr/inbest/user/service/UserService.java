@@ -15,7 +15,9 @@ public interface UserService {
 
 	UserDto join(UserDto userDto);
 
-	void join(JoinDto joinDto);
+	UserDto join(JoinDto joinDto);
+
+	void insertUserRankingInfo(UserDto userDto);
 
 	void checkEmailExists(String email);
 
@@ -30,4 +32,6 @@ public interface UserService {
 	void updateDefaultImg(Long seq, String email);
 
 	UserDto updateUserInfo(Long seq, MultipartFile file, UserDto userDto, String email) throws IOException;
+
+	void updateUserRankingInfo(UserDto userDto);
 }
