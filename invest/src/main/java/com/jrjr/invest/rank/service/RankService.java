@@ -10,5 +10,5 @@ public interface RankService {
 
 	void updateUserRankingProfileInfo(RedisUserDTO redisUserDTO);
 
-	void updateUserRankingTierAndRateInfo(Integer tier, Integer rate);
+	void updateUserRankingTierAndRateInfo(Long seq);
 }
