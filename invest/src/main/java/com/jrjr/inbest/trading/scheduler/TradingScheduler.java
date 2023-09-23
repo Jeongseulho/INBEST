@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,10 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class TradingScheduler {
-	private final TradingRepository tradingRepository;
 	private final RedisTemplate<String, TradingDTO> redisTradingTemplate;
 	private final RedisTemplate<String, StockDTO> redisStockTemplate;
-
+	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
 	@Value("${stock.url.market-price}")
 	public String url;
 	@Value("${eureka.instance.instance-id}")
@@ -44,18 +44,24 @@ public class TradingScheduler {
 	public void myScheduledTask() throws IOException {
 		// 여기에 수행할 작업을 넣습니다.
 		log.info("========== 주식 매매 시작 ==========");
+
 		//매매 대기열을 가지고 있는 해시키 생성
-		String hashKey = instanceId+"-trading-task";
+		String tradingHashKey = instanceId+"-trading-task";
+		String crawlingHashKey = instanceId+"-crawling-task";
+
+		//주식 크롤링 대기열(Redis)에서 대기중인 주식을 가져옴
+		HashOperations<String, String, CrawlingDTO> crawlingHashOperations = redisCrawlingTemplate.opsForHash();
+		Map<String, CrawlingDTO> crawlingDTOMap = crawlingHashOperations.entries(crawlingHashKey);
 
 		//주식 매매 대기열(Redis)에서 대기중인 주식 매매를 가져옴
 		HashOperations<String, String, TradingDTO> tradingHashOperations = redisTradingTemplate.opsForHash();
 		Map<String,Long> marketPriceMap = new HashMap<>();
-		Map<String, TradingDTO> entries = tradingHashOperations.entries(hashKey);
+		Map<String, TradingDTO> tradingDTOMap = tradingHashOperations.entries(tradingHashKey);
 		Map<String, List<TradingDTO>> tradingByCodeMap = new HashMap<>();
 		
 		//주식 코드별 매매로 분류
-		for(String key : entries.keySet()) {
-			TradingDTO tradingDTO = entries.get(key);
+		for(String key : tradingDTOMap.keySet()) {
+			TradingDTO tradingDTO = tradingDTOMap.get(key);
 			String stockCode = tradingDTO.getStockCode();
 			
 			//주식 코드 번호의 매매 리스트가 없으면 생성
@@ -72,20 +78,9 @@ public class TradingScheduler {
 		log.info(tradingByCodeMap+" ");
 
 		//종목코드 별 크롤링 후 매매 확인
-		for(String stockCode : tradingByCodeMap.keySet()){
+		for(String stockCode : crawlingDTOMap.keySet()){
 			List<TradingDTO> tradingList = tradingByCodeMap.get(stockCode);
-			
-			//시간이 빠른 순으로 정렬
-			tradingList.sort(new Comparator<TradingDTO>() {
-				@Override
-				public int compare(TradingDTO o1, TradingDTO o2) {
-					if(o1.getCreatedDate().isBefore(o2.getCreatedDate())){
-						return -1;
-					}
-					return 1;
-				}
-			});
-			
+
 			//비동기로 크롤링 실행
 			CompletableFuture.supplyAsync(()->{
 				Long marketPrice = null;
@@ -103,7 +98,7 @@ public class TradingScheduler {
 
 					log.info(name.text()+" 현재 시가 : "+price.text());
 					
-					//,표를 파싱해서 숫자로 변경
+					//,표시를 파싱해서 숫자로 변경
 					String priceText = price.text();
 					priceText = priceText.replaceAll(",","");
 					marketPrice = Long.valueOf(priceText);
@@ -127,7 +122,11 @@ public class TradingScheduler {
 
 					return ;
 				}
+				if(tradingList.isEmpty()){
+					log.info(stockCode+"로 올라온 매매가 없습니다.");
 
+					return ;
+				}
 				for(int i=0;i<tradingList.size();i++){
 					TradingDTO tradingDTO = tradingList.get(i);
 					//매도
@@ -135,7 +134,7 @@ public class TradingScheduler {
 						log.info("매도 : "+tradingDTO.getPrice() +" vs "+price);
 						//매도 성공
 						if(tradingDTO.getPrice() <= price){
-							
+							log.info("매수 가능");
 						}
 					}//매수
 					else if(tradingDTO.getTradingType() == TradingType.SELL){
@@ -145,6 +144,7 @@ public class TradingScheduler {
 							//매매 대기열에서 매매 정보 삭제
 							//db 매매에 저장
 							//수익률 저장
+							log.info("매도 가능");
 						}
 					}
 				}

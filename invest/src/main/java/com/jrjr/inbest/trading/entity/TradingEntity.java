@@ -47,6 +47,10 @@ public class TradingEntity extends BaseEntity {
 		this.conclusionType = conclusionType;
 	}
 
+	public void setConclusionType(Integer conclusionType) {
+		this.conclusionType = conclusionType;
+	}
+
 	public TradingDTO toTradingDto(){
 		return TradingDTO.builder().
 			seq(seq).userSeq(userSeq).nickname(nickname).

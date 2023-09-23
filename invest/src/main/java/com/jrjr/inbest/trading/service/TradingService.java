@@ -3,6 +3,7 @@ package com.jrjr.inbest.trading.service;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,9 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class TradingService {
-	private final RedisTradingRepository redisTradingRepository;
 	private final TradingRepository tradingRepository;
 	private final RedisTemplate<String, TradingDTO> redisTradingTemplate;
+	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
 
@@ -41,12 +42,19 @@ public class TradingService {
 		RedisTradingEntity redisTradingEntity = tradingDto.toRedisTradingEntity();
 		log.info(redisTradingEntity.toString());
 
-		//서버 pk로 매매 작업 해시키 생성
-		String hashKey = instanceId+"-trading-task";
-		
+
 		//매매 작업 대기 열에 입력받은 매매 정보 추가
+		//서버 pk로 매매 작업 해시키 생성
+		String tradingHashKey = instanceId+"-trading-task";
 		HashOperations<String, String, TradingDTO> hashOperations = redisTradingTemplate.opsForHash();
-		hashOperations.put(hashKey,String.valueOf(tradingDto.getSeq()),tradingDto);
+		hashOperations.put(tradingHashKey,String.valueOf(tradingDto.getSeq()),tradingDto);
+
+		CrawlingDTO crawlingDTO = CrawlingDTO.builder().amount(tradingDto.getAmount()).stockCode(tradingDto.getStockCode()).build();
+
+		//매매 작업 대기 열에 입력받은 크롤링해야하는 주식 정보 추가
+		String crawlingHashKey = instanceId+"-crawling-task";
+		HashOperations<String,String,CrawlingDTO> redisCrawlingOperations = redisCrawlingTemplate.opsForHash();
+		redisCrawlingOperations.put(crawlingHashKey,String.valueOf(tradingDto.getSeq()),crawlingDTO);
 
 		//서버가 가지고 있는 매매 정보 확인
 		// Map<String, TradingDTO> entries = hashOperations.entries(hashKey);

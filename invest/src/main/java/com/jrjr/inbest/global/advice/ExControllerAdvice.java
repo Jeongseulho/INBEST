@@ -47,13 +47,4 @@ public class ExControllerAdvice {
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
 		return new ResponseEntity<>(errorResult, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
-	@ExceptionHandler(NoHandlerFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ResponseEntity<ErrorResult> notFoundPage(Exception ex) {
-		log.error("Exception: {}", ex.getMessage());
-		ex.printStackTrace();;
-		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
-		return new ResponseEntity<>(errorResult, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
 }
