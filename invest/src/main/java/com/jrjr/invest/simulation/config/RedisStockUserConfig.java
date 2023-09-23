@@ -18,7 +18,7 @@ public class RedisStockUserConfig {
 	private final RedisConnectionFactory redisConnectionFactory;
 
 	@Bean
-	public RedisTemplate<String, RedisStockUserDTO> redisStockDtoRedisTemplate() {
+	public RedisTemplate<String, RedisStockUserDTO> redisStockUserDtoRedisTemplate() {
 		RedisTemplate<String, RedisStockUserDTO> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 
