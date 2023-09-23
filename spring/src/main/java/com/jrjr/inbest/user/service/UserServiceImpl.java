@@ -13,6 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import net.minidev.json.JSONObject;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
@@ -107,8 +111,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void join(JoinDto joinDto) {
-		log.info("UserServiceImpl - join 실행: inbest");
+	public UserDto join(JoinDto joinDto) {
+		log.info("inbest 회원 가입 정보: {}", joinDto.toString());
 
 		String birthyear = null;
 		String birthday = null;
@@ -142,6 +146,28 @@ public class UserServiceImpl implements UserService {
 				.provider("inbest")
 				.build()
 		);
+
+		return UserDto.builder()
+			.seq(user.getSeq())
+			.nickname(user.getNickname())
+			.profileImgSearchName(user.getProfileImgSearchName())
+			.build();
+	}
+
+	@Override
+	public void insertUserRankingInfo(UserDto userDto) {
+		log.info("UserServiceImpl - insertUserRankingInfo 실행: {}", userDto.toString());
+
+		// WebClient webClient = WebClient.create("http://localhost:9103");
+		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8103");
+		webClient.post()
+			.uri(uriBuilder -> uriBuilder
+				.path("/rank/users")
+				.build())
+			.body(BodyInserters.fromValue(userDto))
+			.retrieve()
+			.bodyToMono(JSONObject.class)
+			.block();
 	}
 
 	@Override
@@ -235,9 +261,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) throws
 		IOException {
-		log.info("UserServiceImpl - updateUserInfo 실행: {}", seq);
-		log.info("수정할 유저 정보 " + inputUserDto);
-		log.info("수정할 파일 VVVVVV");
+		log.info("회원 정보: {}", inputUserDto);
 
 		if (file == null) {
 			log.info("파일 없음");
@@ -291,5 +315,26 @@ public class UserServiceImpl implements UserService {
 
 		log.info("유저 변경 종료");
 		return userEntity.get().convertToUserDto(userEntity.get());
+	}
+
+	@Override
+	public void updateUserRankingInfo(UserDto inputUserDto) {
+		log.info("UserServiceImpl - updateUserRankingInfo 실행");
+		UserDto userDto = UserDto.builder()
+			.seq(inputUserDto.getSeq())
+			.nickname(inputUserDto.getNickname())
+			.profileImgSearchName(inputUserDto.getProfileImgSearchName())
+			.build();
+
+		// WebClient webClient = WebClient.create("http://localhost:9103");
+		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8103");
+		webClient.put()
+			.uri(uriBuilder -> uriBuilder
+				.path("/rank/users")
+				.build())
+			.body(BodyInserters.fromValue(userDto))
+			.retrieve()
+			.bodyToMono(JSONObject.class)
+			.block();
 	}
 }
