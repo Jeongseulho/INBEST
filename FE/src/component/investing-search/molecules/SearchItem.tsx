@@ -10,7 +10,7 @@ interface Props {
 
 const SearchItem = ({ logo, name, code, price, index }: Props) => {
   return (
-    <div className=" flex justify-around border-t-2 items-center py-2 ">
+    <div className=" flex justify-around border-b-2 items-center py-2 ">
       <p className=" w-2 text-center">{index}</p>
       <div className=" flex w-28 justify-center">
         <img src={logo} />
