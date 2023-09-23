@@ -4,31 +4,28 @@ import group from "../../../asset/image/group.png";
 const MyGroupList = () => {
   const data = [
     {
-      seq: 1,
       title: "title1",
       memberCnt: 1,
-      groupLeaderProfileImg: "leader1",
       seedMoney: 10000,
-      meanTierImg: "",
-      state: "진행중",
+      avgTier: 100,
+      progressState: "inProgress",
+      groupCode: "groupCode1",
     },
     {
-      seq: 2,
       title: "title2",
       memberCnt: 2,
-      groupLeaderProfileImg: "leader2",
-      seedMoney: 10000,
-      meanTierImg: "",
-      state: "시작 전",
+      seedMoney: 0,
+      avgTier: 200,
+      progressState: "inProgress",
+      groupCode: "groupCode2",
     },
     {
-      seq: 3,
       title: "title3",
       memberCnt: 3,
-      groupLeaderProfileImg: "leader3",
-      seedMoney: 0,
-      meanTierImg: "",
-      state: "종료",
+      seedMoney: 30000,
+      avgTier: 300,
+      progressState: "inProgress",
+      groupCode: "groupCode3",
     },
   ];
   return (
@@ -48,13 +45,14 @@ const MyGroupList = () => {
 
       {data.map((group, index) => (
         <MyGroup
-          key={group.seq}
+          key={group.groupCode}
           index={index}
           title={group.title}
           memberCnt={group.memberCnt}
           seedMoney={group.seedMoney}
-          meanTierImg={group.meanTierImg}
-          state={group.state}
+          avgTier={group.avgTier}
+          progressState={group.progressState}
+          groupCode={group.groupCode}
         />
       ))}
     </div>

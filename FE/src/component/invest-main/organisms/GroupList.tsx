@@ -4,49 +4,44 @@ import group from "../../../asset/image/group.png";
 const GroupList = () => {
   const data = [
     {
-      seq: 1,
       title: "title1",
-      groupMemberCnt: 1,
-      groupLeaderProfileImg: "leader1",
+      memberCnt: 1,
       seedMoney: 10000,
-      meanTierImg: "",
+      avgTier: 100,
       period: 1,
+      groupCode: "groupCode1",
     },
     {
-      seq: 2,
       title: "title2",
-      groupMemberCnt: 2,
-      groupLeaderProfileImg: "leader2",
-      seedMoney: 10000,
-      meanTierImg: "",
-      period: 1,
+      memberCnt: 2,
+      seedMoney: 20000,
+      avgTier: 200,
+      period: 2,
+      groupCode: "groupCode2",
     },
     {
-      seq: 3,
       title: "title3",
-      groupMemberCnt: 3,
-      groupLeaderProfileImg: "leader3",
-      seedMoney: 10000,
-      meanTierImg: "",
-      period: 1,
+      memberCnt: 3,
+      seedMoney: 30000,
+      avgTier: 300,
+      period: 3,
+      groupCode: "groupCode3",
     },
     {
-      seq: 4,
       title: "title4",
-      groupMemberCnt: 4,
-      groupLeaderProfileImg: "leader4",
-      seedMoney: 10000,
-      meanTierImg: "",
-      period: 1,
+      memberCnt: 4,
+      seedMoney: 40000,
+      avgTier: 400,
+      period: 4,
+      groupCode: "groupCode4",
     },
     {
-      seq: 5,
-      title: "title4",
-      groupMemberCnt: 4,
-      groupLeaderProfileImg: "leader4",
-      seedMoney: 10000,
-      meanTierImg: "",
-      period: 1,
+      title: "title5",
+      memberCnt: 5,
+      seedMoney: 50000,
+      avgTier: 500,
+      period: 5,
+      groupCode: "groupCode5",
     },
   ];
   return (
@@ -66,13 +61,14 @@ const GroupList = () => {
 
       {data.map((group, index) => (
         <Group
-          key={group.seq}
+          key={group.groupCode}
           index={index}
           title={group.title}
-          groupMemberCnt={group.groupMemberCnt}
+          memberCnt={group.memberCnt}
           seedMoney={group.seedMoney}
-          meanTierImg={group.meanTierImg}
+          avgTier={group.avgTier}
           period={group.period}
+          groupCode={group.groupCode}
         />
       ))}
     </div>
