@@ -1,4 +1,4 @@
-package com.jrjr.invest.simulation.dto;
+package com.jrjr.invest.rank.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@ToString
 public class RedisUserDTO {
 
 	@NotNull
@@ -25,13 +27,11 @@ public class RedisUserDTO {
 	private String profileImgSearchName;
 
 	@NotNull
-	private Integer exp;
-
-	private String tier;
+	private Integer tier; // tier 총 합
 
 	private Integer previousRank;
 
 	private Integer currentRank;
 
-	private Integer rate;
+	private Integer rate; // 종료된 simulation 의 평균 수익률 (수익률 합 / simulation 수)
 }
