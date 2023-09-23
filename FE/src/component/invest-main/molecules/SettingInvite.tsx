@@ -2,6 +2,7 @@ import UserItem from "../atoms/UserItem";
 import UserTag from "../atoms/UserTag";
 import { GroupInviteUser } from "../../../type/GroupSetting";
 import { useEffect } from "react";
+import modalStore from "../../../store/modalStore";
 
 type Action =
   | { type: "ADD_INVITE"; payload: GroupInviteUser }
@@ -12,17 +13,11 @@ interface Props {
   dispatch: React.Dispatch<Action>;
   inviteUsers: GroupInviteUser[] | [];
   unInviteUsers: GroupInviteUser[] | [];
-  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const SettingInvite = ({
-  onNextStep,
-  closeCreateModal,
-  resetStepAndGroupSetting,
-  dispatch,
-  inviteUsers,
-  unInviteUsers,
-}: Props) => {
+const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteUsers, unInviteUsers }: Props) => {
+  const { closeModal } = modalStore();
+
   useEffect(() => {
     dispatch({
       type: "ALL_USER",
@@ -99,7 +94,7 @@ const SettingInvite = ({
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeCreateModal();
+            closeModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

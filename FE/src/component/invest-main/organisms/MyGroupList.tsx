@@ -1,12 +1,10 @@
 import MyGroup from "../molecules/MyGroup";
 import group from "../../../asset/image/group.png";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import modalStore from "../../../store/modalStore";
 
-interface Props {
-  openCreateModal: () => void;
-}
-
-const MyGroupList = ({ openCreateModal }: Props) => {
+const MyGroupList = () => {
+  const { openModal } = modalStore();
   const data = [
     {
       title: "title1",
@@ -29,7 +27,7 @@ const MyGroupList = ({ openCreateModal }: Props) => {
       memberCnt: 3,
       seedMoney: 30000,
       avgTier: 300,
-      progressState: "end",
+      progressState: "beforeStart",
       groupCode: "groupCode3",
     },
   ];
@@ -61,7 +59,7 @@ const MyGroupList = ({ openCreateModal }: Props) => {
         />
       ))}
       <div
-        onClick={openCreateModal}
+        onClick={() => openModal("createGroup")}
         className="text-gray-500  rounded-lg hover:text-black flex cursor-pointer items-center justify-center gap-2 py-2 hover:bg-gray-200 hover:bg-opacity-50 transition-colors duration-300"
       >
         <AiOutlinePlusCircle

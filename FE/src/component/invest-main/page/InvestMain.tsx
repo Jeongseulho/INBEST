@@ -1,21 +1,24 @@
 import CreateModal from "../organisms/CreateModal";
-import { useInvestMain } from "./useInvestMain";
 import FilterModal from "../organisms/FilterModal";
 import GroupList from "../organisms/GroupList";
 import MyGroupList from "../organisms/MyGroupList";
 import InvestingTotalInfo from "../organisms/InvestingTotalInfo";
+import BeforeStartGroupModal from "../organisms/BeforeStartGroupModal";
+import InProgressGroupModal from "../organisms/InProgressGroupModal";
+import QuestionJoinModal from "../organisms/QuestionJoinModal";
 
 const InvestMain = () => {
-  const { showCreateModal, openCreateModal, closeCreateModal, showFilterModal, openFilterModal, closeFilterModal } =
-    useInvestMain();
   return (
     <div className=" flex justify-center items-center mt-10">
       <InvestingTotalInfo />
       <div className=" flex flex-col items-center gap-10 w-1/2">
-        <CreateModal closeCreateModal={closeCreateModal} showCreateModal={showCreateModal} />
-        <FilterModal showFilterModal={showFilterModal} closeFilterModal={closeFilterModal} />
-        <MyGroupList openCreateModal={openCreateModal} />
-        <GroupList openFilterModal={openFilterModal} />
+        <CreateModal />
+        <FilterModal />
+        <BeforeStartGroupModal />
+        <InProgressGroupModal />
+        <QuestionJoinModal />
+        <MyGroupList />
+        <GroupList />
       </div>
     </div>
   );

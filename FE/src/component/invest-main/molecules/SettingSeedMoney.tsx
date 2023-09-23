@@ -1,17 +1,17 @@
 import { SeedMoney } from "../../../type/GroupSetting";
 import SeedMoneySettingTag from "../atoms/SeedMoneySettingTag";
 import { formatNumberToWon } from "../../../util/formatMoney";
+import modalStore from "../../../store/modalStore";
 
 interface Props {
   onNextStep: () => void;
   seedMoney: SeedMoney;
   dispatch: React.Dispatch<{ type: "SEED_MONEY"; payload: SeedMoney }>;
-  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
 
-const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, closeCreateModal, resetStepAndGroupSetting }: Props) => {
-  // TODO: input창 추가 직접 입력 가능하도록
+const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, resetStepAndGroupSetting }: Props) => {
+  const { closeModal } = modalStore();
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
@@ -36,7 +36,7 @@ const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, closeCreateModal, r
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeCreateModal();
+            closeModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

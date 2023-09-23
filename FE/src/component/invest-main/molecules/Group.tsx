@@ -3,6 +3,7 @@
 import LinkingModeTag from "../../common/LinkingModeTag";
 import NumberToTierImage from "../../common/NumberToTierImage";
 import { formatNumberToWon } from "../../../util/formatMoney";
+import modalStore from "../../../store/modalStore";
 
 interface Props {
   index: number;
@@ -15,8 +16,12 @@ interface Props {
 }
 
 const Group = ({ index, title, memberCnt, avgTier, seedMoney, period, groupCode }: Props) => {
+  const { openModal } = modalStore();
   return (
-    <div className="rounded-lg px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer">
+    <div
+      onClick={() => openModal("questionJoin", groupCode)}
+      className="rounded-lg px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer"
+    >
       <p className="w-2">{index}</p>
       <p className="w-24">{title}</p>
       {/* {isBoostMode ? <BoostModeTag /> : <NormalModeTag />} */}
@@ -24,7 +29,7 @@ const Group = ({ index, title, memberCnt, avgTier, seedMoney, period, groupCode 
       <div className=" w-32">
         {seedMoney === 0 ? <LinkingModeTag /> : <p className=" w-32">{formatNumberToWon(seedMoney)}</p>}
       </div>
-      <div className=" w-12 h-12">
+      <div className=" w-16 h-16">
         <NumberToTierImage tier={avgTier} />
       </div>
       <p className=" w-16">{period} 일</p>

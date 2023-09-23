@@ -1,14 +1,15 @@
 import { Period } from "../../../type/GroupSetting";
 import PeriodSettingTag from "../atoms/PeriodSettingTag";
+import modalStore from "../../../store/modalStore";
 
 interface Props {
   onNextStep: () => void;
   period: Period;
   dispatch: React.Dispatch<{ type: "PERIOD"; payload: Period }>;
-  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const SettingPeriod = ({ onNextStep, period, dispatch, closeCreateModal, resetStepAndGroupSetting }: Props) => {
+const SettingPeriod = ({ onNextStep, period, dispatch, resetStepAndGroupSetting }: Props) => {
+  const { closeModal } = modalStore();
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
@@ -26,7 +27,7 @@ const SettingPeriod = ({ onNextStep, period, dispatch, closeCreateModal, resetSt
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeCreateModal();
+            closeModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"
