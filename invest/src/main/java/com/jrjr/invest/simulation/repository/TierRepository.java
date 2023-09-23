@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.jrjr.invest.simulation.entity.Tier;
 
 @Repository
-public interface TierRepository extends JpaRepository<Long, Tier> {
+public interface TierRepository extends JpaRepository<Tier, Long> {
 
 	List<Tier> findAllByUserSeq(Long userSeq);
 }

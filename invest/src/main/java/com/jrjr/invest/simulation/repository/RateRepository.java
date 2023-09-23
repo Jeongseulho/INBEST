@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.jrjr.invest.simulation.entity.Rate;
 
 @Repository
-public interface RateRepository extends JpaRepository<Long, Rate> {
+public interface RateRepository extends JpaRepository<Rate, Long> {
 
 	List<Rate> findAllByUserSeq(Long userSeq);
 }
