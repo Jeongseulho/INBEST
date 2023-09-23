@@ -13,10 +13,9 @@ interface Props {
   progressState: string;
   groupCode: string;
 }
-
 const MyGroup = ({ index, title, memberCnt, seedMoney, avgTier, progressState, groupCode }: Props) => {
   return (
-    <div className="  text-center px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer">
+    <div className=" rounded-lg text-center px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer">
       <p className="w-2">{index}</p>
       <p className="w-24">{title}</p>
       {/* {isBoostMode ? <BoostModeTag /> : <NormalModeTag />} */}
@@ -24,7 +23,7 @@ const MyGroup = ({ index, title, memberCnt, seedMoney, avgTier, progressState, g
       <div className=" w-32">
         {seedMoney === 0 ? <LinkingModeTag /> : <p className=" w-32">{formatNumberToWon(seedMoney)}</p>}
       </div>
-      <div className=" w-16 h-16">
+      <div className=" w-12 h-12">
         <NumberToTierImage tier={avgTier} />
       </div>
       <p className=" w-16">{progressState}</p>

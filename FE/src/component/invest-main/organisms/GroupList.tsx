@@ -1,7 +1,12 @@
 import Group from "../molecules/Group";
 import group from "../../../asset/image/group.png";
+import { LuSettings2 } from "react-icons/lu";
 
-const GroupList = () => {
+interface Props {
+  openFilterModal: () => void;
+}
+
+const GroupList = ({ openFilterModal }: Props) => {
   const data = [
     {
       title: "title1",
@@ -39,7 +44,7 @@ const GroupList = () => {
       title: "title5",
       memberCnt: 5,
       seedMoney: 50000,
-      avgTier: 500,
+      avgTier: 90,
       period: 5,
       groupCode: "groupCode5",
     },
@@ -50,6 +55,26 @@ const GroupList = () => {
         <img src={group} width={70} />
         <h3 className=" text-left">참여 가능 그룹</h3>
       </div>
+
+      <label htmlFor="nickname-search" className="text-left mb-4">
+        <p className="my-2 font-regular">그룹 검색</p>
+        <div className=" flex items-center gap-4">
+          <input
+            id="nickname-search"
+            type="text"
+            placeholder="닉네임을 입력해주세요."
+            className=" border-gray-400 border p-2 rounded-md bg-main bg-opacity-10"
+          />
+          <div
+            onClick={openFilterModal}
+            className=" cursor-pointer hover:text-gray-700  h-8 flex items-center rounded-full border-2 border-gray-300 py-3 px-2 gap-1 hover:bg-primary hover:bg-opacity-20 transition-colors duration-300"
+          >
+            <LuSettings2 className="text-gray-500 " />
+            <p className=" text-lightPrimary text-sm  ">필터 적용</p>
+          </div>
+        </div>
+      </label>
+
       <div className="flex justify-between w-full border-t-2 border-b-2 px-4">
         <p className="w-2">#</p>
         <p className="w-24">그룹 이름</p>
