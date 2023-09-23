@@ -51,6 +51,8 @@ public class BoardDTO implements Serializable {
 	private List<CommentDTO> commentList;
 	@Schema(description = "작성자 정보")
 	private UserDTO writer;
+	@Schema(description = "좋아하는 유저 정보")
+	private List<UserDTO> likesUserList;
 	@Schema(description = "최초 글 생성일")
 	private LocalDateTime createdDate;
 	@Schema(description = "최종 글 수정일")

@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import com.jrjr.inbest.board.dto.BoardImgDTO;
 import com.jrjr.inbest.board.dto.CommentDTO;
+import com.jrjr.inbest.board.dto.UserDTO;
 import com.jrjr.inbest.global.entity.BaseEntity;
 import com.jrjr.inbest.board.dto.BoardDTO;
 
@@ -80,6 +81,15 @@ public class BoardEntity  extends BaseEntity implements Serializable {
 			}
 		}
 		boardDTO.setCommentList(commentDTOList);
+
+		List<UserDTO> likeUserDTOList = new ArrayList<>();
+		if(likeUserList !=null){
+			for(UserEntity userEntity : likeUserList){
+				likeUserDTOList.add(userEntity.toUserDTO());
+			}
+		}
+		boardDTO.setLikesUserList(likeUserDTOList);
+
 		return boardDTO;
 	}
 	public void updateView(){

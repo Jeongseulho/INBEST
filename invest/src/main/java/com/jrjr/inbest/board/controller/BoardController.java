@@ -18,15 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.inbest.board.dto.BoardDTO;
 import com.jrjr.inbest.board.dto.CommentDTO;
+import com.jrjr.inbest.board.dto.UserDTO;
 import com.jrjr.inbest.board.service.BoardService;
 import com.jrjr.inbest.board.service.CommentService;
+import com.jrjr.inbest.global.jwt.JwtProvider;
 
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 	private final BoardService boardService;
 	private final CommentService commentService;
+	private final JwtProvider jwtProvider;
 
 	@Operation(summary = "게시판 등록")
 	@Parameters(value = {
@@ -107,12 +112,9 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 	@Operation(summary = "게시판 상세정보")
-	// @Parameters(value = {
-	// 	@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
-	// 	@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
-	// })
 	@GetMapping("/{seq}")
-	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable (value = "seq") String seq){
+	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable (value = "seq") String seq,
+		HttpServletRequest request){
 		log.info("========== 게시판 상세 정보 시작 ==========");
 		log.info("seq : "+seq);
 
@@ -120,11 +122,30 @@ public class BoardController {
 
 		log.info("검색 결과 : "+boardDTO);
 
+		//토큰으로 유저 이메일 얻기
+		String accessToken = jwtProvider.resolveAccessToken(request).orElse("accessToken");
+		String loginEmail = "";
+
+		if(accessToken.equals("accessToken")){
+			Claims claims = jwtProvider.getClaims(accessToken);
+			loginEmail = claims.getSubject();
+		}
+
+		log.info("로그인 유저 이메일 : "+loginEmail);
+
 		Map<String, Object> resultMap = new HashMap<>();
 		if(boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()){
 			resultMap.put("success",false);
 		}else{
 			resultMap.put("success",true);
+			boolean like = false;
+
+			for(UserDTO likeUserDTO : boardDTO.getLikesUserList()){
+				if(likeUserDTO.getEmail().equals(loginEmail)){
+					like=true;
+				}
+			}
+			resultMap.put("loginUserLike",like);
 		}
 		resultMap.put("board",boardDTO);
 

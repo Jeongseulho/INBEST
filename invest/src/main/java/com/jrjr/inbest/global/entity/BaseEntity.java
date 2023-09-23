@@ -1,6 +1,4 @@
 package com.jrjr.inbest.global.entity;
-
-
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
