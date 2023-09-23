@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,13 +52,25 @@ public class RankController {
 	}
 
 	@GetMapping("/users")
-	ResponseEntity<Map<String, Object>> testSortingUserRankingInfo() {
+	ResponseEntity<Map<String, Object>> testSortUserRankingInfo() {
 		log.info("========== 랭킹 정보 업데이트 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		rankService.sortUserRanking();
 
 		log.info("========== 랭킹 정보 업데이트 완료 ==========");
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/users/{seq}")
+	ResponseEntity<Map<String, Object>> testUpdateUserRankingTierAndRateInfo(@PathVariable(value = "seq") Long seq) {
+		log.info("========== 티어 및 수익률 정보 업데이트 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		rankService.updateUserRankingTierAndRateInfo(seq);
+
+		log.info("========== 티어 및 수익률 정보 업데이트 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
