@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ public class RankController {
 		log.info("========== 유저 랭킹 정보 추가 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		rankService.insertUserRankingInfo(redisUserDTO);
+		rankService.insertUserRanking(redisUserDTO);
 
 		log.info("========== 유저 랭킹 정보 추가 완료 ==========");
 		resultMap.put("success", true);
@@ -42,9 +43,21 @@ public class RankController {
 		log.info("========== 유저 랭킹 정보 수정 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		rankService.updateUserRankingInfo(redisUserDTO);
+		rankService.updateUserRankingProfileInfo(redisUserDTO);
 
 		log.info("========== 유저 랭킹 정보 수정 완료 ==========");
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/users")
+	ResponseEntity<Map<String, Object>> testSortingUserRankingInfo() {
+		log.info("========== 랭킹 정보 업데이트 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		rankService.sortUserRanking();
+
+		log.info("========== 랭킹 정보 업데이트 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
