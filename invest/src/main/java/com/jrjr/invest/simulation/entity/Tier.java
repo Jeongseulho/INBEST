@@ -21,11 +21,15 @@ public class Tier extends BaseEntity {
 	private Long userSeq;
 
 	@Column(nullable = false)
+	private Long simulationSeq;
+
+	@Column(nullable = false)
 	private Integer tier;
 
 	@Builder
-	public Tier(Long userSeq, Integer tier) {
+	public Tier(Long userSeq, Long simulationSeq, Integer tier) {
 		this.userSeq = userSeq;
+		this.simulationSeq = simulationSeq;
 		this.tier = tier;
 	}
 }
