@@ -19,7 +19,7 @@ public class RankServiceImpl implements RankService {
 	private final RedisTemplate<String, RedisUserDTO> redisUserDtoRedisTemplate;
 
 	@Override
-	public void insertUserRankingInfo(RedisUserDTO redisUserDTO) {
+	public void insertUserRanking(RedisUserDTO redisUserDTO) {
 		log.info("회원 정보: {}", redisUserDTO.toString());
 
 		String hashKey = "user";
@@ -33,7 +33,7 @@ public class RankServiceImpl implements RankService {
 	}
 
 	@Override
-	public void updateUserRankingInfo(RedisUserDTO inputRedisUserDTO) {
+	public void updateUserRankingProfileInfo(RedisUserDTO inputRedisUserDTO) {
 		log.info("변경 요청 회원 정보: {}", inputRedisUserDTO.toString());
 
 		String hashKey = "user";
@@ -49,5 +49,15 @@ public class RankServiceImpl implements RankService {
 		for (String seq : redisUserDTOMap.keySet()) {
 			log.info(redisUserDTOMap.get(seq).toString());
 		}
+	}
+
+	@Override
+	public void sortUserRanking() {
+
+	}
+
+	@Override
+	public void updateUserRankingTierAndRateInfo(Integer tier, Integer rate) {
+
 	}
 }

@@ -4,7 +4,11 @@ import com.jrjr.invest.rank.dto.RedisUserDTO;
 
 public interface RankService {
 
-	void insertUserRankingInfo(RedisUserDTO redisUserDTO);
+	void insertUserRanking(RedisUserDTO redisUserDTO);
 
-	void updateUserRankingInfo(RedisUserDTO redisUserDTO);
+	void sortUserRanking();
+
+	void updateUserRankingProfileInfo(RedisUserDTO redisUserDTO);
+
+	void updateUserRankingTierAndRateInfo(Integer tier, Integer rate);
 }
