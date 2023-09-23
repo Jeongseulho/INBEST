@@ -2,6 +2,7 @@ package com.jrjr.invest.rank.entity;
 
 import com.jrjr.invest.global.entity.BaseEntity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -19,6 +20,7 @@ public class Tier extends BaseEntity {
 	@Id
 	private Long userSeq;
 
+	@Column(nullable = false)
 	private Integer tier;
 
 	@Builder
