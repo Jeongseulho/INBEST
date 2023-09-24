@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,24 +32,36 @@ public class RankController {
 
 	@PostMapping("/users")
 	ResponseEntity<Map<String, Object>> insertUserRankingInfo(@RequestBody RedisUserDTO redisUserDTO) {
-		log.info("========== 유저 랭킹 정보 추가 시작 ==========");
+		log.info("========== 개인 랭킹: 회원 정보 추가 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userRankService.insertUserInfo(redisUserDTO);
 
-		log.info("========== 유저 랭킹 정보 추가 완료 ==========");
+		log.info("========== 개인 랭킹: 회원 정보 추가 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
 	@PutMapping("/users")
 	ResponseEntity<Map<String, Object>> updateUserRankingInfo(@RequestBody RedisUserDTO redisUserDTO) {
-		log.info("========== 유저 랭킹 정보 수정 시작 ==========");
+		log.info("========== 개인 랭킹: 프로필 정보 수정 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userRankService.updateUserProfileInfo(redisUserDTO);
 
-		log.info("========== 유저 랭킹 정보 수정 완료 ==========");
+		log.info("========== 개인 랭킹: 프로필 정보 수정 완료 ==========");
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/users")
+	ResponseEntity<Map<String, Object>> deleteUserRankingInfo(@RequestParam Long seq) {
+		log.info("========== 개인 랭킹: 회원 정보 삭제 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		userRankService.deleteUserInfo(seq);
+
+		log.info("========== 개인 랭킹: 회원 정보 삭제 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -79,12 +92,12 @@ public class RankController {
 
 	@GetMapping("/test/sort")
 	ResponseEntity<Map<String, Object>> testSortUserRankingInfo() {
-		log.info("========== 개인 랭킹 정보 업데이트 시작 ==========");
+		log.info("========== 개인 랭킹: 랭킹 산정 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userRankService.updateUserRankingInfo();
 
-		log.info("========== 개인 랭킹 정보 업데이트 완료 ==========");
+		log.info("========== 개인 랭킹: 랭킹 산정 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -92,12 +105,12 @@ public class RankController {
 	@GetMapping("/test/info")
 	ResponseEntity<Map<String, Object>> testGetUserRankingInfo(@RequestParam Long start,
 		@RequestParam Long end) {
-		log.info("========== 개인 랭킹 정보 불러오기 시작 ==========");
+		log.info("========== 개인 랭킹: 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Set<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfo(start, end);
 
-		log.info("========== 개인 랭킹 정보 불러오기 완료 ==========");
+		log.info("========== 개인 랭킹: 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
 		resultMap.put("UserRankingInfo", userRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -105,12 +118,12 @@ public class RankController {
 
 	@GetMapping("/test/info/{seq}")
 	ResponseEntity<Map<String, Object>> testGetMyRankingInfo(@PathVariable(value = "seq") Long seq) {
-		log.info("========== 개인 랭킹 정보 불러오기 시작 ==========");
+		log.info("========== 개인 랭킹: 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		RedisUserDTO myRankingInfo = userRankService.getMyRankingInfo(seq);
 
-		log.info("========== 개인 랭킹 정보 불러오기 완료 ==========");
+		log.info("========== 개인 랭킹: 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
 		resultMap.put("MyRankingInfo", myRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
