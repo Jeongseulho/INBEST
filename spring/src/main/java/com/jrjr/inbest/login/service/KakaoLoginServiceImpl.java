@@ -77,6 +77,7 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 		return UserDto.builder()
 			.email(userEntity.get().getEmail())
 			.seq(userEntity.get().getSeq())
+			.nickname(userEntity.get().getNickname())
 			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
 			.role(loginEntity.get().getRole())
 			.provider(loginEntity.get().getProvider())

@@ -25,7 +25,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,9 +47,8 @@ public class LoginController {
 	})
 	@PostMapping("/login/{provider}")
 	public ResponseEntity<Map<String, Object>> login(@PathVariable(value = "provider") String provider,
-		@RequestBody LoginDto inputLoginDto,
-		HttpServletResponse response) {
-		log.info("LoginController - login 실행");
+		@RequestBody LoginDto inputLoginDto) {
+		log.info("========== {} 로그인 시작 ==========", provider);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		// 인증
@@ -71,11 +69,14 @@ public class LoginController {
 		AccessTokenDto accessTokenDto
 			= jwtProvider.generateAccessToken(userDto.getEmail(), userDto.getRole());
 
+		log.info("========== 로그인 완료 ==========");
+
 		resultMap.put("success", true);
 		resultMap.put("grantType", accessTokenDto.getGrantType());
 		resultMap.put("accessToken", accessTokenDto.getAccessToken());
 		resultMap.put("refreshToken", refreshToken);
 		resultMap.put("seq", userDto.getSeq());
+		resultMap.put("nickname", userDto.getNickname());
 		resultMap.put("profileImgSearchName", userDto.getProfileImgSearchName());
 		resultMap.put("role", userDto.getRole());
 		resultMap.put("provider", userDto.getProvider());
@@ -88,15 +89,16 @@ public class LoginController {
 		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 로그아웃하려는 계정의 이메일 불일치"),
 	})
 	@PostMapping("/logout")
-	public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request,
-		HttpServletResponse response) {
-		log.info("LoginController - logout 실행");
+	public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request) {
+		log.info("========== 로그아웃 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
 		loginService.logout(email); // 인증 후 redis 에서 refreshToken 삭제
 		// CookieUtil.deleteCookie(response, "refreshToken"); // cookie 에서 refreshToken 삭제
+
+		log.info("========== 로그아웃 완료 ==========");
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
