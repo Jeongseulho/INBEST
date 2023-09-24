@@ -1,6 +1,7 @@
 package com.jrjr.invest.rank.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -51,7 +52,7 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@GetMapping("/users/{seq}")
+	@GetMapping("/test/users/{seq}")
 	ResponseEntity<Map<String, Object>> testUpdateUserRankingTierAndRateInfo(@PathVariable(value = "seq") Long seq) {
 		log.info("========== 티어 및 수익률 정보 업데이트 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
@@ -63,7 +64,19 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@GetMapping("/users")
+	@GetMapping("/test/users")
+	ResponseEntity<Map<String, Object>> testUpdateAllUserRankingTierAndRateInfo() {
+		log.info("========== 전체 회원 티어 및 수익률 정보 업데이트 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		userRankService.updateAllUserTierAndRateInfo();
+
+		log.info("========== 전체 회원 티어 및 수익률 정보 업데이트 완료 ==========");
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/test/sort")
 	ResponseEntity<Map<String, Object>> testSortUserRankingInfo() {
 		log.info("========== 랭킹 정보 업데이트 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
@@ -72,6 +85,19 @@ public class RankController {
 
 		log.info("========== 랭킹 정보 업데이트 완료 ==========");
 		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/test/info")
+	ResponseEntity<Map<String, Object>> testGetUserRankingInfo() {
+		log.info("========== 랭킹 정보 불러오기 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		List<RedisUserDTO> userRankingListInfo = userRankService.getUserRankingListInfo(0, -1);
+
+		log.info("========== 랭킹 정보 불러오기 완료 ==========");
+		resultMap.put("success", true);
+		resultMap.put("UserRankingInfo", userRankingListInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
