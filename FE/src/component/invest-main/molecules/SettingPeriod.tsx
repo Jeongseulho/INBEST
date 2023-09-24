@@ -18,7 +18,8 @@ const SettingPeriod = ({ onNextStep, period, dispatch, closeCreateModal, resetSt
         <div className=" flex w-full justify-around">
           <PeriodSettingTag text="7일" dispatch={dispatch} payload={7} period={period} />
           <PeriodSettingTag text="14일" dispatch={dispatch} payload={14} period={period} />
-          <PeriodSettingTag text="28일" dispatch={dispatch} payload={30} period={period} />
+          <PeriodSettingTag text="21일" dispatch={dispatch} payload={21} period={period} />
+          <PeriodSettingTag text="28일" dispatch={dispatch} payload={28} period={period} />
           <PeriodSettingTag text="가속모드" dispatch={dispatch} payload={"boostMode"} period={period} />
         </div>
         <p className=" text-myGray text-center">
