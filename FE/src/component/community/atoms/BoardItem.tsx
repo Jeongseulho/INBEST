@@ -5,16 +5,19 @@ import { removeHtmltag } from "../../../util/removeHtmltag";
 import { AiOutlineEye } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
 import { BiCommentDetail } from "react-icons/bi";
+import { Link } from "react-router-dom";
 const BoardItem = ({ board }: { board: Board }) => {
   const imgSrc = getImgSrc(board.context);
   const imgCnt = getImgCount(board.context);
   return (
     <div className="w-full flex bg-white h-56 rounded-md shadow-md relative">
       <div className={`${imgSrc ? "w-2/3" : "w-full me-2"} ms-5`}>
-        <div className="text-lg font-bold mt-5">{board.title}</div>
-        <div className="text-lg font-bold mt-5 flex">
-          <p className="text-sm font-light h-10 overflow-hidden line-clamp-2">{removeHtmltag(board.context)}</p>
-        </div>
+        <Link to={{ pathname: "detail", search: "?seq=" + board.seq }}>
+          <div className="text-lg font-bold mt-5">{board.title}</div>
+          <div className="text-lg font-bold mt-5 flex">
+            <p className="text-sm font-light h-10 overflow-hidden line-clamp-2">{removeHtmltag(board.context)}</p>
+          </div>
+        </Link>
 
         <div>
           <div className="flex items-center absolute bottom-12">

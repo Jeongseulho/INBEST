@@ -13,6 +13,7 @@ import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
 import CommunityList from "./component/community/organisms/CommunityList";
 import CommunityCreate from "./component/community/organisms/CommunityCreate";
+import CommunityDetail from "./component/community/organisms/CommunityDetail";
 const queryClient = new QueryClient();
 
 function App() {
@@ -31,9 +32,9 @@ function App() {
               <Route path="community" element={<Community />}>
                 <Route index element={<CommunityList />} />
                 <Route path="create" element={<CommunityCreate />} />
+                <Route path="detail" element={<CommunityDetail />} />
               </Route>
               <Route path="/invest/:groupCode" element={<Investing />} />
-              <Route path="/community" element={<Community />}></Route>
             </Routes>
           </AnimatePresence>
         </Layout>

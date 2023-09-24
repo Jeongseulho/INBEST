@@ -7,10 +7,10 @@ export interface Board {
   title: string;
   files: string[];
   imgList: string[];
-  commentList: string[];
+  commentList: Comment[];
   writer: Writer;
-  createdDate: Date;
-  lastModifiedDate: Date;
+  createdDate: string;
+  lastModifiedDate: string;
 }
 export interface Writer {
   seq: number;
@@ -31,3 +31,22 @@ export interface GetBoardList {
   success: boolean;
   board: Board[];
 }
+export interface GetBoardDetail {
+  success: boolean;
+  board: Board;
+  loginUserLike: boolean;
+}
+
+export interface Comment {
+  boardId: null | string;
+  cocommentList: Comment[];
+  context: string;
+  createdDate: string;
+  lastModifiedDate: string;
+  likes: number;
+  seq: string;
+  userSeq: number;
+  writer: null;
+}
+
+export interface Cocoment extends Omit<Comment, "cocommentList"> {}

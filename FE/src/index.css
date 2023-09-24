@@ -213,7 +213,7 @@ body{
 
 .ql-editor{
   height: 30rem;
-  @apply bg-slate-200
+  @apply bg-white
 }
 .ql-toolbar{
   @apply bg-gray-100
