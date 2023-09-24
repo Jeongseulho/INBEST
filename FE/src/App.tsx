@@ -12,7 +12,14 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: 1000 * 60,
+    },
+  },
+});
 
 function App() {
   return (
