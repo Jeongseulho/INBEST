@@ -27,8 +27,6 @@ import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -126,7 +124,7 @@ public class BoardController {
 		String accessToken = jwtProvider.resolveAccessToken(request).orElse("accessToken");
 		String loginEmail = "";
 
-		if(accessToken.equals("accessToken")){
+		if(!accessToken.equals("accessToken")){
 			Claims claims = jwtProvider.getClaims(accessToken);
 			loginEmail = claims.getSubject();
 		}
