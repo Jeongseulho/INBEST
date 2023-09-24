@@ -1,8 +1,8 @@
 package com.jrjr.invest.rank.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.invest.rank.dto.RedisUserDTO;
@@ -81,7 +82,7 @@ public class RankController {
 		log.info("========== 랭킹 정보 업데이트 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userRankService.sortUserRankingInfo();
+		userRankService.updateUserRankingInfo();
 
 		log.info("========== 랭킹 정보 업데이트 완료 ==========");
 		resultMap.put("success", true);
@@ -89,15 +90,16 @@ public class RankController {
 	}
 
 	@GetMapping("/test/info")
-	ResponseEntity<Map<String, Object>> testGetUserRankingInfo() {
+	ResponseEntity<Map<String, Object>> testGetUserRankingInfo(@RequestParam Long start,
+		@RequestParam Long end) {
 		log.info("========== 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		List<RedisUserDTO> userRankingListInfo = userRankService.getUserRankingListInfo(0, -1);
+		Set<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfo(start, end);
 
 		log.info("========== 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
-		resultMap.put("UserRankingInfo", userRankingListInfo);
+		resultMap.put("UserRankingInfo", userRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
