@@ -27,17 +27,27 @@ public class UserRankServiceImpl implements UserRankService {
 
 	@Override
 	public void insertUserInfo(RedisUserDTO redisUserDTO) {
-		log.info("회원 정보: {}", redisUserDTO.toString());
+		log.info("추가 할 회원 정보: {}", redisUserDTO.toString());
 
 		redisUserRepository.insertUserInfo(redisUserDTO);
+		log.info("회원 정보 추가 완료");
+
 		this.updateUserRankingInfo();
 	}
 
 	@Override
 	public void updateUserProfileInfo(RedisUserDTO redisUserDTO) {
-		log.info("변경 요청 회원 정보: {}", redisUserDTO.toString());
+		log.info("수정 할 회원 정보: {}", redisUserDTO.toString());
 
 		redisUserRepository.updateUserProfileInfo(redisUserDTO);
+		this.updateUserRankingInfo();
+	}
+
+	@Override
+	public void deleteUserInfo(Long seq) {
+		log.info("삭제 할 회원 정보 seq: {}", seq);
+
+		redisUserRepository.deleteUserInfo(seq);
 		this.updateUserRankingInfo();
 	}
 
@@ -78,11 +88,7 @@ public class UserRankServiceImpl implements UserRankService {
 
 	@Override
 	public void updateUserRankingInfo() {
-		this.printUserInfoList();
-
 		redisUserRepository.updateUserRankingList();
-
-		this.printSortedUserInfoList(0, -1);
 	}
 
 	@Override

@@ -10,6 +10,8 @@ public interface UserRankService {
 
 	void updateUserProfileInfo(RedisUserDTO redisUserDTO);
 
+	void deleteUserInfo(Long seq);
+
 	void updateUserTierAndRateInfo(Long seq);
 
 	void updateAllUserTierAndRateInfo();
