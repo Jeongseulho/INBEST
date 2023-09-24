@@ -26,4 +26,5 @@ public class CrawlingDTO implements Serializable {
 	private Long amount;
 	private String name;
 	private String marketPrice;
+	private Integer stockType;
 }

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import com.jrjr.inbest.crawler.StockCrawler;
+import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,10 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TradingScheduler {
 	private final RedisTemplate<String, TradingDTO> redisTradingTemplate;
-	private final RedisTemplate<String, StockDTO> redisStockTemplate;
-	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
 	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
-	// private final TradingHandler KoreaTradingHandler;
+	private final StockCrawler KoreaStockCrawler;
 	private final TradingService tradingService;
 
 	@Value("${stock.url.market-price}")
@@ -93,40 +93,13 @@ public class TradingScheduler {
 			//비동기로 크롤링 실행
 			CompletableFuture.supplyAsync(()->{
 				Long marketPrice = null;
-				Document doc = null;
 
-				try {
-					//크롤링으로 시가와 기업 이름을 가져옴
-					doc = Jsoup.connect(url+stockCode).get();
-					Element name = doc.select(".ellip").first();
-					Element price = doc.select(".price").first();
-
-					if(name == null || price == null){
-						log.info("매매를 할수 없는 종목입니다.");
-						return null;
-					}
-
-					log.info(name.text()+" 현재 시가 : "+price.text());
-					
-					//,표시를 파싱해서 숫자로 변경
-					String priceText = price.text();
-					priceText = priceText.replaceAll(",","");
-					marketPrice = Long.valueOf(priceText);
-					
-					//시가를 Redis에 저장
-					StockDTO stockDTO = StockDTO.builder()
-						.name(name.text())
-						.stockCode(stockCode)
-						.marketPrice(marketPrice)
-						.lastModifiedDate(LocalDateTime.now()).build();
-					HashOperations<String, String, StockDTO> stockHashOperations = redisStockTemplate.opsForHash();
-					stockHashOperations.put("stock",stockCode,stockDTO);
-				} catch (IOException e) {
-					e.printStackTrace();
+				if(crawlingDTO.getStockType() == StockType.KOREA){
+					return KoreaStockCrawler.crawling(stockCode);
 				}
 
 				return marketPrice;
-			}).thenAcceptAsync((price)->{
+			}).thenAccept((price)->{
 				List<TradingDTO> tradingList = tradingByCodeMap.get(stockCode);
 				if(price == null){
 					log.info(stockCode+"의 시가를 구할 수 없습니다.");

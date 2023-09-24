@@ -56,17 +56,21 @@ public class TradingService {
 
 		//매매 작업 대기 열에 입력받은 크롤링해야하는 주식 정보 추가
 		//크롤링할 주식 데이터 dto 생성
-		CrawlingDTO crawlingDTO = CrawlingDTO.builder().amount(tradingDTO.getAmount()).stockCode(tradingDTO.getStockCode()).build();
+		CrawlingDTO crawlingDTO =
+			CrawlingDTO.builder()
+				.amount(tradingDTO.getAmount())
+				.stockCode(tradingDTO.getStockCode())
+				.name(tradingDTO.getStockName())
+				.stockType(tradingDTO.getStockType())
+				.build();
+
 		String crawlingHashKey = instanceId+"-crawling-task";
 		HashOperations<String,String,CrawlingDTO> redisCrawlingOperations = redisCrawlingTemplate.opsForHash();
 		CrawlingDTO savedCrawling = redisCrawlingOperations.get(crawlingHashKey,crawlingDTO.getStockCode());
 
 		//이미 존재하는 주식 크롤링작업이면 개수 증가
 		if(savedCrawling  == null) {
-			savedCrawling = CrawlingDTO.builder()
-				.amount(tradingDTO.getAmount())
-				.stockCode(tradingDTO.getStockCode())
-				.build();
+			savedCrawling = crawlingDTO;
 		}else{
 			savedCrawling.setAmount(savedCrawling.getAmount() + crawlingDTO.getAmount());
 		}
