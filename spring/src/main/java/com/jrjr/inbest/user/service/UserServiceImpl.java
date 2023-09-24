@@ -223,6 +223,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void deleteUserRankingInfo(Long seq) {
+		log.info("UserServiceImpl - updateUserRankingInfo 실행");
+
+		// WebClient webClient = WebClient.create("http://localhost:9103");
+		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8103");
+		webClient.delete()
+			.uri(uriBuilder -> uriBuilder
+				.path("/rank/users")
+				.queryParam("seq", seq)
+				.build())
+			.retrieve()
+			.bodyToMono(JSONObject.class)
+			.block();
+	}
+
+	@Override
 	public UserDto getUserInfo(Long seq) {
 		log.info("UserServiceImpl - getUserInfo 실행: {}", seq);
 
