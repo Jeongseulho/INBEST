@@ -68,13 +68,25 @@ public class UserRankServiceImpl implements UserRankService {
 	}
 
 	@Override
-	public void sortUserRankingInfo() {
+	public void updateAllUserTierAndRateInfo() {
+		Set<String> hashKeys = redisUserRepository.getAllHashKeys();
+		for (String seq : hashKeys) {
+			this.updateUserTierAndRateInfo(Long.parseLong(seq));
+		}
+	}
+
+	@Override
+	public void updateUserRankingInfo() {
 		this.printUserInfoList();
 
-		redisUserRepository.removeAllFromSortedUserSet();
-		redisUserRepository.sortUserRankingInfo();
+		redisUserRepository.updateUserRankingList();
 
 		this.printSortedUserInfoList(0, -1);
+	}
+
+	@Override
+	public Set<RedisUserDTO> getUserRankingInfo(long start, long end) {
+		return redisUserRepository.getUserInfoSet(start, end);
 	}
 
 	@Override
@@ -90,7 +102,7 @@ public class UserRankServiceImpl implements UserRankService {
 	@Override
 	public void printSortedUserInfoList(long start, long end) {
 		log.info("========== 정렬된 회원 랭킹 정보 ==========");
-		Set<RedisUserDTO> sortedUserSet = redisUserRepository.getSortedUserSet(start, end);
+		Set<RedisUserDTO> sortedUserSet = redisUserRepository.getUserInfoSet(start, end);
 		for (RedisUserDTO redisUserDTO : sortedUserSet) {
 			log.info(redisUserDTO.toString());
 		}
