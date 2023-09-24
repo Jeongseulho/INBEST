@@ -23,8 +23,6 @@ for company_code in company_codes:
         "reprt_code" : "11012",
         "fs_div" : "OFS"
     }
-    # print(company_code)
-    # print('여기도 안온다고?')
 
     response = requests.get(url, params=params)
 
