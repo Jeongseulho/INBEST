@@ -30,7 +30,7 @@ public class UserRankServiceImpl implements UserRankService {
 		log.info("회원 정보: {}", redisUserDTO.toString());
 
 		redisUserRepository.insertUserInfo(redisUserDTO);
-		this.printUserInfoList();
+		this.updateUserRankingInfo();
 	}
 
 	@Override
@@ -38,6 +38,7 @@ public class UserRankServiceImpl implements UserRankService {
 		log.info("변경 요청 회원 정보: {}", redisUserDTO.toString());
 
 		redisUserRepository.updateUserProfileInfo(redisUserDTO);
+		this.updateUserRankingInfo();
 	}
 
 	@Override
