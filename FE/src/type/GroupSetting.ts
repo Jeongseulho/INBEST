@@ -1,5 +1,5 @@
 export type Period = number;
-export type SeedMoney = "linkingMode" | number;
+export type SeedMoney = number;
 export type GroupInviteUser = {
   userSeq: number;
   nickname: string;

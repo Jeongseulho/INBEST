@@ -3,6 +3,7 @@ import UserTag from "../atoms/UserTag";
 import { GroupInviteUser } from "../../../type/GroupSetting";
 import { useEffect } from "react";
 import modalStore from "../../../store/modalStore";
+import default_image from "../../../asset/image/default_image.png";
 
 type Action =
   | { type: "ADD_INVITE"; payload: GroupInviteUser }
@@ -25,22 +26,22 @@ const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteU
         {
           userSeq: 1,
           nickname: "닉네임1",
-          profileImg: "",
+          profileImg: default_image,
         },
         {
           userSeq: 2,
           nickname: "닉네임2",
-          profileImg: "",
+          profileImg: default_image,
         },
         {
           userSeq: 3,
           nickname: "닉네임3",
-          profileImg: "",
+          profileImg: default_image,
         },
         {
           userSeq: 4,
           nickname: "닉네임4",
-          profileImg: "",
+          profileImg: default_image,
         },
       ],
     });

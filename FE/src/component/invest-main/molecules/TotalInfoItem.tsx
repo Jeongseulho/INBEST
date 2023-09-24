@@ -1,27 +1,25 @@
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 import { formatComma } from "../../../util/formatComma";
 interface Props {
-  img: string;
   title: string;
   number: number;
-  change: number;
+  fluctuation: number;
 }
 
-const TotalInfoItem = ({ img, title, number, change }: Props) => {
+const TotalInfoItem = ({ title, number, fluctuation }: Props) => {
   return (
-    <div className=" flex gap-6">
-      <img src={img} />
-      <div className=" flex flex-col">
-        <p className=" text-myGray">{title}</p>
+    <div className=" flex flex-col">
+      <p className=" text-myGray">{title}</p>
+      <div className=" flex items-center gap-2">
         <p className=" font-bold text-3xl">{formatComma(number)}</p>
-        {change >= 0 ? (
+        {fluctuation >= 0 ? (
           <div className=" flex items-center">
             <AiOutlineArrowUp
               style={{
                 color: "#00C851",
               }}
             />
-            <p className=" font-semiBold text-green-500">{change}</p>
+            <p className=" font-semiBold text-green-500">{fluctuation}</p>
           </div>
         ) : (
           <div className=" flex items-center">
@@ -30,7 +28,7 @@ const TotalInfoItem = ({ img, title, number, change }: Props) => {
                 color: "#ff4444",
               }}
             />
-            <p className=" font-semiBold text-red-500">{change}</p>
+            <p className=" font-semiBold text-red-500">{fluctuation}</p>
           </div>
         )}
       </div>

@@ -7,17 +7,14 @@ import { formatNumberToWon } from "../../../util/formatMoney";
 interface Props {
   seedMoney: SeedMoney;
   dispatch: React.Dispatch<{ type: "SEED_MONEY"; payload: SeedMoney }>;
-  prevSeedMoney: number[];
 }
 
-const SeedMoneyFilterBar = ({ seedMoney, dispatch, prevSeedMoney }: Props) => {
+const SeedMoneyFilterBar = ({ seedMoney, dispatch }: Props) => {
   return (
     <div className=" border-2 rounded-lg py-4 px-10 w-full pb-10">
       <div className=" flex flex-col w-full items-center ">
         <p className=" mb-4 mr-4 text-xl">
-          {seedMoney === "linkingMode"
-            ? `${formatNumberToWon(prevSeedMoney[0])} ~ ${formatNumberToWon(prevSeedMoney[1])}`
-            : `${formatNumberToWon(seedMoney[0])} ~ ${formatNumberToWon(seedMoney[1])}`}
+          {`${formatNumberToWon(seedMoney[0])} ~ ${formatNumberToWon(seedMoney[1])}`}
         </p>
         <Slider
           range
@@ -43,8 +40,7 @@ const SeedMoneyFilterBar = ({ seedMoney, dispatch, prevSeedMoney }: Props) => {
               dispatch({ type: "SEED_MONEY", payload });
             }
           }}
-          value={seedMoney === "linkingMode" ? prevSeedMoney : seedMoney}
-          disabled={seedMoney === "linkingMode"}
+          value={seedMoney}
         />
       </div>
     </div>

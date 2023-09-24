@@ -1,6 +1,3 @@
-// import BoostModeTag from "../../common/BoostModeTag";
-// import NormalModeTag from "../atoms/NormalModeTag";
-import LinkingModeTag from "../../common/LinkingModeTag";
 import NumberToTierImage from "../../common/NumberToTierImage";
 import { formatNumberToWon } from "../../../util/formatMoney";
 import modalStore from "../../../store/modalStore";
@@ -27,7 +24,7 @@ const Group = ({ index, title, memberCnt, avgTier, seedMoney, period, groupCode 
       {/* {isBoostMode ? <BoostModeTag /> : <NormalModeTag />} */}
       <p className="w-16">{memberCnt} 명</p>
       <div className=" w-32">
-        {seedMoney === 0 ? <LinkingModeTag /> : <p className=" w-32">{formatNumberToWon(seedMoney)}</p>}
+        <p className=" w-32">{formatNumberToWon(seedMoney)}</p>
       </div>
       <div className=" w-16 h-16">
         <NumberToTierImage tier={avgTier} />

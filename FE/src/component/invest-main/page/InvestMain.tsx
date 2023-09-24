@@ -9,17 +9,15 @@ import QuestionJoinModal from "../organisms/QuestionJoinModal";
 
 const InvestMain = () => {
   return (
-    <div className=" flex justify-center items-center mt-10">
+    <div className=" flex flex-col items-center gap-10 w-9/12 mx-auto mt-10">
       <InvestingTotalInfo />
-      <div className=" flex flex-col items-center gap-10 w-1/2">
-        <CreateModal />
-        <FilterModal />
-        <BeforeStartGroupModal />
-        <InProgressGroupModal />
-        <QuestionJoinModal />
-        <MyGroupList />
-        <GroupList />
-      </div>
+      <CreateModal />
+      <FilterModal />
+      <BeforeStartGroupModal />
+      <InProgressGroupModal />
+      <QuestionJoinModal />
+      <MyGroupList />
+      <GroupList />
     </div>
   );
 };
