@@ -7,10 +7,10 @@ interface Props {
   linkUrl: string;
 }
 
-const News = ({ title, content, imgUrl, linkUrl }: Props) => {
+const IndustryNewsItem = ({ title, content, imgUrl, linkUrl }: Props) => {
   return (
     <a
-      className=" flex items-center gap-3 hover:bg-gray-200 hover:bg-opacity-70 rounded-md transition-colors duration-300"
+      className=" col-span-1 flex items-center gap-3 hover:bg-gray-200 hover:bg-opacity-70 rounded-md transition-colors duration-300"
       href={linkUrl}
       target="_black"
     >
@@ -22,4 +22,4 @@ const News = ({ title, content, imgUrl, linkUrl }: Props) => {
     </a>
   );
 };
-export default News;
+export default IndustryNewsItem;
