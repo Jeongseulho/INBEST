@@ -11,7 +11,9 @@ public interface UserRepository {
 
 	Map<String, RedisUserDTO> getUserInfoMap();
 
-	Set<RedisUserDTO> getSortedUserSet(long start, long end);
+	Set<String> getAllHashKeys();
+
+	Set<RedisUserDTO> getUserInfoSet(long start, long end);
 
 	void insertUserInfo(RedisUserDTO redisUserDTO);
 
@@ -21,5 +23,5 @@ public interface UserRepository {
 
 	void removeAllFromSortedUserSet();
 
-	void sortUserRankingInfo();
+	void updateUserRankingList();
 }

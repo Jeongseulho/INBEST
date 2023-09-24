@@ -40,7 +40,12 @@ public class UserRedisRepository implements UserRepository {
 	}
 
 	@Override
-	public Set<RedisUserDTO> getSortedUserSet(long start, long end) {
+	public Set<String> getAllHashKeys() {
+		return userHashOperations.keys(USER_HASH_KEY);
+	}
+
+	@Override
+	public Set<RedisUserDTO> getUserInfoSet(long start, long end) {
 		return userZSetOperations.reverseRange(USER_SORT_KEY, start, end);
 	}
 
@@ -79,11 +84,40 @@ public class UserRedisRepository implements UserRepository {
 	}
 
 	@Override
-	public void sortUserRankingInfo() {
+	public void updateUserRankingList() {
+		// user-sort set 에 user hash table 정보 저장 (기존 정보 초기화 후 저장)
 		Map<String, RedisUserDTO> userDTOMap = this.getUserInfoMap();
+		this.removeAllFromSortedUserSet();
 		for (RedisUserDTO redisUserDTO : userDTOMap.values()) {
 			userZSetOperations.add(USER_SORT_KEY, redisUserDTO,
 				redisUserDTO.getTier() == null ? 0 : redisUserDTO.getTier());
+		}
+
+		// 랭킹 구하기
+		int rank = 0;
+		int index = 0;
+		int previousTier = Integer.MAX_VALUE;
+
+		Set<RedisUserDTO> userDTOSet = this.getUserInfoSet(0, -1);
+		for (RedisUserDTO redisUserDTO : userDTOSet) {
+			index++;
+			Integer tier = redisUserDTO.getTier();
+
+			log.info("previousTier: {}", previousTier);
+			log.info("tier: {}", tier);
+
+			if (tier != previousTier) {
+				rank = index;
+			}
+			previousTier = tier;
+
+			// 기존 정보 삭제 후 추가
+			userZSetOperations.remove(USER_SORT_KEY, redisUserDTO);
+			redisUserDTO.setPreviousRank(redisUserDTO.getCurrentRank());
+			redisUserDTO.setCurrentRank(rank);
+			userZSetOperations.add(USER_SORT_KEY, redisUserDTO,
+				redisUserDTO.getTier() == null ? 0 : redisUserDTO.getTier());
+			userHashOperations.put(USER_HASH_KEY, String.valueOf(redisUserDTO.getSeq()), redisUserDTO);
 		}
 	}
 }
