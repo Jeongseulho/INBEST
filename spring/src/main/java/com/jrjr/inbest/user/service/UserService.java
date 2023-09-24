@@ -27,6 +27,8 @@ public interface UserService {
 
 	void withdraw(Long seq, String email);
 
+	void deleteUserRankingInfo(Long seq);
+
 	UserDto getUserInfo(Long seq);
 
 	void updateDefaultImg(Long seq, String email);

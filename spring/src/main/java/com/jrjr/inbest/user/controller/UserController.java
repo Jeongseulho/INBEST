@@ -127,6 +127,7 @@ public class UserController {
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
 		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
 		userService.withdraw(seq, email);
+		userService.deleteUserRankingInfo(seq);
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
