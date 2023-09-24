@@ -33,6 +33,9 @@ public class Simulation {
 	private Integer period;
 
 	@Column(nullable = false)
+	private Long seedMoney;
+
+	@Column(nullable = false)
 	private Integer memberNum;
 
 	@Column(nullable = false)
@@ -42,7 +45,7 @@ public class Simulation {
 	private Integer revenuRate; // simulation 평균 수익률
 
 	@Builder
-	public Simulation(String title, LocalDateTime startDate, Integer period, Integer memberNum, LocalDateTime finishedDate) {
+	public Simulation(String title, Long seedMoney, LocalDateTime startDate, Integer period, Integer memberNum, LocalDateTime finishedDate) {
 		this.title = title;
 		this.startDate = startDate;
 		this.period = period;
