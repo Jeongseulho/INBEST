@@ -39,7 +39,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TradingScheduler {
 	private final RedisTemplate<String, TradingDTO> redisTradingTemplate;
 	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
-	private final StockCrawler KoreaStockCrawler;
+	private final StockCrawler koreaStockCrawler;
+	private final StockCrawler cryptoStockCrawler;
 	private final TradingService tradingService;
 
 	@Value("${stock.url.market-price}")
@@ -95,7 +96,9 @@ public class TradingScheduler {
 				Long marketPrice = null;
 
 				if(crawlingDTO.getStockType() == StockType.KOREA){
-					return KoreaStockCrawler.crawling(stockCode);
+					return koreaStockCrawler.crawling(stockCode);
+				}else if(crawlingDTO.getStockType() == StockType.CRYPTO_MONEY){
+					return cryptoStockCrawler.crawling(stockCode);
 				}
 
 				return marketPrice;

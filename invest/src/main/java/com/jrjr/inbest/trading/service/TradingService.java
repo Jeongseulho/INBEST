@@ -122,6 +122,8 @@ public class TradingService {
 		HashOperations<String, String, RedisSimulationUserDTO> simulationUserHashOperations = redisSimulationUserTemplate.opsForHash();
 		String simulationHashKey = "simulation_"+tradingDTO.getGameSeq();
 		RedisSimulationUserDTO redisSimulationUserDTO = simulationUserHashOperations.get(simulationHashKey,String.valueOf(tradingDTO.getUserSeq()));
+		Map<String,RedisSimulationUserDTO> map = simulationUserHashOperations.entries(simulationHashKey);
+
 		redisSimulationUserDTO.setCurrentMoney(redisSimulationUserDTO.getCurrentMoney() + tradingDTO.getPrice()*tradingDTO.getAmount());
 		simulationUserHashOperations.put(simulationHashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),redisSimulationUserDTO);
 
