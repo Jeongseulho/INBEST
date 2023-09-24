@@ -79,12 +79,12 @@ public class RankController {
 
 	@GetMapping("/test/sort")
 	ResponseEntity<Map<String, Object>> testSortUserRankingInfo() {
-		log.info("========== 랭킹 정보 업데이트 시작 ==========");
+		log.info("========== 개인 랭킹 정보 업데이트 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userRankService.updateUserRankingInfo();
 
-		log.info("========== 랭킹 정보 업데이트 완료 ==========");
+		log.info("========== 개인 랭킹 정보 업데이트 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -92,14 +92,27 @@ public class RankController {
 	@GetMapping("/test/info")
 	ResponseEntity<Map<String, Object>> testGetUserRankingInfo(@RequestParam Long start,
 		@RequestParam Long end) {
-		log.info("========== 랭킹 정보 불러오기 시작 ==========");
+		log.info("========== 개인 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Set<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfo(start, end);
 
-		log.info("========== 랭킹 정보 불러오기 완료 ==========");
+		log.info("========== 개인 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
 		resultMap.put("UserRankingInfo", userRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/test/info/{seq}")
+	ResponseEntity<Map<String, Object>> testGetMyRankingInfo(@PathVariable(value = "seq") Long seq) {
+		log.info("========== 개인 랭킹 정보 불러오기 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		RedisUserDTO myRankingInfo = userRankService.getMyRankingInfo(seq);
+
+		log.info("========== 개인 랭킹 정보 불러오기 완료 ==========");
+		resultMap.put("success", true);
+		resultMap.put("MyRankingInfo", myRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }

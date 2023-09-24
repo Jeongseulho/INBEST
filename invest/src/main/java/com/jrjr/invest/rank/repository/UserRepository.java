@@ -24,4 +24,6 @@ public interface UserRepository {
 	void removeAllFromSortedUserSet();
 
 	void updateUserRankingList();
+
+	RedisUserDTO getMyRankingInfo(Long seq);
 }

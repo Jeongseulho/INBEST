@@ -90,6 +90,11 @@ public class UserRankServiceImpl implements UserRankService {
 	}
 
 	@Override
+	public RedisUserDTO getMyRankingInfo(Long seq) {
+		return redisUserRepository.getMyRankingInfo(seq);
+	}
+
+	@Override
 	public void printUserInfoList() {
 		log.info("========== 회원 정보 ==========");
 		Map<String, RedisUserDTO> userDTOMap = redisUserRepository.getUserInfoMap();

@@ -120,4 +120,15 @@ public class UserRedisRepository implements UserRepository {
 			userHashOperations.put(USER_HASH_KEY, String.valueOf(redisUserDTO.getSeq()), redisUserDTO);
 		}
 	}
+
+	@Override
+	public RedisUserDTO getMyRankingInfo(Long seq) {
+		Set<RedisUserDTO> userDTOSet = this.getUserInfoSet(0, -1);
+		for (RedisUserDTO redisUserDTO : userDTOSet) {
+			if (redisUserDTO.getSeq() == seq) {
+				return redisUserDTO;
+			}
+		}
+		return null;
+	}
 }

@@ -18,6 +18,8 @@ public interface UserRankService {
 
 	Set<RedisUserDTO> getUserRankingInfo(long start, long end);
 
+	RedisUserDTO getMyRankingInfo(Long seq);
+
 	void printUserInfoList();
 
 	void printSortedUserInfoList(long start, long end);
