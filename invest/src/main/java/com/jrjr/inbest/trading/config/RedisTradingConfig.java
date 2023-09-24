@@ -17,7 +17,7 @@ public class RedisTradingConfig {
 	private final RedisConnectionFactory redisConnectionFactory;
 
 	@Bean
-	public RedisTemplate<String, TradingDTO> redisCrawlingTemplate() {
+	public RedisTemplate<String, TradingDTO> redisTradingTemplate() {
 		RedisTemplate<String, TradingDTO> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 

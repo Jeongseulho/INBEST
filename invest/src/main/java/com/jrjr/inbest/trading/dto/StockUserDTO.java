@@ -17,6 +17,13 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 @Slf4j
-public class StockUserDTO extends StockDTO {
+public class StockUserDTO  {
+	private String stockCode;
+	// private Long marketPrice;
+	private String name;
+	private int type;
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	private LocalDateTime lastModifiedDate;
 	private Long amount;
 }

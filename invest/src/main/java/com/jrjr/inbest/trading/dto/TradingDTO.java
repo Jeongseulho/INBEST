@@ -52,6 +52,8 @@ public class TradingDTO implements Serializable {
 	@NotNull
 	private Integer stockType;
 	@NotNull
+	private String stockName;
+	@NotNull
 	private Integer gameType;
 	private Integer conclusionType;
 
@@ -59,7 +61,9 @@ public class TradingDTO implements Serializable {
 		// log.info(this.toString());
 		return TradingEntity.builder().
 			userSeq(this.userSeq).nickname(this.nickname).
-			amount(this.amount).stockCode(this.stockCode).tradingType(this.tradingType).conclusionType(this.conclusionType).
+			amount(this.amount).stockCode(this.stockCode).
+			tradingType(this.tradingType).conclusionType(this.conclusionType).
+			price(price).stockName(stockName).
 			build();
 	}
 	public RedisTradingEntity toRedisTradingEntity(){

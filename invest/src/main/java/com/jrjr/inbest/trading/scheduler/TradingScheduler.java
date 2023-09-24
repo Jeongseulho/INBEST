@@ -20,9 +20,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.jrjr.inbest.trading.dto.StockDTO;
+import com.jrjr.inbest.trading.dto.StockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.constant.TradingType;
+import com.jrjr.inbest.trading.handler.KoreaRegularTradingHandler;
+import com.jrjr.inbest.trading.handler.TradingHandler;
 import com.jrjr.inbest.trading.repository.TradingRepository;
+import com.jrjr.inbest.trading.service.TradingService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +37,11 @@ import lombok.extern.slf4j.Slf4j;
 public class TradingScheduler {
 	private final RedisTemplate<String, TradingDTO> redisTradingTemplate;
 	private final RedisTemplate<String, StockDTO> redisStockTemplate;
+	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
 	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
+	// private final TradingHandler KoreaTradingHandler;
+	private final TradingService tradingService;
+
 	@Value("${stock.url.market-price}")
 	public String url;
 	@Value("${eureka.instance.instance-id}")
@@ -41,7 +49,7 @@ public class TradingScheduler {
 
 	@Scheduled(cron = "0/10 * * * * *")
 	// @Scheduled(cron = "0 * 9-17 * * ?")
-	public void myScheduledTask() throws IOException {
+	public void myScheduledTask() throws Exception {
 		// 여기에 수행할 작업을 넣습니다.
 		log.info("========== 주식 매매 시작 ==========");
 
@@ -74,17 +82,19 @@ public class TradingScheduler {
 			tradingList.add(tradingDTO);
 			tradingByCodeMap.put(stockCode,tradingList);
 		}
-
+		log.info("주식 종목 By 거래");
 		log.info(tradingByCodeMap+" ");
-
+		log.info("크롤링 대상 목록");
+		log.info(crawlingDTOMap+" ");
 		//종목코드 별 크롤링 후 매매 확인
-		for(String stockCode : crawlingDTOMap.keySet()){
-			List<TradingDTO> tradingList = tradingByCodeMap.get(stockCode);
-
+		for(String seq : crawlingDTOMap.keySet()){
+			CrawlingDTO crawlingDTO= crawlingDTOMap.get(seq);
+			String stockCode = crawlingDTO.getStockCode();
 			//비동기로 크롤링 실행
 			CompletableFuture.supplyAsync(()->{
 				Long marketPrice = null;
 				Document doc = null;
+
 				try {
 					//크롤링으로 시가와 기업 이름을 가져옴
 					doc = Jsoup.connect(url+stockCode).get();
@@ -117,40 +127,48 @@ public class TradingScheduler {
 
 				return marketPrice;
 			}).thenAcceptAsync((price)->{
+				List<TradingDTO> tradingList = tradingByCodeMap.get(stockCode);
 				if(price == null){
 					log.info(stockCode+"의 시가를 구할 수 없습니다.");
-
 					return ;
 				}
 				if(tradingList.isEmpty()){
 					log.info(stockCode+"로 올라온 매매가 없습니다.");
-
 					return ;
 				}
 				for(int i=0;i<tradingList.size();i++){
 					TradingDTO tradingDTO = tradingList.get(i);
 					//매도
 					if(tradingDTO.getTradingType() == TradingType.BUY){
-						log.info("매도 : "+tradingDTO.getPrice() +" vs "+price);
-						//매도 성공
-						if(tradingDTO.getPrice() <= price){
-							log.info("매수 가능");
-						}
-					}//매수
-					else if(tradingDTO.getTradingType() == TradingType.SELL){
 						log.info("매수 : "+tradingDTO.getPrice() +" vs "+price);
 						//매수 성공
 						if(tradingDTO.getPrice() >= price){
-							//매매 대기열에서 매매 정보 삭제
-							//db 매매에 저장
-							//수익률 저장
+							log.info("매수 가능");
+							try {
+								tradingService.buyStock(tradingDTO);
+							} catch (Exception e) {
+								log.info(tradingDTO+" 매수 실패");
+								e.printStackTrace();
+							}
+						}
+					}
+					//매수
+					else if(tradingDTO.getTradingType() == TradingType.SELL){
+						log.info("매도 : "+tradingDTO.getPrice() +" vs "+price);
+						//매도 성공
+						if(tradingDTO.getPrice() <= price){
 							log.info("매도 가능");
+							try {
+								tradingService.sellStock(tradingDTO);
+							} catch (Exception e) {
+								log.info(tradingDTO+" 매도 실패");
+								e.printStackTrace();
+							}
 						}
 					}
 				}
 			});
-
 		}
-		log.info("========== 주식 매매 종료 ==========");
+		log.info("========== 주식 매매 신청 종료 ==========");
 	}
 }

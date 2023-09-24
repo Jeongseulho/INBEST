@@ -71,7 +71,7 @@ public class KoreaRegularTradingHandler implements TradingHandler{
                     String simulationUserKey = tradingDTO.getStockType()+"_"+tradingDTO.getStockCode();
                     HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
                     StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);
-                    stockUserDTO.setMarketPrice(price);
+                    // stockUserDTO.setMarketPrice(price);
                     stockUserDTO.setAmount(stockUserDTO.getAmount()-tradingDTO.getAmount());
 
                     //모두 매도하면 삭제
