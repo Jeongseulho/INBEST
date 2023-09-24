@@ -51,6 +51,8 @@ public class UserRedisRepository implements UserRepository {
 
 	@Override
 	public void insertUserInfo(RedisUserDTO redisUserDTO) {
+		redisUserDTO.setTier(0);
+		redisUserDTO.setRate(0);
 		userHashOperations.put(USER_HASH_KEY, String.valueOf(redisUserDTO.getSeq()), redisUserDTO);
 	}
 
@@ -64,6 +66,11 @@ public class UserRedisRepository implements UserRepository {
 
 		userHashOperations.put(USER_HASH_KEY, String.valueOf(redisUserDTO.getSeq()), redisUserDTO);
 		log.info("변경 후 회원 정보: {}", redisUserDTO);
+	}
+
+	@Override
+	public void deleteUserInfo(Long seq) {
+		userHashOperations.delete(USER_HASH_KEY, String.valueOf(seq));
 	}
 
 	@Override
@@ -89,8 +96,7 @@ public class UserRedisRepository implements UserRepository {
 		Map<String, RedisUserDTO> userDTOMap = this.getUserInfoMap();
 		this.removeAllFromSortedUserSet();
 		for (RedisUserDTO redisUserDTO : userDTOMap.values()) {
-			userZSetOperations.add(USER_SORT_KEY, redisUserDTO,
-				redisUserDTO.getTier() == null ? 0 : redisUserDTO.getTier());
+			userZSetOperations.add(USER_SORT_KEY, redisUserDTO, redisUserDTO.getTier());
 		}
 
 		// 랭킹 구하기
@@ -103,9 +109,6 @@ public class UserRedisRepository implements UserRepository {
 			index++;
 			Integer tier = redisUserDTO.getTier();
 
-			log.info("previousTier: {}", previousTier);
-			log.info("tier: {}", tier);
-
 			if (tier != previousTier) {
 				rank = index;
 			}
@@ -115,8 +118,7 @@ public class UserRedisRepository implements UserRepository {
 			userZSetOperations.remove(USER_SORT_KEY, redisUserDTO);
 			redisUserDTO.setPreviousRank(redisUserDTO.getCurrentRank());
 			redisUserDTO.setCurrentRank(rank);
-			userZSetOperations.add(USER_SORT_KEY, redisUserDTO,
-				redisUserDTO.getTier() == null ? 0 : redisUserDTO.getTier());
+			userZSetOperations.add(USER_SORT_KEY, redisUserDTO, redisUserDTO.getTier());
 			userHashOperations.put(USER_HASH_KEY, String.valueOf(redisUserDTO.getSeq()), redisUserDTO);
 		}
 	}
@@ -125,7 +127,7 @@ public class UserRedisRepository implements UserRepository {
 	public RedisUserDTO getMyRankingInfo(Long seq) {
 		Set<RedisUserDTO> userDTOSet = this.getUserInfoSet(0, -1);
 		for (RedisUserDTO redisUserDTO : userDTOSet) {
-			if (redisUserDTO.getSeq() == seq) {
+			if (redisUserDTO.getSeq().equals(seq)) {
 				return redisUserDTO;
 			}
 		}

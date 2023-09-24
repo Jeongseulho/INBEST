@@ -19,6 +19,8 @@ public interface UserRepository {
 
 	void updateUserProfileInfo(RedisUserDTO inputRedisUserDTO);
 
+	void deleteUserInfo(Long seq);
+
 	void updateUserTierAndRateInfo(Long seq, Integer tier, Integer rate);
 
 	void removeAllFromSortedUserSet();
