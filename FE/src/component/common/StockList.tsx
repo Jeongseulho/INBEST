@@ -27,7 +27,11 @@ const StockList = ({ title, stockList, setCompanyCode }: Props) => {
       </div>
       <div className=" flex flex-col gap-2">
         {stockList.map((stock, index) => (
-          <div className=" flex justify-between" key={index} onClick={() => setCompanyCode(stock.code)}>
+          <div
+            className=" flex justify-between cursor-pointer hover:bg-gray-400 hover:bg-opacity-20 items-center py-1 rounded-md transition-colors duration-300"
+            key={index}
+            onClick={() => setCompanyCode(stock.code)}
+          >
             <p className=" w-24 text-center">{stock.name}</p>
             <div className=" flex w-40 items-center justify-center">
               <p className=" text-center">{formatNumberToDollar(stock.price)}</p>

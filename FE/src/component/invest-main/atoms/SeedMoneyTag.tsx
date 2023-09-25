@@ -4,7 +4,7 @@ const SeedMoneyTag = () => {
   return (
     <div>
       <div className=" flex items-end">
-        <p className=" font-regular me-2">시드머니</p>
+        <p className=" font-medium text-gray-600">시드머니</p>
         <img src={coin} width={40} />
       </div>
       <p className=" font-bold text-xl">1,000,000 원</p>
