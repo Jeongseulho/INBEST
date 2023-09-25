@@ -24,11 +24,7 @@ const SettingSeedMoney = ({ onNextStep, seedMoney, dispatch, resetStepAndGroupSe
           <SeedMoneySettingTag text="오백만원" dispatch={dispatch} payload={5000000} seedMoney={seedMoney} />
           <SeedMoneySettingTag text="천만원" dispatch={dispatch} payload={10000000} seedMoney={seedMoney} />
         </div>
-        <p className=" text-myGray text-center">
-          계좌연동모드란?
-          <br />
-          본인의 계좌를 기반으로 시드머니를 설정합니다.
-        </p>
+        <p className=" text-myGray text-center">모의투자 시작시 시드머니를 통해 투자를 시작합니다.</p>
       </div>
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button

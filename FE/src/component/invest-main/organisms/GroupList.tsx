@@ -58,7 +58,7 @@ const GroupList = () => {
         <p className="my-2 font-regular">그룹 검색</p>
         <div className=" flex items-center gap-4">
           <input
-            id="nickname-search"
+            id="group-search"
             type="text"
             placeholder="그룹 이름으로 검색할 수 있습니다."
             className=" border-gray-400 border p-2 rounded-md bg-main bg-opacity-10"

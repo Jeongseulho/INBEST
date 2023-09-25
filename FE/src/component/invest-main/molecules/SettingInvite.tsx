@@ -1,51 +1,21 @@
 import UserItem from "../atoms/UserItem";
 import UserTag from "../atoms/UserTag";
-import { GroupInviteUser } from "../../../type/GroupSetting";
-import { useEffect } from "react";
+import { SearchUser } from "../../../type/Group";
 import modalStore from "../../../store/modalStore";
-import default_image from "../../../asset/image/default_image.png";
+import { useSettingInvite } from "./useSettingInvite";
+import { BsSearch } from "react-icons/bs";
+import spinner from "../../../asset/image/spinner.svg";
 
-type Action =
-  | { type: "ADD_INVITE"; payload: GroupInviteUser }
-  | { type: "DELETE_INVITE"; payload: GroupInviteUser }
-  | { type: "ALL_USER"; payload: GroupInviteUser[] };
+type Action = { type: "ADD_INVITE"; payload: SearchUser } | { type: "DELETE_INVITE"; payload: SearchUser };
 interface Props {
   onNextStep: () => void;
   dispatch: React.Dispatch<Action>;
-  inviteUsers: GroupInviteUser[] | [];
-  unInviteUsers: GroupInviteUser[] | [];
+  inviteUsers: SearchUser[] | [];
   resetStepAndGroupSetting: () => void;
 }
-const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteUsers, unInviteUsers }: Props) => {
+const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteUsers }: Props) => {
   const { closeModal } = modalStore();
-
-  useEffect(() => {
-    dispatch({
-      type: "ALL_USER",
-      payload: [
-        {
-          userSeq: 1,
-          nickname: "닉네임1",
-          profileImg: default_image,
-        },
-        {
-          userSeq: 2,
-          nickname: "닉네임2",
-          profileImg: default_image,
-        },
-        {
-          userSeq: 3,
-          nickname: "닉네임3",
-          profileImg: default_image,
-        },
-        {
-          userSeq: 4,
-          nickname: "닉네임4",
-          profileImg: default_image,
-        },
-      ],
-    });
-  }, []);
+  const { data, isLoading, searchUserNickname, onChangeSearchUserNickname } = useSettingInvite();
 
   return (
     <div className=" relative w-full h-full">
@@ -55,34 +25,57 @@ const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteU
         <div className=" flex flex-col w-full">
           <label htmlFor="nickname-search" className="text-left">
             <p className="my-2 font-regular">유저 검색</p>
-            <input
-              id="nickname-search"
-              type="text"
-              placeholder="닉네임을 입력해주세요."
-              className=" border-gray-400 border p-2 rounded-md bg-main bg-opacity-10 w-full"
-            />
-          </label>
-          <div className=" flex flex-wrap">
-            {unInviteUsers.map((user) => (
-              <UserItem
-                key={user.userSeq}
-                nickname={user.nickname}
-                profileImg={user.profileImg}
-                dispatch={dispatch}
-                payload={user}
+            <div className=" relative">
+              <input
+                type="text"
+                className="px-3 border-gray-400 border bg-main bg-opacity-10 h-10 w-full rounded-md pe-8"
+                placeholder="검색어를 입력하세요"
+                value={searchUserNickname}
+                onChange={onChangeSearchUserNickname}
               />
-            ))}
-          </div>
+              <div>
+                <BsSearch
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    right: "0",
+                    cursor: "pointer",
+                  }}
+                />
+              </div>
+            </div>
+          </label>
+        </div>
+        <div className=" w-full h-1/5">
+          <p className=" my-2 font-regular text-left">검색 결과</p>
+          {isLoading ? (
+            <div className=" flex items-center justify-center">
+              <img src={spinner} alt="Loading Spinner" width={80} />
+            </div>
+          ) : (
+            <div className=" flex flex-wrap">
+              {data?.map((user) => (
+                <UserItem
+                  key={user.userSeq}
+                  nickname={user.nickname}
+                  profileImg={user.profile}
+                  dispatch={dispatch}
+                  payload={user}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className=" w-full">
+        <div className=" w-full h-1/5">
           <p className=" my-2 font-regular text-left">초대 목록</p>
           <div className=" flex flex-wrap">
             {inviteUsers.map((user) => (
               <UserTag
                 key={user.userSeq}
                 nickname={user.nickname}
-                profileImg={user.profileImg}
+                profileImg={user.profile}
                 dispatch={dispatch}
                 payload={user}
               />
