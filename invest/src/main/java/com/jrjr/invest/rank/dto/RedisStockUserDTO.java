@@ -1,4 +1,4 @@
-package com.jrjr.invest.simulation.dto;
+package com.jrjr.invest.rank.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -7,13 +7,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class RedisStockDTO {
+@ToString
+public class RedisStockUserDTO {
+
+	@NotNull
+	private Long simulationSeq;
+
+	@NotNull
+	private Long userSeq;
 
 	@NotNull
 	private String category;
@@ -22,8 +30,5 @@ public class RedisStockDTO {
 	private String stockCode;
 
 	@NotNull
-	private String name;
-
-	@NotNull
-	private Long price;
+	private Integer count;
 }
