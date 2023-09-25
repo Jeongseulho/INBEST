@@ -66,6 +66,12 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Parameters(value = {
+		@Parameter(required = true, name = "userSeq", description = "유저 pk"),
+		@Parameter(required = true, name = "context", description = "글 내용"),
+		@Parameter(required = true, name = "title", description = "글 제목"),
+	})
+	@Operation(summary = "게시물 수정")
 	@PutMapping("/{boardId}")
 	public ResponseEntity<Map<String, Object>> updateBoard(
 		@PathVariable String boardId,
@@ -94,6 +100,7 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "게시물 삭제")
 	@DeleteMapping("/{boardId}")
 	public ResponseEntity<Map<String, Object>> deleteBoard(
 		@PathVariable String boardId, HttpServletRequest request) throws Exception {
@@ -145,7 +152,6 @@ public class BoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		loginEmail = jwtProvider.getEmail(request);
 
 		//로그인한 유저가 좋아요를 누른 경우 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
@@ -190,7 +196,7 @@ public class BoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		//로그인한 유저가 좋아요를 누른 경우 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
 			List<UserDTO> likeUserList = boardDTOList.get(i).getLikesUserList();
@@ -213,6 +219,11 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "조회수가 많은 게시판 목록", description = "기간(period)와 한번에 출력하는 양(pageSize)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
+	@Parameters(value = {
+		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
+		@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
+	})
 	@GetMapping("/most-views")
 	public ResponseEntity<Map<String, Object>> findAllViewBoards(
 		@RequestParam(name = "pageSize") int pageSize,
@@ -233,7 +244,6 @@ public class BoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		loginEmail = jwtProvider.getEmail(request);
 
 		//로그인한 유저가 좋아요를 누른 경우 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
@@ -360,6 +370,10 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "댓글 수정")
+	@Parameters(value = {
+		@Parameter(required = true, name = "context", description = "댓글 내용"),
+	})
 	@PutMapping("/{boardSeq}/comments/{commentSeq}")
 	public ResponseEntity<Map<String, Object>> updateComment(
 		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq,
@@ -395,6 +409,7 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "댓글 삭제")
 	@DeleteMapping("/{boardSeq}/comments/{commentSeq}")
 	public ResponseEntity<Map<String, Object>> deleteComment(
 		@PathVariable(name = "boardSeq") String boardSeq,
@@ -456,6 +471,7 @@ public class BoardController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "대댓글 삭제")
 	@PutMapping("/{boardSeq}/comments/{commentSeq}/cocomments/{cocommentSeq}")
 	public ResponseEntity<Map<String, Object>> updateComment(
 		@RequestBody CommentDTO cocommentDTO, @PathVariable(name = "boardSeq") String boardSeq,
