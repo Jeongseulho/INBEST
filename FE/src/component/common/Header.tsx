@@ -103,7 +103,7 @@ const Header = () => {
                                 const res = await getUserInfo(userInfo!.seq);
                                 setMyInfo(res.UserInfo);
                                 console.log(myInfo);
-                                setShowModal(() => true);
+                                setShowModal(true);
                                 console.log(res);
                               } catch (err) {
                                 console.log(err);

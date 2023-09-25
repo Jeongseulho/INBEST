@@ -1,7 +1,7 @@
-import { temp } from "./tempapi";
+import { instanceWithAuth } from "./interceptors";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
-import { Board, Comment, GetBoardDetail, GetBoardList } from "../type/Board";
-const apiWithAuth = temp("boards");
+import { Comment, GetBoardDetail, GetBoardList } from "../type/Board";
+const apiWithAuth = instanceWithAuth("board-service/boards");
 
 export const createBoard = async (userSeq: number, context: string, title: string): Promise<ApiSuccessMessage> => {
   console.log(userSeq, context, title);
@@ -13,17 +13,7 @@ export const createBoard = async (userSeq: number, context: string, title: strin
   console.log(data);
   return data;
 };
-// export const createBoard = async (userSeq: number, context: string, title: string): Promise<ApiSuccessMessage> => {
-//   console.log(userSeq, context, title);
-//   const { data } = await apiWithAuth.post("", null, {
-//     params: {
-//       userSeq,
-//       context,
-//       title,
-//     },
-//   });
-//   return data;
-// };
+
 export const getBoardList = async (pageNo: number): Promise<GetBoardList> => {
   const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10 } });
   return data;
@@ -33,7 +23,7 @@ export const getBoardDetail = async (seq: string): Promise<GetBoardDetail> => {
   return data;
 };
 export const postComment = async (boardSeq: string, userSeq: number, context: string): Promise<Comment> => {
-  const { data } = await apiWithAuth.post(`/${boardSeq}/comments`, null, { params: { userSeq, context } });
+  const { data } = await apiWithAuth.post(`/${boardSeq}/comments`, { userSeq, context });
   return data;
 };
 export const postCocomment = async (
@@ -42,8 +32,11 @@ export const postCocomment = async (
   context: string,
   commentSeq: string
 ): Promise<Comment> => {
-  const { data } = await apiWithAuth.post(`/${boardSeq}/comments/${commentSeq}/cocoments`, null, {
-    params: { userSeq, context },
-  });
+  const { data } = await apiWithAuth.post(`/${boardSeq}/comments/${commentSeq}/cocomments`, { userSeq, context });
+  return data;
+};
+
+export const likeBoard = async (boardSeq: string, userSeq: number): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.put(`/${boardSeq}/likes/${userSeq}`);
   return data;
 };

@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 export const useBoardComment = () => {
-  const [showCocomentCreate, setShowCocomentCreate] = useState(false);
-  return { showCocomentCreate, setShowCocomentCreate };
+  const [showCocommentCreate, setShowCocommentCreate] = useState(false);
+  const [showCocoment, setShowCocoment] = useState(false);
+
+  return { showCocommentCreate, setShowCocommentCreate, showCocoment, setShowCocoment };
 };

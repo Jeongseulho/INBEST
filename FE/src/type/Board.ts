@@ -46,7 +46,7 @@ export interface Comment {
   likes: number;
   seq: string;
   userSeq: number;
-  writer: null;
+  writer: Writer;
 }
 
-export interface Cocoment extends Omit<Comment, "cocommentList"> {}
+export interface Cocomment extends Omit<Comment, "cocommentList"> {}

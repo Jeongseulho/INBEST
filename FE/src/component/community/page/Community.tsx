@@ -12,7 +12,7 @@ const Community = () => {
               <div className=" relative">
                 <input
                   type="text"
-                  className="px-3 border-gray-300 border h-10 w-96 rounded-md"
+                  className="px-3 border-gray-400 border bg-main bg-opacity-10 h-10 w-96 rounded-md pe-8"
                   placeholder="검색어를 입력하세요"
                 />
                 <BsSearch

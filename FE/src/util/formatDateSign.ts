@@ -1,11 +1,9 @@
 export const getTimeAgo = (dateString: string) => {
   const currentDateLocal = new Date();
   // `dateString`를 한국 시간대로 변환
-
-  console.log(currentDateLocal);
   const dateObject = new Date(dateString);
   dateObject.setTime(dateObject.getTime() + 9 * 60 * 60 * 1000); // 9시간 추가
-  console.log(dateObject);
+
   const timeDifference = +currentDateLocal - +dateObject;
   const seconds = Math.floor(timeDifference / 1000);
   const minutes = Math.floor(seconds / 60);

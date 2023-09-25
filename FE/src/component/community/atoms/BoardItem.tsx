@@ -6,9 +6,11 @@ import { AiOutlineEye } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
 import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { useBoardItem } from "./useBoardItem";
 const BoardItem = ({ board }: { board: Board }) => {
   const imgSrc = getImgSrc(board.context);
   const imgCnt = getImgCount(board.context);
+  const { onLike } = useBoardItem();
   return (
     <div className="w-full flex bg-white h-56 rounded-md shadow-md relative">
       <div className={`${imgSrc ? "w-2/3" : "w-full me-2"} ms-5`}>
@@ -30,7 +32,10 @@ const BoardItem = ({ board }: { board: Board }) => {
               <span className="ms-1">{board.view}</span>
             </div>
 
-            <div className="flex items-center">
+            <div
+              className="flex items-center hover:cursor-pointer hover:text-blue-600"
+              onClick={() => onLike(board.seq)}
+            >
               <BiLike />
               <span className="ms-1">{board.likes}</span>
             </div>

@@ -6,6 +6,7 @@ import { BiCommentDetail } from "react-icons/bi";
 import Dompurify from "dompurify";
 import BoardCommentCreate from "../atoms/BoardCommentCreate";
 import BoardComment from "../atoms/BoardComment";
+
 const BoardDetailContent = () => {
   const {
     board,
@@ -16,6 +17,8 @@ const BoardDetailContent = () => {
     cocommentText,
     setCocommentText,
     onPostCocomment,
+    showCommentCreate,
+    setShowCommentCreate,
   } = useBoardDetailContent();
   return (
     <>
@@ -45,8 +48,10 @@ const BoardDetailContent = () => {
           {board && <div dangerouslySetInnerHTML={{ __html: Dompurify.sanitize(board.context) }}></div>}
           <div className="absolute bottom-5 flex mt-10">
             <div className="flex items-center text-lg">
-              <BiLike />
-              <span className="ms-1 me-3">{board?.likes}</span>
+              <div className="flex items-center hover:cursor-pointer">
+                <BiLike />
+                <span className="ms-1 me-3">{board?.likes}</span>
+              </div>
               <BiCommentDetail />
               <span className="ms-1">{board?.commentList.length}</span>
             </div>
@@ -54,7 +59,25 @@ const BoardDetailContent = () => {
         </div>
       </div>
       <div className="pb-3">
-        <BoardCommentCreate setCommentText={setCommentText} onPostComment={onPostComment} commentText={commentText} />
+        <div className="flex justify-center">
+          {!showCommentCreate && (
+            <div
+              className="mt-3 flex justify-center h-12 border-2 items-center w-5/6 ms-2 mb-5
+            hover:cursor-pointer"
+              onClick={() => setShowCommentCreate((prev) => !prev)}
+            >
+              <span>댓글 작성하기</span>
+            </div>
+          )}
+        </div>
+        {showCommentCreate && (
+          <BoardCommentCreate
+            setCommentText={setCommentText}
+            onPostComment={onPostComment}
+            commentText={commentText}
+            onCancel={setShowCommentCreate}
+          />
+        )}
       </div>
       <div>
         {board?.commentList.map((comment) => (

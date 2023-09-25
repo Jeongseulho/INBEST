@@ -10,11 +10,11 @@ export const useBoardDetailContent = () => {
   const [cocommentText, setCocommentText] = useState("");
   const { userInfo } = userStore();
   const seq = searchParams.get("seq") ? searchParams.get("seq") : "";
-  const { data, isLoading, isError, error } = useQuery(["getBoardList", seq], () => getBoardDetail(seq!));
+  const { data, isLoading, isError, error, refetch } = useQuery(["getBoardDetail", seq], () => getBoardDetail(seq!));
   const board = data?.board;
   const loginUserLike = data?.loginUserLike;
-
-  const onPostComment = async (commentSeq: string) => {
+  const [showCommentCreate, setShowCommentCreate] = useState(false);
+  const onPostComment = async () => {
     if (commentText.trim() === "") {
       toast.error("댓글을 입력해 주세요");
       return;
@@ -23,19 +23,22 @@ export const useBoardDetailContent = () => {
       await postComment(board!.seq, userInfo!.seq, commentText);
       toast.success("댓글이 등록되었습니다");
       setCommentText("");
+      refetch();
     } catch (err) {
       console.log(err);
     }
   };
+
   const onPostCocomment = async (commentSeq: string) => {
     if (cocommentText.trim() === "") {
       toast.error("댓글을 입력해 주세요");
       return;
     }
     try {
-      await postCocomment(board!.seq, userInfo!.seq, commentText, commentSeq);
+      await postCocomment(board!.seq, userInfo!.seq, cocommentText, commentSeq);
       toast.success("댓글이 등록되었습니다");
-      setCommentText("");
+      setCocommentText("");
+      refetch();
     } catch (err) {
       console.log(err);
     }
@@ -53,5 +56,7 @@ export const useBoardDetailContent = () => {
     cocommentText,
     setCocommentText,
     onPostCocomment,
+    showCommentCreate,
+    setShowCommentCreate,
   };
 };
