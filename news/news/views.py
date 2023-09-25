@@ -93,9 +93,52 @@ def BreakingNewsList(request):
     return JsonResponse(news_data, safe=False)
 
 
-# 산업별 뉴스 목록
+# 산업별 뉴스 목록 ver1
 @api_view(['GET'])
 def IndustryByNewsList(request, category):
+    url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
+    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, 'lxml')
+
+    newslist = soup.select(".list .item-box01")
+    news_data = []
+
+    for news in newslist:
+        try:
+            image_url = "https:" + news.select_one(".img-con img")['src']
+        except Exception:
+            continue
+
+        try:
+            content = news.select_one(".lead").text.strip()    
+        except Exception:
+            continue
+
+        try:
+            link_url = news.select_one(".news-con a")['href']
+        except Exception:
+            continue
+
+        title = news.select_one(".tit-news").text.strip()
+
+        data_dict ={
+            'title': title,
+            'content' : content,
+            'image_url': image_url,
+            'link_url' : link_url
+        }
+
+        news_data.append(data_dict)
+
+    time.sleep(1)
+
+    return JsonResponse(news_data, safe=False)
+
+# 산업별 뉴스 목록 ver2
+@api_view(['GET'])
+def IndustryByNewsList2(request, category):
     url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
