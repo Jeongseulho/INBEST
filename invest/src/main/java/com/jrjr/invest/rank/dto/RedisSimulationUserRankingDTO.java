@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class SimulationUserRankingDTO {
+public class RedisSimulationUserRankingDTO {
 
 	private Long simulationSeq;
 
