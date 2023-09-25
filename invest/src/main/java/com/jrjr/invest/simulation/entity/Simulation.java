@@ -4,16 +4,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jrjr.invest.simulation.dto.SimulationDTO;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "simulation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class Simulation {
 
 	@Id
@@ -63,5 +62,25 @@ public class Simulation {
 
 	public void updateSimulationRate(Integer revenuRate) {
 		this.revenuRate = revenuRate;
+	}
+
+	public SimulationDTO simulationDTO(){
+		return  SimulationDTO.builder()
+				.seq(seq).finishedDate(finishedDate)
+				.owner(owner).period(period).title(title).startDate(startDate)
+				.revenuRate(revenuRate).seedMoney(seedMoney)
+				.build();
+	}
+
+	public String getProgressState() {
+		if (finishedDate != null) {
+			return "finished";
+		}
+
+		if (startDate != null) {
+			return "inprogress";
+		}
+
+		return "waiting";
 	}
 }
