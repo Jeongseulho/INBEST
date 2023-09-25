@@ -79,7 +79,9 @@ public class BoardController {
 		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
-		if (!userService.checkExistByEmail(loginEmail, boardDTO.getUserSeq())) {
+		BoardDTO originalBoard = boardService.findBySeq(boardId);
+
+		if (!loginEmail.equals(originalBoard.getWriter().getEmail())) {
 			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
 		}
 
@@ -103,9 +105,9 @@ public class BoardController {
 		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
-		BoardDTO boardDTO = boardService.findBySeq(boardId);
+		BoardDTO originalBoard = boardService.findBySeq(boardId);
 
-		if (!userService.checkExistByEmail(loginEmail, boardDTO.getUserSeq())) {
+		if (!loginEmail.equals(originalBoard.getWriter().getEmail())) {
 			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
 		}
 
@@ -138,7 +140,7 @@ public class BoardController {
 		resultMap.put("board", boardDTOList);
 		resultMap.put("total", boardDTOList);
 
-		log.info("========== 게시판 등록 종료 ==========");
+		log.info("========== 게시판 검색 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
