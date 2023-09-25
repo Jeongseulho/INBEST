@@ -6,8 +6,9 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
-import com.jrjr.invest.rank.repository.UserRedisRepository;
+import com.jrjr.invest.rank.repository.UserRepository;
 import com.jrjr.invest.simulation.entity.Rate;
 import com.jrjr.invest.simulation.entity.Tier;
 import com.jrjr.invest.simulation.repository.RateRepository;
@@ -21,25 +22,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserRankServiceImpl implements UserRankService {
 
-	private final UserRedisRepository redisUserRepository;
+	private final UserRepository redisUserRepository;
 	private final TierRepository tierRepository;
 	private final RateRepository rateRepository;
 
 	@Override
-	public void insertUserInfo(RedisUserDTO redisUserDTO) {
-		log.info("추가 할 회원 정보: {}", redisUserDTO.toString());
+	public void insertUserInfo(RedisUserDTO redisUserDto) {
+		log.info("추가 할 회원 정보: {}", redisUserDto.toString());
 
-		redisUserRepository.insertUserInfo(redisUserDTO);
+		redisUserRepository.insertUserInfo(redisUserDto);
 		log.info("회원 정보 추가 완료");
 
 		this.updateUserRankingInfo();
 	}
 
 	@Override
-	public void updateUserProfileInfo(RedisUserDTO redisUserDTO) {
-		log.info("수정 할 회원 정보: {}", redisUserDTO.toString());
+	public void updateUserProfileInfo(RedisUserDTO redisUserDto) {
+		log.info("수정 할 회원 정보: {}", redisUserDto.toString());
 
-		redisUserRepository.updateUserProfileInfo(redisUserDTO);
+		redisUserRepository.updateUserProfileInfo(redisUserDto);
 		this.updateUserRankingInfo();
 	}
 
@@ -102,11 +103,21 @@ public class UserRankServiceImpl implements UserRankService {
 	}
 
 	@Override
+	public void updateTierRankInfo() {
+		redisUserRepository.updateTierRankList();
+	}
+
+	@Override
+	public RedisTierRankDTO getTierRankInfo() {
+		return redisUserRepository.getTierRankList();
+	}
+
+	@Override
 	public void printUserInfoList() {
 		log.info("========== 회원 정보 ==========");
-		Map<String, RedisUserDTO> userDTOMap = redisUserRepository.getUserInfoMap();
-		for (String seq : userDTOMap.keySet()) {
-			log.info(userDTOMap.get(seq).toString());
+		Map<String, RedisUserDTO> userDtoMap = redisUserRepository.getUserInfoMap();
+		for (String seq : userDtoMap.keySet()) {
+			log.info(userDtoMap.get(seq).toString());
 		}
 		log.info("================================");
 	}
@@ -115,8 +126,8 @@ public class UserRankServiceImpl implements UserRankService {
 	public void printSortedUserInfoList(long start, long end) {
 		log.info("========== 정렬된 회원 랭킹 정보 ==========");
 		Set<RedisUserDTO> sortedUserSet = redisUserRepository.getUserInfoSet(start, end);
-		for (RedisUserDTO redisUserDTO : sortedUserSet) {
-			log.info(redisUserDTO.toString());
+		for (RedisUserDTO redisUserDto : sortedUserSet) {
+			log.info(redisUserDto.toString());
 		}
 		log.info("================================");
 	}

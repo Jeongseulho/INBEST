@@ -2,13 +2,14 @@ package com.jrjr.invest.rank.service;
 
 import java.util.Set;
 
+import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
 
 public interface UserRankService {
 
-	void insertUserInfo(RedisUserDTO redisUserDTO);
+	void insertUserInfo(RedisUserDTO redisUserDto);
 
-	void updateUserProfileInfo(RedisUserDTO redisUserDTO);
+	void updateUserProfileInfo(RedisUserDTO redisUserDto);
 
 	void deleteUserInfo(Long seq);
 
@@ -21,6 +22,10 @@ public interface UserRankService {
 	Set<RedisUserDTO> getUserRankingInfo(long start, long end);
 
 	RedisUserDTO getMyRankingInfo(Long seq);
+
+	void updateTierRankInfo();
+
+	RedisTierRankDTO getTierRankInfo();
 
 	void printUserInfoList();
 
