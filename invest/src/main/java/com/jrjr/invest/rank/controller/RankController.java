@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
 import com.jrjr.invest.rank.service.UserRankService;
 
@@ -31,11 +32,11 @@ public class RankController {
 	private final UserRankService userRankService;
 
 	@PostMapping("/users")
-	ResponseEntity<Map<String, Object>> insertUserRankingInfo(@RequestBody RedisUserDTO redisUserDTO) {
+	ResponseEntity<Map<String, Object>> insertUserRankingInfo(@RequestBody RedisUserDTO redisUserDto) {
 		log.info("========== 개인 랭킹: 회원 정보 추가 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userRankService.insertUserInfo(redisUserDTO);
+		userRankService.insertUserInfo(redisUserDto);
 
 		log.info("========== 개인 랭킹: 회원 정보 추가 완료 ==========");
 		resultMap.put("success", true);
@@ -43,11 +44,11 @@ public class RankController {
 	}
 
 	@PutMapping("/users")
-	ResponseEntity<Map<String, Object>> updateUserRankingInfo(@RequestBody RedisUserDTO redisUserDTO) {
+	ResponseEntity<Map<String, Object>> updateUserRankingInfo(@RequestBody RedisUserDTO redisUserDto) {
 		log.info("========== 개인 랭킹: 프로필 정보 수정 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		userRankService.updateUserProfileInfo(redisUserDTO);
+		userRankService.updateUserProfileInfo(redisUserDto);
 
 		log.info("========== 개인 랭킹: 프로필 정보 수정 완료 ==========");
 		resultMap.put("success", true);
@@ -126,6 +127,32 @@ public class RankController {
 		log.info("========== 개인 랭킹: 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
 		resultMap.put("MyRankingInfo", myRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/test/sort/tier")
+	ResponseEntity<Map<String, Object>> testSortTierInfo() {
+		log.info("========== 티어 분포도: 티어 분포도 산정 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		userRankService.updateTierRankInfo();
+
+		log.info("========== 티어 분포도: 티어 분포도 산정 완료 ==========");
+		resultMap.put("success", true);
+		// resultMap.put("MyRankingInfo", myRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/test/info/tier")
+	ResponseEntity<Map<String, Object>> testGetTierInfo() {
+		log.info("========== 티어 분포도: 티어 정보 불러오기 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		RedisTierRankDTO tierRankInfo = userRankService.getTierRankInfo();
+
+		log.info("========== 티어 분포도: 티어 정보 불러오기 완료 ==========");
+		resultMap.put("success", true);
+		resultMap.put("TierRankInfo", tierRankInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
