@@ -1,4 +1,4 @@
-package com.jrjr.invest.group.repository;
+package com.jrjr.invest.simulation.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,17 +6,19 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.jrjr.invest.group.entity.User;
+import com.jrjr.invest.simulation.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-	List<User> findByNameContains(String keyword);
 
 	Optional<User> findByEmail(String email);
 
 	Boolean existsByEmail(String email);
 
 	Boolean existsByNickname(String nickname);
+
+	List<User> findByNameContains(String keyword);
+
+	User findBySeq(Long seq);
 }
 

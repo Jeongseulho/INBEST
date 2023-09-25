@@ -51,7 +51,7 @@ public class ExceptionControllerAdvice {
 
 	@ExceptionHandler(NoHandlerFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ResponseEntity<ErrorResult> notFoundPage(Exception ex) {
+	public ResponseEntity<ErrorResult> notFoundPage(NoHandlerFoundException ex) {
 		log.error("Exception: {}", ex.getMessage());
 		ex.printStackTrace();
 		ErrorResult errorResult = new ErrorResult("false", ex.getMessage());
