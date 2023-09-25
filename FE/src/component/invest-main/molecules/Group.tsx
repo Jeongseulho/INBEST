@@ -7,11 +7,11 @@ interface Props extends JoinableGroup {
   index: number;
 }
 
-const Group = ({ index, title, currentMemberNum, averageTier, seedMoney, period, groupCode }: Props) => {
+const Group = ({ index, title, currentMemberNum, averageTier, seedMoney, period, simulationSeq }: Props) => {
   const { openModal } = modalStore();
   return (
     <div
-      onClick={() => openModal("questionJoin", groupCode)}
+      onClick={() => openModal("questionJoin", simulationSeq)}
       className="rounded-lg px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer"
     >
       <p className="w-2">{index}</p>

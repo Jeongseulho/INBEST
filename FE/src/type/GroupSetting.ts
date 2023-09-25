@@ -7,4 +7,5 @@ export interface GroupSetting {
   seedMoney: SeedMoney;
   invitedUsers: SearchUser[] | [];
   title: string;
+  ownerSeq: number;
 }

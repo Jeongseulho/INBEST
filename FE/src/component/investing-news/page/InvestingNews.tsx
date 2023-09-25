@@ -4,7 +4,7 @@ import BreakingNews from "../organisms/BreakingNews";
 
 const InvestingNews = () => {
   return (
-    <div className=" grid grid-cols-2 grid-rows-3 gap-4">
+    <div className=" grid grid-cols-2 grid-rows-12 gap-4">
       <MainNews />
       <BreakingNews />
       <IndustryNews />

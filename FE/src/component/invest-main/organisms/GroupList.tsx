@@ -3,7 +3,7 @@ import group from "../../../asset/image/group.png";
 import { LuSettings2 } from "react-icons/lu";
 import modalStore from "../../../store/modalStore";
 import { useGroupList } from "./useGroupList";
-import Skeleton from "react-loading-skeleton";
+import GroupSkeleton from "../molecules/GroupSkeleton";
 
 const GroupList = () => {
   const { openModal } = modalStore();
@@ -44,20 +44,29 @@ const GroupList = () => {
       </div>
 
       {isLoading ? (
-        <Skeleton count={6} height={64} />
+        <div className=" flex flex-col gap-4 pb-8">
+          <GroupSkeleton />
+          <GroupSkeleton />
+          <GroupSkeleton />
+          <GroupSkeleton />
+          <GroupSkeleton />
+          <GroupSkeleton />
+        </div>
       ) : (
-        data?.map((group, index) => (
-          <Group
-            key={group.groupCode}
-            index={index}
-            title={group.title}
-            currentMemberNum={group.currentMemberNum}
-            seedMoney={group.seedMoney}
-            averageTier={group.averageTier}
-            period={group.period}
-            groupCode={group.groupCode}
-          />
-        ))
+        <div className=" flex flex-col gap-4 pb-8">
+          {data?.map((group, index) => (
+            <Group
+              key={group.simulationSeq}
+              index={index}
+              title={group.title}
+              currentMemberNum={group.currentMemberNum}
+              seedMoney={group.seedMoney}
+              averageTier={group.averageTier}
+              period={group.period}
+              simulationSeq={group.simulationSeq}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

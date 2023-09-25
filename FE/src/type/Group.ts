@@ -20,7 +20,7 @@ export interface SearchUser {
 export type SearchUserList = SearchUser[];
 
 export interface MyGroup {
-  groupCode: string;
+  simulationSeq: number;
   title: string;
   currentMemberNum: number;
   seedMoney: number;
@@ -49,7 +49,7 @@ export interface InProgressGroupDetail {
 }
 
 export interface JoinableGroup {
-  groupCode: string;
+  simulationSeq: number;
   title: string;
   currentMemberNum: number;
   seedMoney: number;

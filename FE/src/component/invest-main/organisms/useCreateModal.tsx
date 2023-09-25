@@ -5,6 +5,7 @@ import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
 import { createGroup } from "../../../api/group";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
+import userStore from "../../../store/userStore";
 
 type Action =
   | { type: "PERIOD"; payload: Period }
@@ -12,7 +13,8 @@ type Action =
   | { type: "ADD_INVITE"; payload: SearchUser }
   | { type: "DELETE_INVITE"; payload: SearchUser }
   | { type: "TITLE"; payload: string }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "OWNER_SEQ"; payload: number };
 
 export const useCreateModal = () => {
   const queryClient = useQueryClient();
@@ -26,6 +28,7 @@ export const useCreateModal = () => {
     seedMoney: 1000000,
     invitedUsers: [],
     title: "",
+    ownerSeq: 0,
   };
 
   const reducer = (groupSetting: GroupSetting, action: Action): GroupSetting => {
@@ -48,6 +51,8 @@ export const useCreateModal = () => {
         return { ...groupSetting, title: action.payload };
       case "RESET":
         return initGroupSetting;
+      case "OWNER_SEQ":
+        return { ...groupSetting, ownerSeq: action.payload };
       default:
         throw new Error("Unhandled group setting action");
     }
@@ -68,6 +73,8 @@ export const useCreateModal = () => {
         toast.error("방 제목을 1자이상 입력해주세요.");
         return;
       }
+      const { userInfo } = userStore();
+      dispatch({ type: "OWNER_SEQ", payload: userInfo?.seq as number });
       return await createGroup(groupSetting);
     },
     onSuccess: () => {

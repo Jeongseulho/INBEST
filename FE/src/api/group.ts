@@ -38,13 +38,13 @@ export const getMyGroupList = async (): Promise<MyGroupList> => {
   return data;
 };
 
-export const getWaitingGroupDetail = async (groupCode: string): Promise<WaitingGroupDetail> => {
-  const { data } = await api.get("/detail", { params: { groupCode, progressState: "waiting" } });
+export const getWaitingGroupDetail = async (simulationSeq: number): Promise<WaitingGroupDetail> => {
+  const { data } = await api.get("/detail", { params: { simulationSeq, progressState: "waiting" } });
   return data;
 };
 
-export const getInProgressGroupDetail = async (groupCode: string): Promise<InProgressGroupDetail> => {
-  const { data } = await api.get("/detail", { params: { groupCode, progressState: "inprogress" } });
+export const getInProgressGroupDetail = async (simulationSeq: number): Promise<InProgressGroupDetail> => {
+  const { data } = await api.get("/detail", { params: { simulationSeq, progressState: "inprogress" } });
   return data;
 };
 
@@ -56,24 +56,24 @@ export const getJoinableGroupList = async (): Promise<JoinableGroupList> => {
   return data;
 };
 
-export const getJoinableGroupDetail = async (groupCode: string): Promise<JoinableGroupDetail> => {
-  const { data } = await api.get("/detail", { params: { groupCode, progressState: "waiting" } });
+export const getJoinableGroupDetail = async (simulationSeq: number): Promise<JoinableGroupDetail> => {
+  const { data } = await api.get("/detail", { params: { simulationSeq, progressState: "waiting" } });
   return data;
 };
 
-export const joinGroup = async (groupCode: string): Promise<ApiSuccessMessage> => {
+export const joinGroup = async (simulationSeq: number): Promise<ApiSuccessMessage> => {
   const { userInfo } = userStore.getState();
-  const { data } = await api.post("/join", { groupCode, userSeq: userInfo?.seq });
+  const { data } = await api.post("/join", { simulationSeq, userSeq: userInfo?.seq });
   return data;
 };
 
-export const exitGroup = async (groupCode: string): Promise<ApiSuccessMessage> => {
+export const exitGroup = async (simulationSeq: number): Promise<ApiSuccessMessage> => {
   const { userInfo } = userStore.getState();
-  const { data } = await api.post("/exit", { groupCode, userSeq: userInfo?.seq });
+  const { data } = await api.post("/exit", { simulationSeq, userSeq: userInfo?.seq });
   return data;
 };
 
-export const startInvesting = async (groupCode: string): Promise<ApiSuccessMessage> => {
-  const { data } = await api.post("/start", { groupCode });
+export const startInvesting = async (simulationSeq: number): Promise<ApiSuccessMessage> => {
+  const { data } = await api.post("/start", { simulationSeq });
   return data;
 };

@@ -36,7 +36,7 @@ function App() {
               <Route path="/invest" element={<InvestMain />} />
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
-              <Route path="/invest/:groupCode" element={<Investing />} />
+              <Route path="/invest/:simulationSeq" element={<Investing />} />
               <Route path="/community" element={<Community />}></Route>
             </Routes>
           </AnimatePresence>
