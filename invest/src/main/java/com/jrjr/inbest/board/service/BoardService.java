@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -21,11 +22,9 @@ import com.jrjr.inbest.board.dto.CommentDTO;
 import com.jrjr.inbest.board.dto.UserDTO;
 import com.jrjr.inbest.board.entity.BoardEntity;
 import com.jrjr.inbest.board.entity.BoardImgEntity;
-import com.jrjr.inbest.board.entity.CommentEntity;
 import com.jrjr.inbest.board.entity.UserEntity;
 import com.jrjr.inbest.board.repository.BoardImgRepository;
 import com.jrjr.inbest.board.repository.BoardRepository;
-import com.jrjr.inbest.board.repository.CommentRepository;
 import com.jrjr.inbest.board.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -47,24 +46,25 @@ public class BoardService {
 	@Value(value = "${cloud.aws.s3.uri}")
 	private String bucketUrl;
 
+	@Transactional
 	public void insertBoard(BoardDTO boardDTO) throws Exception {
 		BoardEntity board = boardDTO.toBoardEntity();
 		log.info(board.toString());
 		ArrayList<BoardImgEntity> boardImgEntities = new ArrayList<>();
 
-		if(boardDTO.getFiles() != null){
-			for(MultipartFile file : boardDTO.getFiles()){
+		if (boardDTO.getFiles() != null) {
+			for (MultipartFile file : boardDTO.getFiles()) {
 				BoardImgDTO boardImgDTO = new BoardImgDTO();
 				String originalName = "";
 				File backgroundImgFile;
-				String backgroundImgSearchName="";
+				String backgroundImgSearchName = "";
 				UUID uuid = UUID.randomUUID();
 				String extend = "";
 
 				originalName = file.getOriginalFilename();
 				extend = originalName.substring(originalName.lastIndexOf('.'));
 				// #2 - 원본 파일 이름 저장
-				boardImgDTO.setOriginalName(originalName.substring(0,originalName.indexOf('.')));
+				boardImgDTO.setOriginalName(originalName.substring(0, originalName.indexOf('.')));
 				boardImgDTO.setExtend(extend);
 
 				// #3 - 저장용 랜덤 파일 이름 저장
@@ -72,10 +72,10 @@ public class BoardService {
 
 				// #4 - 파일 임시 저장
 				//파일이 있으면 임시 파일 저장
-				backgroundImgFile = File.createTempFile(backgroundImgSearchName,extend);
-				FileUtils.copyInputStreamToFile(file.getInputStream(),backgroundImgFile);
+				backgroundImgFile = File.createTempFile(backgroundImgSearchName, extend);
+				FileUtils.copyInputStreamToFile(file.getInputStream(), backgroundImgFile);
 				//5 - 이미지 서버 저장
-				amazonS3.putObject(bucketName, "board/"+backgroundImgSearchName+extend, backgroundImgFile);
+				amazonS3.putObject(bucketName, "board/" + backgroundImgSearchName + extend, backgroundImgFile);
 				// #6 - DB 저장
 				boardImgDTO.setSearchName(backgroundImgSearchName);
 				BoardImgEntity boardImgEntity = boardImgDTO.toBoardImgEntity();
@@ -91,19 +91,48 @@ public class BoardService {
 		boardRepository.save(board);
 	}
 
-	public List<BoardDTO> findAllBoards(int page,int size){
+	@Transactional
+	public BoardDTO updateBoard(BoardDTO boardDTO) throws Exception {
+		BoardEntity boardEntity = boardRepository.findById(boardDTO.getSeq()).orElse(null);
+
+		if (boardEntity == null) {
+			throw new Exception("해당 게시물(" + boardDTO.getSeq() + ")이 없습니다.");
+		}
+
+		//제목, 글내용 바꾸기
+		boardEntity.updateBoard(boardDTO);
+		boardRepository.save(boardEntity);
+
+		return boardDTO;
+	}
+
+	@Transactional
+	public void deleteBoard(String boardId) throws Exception {
+		BoardEntity boardEntity = boardRepository.findById(boardId).orElse(null);
+
+		if (boardEntity == null) {
+			throw new Exception("해당 게시물(" + boardId + ")이 없습니다.");
+		}
+
+		//제목, 글내용 바꾸기
+		boardRepository.delete(boardEntity);
+
+		return;
+	}
+
+	public List<BoardDTO> findAllBoards(int page, int size) {
 		Page<BoardEntity> boardEntityList = boardRepository.findAll(
-			PageRequest.of(page-1,size, Sort.Direction.DESC,"createdDate"));
+			PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdDate"));
 		List<BoardDTO> boardDTOList = new ArrayList<>();
 
 		log.info("========== 대상 게시물 ==========");
-		for(BoardEntity boardEntity : boardEntityList.getContent()){
+		for (BoardEntity boardEntity : boardEntityList.getContent()) {
 			BoardDTO boardDTO = boardEntity.toBoardDTO();
 
 			log.info(boardDTO.toString());
-			if(boardDTO.getUserSeq() !=null){
-				UserDTO userDTO= userService.findBySeq(boardDTO.getUserSeq());
-				log.info("작성자 : "+userDTO.toString());
+			if (boardDTO.getUserSeq() != null) {
+				UserDTO userDTO = userService.findBySeq(boardDTO.getUserSeq());
+				log.info("작성자 : " + userDTO.toString());
 				boardDTO.setWriter(userDTO);
 			}
 			boardDTOList.add(boardDTO);
@@ -111,10 +140,11 @@ public class BoardService {
 
 		return boardDTOList;
 	}
-	public BoardDTO findBySeq(String id){
-		BoardEntity boardEntity= boardRepository.findById(id).orElse(null);
 
-		if(boardEntity == null){
+	public BoardDTO findBySeq(String id) {
+		BoardEntity boardEntity = boardRepository.findById(id).orElse(null);
+
+		if (boardEntity == null) {
 			return new BoardDTO();
 		}
 
@@ -123,35 +153,36 @@ public class BoardService {
 		boardDTO.setWriter(userDTO);
 
 		//댓글 유저 가져오기
-		for(CommentDTO commentDTO:boardDTO.getCommentList()){
+		for (CommentDTO commentDTO : boardDTO.getCommentList()) {
 			UserEntity commentWriter = userRepository.findBySeq(commentDTO.getUserSeq());
 			UserDTO commentWriterDTO;
 
-			if(commentWriter == null){
+			if (commentWriter == null) {
 				commentWriterDTO = UserDTO.builder()
 					.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
 					.profileImgOriginalName("DefaultProfile.png")
 					.name("이름없음")
 					.nickname("이름없음")
 					.build();
-			}else{
+			} else {
 				commentWriterDTO = commentWriter.toUserDTO();
 			}
 			commentDTO.setWriter(commentWriterDTO);
 
 			//대댓글 유저 가져오기
-			for(CommentDTO cocomentDTO : commentDTO.getCocommentList()){
+			for (CommentDTO cocomentDTO : commentDTO.getCocommentList()) {
 				UserEntity cocommentWriter = userRepository.findBySeq(cocomentDTO.getUserSeq());
 				UserDTO cocommentWriterDTO;
 
-				if(cocommentWriter == null){
+				if (cocommentWriter == null) {
 					cocommentWriterDTO = UserDTO.builder()
-						.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
+						.profileImgSearchName(
+							"https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
 						.profileImgOriginalName("DefaultProfile.png")
 						.name("이름없음")
 						.nickname("이름없음")
 						.build();
-				}else{
+				} else {
 					cocommentWriterDTO = cocommentWriter.toUserDTO();
 				}
 				cocomentDTO.setWriter(cocommentWriterDTO);
@@ -163,17 +194,19 @@ public class BoardService {
 
 		return boardDTO;
 	}
-	public BoardDTO updateLikes(Long userSeq,String boardId)throws Exception {
-		BoardEntity boardEntity= boardRepository.findById(boardId).orElse(null);
+
+	@Transactional
+	public BoardDTO updateLikes(Long userSeq, String boardId) throws Exception {
+		BoardEntity boardEntity = boardRepository.findById(boardId).orElse(null);
 
 		//게시물 있는지 확인
-		if(boardEntity == null){
+		if (boardEntity == null) {
 			throw new Exception("대상 게시물이 없습니다.");
 		}
 
 		UserEntity userEntity = userRepository.findBySeq(userSeq);
 		//유저가 있는지 확인
-		if(userEntity== null){
+		if (userEntity == null) {
 			throw new Exception("대상 유저가 없습니다.");
 		}
 
@@ -181,6 +214,7 @@ public class BoardService {
 		boardRepository.save(boardEntity);
 		return boardEntity.toBoardDTO();
 	}
+
 	public List<BoardDTO> findPopularPosts(int pageSize, int period) {
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = end.minusDays(period);
@@ -193,7 +227,7 @@ public class BoardService {
 
 		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
 
-		for(BoardEntity boardEntity : boardEntityList){
+		for (BoardEntity boardEntity : boardEntityList) {
 			boardDTOList.add(boardEntity.toBoardDTO());
 		}
 

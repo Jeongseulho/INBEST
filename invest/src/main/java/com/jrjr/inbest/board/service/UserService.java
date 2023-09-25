@@ -1,28 +1,9 @@
 package com.jrjr.inbest.board.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.jrjr.inbest.board.dto.BoardDTO;
-import com.jrjr.inbest.board.dto.BoardImgDTO;
 import com.jrjr.inbest.board.dto.UserDTO;
-import com.jrjr.inbest.board.entity.BoardEntity;
-import com.jrjr.inbest.board.entity.BoardImgEntity;
 import com.jrjr.inbest.board.entity.UserEntity;
-import com.jrjr.inbest.board.repository.BoardImgRepository;
-import com.jrjr.inbest.board.repository.BoardRepository;
 import com.jrjr.inbest.board.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,13 +15,29 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 	private final UserRepository userRepository;
 
-	public UserDTO findBySeq(Long seq){
-		UserEntity userEntity= userRepository.findBySeq(seq);
+	public UserDTO findBySeq(Long seq) {
+		UserEntity userEntity = userRepository.findBySeq(seq);
 
-		if(userEntity == null){
+		if (userEntity == null) {
 			return UserDTO.builder().build();
 		}
 
 		return userEntity.toUserDTO();
+	}
+
+	public Boolean checkExistByEmail(String loginEmail, Long userSeq) {
+		UserEntity userEntity = userRepository.findBySeq(userSeq);
+
+		//유저가 없는경우
+		if (userEntity == null) {
+			return false;
+		}
+
+		//로그인한 이메일의 유저와 요청한 유저와 다른 경우
+		if (userEntity.getEmail() == null || userEntity.getEmail().equals(loginEmail)) {
+			return false;
+		}
+
+		return true;
 	}
 }

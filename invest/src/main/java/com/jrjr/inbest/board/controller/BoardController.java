@@ -1,14 +1,13 @@
 package com.jrjr.inbest.board.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,9 +20,9 @@ import com.jrjr.inbest.board.dto.CommentDTO;
 import com.jrjr.inbest.board.dto.UserDTO;
 import com.jrjr.inbest.board.service.BoardService;
 import com.jrjr.inbest.board.service.CommentService;
+import com.jrjr.inbest.board.service.UserService;
 import com.jrjr.inbest.global.jwt.JwtProvider;
 
-import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -42,6 +41,7 @@ public class BoardController {
 	private final BoardService boardService;
 	private final CommentService commentService;
 	private final JwtProvider jwtProvider;
+	private final UserService userService;
 
 	@Operation(summary = "게시판 등록")
 	@Parameters(value = {
@@ -53,55 +53,94 @@ public class BoardController {
 	@PostMapping("")
 	public ResponseEntity<Map<String, Object>> insertBoard(@RequestBody BoardDTO boardDTO) throws Exception {
 		log.info("========== 게시판 등록 시작 ==========");
-
 		log.info("입력 받은 데이터");
 		log.info(boardDTO.toString());
 
 		boardService.insertBoard(boardDTO);
 
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("success",true);
+		resultMap.put("success", true);
 
 		log.info("========== 게시판 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
-	@PutMapping("")
-	public ResponseEntity<Map<String, Object>> updaetBoard(@RequestBody BoardDTO boardDTO, HttpServletRequest request) throws Exception {
-		log.info("========== 게시판 수정 시작 ==========");
 
+	@PutMapping("/{boardId}")
+	public ResponseEntity<Map<String, Object>> updateBoard(
+		@PathVariable String boardId,
+		@RequestBody BoardDTO boardDTO,
+		HttpServletRequest request) throws Exception {
+		log.info("========== 게시판 수정 시작 ==========");
 		log.info("입력 받은 데이터");
 		log.info(boardDTO.toString());
 
-		boardService.insertBoard(boardDTO);
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = jwtProvider.getEmail(request);
+		log.info("로그인 유저 이메일 : " + loginEmail);
+
+		if (!userService.checkExistByEmail(loginEmail, boardDTO.getUserSeq())) {
+			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
+		}
+
+		boardService.updateBoard(boardDTO);
 
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("success",true);
+		resultMap.put("success", true);
 
 		log.info("========== 게시판 수정 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
-	@Operation(summary = "게시판 목록 출력",description = "기간(period)와 한번에 출력하는 양(size)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
+
+	@DeleteMapping("/{boardId}")
+	public ResponseEntity<Map<String, Object>> deleteBoard(
+		@PathVariable String boardId, HttpServletRequest request) throws Exception {
+		log.info("========== 게시판 수정 시작 ==========");
+		log.info("입력 받은 데이터");
+		log.info(boardId);
+
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = jwtProvider.getEmail(request);
+		log.info("로그인 유저 이메일 : " + loginEmail);
+
+		BoardDTO boardDTO = boardService.findBySeq(boardId);
+
+		if (!userService.checkExistByEmail(loginEmail, boardDTO.getUserSeq())) {
+			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
+		}
+
+		boardService.deleteBoard(boardId);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+
+		log.info("========== 게시판 수정 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "게시판 목록 출력", description = "기간(period)와 한번에 출력하는 양(size)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
 	@Parameters(value = {
 		@Parameter(required = true, name = "pageNo", description = "페이지 번호"),
 		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
 	})
 	@GetMapping("")
-	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "pageNo") int page,@RequestParam(name = "pageSize") int size){
+	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "pageNo") int page,
+		@RequestParam(name = "pageSize") int size) {
 		log.info("========== 게시판 목록 검색 시작 ==========");
-		log.info("page : "+page+" size : "+size);
+		log.info("page : " + page + " size : " + size);
 
-		List<BoardDTO> boardDTOList= boardService.findAllBoards(page,size);
+		List<BoardDTO> boardDTOList = boardService.findAllBoards(page, size);
 
-		log.info("검색 결과 : "+boardDTOList);
+		log.info("검색 결과 : " + boardDTOList);
 
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("success",true);
-		resultMap.put("board",boardDTOList);
+		resultMap.put("success", true);
+		resultMap.put("board", boardDTOList);
 
 		log.info("========== 게시판 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
-	@Operation(summary = "좋아요가 많은 게시판 목록",description = "기간(period)와 한번에 출력하는 양(pageSize)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
+
+	@Operation(summary = "좋아요가 많은 게시판 목록", description = "기간(period)와 한번에 출력하는 양(pageSize)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
 	@Parameters(value = {
 		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
 		@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
@@ -109,116 +148,116 @@ public class BoardController {
 	@GetMapping("/best-likes")
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
-		@RequestParam(name = "period") int period){
+		@RequestParam(name = "period") int period) {
 		log.info("========== 좋아요 많은 게시판 목록 검색 시작 ==========");
-		log.info("페이지 크기 : "+pageSize+" 기간 : "+period);
+		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
-		List<BoardDTO> boardDTOList= boardService.findPopularPosts(pageSize,period);
+		List<BoardDTO> boardDTOList = boardService.findPopularPosts(pageSize, period);
 
-		log.info("검색 결과 : "+boardDTOList);
+		log.info("검색 결과 : " + boardDTOList);
 
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("success",true);
-		resultMap.put("board",boardDTOList);
+		resultMap.put("success", true);
+		resultMap.put("board", boardDTOList);
 
 		log.info("========== 좋아요 많은 게시판 목록 검색 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
 	@Operation(summary = "게시판 상세정보")
 	@GetMapping("/{seq}")
-	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable (value = "seq") String seq,
-		HttpServletRequest request){
+	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable(value = "seq") String seq,
+		HttpServletRequest request) {
 		log.info("========== 게시판 상세 정보 시작 ==========");
-		log.info("seq : "+seq);
+		log.info("seq : " + seq);
 
-		BoardDTO boardDTO= boardService.findBySeq(seq);
-
-		log.info("검색 결과 : "+boardDTO);
-
-		//토큰으로 유저 이메일 얻기
-		String accessToken = jwtProvider.resolveAccessToken(request).orElse("accessToken");
+		BoardDTO boardDTO = boardService.findBySeq(seq);
 		String loginEmail = "";
-
-		if(!accessToken.equals("accessToken")){
-			Claims claims = jwtProvider.getClaims(accessToken);
-			loginEmail = claims.getSubject();
+		log.info("검색 결과 : " + boardDTO);
+		//토큰으로 유저 이메일 얻기
+		try {
+			loginEmail = jwtProvider.getEmail(request);
+			log.info("로그인 유저 이메일 : " + loginEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		log.info("로그인 유저 이메일 : "+loginEmail);
 
 		Map<String, Object> resultMap = new HashMap<>();
-		if(boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()){
-			resultMap.put("success",false);
-		}else{
-			resultMap.put("success",true);
+		if (boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()) {
+			resultMap.put("success", false);
+		} else {
+			resultMap.put("success", true);
 			boolean like = false;
 
-			for(UserDTO likeUserDTO : boardDTO.getLikesUserList()){
-				if(likeUserDTO.getEmail().equals(loginEmail)){
-					like=true;
+			for (UserDTO likeUserDTO : boardDTO.getLikesUserList()) {
+				if (likeUserDTO.getEmail().equals(loginEmail)) {
+					like = true;
 				}
 			}
-			resultMap.put("loginUserLike",like);
+			resultMap.put("loginUserLike", like);
 		}
-		resultMap.put("board",boardDTO);
+		resultMap.put("board", boardDTO);
 
 		log.info("========== 게시판 상세 정보 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
 	@Operation(summary = "게시물 좋아요")
 	@PutMapping("/{boardSeq}/likes/{userSeq}")
 	public ResponseEntity<Map<String, Object>> updateBoardLikes(
-		@PathVariable (value = "boardSeq") String boardId,@PathVariable (value = "userSeq") Long userSeq) throws
+		@PathVariable(value = "boardSeq") String boardId, @PathVariable(value = "userSeq") Long userSeq) throws
 		Exception {
 		log.info("========== 게시판 좋아요 시작 ==========");
-		log.info("유저 seq : "+userSeq+" 게시판 seq "+boardId);
+		log.info("유저 seq : " + userSeq + " 게시판 seq " + boardId);
 
-		BoardDTO boardDTO= boardService.updateLikes(userSeq,boardId);
+		BoardDTO boardDTO = boardService.updateLikes(userSeq, boardId);
 
-		log.info("좋아요 결과 : "+boardDTO);
+		log.info("좋아요 결과 : " + boardDTO);
 
 		Map<String, Object> resultMap = new HashMap<>();
 
-		if(boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()){
-			resultMap.put("success",false);
-		}else{
-			resultMap.put("success",true);
+		if (boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()) {
+			resultMap.put("success", false);
+		} else {
+			resultMap.put("success", true);
 		}
 
-		resultMap.put("board",boardDTO);
+		resultMap.put("board", boardDTO);
 
 		log.info("========== 게시판 좋아요 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
 	@Operation(summary = "댓글 등록")
 	@Parameters(value = {
-			@Parameter(required = true, name = "userSeq", description = "댓글 작성자 pk"),
-			@Parameter(required = true, name = "context", description = "댓글 내용"),
-		})
+		@Parameter(required = true, name = "userSeq", description = "댓글 작성자 pk"),
+		@Parameter(required = true, name = "context", description = "댓글 내용"),
+	})
 	@PostMapping("/{boardSeq}/comments")
 	public ResponseEntity<Map<String, Object>> insertComment(
-		@RequestBody CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq) throws
+		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq) throws
 		Exception {
 		log.info("========== 덧글 등록 시작 ==========");
-		log.info("덧글 : "+commentDTO);
+		log.info("덧글 : " + commentDTO);
 
-		CommentDTO resultDto = commentService.insertComment(commentDTO,boardSeq);
+		CommentDTO resultDto = commentService.insertComment(commentDTO, boardSeq);
 
-		log.info("덧글 결과 : "+resultDto);
+		log.info("덧글 결과 : " + resultDto);
 
 		Map<String, Object> resultMap = new HashMap<>();
 
-		if(resultDto.getSeq() == null || resultDto.getSeq().isEmpty()){
-			resultMap.put("success",false);
-		}else{
-			resultMap.put("success",true);
+		if (resultDto.getSeq() == null || resultDto.getSeq().isEmpty()) {
+			resultMap.put("success", false);
+		} else {
+			resultMap.put("success", true);
 		}
 
-		resultMap.put("comment",resultDto);
+		resultMap.put("comment", resultDto);
 
 		log.info("========== 덧글 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
 	@Operation(summary = "대댓글 등록")
 	@Parameters(value = {
 		@Parameter(required = true, name = "userSeq", description = "댓글 작성자 pk"),
@@ -227,24 +266,24 @@ public class BoardController {
 	@PostMapping("/{boardSeq}/comments/{commentSeq}/cocomments")
 	public ResponseEntity<Map<String, Object>> insertCoComment(
 		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq
-		,@PathVariable(name = "commentSeq") String commentSeq) throws
+		, @PathVariable(name = "commentSeq") String commentSeq) throws
 		Exception {
 		log.info("========== 대댓글 등록 시작 ==========");
-		log.info("대댓글 : "+commentDTO);
+		log.info("대댓글 : " + commentDTO);
 
-		CommentDTO resultDto = commentService.insertCocomment(commentDTO,boardSeq,commentSeq);
+		CommentDTO resultDto = commentService.insertCocomment(commentDTO, boardSeq, commentSeq);
 
-		log.info("덧글 결과 : "+resultDto);
+		log.info("덧글 결과 : " + resultDto);
 
 		Map<String, Object> resultMap = new HashMap<>();
 
-		if(resultDto.getSeq() == null || resultDto.getSeq().isEmpty()){
-			resultMap.put("success",false);
-		}else{
-			resultMap.put("success",true);
+		if (resultDto.getSeq() == null || resultDto.getSeq().isEmpty()) {
+			resultMap.put("success", false);
+		} else {
+			resultMap.put("success", true);
 		}
 
-		resultMap.put("comment",resultDto);
+		resultMap.put("comment", resultDto);
 
 		log.info("========== 대댓글 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);

@@ -1,7 +1,6 @@
 package com.jrjr.inbest.global.jwt;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtProvider {
-
 	@Value("${spring.oauth.jwt.secret}")
 	private String secretKey;
 
@@ -53,9 +51,22 @@ public class JwtProvider {
 				.parseClaimsJws(token)
 				.getBody();
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.info("INVALID_TOKEN");
 			throw new JwtException("INVALID_TOKEN");
 		}
+	}
+
+	public String getEmail(HttpServletRequest request) {
+		String accessToken = resolveAccessToken(request).orElse("accessToken");
+		String loginEmail = "";
+
+		if (!accessToken.equals("accessToken")) {
+			Claims claims = getClaims(accessToken);
+			loginEmail = claims.getSubject();
+		}
+
+		return loginEmail;
 	}
 
 	public UserDTO getUserInfoFromToken(String token) {
@@ -65,10 +76,11 @@ public class JwtProvider {
 
 		UserEntity userEntity = userRepository.findByEmail(claims.getSubject());
 
-		if(userEntity == null){
+		if (userEntity == null) {
 			return UserDTO.builder().build();
 		}
 
 		return userEntity.toUserDTO();
 	}
+
 }
