@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -3,7 +3,7 @@ import { useMainNews } from "./useMainNews";
 import news from "../../../asset/image/news.png";
 
 const MainNews = () => {
-  const { data, isLoading, isError } = useMainNews();
+  const { data, isLoading } = useMainNews();
   return (
     <div className=" shadow-component col-span-1 row-span-2 p-4">
       <div className=" flex items-center mb-4 gap-4">
@@ -12,8 +12,6 @@ const MainNews = () => {
       </div>
       {isLoading ? (
         <p>로딩중...</p>
-      ) : isError ? (
-        <p>에러가 발생했습니다.</p>
       ) : (
         <div className=" flex flex-col gap-4 ">
           {data?.map((news, idx) => (

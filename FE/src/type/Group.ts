@@ -19,14 +19,16 @@ export interface SearchUser {
 }
 export type SearchUserList = SearchUser[];
 
-export type MyGroupList = {
+export interface MyGroup {
   groupCode: string;
   title: string;
   currentMemberNum: number;
   seedMoney: number;
   averageTier: number;
   progressState: string;
-};
+}
+
+export type MyGroupList = MyGroup[];
 
 export interface WaitingGroupDetail {
   seedMoney: number;
@@ -46,13 +48,15 @@ export interface InProgressGroupDetail {
   endDate: string;
 }
 
-export type JoinableGroupList = {
+export interface JoinableGroup {
   groupCode: string;
   title: string;
   currentMemberNum: number;
   seedMoney: number;
   averageTier: number;
   period: number;
-}[];
+}
+
+export type JoinableGroupList = JoinableGroup[];
 
 export interface JoinableGroupDetail extends WaitingGroupDetail {}

@@ -2,51 +2,12 @@ import Group from "../molecules/Group";
 import group from "../../../asset/image/group.png";
 import { LuSettings2 } from "react-icons/lu";
 import modalStore from "../../../store/modalStore";
+import { useGroupList } from "./useGroupList";
+import Skeleton from "react-loading-skeleton";
 
 const GroupList = () => {
-  const data = [
-    {
-      title: "title1",
-      memberCnt: 1,
-      seedMoney: 10000,
-      avgTier: 100,
-      period: 1,
-      groupCode: "groupCode1",
-    },
-    {
-      title: "title2",
-      memberCnt: 2,
-      seedMoney: 20000,
-      avgTier: 200,
-      period: 2,
-      groupCode: "groupCode2",
-    },
-    {
-      title: "title3",
-      memberCnt: 3,
-      seedMoney: 30000,
-      avgTier: 300,
-      period: 3,
-      groupCode: "groupCode3",
-    },
-    {
-      title: "title4",
-      memberCnt: 4,
-      seedMoney: 40000,
-      avgTier: 400,
-      period: 4,
-      groupCode: "groupCode4",
-    },
-    {
-      title: "title5",
-      memberCnt: 5,
-      seedMoney: 50000,
-      avgTier: 90,
-      period: 5,
-      groupCode: "groupCode5",
-    },
-  ];
   const { openModal } = modalStore();
+  const { data, isLoading } = useGroupList();
   return (
     <div className="w-4/5 flex flex-col text-center px-4 shadow-component">
       <div className=" flex items-center gap-4">
@@ -82,18 +43,22 @@ const GroupList = () => {
         <p className="w-16">진행 기간</p>
       </div>
 
-      {data.map((group, index) => (
-        <Group
-          key={group.groupCode}
-          index={index}
-          title={group.title}
-          memberCnt={group.memberCnt}
-          seedMoney={group.seedMoney}
-          avgTier={group.avgTier}
-          period={group.period}
-          groupCode={group.groupCode}
-        />
-      ))}
+      {isLoading ? (
+        <Skeleton count={6} height={64} />
+      ) : (
+        data?.map((group, index) => (
+          <Group
+            key={group.groupCode}
+            index={index}
+            title={group.title}
+            currentMemberNum={group.currentMemberNum}
+            seedMoney={group.seedMoney}
+            averageTier={group.averageTier}
+            period={group.period}
+            groupCode={group.groupCode}
+          />
+        ))
+      )}
     </div>
   );
 };
