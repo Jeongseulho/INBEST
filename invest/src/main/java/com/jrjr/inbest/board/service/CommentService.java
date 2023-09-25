@@ -91,8 +91,8 @@ public class CommentService {
 		if (commentEntity == null) {
 			throw new Exception("해당 덧글이 없습니다.");
 		}
-
-		commentRepository.delete(commentEntity);
+		commentEntity.delete();
+		commentRepository.save(commentEntity);
 	}
 
 	@Transactional

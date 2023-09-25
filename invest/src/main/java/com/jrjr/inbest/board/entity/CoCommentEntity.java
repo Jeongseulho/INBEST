@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-@Document(collection  = "cocomment")
+@Document(collection = "cocomment")
 @Getter
 @NoArgsConstructor
 @ToString
@@ -74,5 +74,10 @@ public class CoCommentEntity extends BaseEntity implements Serializable {
 		log.info("반영 후: " + likeUserList + " ");
 		//좋아요 수 반영
 		likes = Long.valueOf(likeUserList.size());
+	}
+
+	public void delete() {
+		this.context = "삭제된 덧글입니다.";
+		this.userSeq = 0L;
 	}
 }

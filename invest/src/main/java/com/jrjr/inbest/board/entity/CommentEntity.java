@@ -68,6 +68,11 @@ public class CommentEntity extends BaseEntity implements Serializable {
 		this.context = commentDTO.getContext();
 	}
 
+	public void delete() {
+		this.context = "삭제된 덧글입니다.";
+		this.userSeq = 0L;
+	}
+
 	public void updateLikeUserList(UserEntity userEntity) {
 		boolean alreadyLike = false;
 
