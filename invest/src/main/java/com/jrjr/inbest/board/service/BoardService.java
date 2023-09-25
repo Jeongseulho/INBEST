@@ -87,7 +87,6 @@ public class BoardService {
 		}
 
 		board.setImgList(boardImgEntities);
-
 		boardRepository.save(board);
 	}
 
