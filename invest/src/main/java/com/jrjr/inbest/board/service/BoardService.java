@@ -122,6 +122,42 @@ public class BoardService {
 		BoardDTO boardDTO = boardEntity.toBoardDTO();
 		boardDTO.setWriter(userDTO);
 
+		//댓글 유저 가져오기
+		for(CommentDTO commentDTO:boardDTO.getCommentList()){
+			UserEntity commentWriter = userRepository.findBySeq(commentDTO.getUserSeq());
+			UserDTO commentWriterDTO;
+
+			if(commentWriter == null){
+				commentWriterDTO = UserDTO.builder()
+					.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
+					.profileImgOriginalName("DefaultProfile.png")
+					.name("이름없음")
+					.nickname("이름없음")
+					.build();
+			}else{
+				commentWriterDTO = commentWriter.toUserDTO();
+			}
+			commentDTO.setWriter(commentWriterDTO);
+
+			//대댓글 유저 가져오기
+			for(CommentDTO cocomentDTO : commentDTO.getCocommentList()){
+				UserEntity cocommentWriter = userRepository.findBySeq(cocomentDTO.getUserSeq());
+				UserDTO cocommentWriterDTO;
+
+				if(cocommentWriter == null){
+					cocommentWriterDTO = UserDTO.builder()
+						.profileImgSearchName("https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png")
+						.profileImgOriginalName("DefaultProfile.png")
+						.name("이름없음")
+						.nickname("이름없음")
+						.build();
+				}else{
+					cocommentWriterDTO = cocommentWriter.toUserDTO();
+				}
+				cocomentDTO.setWriter(cocommentWriterDTO);
+			}
+		}
+
 		boardEntity.updateView();
 		boardRepository.save(boardEntity);
 

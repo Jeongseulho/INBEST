@@ -27,6 +27,7 @@ import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class BoardController {
 		@Parameter(required = false, name = "files", description = "글에 들어가는 파일 배열(type : File)"),
 	})
 	@PostMapping("")
-	public ResponseEntity<Map<String, Object>> insertBoard(@ModelAttribute BoardDTO boardDTO) throws Exception {
+	public ResponseEntity<Map<String, Object>> insertBoard(@RequestBody BoardDTO boardDTO) throws Exception {
 		log.info("========== 게시판 등록 시작 ==========");
 
 		log.info("입력 받은 데이터");
@@ -62,6 +63,21 @@ public class BoardController {
 		resultMap.put("success",true);
 
 		log.info("========== 게시판 등록 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+	@PutMapping("")
+	public ResponseEntity<Map<String, Object>> updaetBoard(@RequestBody BoardDTO boardDTO, HttpServletRequest request) throws Exception {
+		log.info("========== 게시판 수정 시작 ==========");
+
+		log.info("입력 받은 데이터");
+		log.info(boardDTO.toString());
+
+		boardService.insertBoard(boardDTO);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success",true);
+
+		log.info("========== 게시판 수정 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 	@Operation(summary = "게시판 목록 출력",description = "기간(period)와 한번에 출력하는 양(size)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
@@ -85,7 +101,6 @@ public class BoardController {
 		log.info("========== 게시판 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
-
 	@Operation(summary = "좋아요가 많은 게시판 목록",description = "기간(period)와 한번에 출력하는 양(pageSize)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
 	@Parameters(value = {
 		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
@@ -182,7 +197,7 @@ public class BoardController {
 		})
 	@PostMapping("/{boardSeq}/comments")
 	public ResponseEntity<Map<String, Object>> insertComment(
-		@ModelAttribute CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq) throws
+		@RequestBody CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq) throws
 		Exception {
 		log.info("========== 덧글 등록 시작 ==========");
 		log.info("덧글 : "+commentDTO);
@@ -211,7 +226,7 @@ public class BoardController {
 	})
 	@PostMapping("/{boardSeq}/comments/{commentSeq}/cocomments")
 	public ResponseEntity<Map<String, Object>> insertCoComment(
-		@ModelAttribute CommentDTO commentDTO,@PathVariable(name = "boardSeq") String boardSeq
+		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq
 		,@PathVariable(name = "commentSeq") String commentSeq) throws
 		Exception {
 		log.info("========== 대댓글 등록 시작 ==========");
