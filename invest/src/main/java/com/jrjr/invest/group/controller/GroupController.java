@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.invest.group.dto.SimulationDTO;
 import com.jrjr.invest.group.service.GroupService;
-import com.jrjr.invest.simulation.entity.Simulation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +27,12 @@ public class GroupController {
 		// db 생성
 
 		// 방장 redis 생성
+		return null;
 	}
 
 	@GetMapping("/")
 	ResponseEntity<?> searchUsers(@RequestParam String keyword) {
 		groupService.searchUsers(keyword);
+		return null;
 	}
 }
