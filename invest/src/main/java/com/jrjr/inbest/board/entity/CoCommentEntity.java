@@ -50,6 +50,10 @@ public class CoCommentEntity extends BaseEntity implements Serializable {
 		return commentDTO;
 	}
 
+	public void update(CommentDTO commentDTO) {
+		this.context = commentDTO.getContext();
+	}
+
 	public void updateLikeUserList(UserEntity userEntity) {
 		boolean alreadyLike = false;
 

@@ -277,7 +277,7 @@ public class BoardController {
 		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
-		CommentDTO originalComment = commentService.findBySeq(commentSeq);
+		CommentDTO originalComment = commentService.findCommentBySeq(commentSeq);
 		UserDTO writer = userService.findBySeq(originalComment.getUserSeq());
 
 		log.info("원본 댓글 : " + originalComment);
@@ -310,7 +310,7 @@ public class BoardController {
 		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
-		CommentDTO originalComment = commentService.findBySeq(commentSeq);
+		CommentDTO originalComment = commentService.findCommentBySeq(commentSeq);
 		log.info("원본 댓글 : " + originalComment);
 		UserDTO writer = userService.findBySeq(originalComment.getUserSeq());
 
@@ -355,6 +355,73 @@ public class BoardController {
 		resultMap.put("comment", resultDto);
 
 		log.info("========== 대댓글 등록 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@PutMapping("/{boardSeq}/comments/{commentSeq}/cocomments/{cocommentSeq}")
+	public ResponseEntity<Map<String, Object>> updateComment(
+		@RequestBody CommentDTO cocommentDTO, @PathVariable(name = "boardSeq") String boardSeq,
+		@PathVariable(name = "commentSeq") String commentSeq,
+		@PathVariable(name = "cocommentSeq") String cocommentSeq,
+		HttpServletRequest request) throws
+		Exception {
+		log.info("========== 대댓글 수정 시작 ==========");
+		cocommentDTO.setSeq(cocommentSeq);
+		log.info("대댓글 : " + cocommentDTO);
+		log.info(cocommentDTO.toString());
+
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = jwtProvider.getEmail(request);
+		log.info("로그인 유저 이메일 : " + loginEmail);
+
+		CommentDTO originalCocomment = commentService.findCocommentBySeq(commentSeq);
+		UserDTO writer = userService.findBySeq(originalCocomment.getUserSeq());
+
+		log.info("원본 대댓글 : " + originalCocomment);
+
+		if (!loginEmail.equals(writer.getEmail())) {
+			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
+		}
+
+		cocommentDTO = commentService.updateCocomment(cocommentDTO);
+		log.info("대댓글 수정 결과 : " + cocommentDTO);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+		resultMap.put("comment", cocommentDTO);
+
+		log.info("========== 대댓글 수정 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{boardSeq}/comments/{commentSeq}/cocomments/{cocommentSeq}")
+	public ResponseEntity<Map<String, Object>> deleteCocomment(
+		@PathVariable(name = "boardSeq") String boardSeq,
+		@PathVariable(name = "commentSeq") String commentSeq,
+		@PathVariable(name = "cocommentSeq") String cocommentSeq,
+		HttpServletRequest request) throws
+		Exception {
+		log.info("========== 대댓글 삭제 시작 ==========");
+		log.info("덧글 id : " + cocommentSeq);
+
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = jwtProvider.getEmail(request);
+		log.info("로그인 유저 이메일 : " + loginEmail);
+
+		CommentDTO originalComment = commentService.findCocommentBySeq(cocommentSeq);
+		log.info("원본 대댓글 : " + originalComment);
+		UserDTO writer = userService.findBySeq(originalComment.getUserSeq());
+
+		if (!loginEmail.equals(writer.getEmail())) {
+			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
+		}
+
+		commentService.deleteCocomment(cocommentSeq);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+
+		log.info("========== 대댓글 삭제 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }

@@ -62,7 +62,7 @@ public class CommentService {
 		return commentDTO;
 	}
 
-	public CommentDTO findBySeq(String id) throws Exception {
+	public CommentDTO findCommentBySeq(String id) throws Exception {
 		CommentEntity commentEntity = commentRepository.findById(id).orElse(null);
 
 		if (commentEntity == null) {
@@ -70,6 +70,16 @@ public class CommentService {
 		}
 
 		return commentEntity.toCommentDTO();
+	}
+
+	public CommentDTO findCocommentBySeq(String id) throws Exception {
+		CoCommentEntity coCommentEntity = coCommentRepository.findById(id).orElse(null);
+
+		if (coCommentEntity == null) {
+			throw new Exception("해당 덧글이 없습니다.");
+		}
+
+		return coCommentEntity.toCommentDTO();
 	}
 
 	public CommentDTO updateComment(CommentDTO commentDTO) throws Exception {
@@ -130,4 +140,28 @@ public class CommentService {
 
 		return commentDTO;
 	}
+
+	public CommentDTO updateCocomment(CommentDTO commentDTO) throws Exception {
+		CoCommentEntity coCommentEntity = coCommentRepository.findById(commentDTO.getSeq()).orElse(null);
+
+		if (coCommentEntity == null) {
+			throw new Exception("해당 덧글이 없습니다.");
+		}
+
+		coCommentEntity.update(commentDTO);
+		coCommentRepository.save(coCommentEntity);
+
+		return coCommentEntity.toCommentDTO();
+	}
+
+	public void deleteCocomment(String id) throws Exception {
+		CoCommentEntity coCommentEntity = coCommentRepository.findById(id).orElse(null);
+
+		if (coCommentEntity == null) {
+			throw new Exception("해당 덧글이 없습니다.");
+		}
+		coCommentEntity.delete();
+		coCommentRepository.save(coCommentEntity);
+	}
+
 }
