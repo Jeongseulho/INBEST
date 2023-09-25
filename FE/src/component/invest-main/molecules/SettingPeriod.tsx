@@ -20,7 +20,6 @@ const SettingPeriod = ({ onNextStep, period, dispatch, resetStepAndGroupSetting 
           <PeriodSettingTag text="14일" dispatch={dispatch} payload={14} period={period} />
           <PeriodSettingTag text="21일" dispatch={dispatch} payload={21} period={period} />
           <PeriodSettingTag text="28일" dispatch={dispatch} payload={28} period={period} />
-          {/* <PeriodSettingTag text="가속모드" dispatch={dispatch} payload={"boostMode"} period={period} /> */}
         </div>
         <p className=" text-myGray text-center">설정한 기간 동안 모의투자를 진행할 수 있습니다.</p>
       </div>

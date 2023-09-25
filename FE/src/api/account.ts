@@ -4,25 +4,25 @@ import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 import { SignupSubmitFormValue, LoginFormValue, LoginResultValue, ApiGetUserInfo } from "../type/Accounts";
 const api = apiInstance("spring-service");
 const apiWithAuth = instanceWithAuth("spring-service");
-export const checkEmail = async (email: string): Promise<ApiSuccessMessage | void> => {
+export const checkEmail = async (email: string): Promise<ApiSuccessMessage> => {
   const { data } = await api.get("/users/inquiry-email", { params: { email: email } });
   return data;
 };
 
-export const sendEmail = async (email: string): Promise<ApiSuccessMessage | void> => {
+export const sendEmail = async (email: string): Promise<ApiSuccessMessage> => {
   const { data } = await api.get("/email/verify", { params: { email: email } });
   return data;
 };
-export const confirmEmail = async (email: string, code: string): Promise<ApiSuccessMessage | void> => {
+export const confirmEmail = async (email: string, code: string): Promise<ApiSuccessMessage> => {
   const { data } = await api.get("/email/authenticate", { params: { email: email, code: code } });
   return data;
 };
 
-export const checkNickname = async (nickname: string): Promise<ApiSuccessMessage | void> => {
+export const checkNickname = async (nickname: string): Promise<ApiSuccessMessage> => {
   const { data } = await api.get("/users/inquiry-nickname", { params: { nickname: nickname } });
   return data;
 };
-export const signup = async (user: SignupSubmitFormValue): Promise<ApiSuccessMessage | void> => {
+export const signup = async (user: SignupSubmitFormValue): Promise<ApiSuccessMessage> => {
   const { data } = await api.post("/users", user);
   return data;
 };
