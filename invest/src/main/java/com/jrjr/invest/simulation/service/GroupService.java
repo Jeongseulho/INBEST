@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.jrjr.invest.rank.dto.RedisSimulationUserDTO;
 import com.jrjr.invest.simulation.dto.GroupDTO;
+import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
 import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.entity.SimulationUser;

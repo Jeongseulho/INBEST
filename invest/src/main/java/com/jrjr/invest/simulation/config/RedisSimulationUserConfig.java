@@ -1,4 +1,4 @@
-package com.jrjr.invest.rank.config;
+package com.jrjr.invest.simulation.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.jrjr.invest.rank.dto.RedisSimulationUserDTO;
+import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.jrjr.invest.rank.dto;
+package com.jrjr.invest.simulation.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
