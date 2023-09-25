@@ -66,6 +66,10 @@ public class SecurityGlobalFilter implements GlobalFilter {
 						JSONObject errorResponse = new JSONObject();
 						errorResponse.put("success", securityResponse.get("success"));
 						errorResponse.put("message", securityResponse.get("message"));
+						if (securityResponse.get("accessToken") != null) {
+							errorResponse.put("accessToken", securityResponse.get("accessToken"));
+						}
+
 						try {
 							return response.writeWith(Mono.just(response.bufferFactory()
 								.wrap(errorResponse.toString().getBytes())));
