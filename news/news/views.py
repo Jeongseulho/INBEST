@@ -93,84 +93,147 @@ def BreakingNewsList(request):
     return JsonResponse(news_data, safe=False)
 
 
-# 산업별 뉴스 목록 ver1
+# # 산업별 뉴스 목록 / 연합뉴스
+# @api_view(['GET'])
+# def IndustryByNewsList(request, category):
+#     url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
+#     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+
+#     res = requests.get(url, verify=False)
+#     soup = BeautifulSoup(res.text, 'lxml')
+
+#     newslist = soup.select(".list .item-box01")
+#     news_data = []
+
+#     for news in newslist:
+#         try:
+#             image_url = "https:" + news.select_one(".img-con img")['src']
+#         except Exception:
+#             continue
+
+#         try:
+#             content = news.select_one(".lead").text.strip()    
+#         except Exception:
+#             continue
+
+#         try:
+#             link_url = news.select_one(".news-con a")['href']
+#         except Exception:
+#             continue
+
+#         title = news.select_one(".tit-news").text.strip()
+
+#         data_dict ={
+#             'title': title,
+#             'content' : content,
+#             'image_url': image_url,
+#             'link_url' : link_url
+#         }
+
+#         news_data.append(data_dict)
+
+#     time.sleep(1)
+
+#     return JsonResponse(news_data, safe=False)
+
+# 산업별 뉴스 목록 / 뉴스 1
+# @api_view(['GET'])
+# def IndustryByNewsList2(request, category_num):
+#     url = f'https://www.news1.kr/categories/?{category_num}'
+#     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+
+#     res = requests.get(url, headers=headers)
+#     # soup = BeautifulSoup(res.text, 'lxml')
+#     soup = BeautifulSoup(res.content.decode('utf-8', 'replace'), 'lxml')
+
+#     newslist = soup.select(".content_row")
+#     print(newslist)
+#     news_data = []
+
+#     for news in newslist:
+#         try:
+#             image_url = news.select_one(".pic_area img")['src']
+#         except Exception:
+#             continue
+
+#         try:
+#             print('시작')
+#             content_text_area = news.select_one(".txt_area")
+#             title_text_area= content_text_area.select_one("h3.tit")
+#             if title_text_area is not None:
+#                 title= title_text_area.text.strip()
+            
+#             content_text= content_text_area.select_one("p.txt.is-truncated")
+#             if content_text is not None:
+#                 content=content_text.text.strip()
+
+#         except Exception:
+#             print('여기문제있어요')
+#             continue
+
+#         try:
+#             link_url="/articles/?"+news.select_one(".pic_area")['onclick'].split("'")[1].split("?")[1]
+#         except Exception:
+#             print('여기문제있어요2')
+#             continue
+
+#         data_dict ={
+#             'title': title,
+#             'content' : content,
+#             'image_url': image_url,
+#             'link_url' : link_url,
+#             'asdf' : '123'
+#         }
+
+#         news_data.append(data_dict)
+
+#     time.sleep(1)
+
+#     return JsonResponse(news_data, safe=False)
+
+
 @api_view(['GET'])
-def IndustryByNewsList(request, category):
-    url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
+def IndustryByNewsList3(request, category_num_first):
+
+    if category_num_first in [259, 258, 261, 771]:
+        category_num_second = 101
+    elif category_num_first in [241, 239, 238, 376]:
+        category_num_second = 103
+    elif category_num_first in [230, 229, 228]:
+        category_num_second = 105
+
+    url = f'https://news.naver.com/main/list.naver?mode=LS2D&mid=shm&sid1={category_num_second}&sid2={category_num_first}'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
-    res = requests.get(url, verify=False)
+    res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, 'lxml')
 
-    newslist = soup.select(".list .item-box01")
+    newslist = soup.select("ul.type06_headline li")
     news_data = []
 
     for news in newslist:
         try:
-            image_url = "https:" + news.select_one(".img-con img")['src']
+            image_url=news.select_one("dt.photo img")['src']
         except Exception:
             continue
 
         try:
-            content = news.select_one(".lead").text.strip()    
+            title=news.select_one("dt:not(.photo) a").text.strip()
+            content=news.select_one(".lede").text.strip()
+
         except Exception:
             continue
 
         try:
-            link_url = news.select_one(".news-con a")['href']
+            link_url=news.select_one("dt:not(.photo) a")['href']
         except Exception:
             continue
-
-        title = news.select_one(".tit-news").text.strip()
 
         data_dict ={
             'title': title,
             'content' : content,
             'image_url': image_url,
-            'link_url' : link_url
-        }
-
-        news_data.append(data_dict)
-
-    time.sleep(1)
-
-    return JsonResponse(news_data, safe=False)
-
-# 산업별 뉴스 목록 ver2
-@api_view(['GET'])
-def IndustryByNewsList2(request, category):
-    url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
-    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
-
-    res = requests.get(url, headers=headers, verify=False)
-    soup = BeautifulSoup(res.text, 'lxml')
-
-    newslist = soup.select(".list .item-box01")
-    news_data = []
-
-    for news in newslist:
-        try:
-            image_url = "https:" + news.select_one(".img-con img")['src']
-        except Exception:
-            continue
-
-        try:
-            content = news.select_one(".lead").text.strip()    
-        except Exception:
-            continue
-
-        try:
-            link_url = news.select_one(".news-con a")['href']
-        except Exception:
-            continue
-
-        title = news.select_one(".tit-news").text.strip()
-
-        data_dict ={
-            'title': title,
-            'content' : content,
-            'image_url': image_url,
-            'link_url' : link_url
+            'link_url' : link_url,
         }
 
         news_data.append(data_dict)
