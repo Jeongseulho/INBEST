@@ -7,17 +7,14 @@ import { formatNumberToWon } from "../../../util/formatMoney";
 interface Props {
   seedMoney: SeedMoney;
   dispatch: React.Dispatch<{ type: "SEED_MONEY"; payload: SeedMoney }>;
-  prevSeedMoney: number[];
 }
 
-const SeedMoneyFilterBar = ({ seedMoney, dispatch, prevSeedMoney }: Props) => {
+const SeedMoneyFilterBar = ({ seedMoney, dispatch }: Props) => {
   return (
     <div className=" border-2 rounded-lg py-4 px-10 w-full pb-10">
       <div className=" flex flex-col w-full items-center ">
         <p className=" mb-4 mr-4 text-xl">
-          {seedMoney === "linkingMode"
-            ? `${formatNumberToWon(prevSeedMoney[0])} ~ ${formatNumberToWon(prevSeedMoney[1])}`
-            : `${formatNumberToWon(seedMoney[0])} ~ ${formatNumberToWon(seedMoney[1])}`}
+          {`${formatNumberToWon(seedMoney[0])} ~ ${formatNumberToWon(seedMoney[1])}`}
         </p>
         <Slider
           range
@@ -28,19 +25,22 @@ const SeedMoneyFilterBar = ({ seedMoney, dispatch, prevSeedMoney }: Props) => {
           allowCross={false}
           marks={{
             1000000: "백만원",
-            20000000: "이천만원",
-            40000000: "사천만원",
-            60000000: "육천만원",
-            80000000: "팔천만원",
-            100000000: "일억원",
+            2000000: "이백만원",
+            3000000: "삼백만원",
+            4000000: "사백만원",
+            5000000: "오백만원",
+            6000000: "육백만원",
+            7000000: "칠백만원",
+            8000000: "팔백만원",
+            9000000: "구백만원",
+            10000000: "천만원",
           }}
           onChange={(payload: number[] | number) => {
             if (Array.isArray(payload)) {
               dispatch({ type: "SEED_MONEY", payload });
             }
           }}
-          value={seedMoney === "linkingMode" ? prevSeedMoney : seedMoney}
-          disabled={seedMoney === "linkingMode"}
+          value={seedMoney}
         />
       </div>
     </div>

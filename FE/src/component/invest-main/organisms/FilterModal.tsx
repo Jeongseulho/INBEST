@@ -5,21 +5,16 @@ import { FILTER_MODAL_TAB } from "../../../constant/FILTER_MODAL_TAB";
 import FilterPeriodTab from "../molecules/FilterPeriodTab";
 import FilterSeedMoneyTab from "../molecules/FilterSeedMoneyTab";
 import FilterTierTab from "../molecules/FilterTierTab";
+import modalStore from "../../../store/modalStore";
 
-interface Props {
-  showFilterModal: boolean;
-  closeFilterModal: () => void;
-}
-
-const FilterModal = ({ showFilterModal, closeFilterModal }: Props) => {
+const FilterModal = () => {
   const { activeTab, setActiveTab, groupFilter, dispatch } = useFilterModal();
+  const { modalType, closeModal } = modalStore();
   return (
     <Modal
-      isOpen={showFilterModal}
+      isOpen={modalType === "filter"}
       ariaHideApp={false}
-      onRequestClose={() => {
-        closeFilterModal();
-      }}
+      onRequestClose={closeModal}
       closeTimeoutMS={300}
       style={{
         content: {

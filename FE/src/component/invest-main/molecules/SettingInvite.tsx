@@ -2,6 +2,8 @@ import UserItem from "../atoms/UserItem";
 import UserTag from "../atoms/UserTag";
 import { GroupInviteUser } from "../../../type/GroupSetting";
 import { useEffect } from "react";
+import modalStore from "../../../store/modalStore";
+import default_image from "../../../asset/image/default_image.png";
 
 type Action =
   | { type: "ADD_INVITE"; payload: GroupInviteUser }
@@ -12,17 +14,11 @@ interface Props {
   dispatch: React.Dispatch<Action>;
   inviteUsers: GroupInviteUser[] | [];
   unInviteUsers: GroupInviteUser[] | [];
-  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const SettingInvite = ({
-  onNextStep,
-  closeCreateModal,
-  resetStepAndGroupSetting,
-  dispatch,
-  inviteUsers,
-  unInviteUsers,
-}: Props) => {
+const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteUsers, unInviteUsers }: Props) => {
+  const { closeModal } = modalStore();
+
   useEffect(() => {
     dispatch({
       type: "ALL_USER",
@@ -30,22 +26,22 @@ const SettingInvite = ({
         {
           userSeq: 1,
           nickname: "닉네임1",
-          profileImg: "",
+          profileImg: default_image,
         },
         {
           userSeq: 2,
           nickname: "닉네임2",
-          profileImg: "",
+          profileImg: default_image,
         },
         {
           userSeq: 3,
           nickname: "닉네임3",
-          profileImg: "",
+          profileImg: default_image,
         },
         {
           userSeq: 4,
           nickname: "닉네임4",
-          profileImg: "",
+          profileImg: default_image,
         },
       ],
     });
@@ -99,7 +95,7 @@ const SettingInvite = ({
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeCreateModal();
+            closeModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

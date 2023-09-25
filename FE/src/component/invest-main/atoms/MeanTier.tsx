@@ -1,11 +1,19 @@
-const MeanTier = () => {
+import NumberToTierImage from "../../common/NumberToTierImage";
+
+interface Props {
+  tier: number;
+}
+
+const MeanTier = ({ tier }: Props) => {
   return (
-    <div>
-      <div>
-        <p className=" font-regular ">이 그룹의 평균 티어</p>
-        <img src="" />
+    <div className=" flex flex-col">
+      <p className=" font-medium text-gray-600 ">이 그룹의 평균 티어</p>
+      <div className=" flex w-2/3 items-center gap-2">
+        <p className=" font-bold text-xl">실버</p>
+        <div className=" w-1/5">
+          <NumberToTierImage tier={tier} />
+        </div>
       </div>
-      <p className=" font-bold text-xl">플래티넘 2</p>
     </div>
   );
 };

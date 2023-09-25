@@ -14,7 +14,15 @@ import Community from "./component/community/page/Community";
 import CommunityList from "./component/community/organisms/CommunityList";
 import CommunityCreate from "./component/community/organisms/CommunityCreate";
 import CommunityDetail from "./component/community/organisms/CommunityDetail";
-const queryClient = new QueryClient();
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: 1000 * 60,
+    },
+  },
+});
 
 function App() {
   return (
