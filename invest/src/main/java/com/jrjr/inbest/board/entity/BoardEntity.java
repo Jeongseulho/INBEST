@@ -36,7 +36,7 @@ public class BoardEntity extends BaseEntity implements Serializable {
 	private Long userSeq;
 	private String context;
 	private String title;
-	private List<UserEntity> likeUserList;
+	private List<UserDTO> likeUserList;
 	@DBRef
 	private List<BoardImgEntity> imgList;
 	@DBRef
@@ -84,13 +84,13 @@ public class BoardEntity extends BaseEntity implements Serializable {
 		}
 		boardDTO.setCommentList(commentDTOList);
 
-		List<UserDTO> likeUserDTOList = new ArrayList<>();
-		if (likeUserList != null) {
-			for (UserEntity userEntity : likeUserList) {
-				likeUserDTOList.add(userEntity.toUserDTO());
-			}
-		}
-		boardDTO.setLikesUserList(likeUserDTOList);
+		// List<UserDTO> likeUserDTOList = new ArrayList<>();
+		// if (likeUserList != null) {
+		// 	for (UserDTO userEntity : likeUserList) {
+		// 		likeUserDTOList.add(userEntity.toUserDTO());
+		// 	}
+		// }
+		boardDTO.setLikesUserList(likeUserList);
 
 		return boardDTO;
 	}
@@ -124,7 +124,7 @@ public class BoardEntity extends BaseEntity implements Serializable {
 		//좋아요를 누르지 않은 유저라면
 		if (!alreadyLike) {
 			log.info(userEntity.getNickname() + "의 좋아요를 추가합니다.");
-			likeUserList.add(userEntity);
+			likeUserList.add(userEntity.toUserDTO());
 		}
 		log.info("반영 후: " + likeUserList + " ");
 		//좋아요 수 반영

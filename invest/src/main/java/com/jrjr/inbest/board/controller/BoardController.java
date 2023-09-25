@@ -149,14 +149,14 @@ public class BoardController {
 		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
 		@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
 	})
-	@GetMapping("/best-likes")
+	@GetMapping("/most-likes")
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period) {
 		log.info("========== 좋아요 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
-		List<BoardDTO> boardDTOList = boardService.findPopularPosts(pageSize, period);
+		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageSize, period);
 
 		log.info("검색 결과 : " + boardDTOList);
 
@@ -165,6 +165,25 @@ public class BoardController {
 		resultMap.put("board", boardDTOList);
 
 		log.info("========== 좋아요 많은 게시판 목록 검색 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@GetMapping("/most-views")
+	public ResponseEntity<Map<String, Object>> findAllViewBoards(
+		@RequestParam(name = "pageSize") int pageSize,
+		@RequestParam(name = "period") int period) {
+		log.info("========== 조회수 많은 게시판 목록 검색 시작 ==========");
+		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
+
+		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageSize, period);
+
+		log.info("검색 결과 : " + boardDTOList);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+		resultMap.put("board", boardDTOList);
+
+		log.info("========== 조회수 많은 게시판 목록 검색 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 

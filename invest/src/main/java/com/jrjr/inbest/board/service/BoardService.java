@@ -215,7 +215,7 @@ public class BoardService {
 		return boardEntity.toBoardDTO();
 	}
 
-	public List<BoardDTO> findPopularPosts(int pageSize, int period) {
+	public List<BoardDTO> findMostLikesPosts(int pageSize, int period) {
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = end.minusDays(period);
 
@@ -225,6 +225,42 @@ public class BoardService {
 
 		List<BoardEntity> boardEntityList = boardRepository.findByCreatedDateBetween(start, end, pageRequest);
 
+		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
+
+		for (BoardEntity boardEntity : boardEntityList) {
+			boardDTOList.add(boardEntity.toBoardDTO());
+		}
+
+		return boardDTOList;
+	}
+
+	public List<BoardDTO> findMostViewPosts(int pageSize, int period, String type) {
+		LocalDateTime end = LocalDateTime.now();
+		LocalDateTime start = end.minusDays(period);
+
+		// 좋아요(likes)가 많은 순으로 정렬하고 상위 10개를 가져옵니다.
+		PageRequest pageRequest =
+			PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "view"));
+
+		List<BoardEntity> boardEntityList = boardRepository.findByCreatedDateBetween(start, end, pageRequest);
+		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
+
+		for (BoardEntity boardEntity : boardEntityList) {
+			boardDTOList.add(boardEntity.toBoardDTO());
+		}
+
+		return boardDTOList;
+	}
+
+	public List<BoardDTO> findMostRepliesPosts(int pageSize, int period, String type) {
+		LocalDateTime end = LocalDateTime.now();
+		LocalDateTime start = end.minusDays(period);
+
+		// 좋아요(likes)가 많은 순으로 정렬하고 상위 10개를 가져옵니다.
+		PageRequest pageRequest =
+			PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "view"));
+
+		List<BoardEntity> boardEntityList = boardRepository.findByCreatedDateBetween(start, end, pageRequest);
 		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
 
 		for (BoardEntity boardEntity : boardEntityList) {
