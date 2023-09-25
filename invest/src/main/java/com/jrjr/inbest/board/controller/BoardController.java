@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +27,6 @@ import com.jrjr.inbest.global.jwt.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,8 @@ public class BoardController {
 		@Parameter(required = false, name = "files", description = "글에 들어가는 파일 배열(type : File)"),
 	})
 	@PostMapping("")
-	public ResponseEntity<Map<String, Object>> insertBoard(@RequestBody BoardDTO boardDTO) throws Exception {
+	public ResponseEntity<Map<String, Object>> insertBoard(HttpServletRequest request,
+		@RequestBody BoardDTO boardDTO) throws Exception {
 		log.info("========== 게시판 등록 시작 ==========");
 		log.info("입력 받은 데이터");
 		log.info(boardDTO.toString());
@@ -135,6 +136,7 @@ public class BoardController {
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);
 		resultMap.put("board", boardDTOList);
+		resultMap.put("total", boardDTOList);
 
 		log.info("========== 게시판 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
