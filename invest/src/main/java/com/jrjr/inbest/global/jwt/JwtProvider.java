@@ -60,7 +60,8 @@ public class JwtProvider {
 	public String getEmail(HttpServletRequest request) {
 		String accessToken = resolveAccessToken(request).orElse("accessToken");
 		String loginEmail = "";
-
+		log.info("access token : " + accessToken);
+		
 		if (!accessToken.equals("accessToken")) {
 			Claims claims = getClaims(accessToken);
 			loginEmail = claims.getSubject();

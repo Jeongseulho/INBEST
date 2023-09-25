@@ -269,6 +269,7 @@ public class BoardController {
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 덧글 수정 시작 ==========");
+		commentDTO.setSeq(commentSeq);
 		log.info("덧글 : " + commentDTO);
 		log.info(commentDTO.toString());
 
@@ -312,7 +313,7 @@ public class BoardController {
 		CommentDTO originalComment = commentService.findBySeq(commentSeq);
 		log.info("원본 댓글 : " + originalComment);
 		UserDTO writer = userService.findBySeq(originalComment.getUserSeq());
-		
+
 		if (!loginEmail.equals(writer.getEmail())) {
 			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
 		}
