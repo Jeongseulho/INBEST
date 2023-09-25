@@ -99,7 +99,7 @@ def IndustryByNewsList(request, category):
     url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
-    res = requests.get(url, headers=headers)
+    res = requests.get(url, verify=False)
     soup = BeautifulSoup(res.text, 'lxml')
 
     newslist = soup.select(".list .item-box01")
