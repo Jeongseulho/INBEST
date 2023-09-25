@@ -14,11 +14,23 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class SimulationRankingTopStockDTO {
+public class SimulationUserRankingDTO {
 
-	private String stockName;
+	private Long simulationSeq;
 
-	private String stockMarketPrice;
+	private Long userSeq;
 
-	private String stockImgSearchName;
+	private Integer previousRank;
+
+	private Integer currentRank;
+
+	private Long currentMoney;
+
+	private String nickname;
+
+	private String profileImgSearchName;
+
+	private Long totalMoney;
+
+	private Integer rate;
 }
