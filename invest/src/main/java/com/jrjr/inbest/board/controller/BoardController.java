@@ -127,7 +127,7 @@ public class BoardController {
 	})
 	@GetMapping("")
 	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "pageNo") int page,
-		@RequestParam(name = "pageSize") int size) {
+		@RequestParam(name = "pageSize") int size) throws Exception {
 		log.info("========== 게시판 목록 검색 시작 ==========");
 		log.info("page : " + page + " size : " + size);
 
@@ -171,7 +171,7 @@ public class BoardController {
 	@Operation(summary = "게시판 상세정보")
 	@GetMapping("/{seq}")
 	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable(value = "seq") String seq,
-		HttpServletRequest request) {
+		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 상세 정보 시작 ==========");
 		log.info("seq : " + seq);
 
@@ -259,6 +259,70 @@ public class BoardController {
 		resultMap.put("comment", resultDto);
 
 		log.info("========== 덧글 등록 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@PutMapping("/{boardSeq}/comments/{commentSeq}")
+	public ResponseEntity<Map<String, Object>> updateComment(
+		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq,
+		@PathVariable(name = "commentSeq") String commentSeq,
+		HttpServletRequest request) throws
+		Exception {
+		log.info("========== 덧글 수정 시작 ==========");
+		log.info("덧글 : " + commentDTO);
+		log.info(commentDTO.toString());
+
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = jwtProvider.getEmail(request);
+		log.info("로그인 유저 이메일 : " + loginEmail);
+
+		CommentDTO originalComment = commentService.findBySeq(commentSeq);
+		UserDTO writer = userService.findBySeq(originalComment.getUserSeq());
+
+		log.info("원본 댓글 : " + originalComment);
+
+		if (!loginEmail.equals(writer.getEmail())) {
+			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
+		}
+
+		commentDTO = commentService.updateComment(commentDTO);
+		log.info("덧글 수정 결과 : " + commentDTO);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+		resultMap.put("comment", commentDTO);
+
+		log.info("========== 덧글 수정 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{boardSeq}/comments/{commentSeq}")
+	public ResponseEntity<Map<String, Object>> deleteComment(
+		@PathVariable(name = "boardSeq") String boardSeq,
+		@PathVariable(name = "commentSeq") String commentSeq,
+		HttpServletRequest request) throws
+		Exception {
+		log.info("========== 덧글 삭제 시작 ==========");
+		log.info("덧글 id : " + commentSeq);
+
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = jwtProvider.getEmail(request);
+		log.info("로그인 유저 이메일 : " + loginEmail);
+
+		CommentDTO originalComment = commentService.findBySeq(commentSeq);
+		log.info("원본 댓글 : " + originalComment);
+		UserDTO writer = userService.findBySeq(originalComment.getUserSeq());
+		
+		if (!loginEmail.equals(writer.getEmail())) {
+			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
+		}
+
+		commentService.deleteComment(commentSeq);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+
+		log.info("========== 덧글 삭제 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 

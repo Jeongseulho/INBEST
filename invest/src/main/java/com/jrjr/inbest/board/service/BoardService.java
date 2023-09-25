@@ -120,7 +120,7 @@ public class BoardService {
 		return;
 	}
 
-	public List<BoardDTO> findAllBoards(int page, int size) {
+	public List<BoardDTO> findAllBoards(int page, int size) throws Exception {
 		Page<BoardEntity> boardEntityList = boardRepository.findAll(
 			PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdDate"));
 		List<BoardDTO> boardDTOList = new ArrayList<>();
@@ -141,7 +141,7 @@ public class BoardService {
 		return boardDTOList;
 	}
 
-	public BoardDTO findBySeq(String id) {
+	public BoardDTO findBySeq(String id) throws Exception {
 		BoardEntity boardEntity = boardRepository.findById(id).orElse(null);
 
 		if (boardEntity == null) {

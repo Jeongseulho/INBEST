@@ -15,11 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 	private final UserRepository userRepository;
 
-	public UserDTO findBySeq(Long seq) {
+	public UserDTO findBySeq(Long seq) throws Exception {
 		UserEntity userEntity = userRepository.findBySeq(seq);
 
 		if (userEntity == null) {
-			return UserDTO.builder().build();
+			throw new Exception("해당 유저가 없습니다.");
 		}
 
 		return userEntity.toUserDTO();
@@ -40,4 +40,5 @@ public class UserService {
 
 		return true;
 	}
+	
 }
