@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
-import com.jrjr.invest.rank.dto.SimulationRankingDTO;
+import com.jrjr.invest.rank.dto.SimulationUserRankingDTO;
 import com.jrjr.invest.rank.service.SimulationUserRankService;
 import com.jrjr.invest.rank.service.UserRankService;
 
@@ -167,7 +167,7 @@ public class RankController {
 		log.info("========== 시뮬레이션 {} 랭킹: 전체 랭킹 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		List<SimulationRankingDTO> simulationUserRankingInfo
+		List<SimulationUserRankingDTO> simulationUserRankingInfo
 			= simulationUserRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
 
 		log.info("========== 시뮬레이션 랭킹: 전체 랭킹 정보 불러오기 완료 ==========");
@@ -182,7 +182,7 @@ public class RankController {
 		log.info("========== 시뮬레이션 {} 랭킹: 내 랭킹 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		SimulationRankingDTO mySimulationUserRankingInfo
+		SimulationUserRankingDTO mySimulationUserRankingInfo
 			= simulationUserRankService.getMySimulationUserRankingInfo(simulationSeq, userSeq);
 
 		log.info("========== 시뮬레이션 랭킹: 내 랭킹 정보 불러오기 완료 ==========");
