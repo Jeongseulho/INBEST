@@ -26,11 +26,10 @@ public class GroupController {
 
 	private final GroupService groupService;
 
+
 	@PostMapping("/")
-	ResponseEntity<?> createGroup(@RequestBody GroupDTO groupDTO) {
-		// db 생성 : Simulation, SimulationUser
+	ResponseEntity<?> createGroup(@RequestBody GroupDTO groupDTO) throws Exception {
 		groupService.createGroup(groupDTO);
-		// 방장 redis 생성
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 

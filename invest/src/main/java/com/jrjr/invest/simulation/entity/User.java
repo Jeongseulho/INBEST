@@ -55,7 +55,7 @@ public class User extends BaseEntity {
 
 	private LocalDateTime deletedDate;
 
-	@OneToMany(mappedBy = "simulation")
+	@OneToMany(mappedBy = "user")
 	private List<SimulationUser> simulationUserList;
 
 	@Builder

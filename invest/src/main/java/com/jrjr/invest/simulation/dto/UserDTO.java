@@ -41,5 +41,4 @@ public class UserDTO {
 	private String provider;
 
 	private Role role;
-
 }

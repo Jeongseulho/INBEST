@@ -9,16 +9,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
 @Table(name = "simulation_user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class SimulationUser {
 
 	@Id
@@ -34,6 +32,9 @@ public class SimulationUser {
 	private User user;
 
 	@Column(nullable = false)
+	private Long seedMoney;
+
+	@Column(nullable = false)
 	private Long currentMoney;
 
 	@Column(nullable = false)
@@ -45,6 +46,4 @@ public class SimulationUser {
 	@Column(nullable = false)
 	private Boolean isExited;
 
-	@Column(nullable = false)
-	private Boolean isOwner;
 }

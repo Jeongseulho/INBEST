@@ -31,5 +31,8 @@ public class GroupDTO {
 	private Long seedMoney;
 
 	@NotNull
+	private Long ownerSeq;
+
+	@NotNull
 	private List<Long> userSeqList;
 }
