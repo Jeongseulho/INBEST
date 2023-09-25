@@ -1,5 +1,7 @@
 package com.jrjr.invest.rank.dto;
 
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +35,6 @@ public class SimulationUserRankingDTO {
 	private Long totalMoney;
 
 	private Integer rate;
+
+	private List<TopStockDTO> topNStockInfo;
 }

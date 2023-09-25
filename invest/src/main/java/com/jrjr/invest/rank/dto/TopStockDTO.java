@@ -14,9 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class SimulationUserRankingTopStockDTO {
-
-	private Integer rank;
+public class TopStockDTO {
 
 	private String stockName;
 
