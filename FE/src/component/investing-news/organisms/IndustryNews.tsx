@@ -1,9 +1,9 @@
-// import { useIndustryNews } from "./useIndustryNews";
 import news from "../../../asset/image/news.png";
 import IndustryNewsItem from "../molecules/IndustryNewsItem";
 import IndustryTag from "../molecules/IndustryTag";
 import { useIndustryNews } from "./useIndustryNews";
 import { INDUSTRY_NEWS_TAB } from "../../../constant/INDUSTRY_NEWS_TAB";
+import Skeleton from "react-loading-skeleton";
 
 const IndustryNews = () => {
   const { data, isLoading, curIndustryTab, setCurIndustryTab } = useIndustryNews();
@@ -14,7 +14,7 @@ const IndustryNews = () => {
         <img src={news} width={40} />
         <h3>산업별 뉴스</h3>
       </div>
-      <div className=" flex gap-1">
+      <div className=" flex gap-1 mb-4">
         {Object.keys(INDUSTRY_NEWS_TAB).map((myTab) => (
           <IndustryTag
             key={myTab}
@@ -25,7 +25,7 @@ const IndustryNews = () => {
         ))}
       </div>
       {isLoading ? (
-        <p>로딩중...</p>
+        <Skeleton count={5} />
       ) : (
         <div className=" grid grid-cols-2 ">
           {data?.map((news, idx) => (
