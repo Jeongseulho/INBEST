@@ -1,4 +1,4 @@
-package com.jrjr.invest.group.dto;
+package com.jrjr.invest.simulation.dto;
 
 import java.util.List;
 
@@ -10,14 +10,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @ToString
-public class SimulationDTO {
+public class GroupDTO {
 
 	@NotNull
 	private String title;
@@ -29,7 +31,5 @@ public class SimulationDTO {
 	private Long seedMoney;
 
 	@NotNull
-	private List<InvitedUserDTO> invitedUsersList;
-
-
+	private List<Long> userSeqList;
 }

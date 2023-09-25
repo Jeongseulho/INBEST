@@ -1,4 +1,4 @@
-package com.jrjr.invest.group.dto;
+package com.jrjr.invest.simulation.dto;
 
 import javax.management.relation.Role;
 

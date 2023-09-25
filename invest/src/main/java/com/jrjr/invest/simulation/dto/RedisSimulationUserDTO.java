@@ -1,7 +1,5 @@
 package com.jrjr.invest.simulation.dto;
 
-import java.time.LocalDateTime;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,21 +21,11 @@ public class RedisSimulationUserDTO {
 	@NotNull
 	private Long userSeq;
 
-	@NotNull
-	private Integer period;
-
-	@NotNull
-	private Long startMoney;
-
 	private Long currentMoney;
 
 	private Integer previousRank;
 
 	private Integer currentRank;
-
-	private LocalDateTime startDate;
-
-	private LocalDateTime finishedDate;
 
 	private Boolean isExited;
 

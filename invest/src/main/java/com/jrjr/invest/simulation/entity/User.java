@@ -1,18 +1,20 @@
-package com.jrjr.invest.group.entity;
+package com.jrjr.invest.simulation.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.hibernate.annotations.ColumnDefault;
 
 import com.jrjr.invest.global.entity.BaseEntity;
-import com.jrjr.invest.group.dto.UserDTO;
+import com.jrjr.invest.simulation.dto.UserDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -52,6 +54,9 @@ public class User extends BaseEntity {
 	private String profileImgOriginalName;
 
 	private LocalDateTime deletedDate;
+
+	@OneToMany(mappedBy = "simulation")
+	private List<SimulationUser> simulationUserList;
 
 	@Builder
 	public User(String email, String name, String nickname, String birthyear, String birthday, Integer gender,
