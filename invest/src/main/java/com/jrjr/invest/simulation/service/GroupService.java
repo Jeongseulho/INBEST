@@ -29,7 +29,7 @@ public class GroupService {
 	private final UserRepository userRepository;
 	private final SimulationRepository simulationRepository;
 	private final SimulationUserRepository simulationUserRepository;
-	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
+	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
 
 	public List<UserDTO> searchUsers(String keyword) {
 		List<User> users = userRepository.findByNameContains(keyword);
@@ -85,7 +85,7 @@ public class GroupService {
 					.build());
 
 			// redis에 저장
-			redisSimulationUserTemplate.opsForHash().put(generateKey(simulation.getSeq()), userSeq,
+			redisSimulationUserDTORedisTemplate.opsForHash().put(generateKey(simulation.getSeq()), userSeq,
 					RedisSimulationUserDTO.builder()
 							.userSeq(user.getSeq())
 							.simulationSeq(simulation.getSeq())

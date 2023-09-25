@@ -46,7 +46,7 @@ public class SimulationDTO {
 
 	private Integer revenuRate; // simulation 평균 수익률
 
-	private List<SimulationUser> simulationUserList = new ArrayList<>();
+	private List<SimulationUser> simulationUserList;
 
 
 
@@ -57,6 +57,7 @@ public class SimulationDTO {
 			.title(this.title)
 			.period(this.period == null ? 0 : this.period)
 			.seedMoney(this.seedMoney == null ? 0 : this.seedMoney)
+			.simulationUserList(new ArrayList<>())
 			.build();
 	}
 }

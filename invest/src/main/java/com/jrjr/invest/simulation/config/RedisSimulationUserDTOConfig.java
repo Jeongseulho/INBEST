@@ -12,12 +12,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisSimulationUserConfig {
+public class RedisSimulationUserDTOConfig {
 
     private final RedisConnectionFactory redisConnectionFactory;
 
     @Bean
-    public RedisTemplate<String, RedisSimulationUserDTO> redisStockDtoRedisTemplate() {
+    public RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate() {
         RedisTemplate<String, RedisSimulationUserDTO> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
 
