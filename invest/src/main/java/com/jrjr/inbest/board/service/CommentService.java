@@ -76,7 +76,7 @@ public class CommentService {
 		CoCommentEntity coCommentEntity = coCommentRepository.findById(id).orElse(null);
 
 		if (coCommentEntity == null) {
-			throw new Exception("해당 덧글이 없습니다.");
+			throw new Exception("해당 대댓글이 없습니다.");
 		}
 
 		return coCommentEntity.toCommentDTO();

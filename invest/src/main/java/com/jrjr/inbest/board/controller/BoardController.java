@@ -374,7 +374,7 @@ public class BoardController {
 		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
-		CommentDTO originalCocomment = commentService.findCocommentBySeq(commentSeq);
+		CommentDTO originalCocomment = commentService.findCocommentBySeq(cocommentSeq);
 		UserDTO writer = userService.findBySeq(originalCocomment.getUserSeq());
 
 		log.info("원본 대댓글 : " + originalCocomment);
