@@ -8,6 +8,7 @@ import requests
 from rest_framework.decorators import (api_view)
 from textblob import TextBlob
 from googletrans import Translator
+import time
 
 
 # 메인 뉴스 목록
@@ -45,6 +46,8 @@ def MainNewsList(request):
 
         news_data.append(data_dict)
 
+    time.sleep(1)
+
     return JsonResponse(news_data, safe=False)
 
 
@@ -54,7 +57,7 @@ def BreakingNewsList(request):
     url = f'https://www.mk.co.kr/news/economy/latest/'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
-    res = requests.get(url, headers=headers)
+    res = requests.get(url, headers=headers, verify=False)
     soup = BeautifulSoup(res.text, 'lxml')
 
     newslist = soup.select(".news_list .news_node")
@@ -73,17 +76,19 @@ def BreakingNewsList(request):
             
         title = news.select_one(".news_ttl").text.strip()
         content = news.select_one(".news_desc").text.strip()
-        time = news.select_one(".time_info").text.strip()
+        newstime = news.select_one(".time_info").text.strip()
 
         data_dict = {
             'title':title,
             'content':content,
             'image_url':image_url,
-            'time' : time,
+            'time' : newstime,
             'link_url' : link_url
         }
 
         news_data.append(data_dict)
+
+    time.sleep(1)
 
     return JsonResponse(news_data, safe=False)
 
@@ -94,7 +99,7 @@ def IndustryByNewsList(request, category):
     url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
-    res = requests.get(url, headers=headers)
+    res = requests.get(url, headers=headers, verify=False)
     soup = BeautifulSoup(res.text, 'lxml')
 
     newslist = soup.select(".list .item-box01")
@@ -127,6 +132,8 @@ def IndustryByNewsList(request, category):
 
         news_data.append(data_dict)
 
+    time.sleep(1)
+
     return JsonResponse(news_data, safe=False)
 
 
@@ -151,7 +158,7 @@ def CompanyByNewsList(request, company_code):
 
         title = news.select_one(".tit").text.strip()
         link = "https://finance.naver.com" + news.select_one(".tit")['href']
-        time = news.select_one(".date").text.strip()
+        newstime = news.select_one(".date").text.strip()
         info = news.select_one(".info").text.strip()
 
         if info == '헤럴드경제':
@@ -206,7 +213,7 @@ def CompanyByNewsList(request, company_code):
         data_dict ={
             'title': title,
             'link_url' : link,
-            'time': time,
+            'time': newstime,
             'sentiment_analysis': sentiment_analysis,
             'image_url' : image_url,
             'info' : info
@@ -214,5 +221,7 @@ def CompanyByNewsList(request, company_code):
 
 
         news_data.append(data_dict)
+
+    time.sleep(1)
 
     return JsonResponse(news_data, safe=False)

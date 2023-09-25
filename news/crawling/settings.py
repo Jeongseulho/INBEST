@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # 'chatbot',
     'news',
     'corsheaders',
     'django.contrib.admin',
