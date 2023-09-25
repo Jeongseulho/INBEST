@@ -190,8 +190,7 @@ public class BoardController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		loginEmail = jwtProvider.getEmail(request);
-
+		
 		//로그인한 유저가 좋아요를 누른 경우 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
 			List<UserDTO> likeUserList = boardDTOList.get(i).getLikesUserList();
