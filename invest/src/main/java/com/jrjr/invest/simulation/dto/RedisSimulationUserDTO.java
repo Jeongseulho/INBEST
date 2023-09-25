@@ -24,6 +24,9 @@ public class RedisSimulationUserDTO {
 	private Long userSeq;
 
 	@NotNull
+	private Integer period;
+
+	@NotNull
 	private Long startMoney;
 
 	private Long currentMoney;
@@ -32,18 +35,11 @@ public class RedisSimulationUserDTO {
 
 	private Integer currentRank;
 
-	@NotNull
-	private LocalDateTime startTime;
+	private LocalDateTime startDate;
 
-	@NotNull
-	private Integer period;
+	private LocalDateTime finishedDate;
 
-	@NotNull
-	private Boolean linkingMode;
+	private Boolean isExited;
 
-	private Boolean leave;
-
-	private Boolean gameOver;
-
-	private Boolean manager;
+	private Boolean isOwner;
 }

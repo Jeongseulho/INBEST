@@ -24,38 +24,36 @@ public class Simulation {
 	private Long seq;
 
 	@Column(nullable = false)
-	private String simulationName;
+	private String title;
 
 	@Column(nullable = false)
-	private Boolean linkingMode;
-
-	@Column(nullable = false)
-	private LocalDateTime startTime;
+	private LocalDateTime startDate;
 
 	@Column(nullable = false)
 	private Integer period;
 
 	@Column(nullable = false)
-	private Integer memberCnt;
+	private Long seedMoney;
 
 	@Column(nullable = false)
-	private Boolean gameOver;
+	private Integer memberNum;
 
-	private Integer rate; // simulation 평균 수익률
+	@Column(nullable = false)
+	private LocalDateTime finishedDate;
+
+	@Column(nullable = false)
+	private Integer revenuRate; // simulation 평균 수익률
 
 	@Builder
-	public Simulation(String simulationName, Boolean linkingMode, LocalDateTime startTime, Integer period,
-		Integer memberCnt, Boolean gameOver) {
-		this.simulationName = simulationName;
-		this.linkingMode = linkingMode;
-		this.startTime = startTime;
+	public Simulation(String title, Long seedMoney, LocalDateTime startDate, Integer period, Integer memberNum, LocalDateTime finishedDate) {
+		this.title = title;
+		this.startDate = startDate;
 		this.period = period;
-		this.memberCnt = memberCnt;
-		this.gameOver = gameOver;
+		this.memberNum = memberNum;
+		this.finishedDate = finishedDate;
 	}
 
-	public void updateSimulationRate(Integer rate) {
-		this.gameOver = true;
-		this.rate = rate;
+	public void updateSimulationRate(Integer revenuRate) {
+		this.revenuRate = revenuRate;
 	}
 }

@@ -22,20 +22,20 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Value("${spring.rabbitmq.password}")
 	private String password;
 
+
 	// 웹소켓 핸드셰이크 커넥션을 생성할 경로
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/stomp").setAllowedOrigins("*");
+		registry.addEndpoint("/ws").setAllowedOrigins("*");
 	}
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		// registry.setPathMatcher(new AntPathMatcher(".")); // URL을 / -> .으로
-		registry.setApplicationDestinationPrefixes("/pub"); // @MessageMapping으로 연결
-		// registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue");
-		registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue")
+		registry.setApplicationDestinationPrefixes("/app"); // @MessageMapping으로 연결
+		registry.enableStompBrokerRelay("/topic")
 			.setRelayHost(host)
-			.setRelayPort(61613) // RabbitMQ STOMP 기본 포트
+			.setRelayPort(61613)
 			.setSystemLogin(username)
 			.setSystemPasscode(password)
 			.setClientLogin(username)
