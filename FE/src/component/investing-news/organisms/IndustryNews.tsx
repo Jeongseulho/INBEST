@@ -3,7 +3,7 @@ import IndustryNewsItem from "../molecules/IndustryNewsItem";
 import IndustryTag from "../molecules/IndustryTag";
 import { useIndustryNews } from "./useIndustryNews";
 import { INDUSTRY_NEWS_TAB } from "../../../constant/INDUSTRY_NEWS_TAB";
-import Skeleton from "react-loading-skeleton";
+import NewsSkeleton from "../molecules/NewsSkeleton";
 
 const IndustryNews = () => {
   const { data, isLoading, curIndustryTab, setCurIndustryTab } = useIndustryNews();
@@ -25,9 +25,18 @@ const IndustryNews = () => {
         ))}
       </div>
       {isLoading ? (
-        <Skeleton count={5} />
+        <div className=" grid grid-cols-2 gap-4">
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+        </div>
       ) : (
-        <div className=" grid grid-cols-2 ">
+        <div className=" grid grid-cols-2 gap-4">
           {data?.map((news, idx) => (
             <IndustryNewsItem
               key={idx}

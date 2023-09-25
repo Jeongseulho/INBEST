@@ -1,7 +1,7 @@
 import News from "../../investing-news/molecules/News";
 import { useMainNews } from "./useMainNews";
 import news from "../../../asset/image/news.png";
-import Skeleton from "react-loading-skeleton";
+import NewsSkeleton from "../molecules/NewsSkeleton";
 
 const MainNews = () => {
   const { data, isLoading } = useMainNews();
@@ -12,7 +12,13 @@ const MainNews = () => {
         <h3>주요 뉴스</h3>
       </div>
       {isLoading ? (
-        <Skeleton count={5} />
+        <div className=" flex flex-col gap-4">
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+        </div>
       ) : (
         <div className=" flex flex-col gap-4 ">
           {data?.map((news, idx) => (
