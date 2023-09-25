@@ -94,7 +94,7 @@ public class BoardController {
 	@DeleteMapping("/{boardId}")
 	public ResponseEntity<Map<String, Object>> deleteBoard(
 		@PathVariable String boardId, HttpServletRequest request) throws Exception {
-		log.info("========== 게시판 수정 시작 ==========");
+		log.info("========== 게시판 삭제 시작 ==========");
 		log.info("입력 받은 데이터");
 		log.info(boardId);
 
@@ -113,7 +113,7 @@ public class BoardController {
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);
 
-		log.info("========== 게시판 수정 종료 ==========");
+		log.info("========== 게시판 삭제 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
