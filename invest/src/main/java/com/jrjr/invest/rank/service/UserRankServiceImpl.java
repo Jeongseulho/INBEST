@@ -98,8 +98,8 @@ public class UserRankServiceImpl implements UserRankService {
 	}
 
 	@Override
-	public RedisUserDTO getMyRankingInfo(Long seq) {
-		return userRankRedisRepository.getMyRankingInfo(seq);
+	public RedisUserDTO getMyUserRankingInfo(Long seq) {
+		return userRankRedisRepository.getMyUserRankingInfo(seq);
 	}
 
 	@Override

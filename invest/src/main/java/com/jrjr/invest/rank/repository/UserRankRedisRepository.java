@@ -118,7 +118,7 @@ public class UserRankRedisRepository {
 		}
 	}
 
-	public RedisUserDTO getMyRankingInfo(Long seq) {
+	public RedisUserDTO getMyUserRankingInfo(Long seq) {
 		Set<RedisUserDTO> userDtoSet = this.getUserInfoSet(0, -1);
 		for (RedisUserDTO redisUserDto : userDtoSet) {
 			if (redisUserDto.getSeq().equals(seq)) {
