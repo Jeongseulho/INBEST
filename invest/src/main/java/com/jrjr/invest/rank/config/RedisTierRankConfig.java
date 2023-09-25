@@ -18,7 +18,7 @@ public class RedisTierRankConfig {
 	private final RedisConnectionFactory redisConnectionFactory;
 
 	@Bean
-	public RedisTemplate<String, RedisTierRankDTO> redisTierRankDtoRedisTemplate() {
+	public RedisTemplate<String, RedisTierRankDTO> tierRankRedisTemplate() {
 		RedisTemplate<String, RedisTierRankDTO> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 

@@ -1,4 +1,4 @@
-package com.jrjr.invest.simulation.config;
+package com.jrjr.invest.rank.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,18 +7,18 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.jrjr.invest.simulation.dto.RedisStockDTO;
+import com.jrjr.invest.rank.dto.RedisStockDTO;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisStockDTOConfig {
+public class RedisStockConfig {
 
 	private final RedisConnectionFactory redisConnectionFactory;
 
 	@Bean
-	public RedisTemplate<String, RedisStockDTO> redisStockDTORedisTemplate() {
+	public RedisTemplate<String, RedisStockDTO> stockRedisTemplate() {
 		RedisTemplate<String, RedisStockDTO> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 
