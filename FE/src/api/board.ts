@@ -40,3 +40,8 @@ export const likeBoard = async (boardSeq: string, userSeq: number): Promise<ApiS
   const { data } = await apiWithAuth.put(`/${boardSeq}/likes/${userSeq}`);
   return data;
 };
+
+export const deleteBoard = async (boardSeq: string): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.delete(`${boardSeq}`);
+  return data;
+};

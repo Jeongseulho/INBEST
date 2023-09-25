@@ -11,6 +11,7 @@ export interface Board {
   writer: Writer;
   createdDate: string;
   lastModifiedDate: string;
+  loginUserLike: boolean;
 }
 export interface Writer {
   seq: number;

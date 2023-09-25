@@ -1,16 +1,16 @@
 import { useBoardDetailContent } from "./useBoardDetailContent";
 import { MdDateRange } from "react-icons/md";
 import { AiOutlineEye } from "react-icons/ai";
-import { BiLike } from "react-icons/bi";
+import { BiLike, BiSolidLike } from "react-icons/bi";
 import { BiCommentDetail } from "react-icons/bi";
 import Dompurify from "dompurify";
 import BoardCommentCreate from "../atoms/BoardCommentCreate";
 import BoardComment from "../atoms/BoardComment";
-
+import userStore from "../../../store/userStore";
+import BoardMenubar from "../atoms/BoardMenubar";
 const BoardDetailContent = () => {
   const {
     board,
-    loginUserLike,
     setCommentText,
     onPostComment,
     commentText,
@@ -19,10 +19,20 @@ const BoardDetailContent = () => {
     onPostCocomment,
     showCommentCreate,
     setShowCommentCreate,
+    onLike,
+    onDeleteBoard,
   } = useBoardDetailContent();
+  const { userInfo } = userStore();
   return (
     <>
-      <div className="text-2xl ms-3 pt-5">{board?.title}</div>
+      <header className="flex justify-between">
+        <div className="text-2xl ms-3 mt-5">{board?.title}</div>
+        {userInfo?.seq === board?.writer.seq && (
+          <div className="text-2xl me-3 mt-5">
+            <BoardMenubar board={board!} cocomment={null} comment={null} onDelete={onDeleteBoard} />
+          </div>
+        )}
+      </header>
       <div className="flex justify-between mt-10 text-lg border-b-2 pb-2 mx-3">
         <div className="flex justify-between  w-48">
           <div className="flex items-center">
@@ -48,8 +58,13 @@ const BoardDetailContent = () => {
           {board && <div dangerouslySetInnerHTML={{ __html: Dompurify.sanitize(board.context) }}></div>}
           <div className="absolute bottom-5 flex mt-10">
             <div className="flex items-center text-lg">
-              <div className="flex items-center hover:cursor-pointer">
-                <BiLike />
+              <div className="flex items-center hover:cursor-pointer" onClick={onLike}>
+                {board?.loginUserLike && (
+                  <div className="text-blue-400">
+                    <BiSolidLike />
+                  </div>
+                )}
+                {!board?.loginUserLike && <BiLike />}
                 <span className="ms-1 me-3">{board?.likes}</span>
               </div>
               <BiCommentDetail />

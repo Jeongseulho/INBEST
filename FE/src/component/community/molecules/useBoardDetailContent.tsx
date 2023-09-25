@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { getBoardDetail, postCocomment, postComment } from "../../../api/board";
-import { useSearchParams } from "react-router-dom";
+import { getBoardDetail, likeBoard, postCocomment, postComment, deleteBoard } from "../../../api/board";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import userStore from "../../../store/userStore";
 import { toast } from "react-toastify";
@@ -14,6 +14,8 @@ export const useBoardDetailContent = () => {
   const board = data?.board;
   const loginUserLike = data?.loginUserLike;
   const [showCommentCreate, setShowCommentCreate] = useState(false);
+  const navigator = useNavigate();
+  console.log(data);
   const onPostComment = async () => {
     if (commentText.trim() === "") {
       toast.error("댓글을 입력해 주세요");
@@ -44,6 +46,24 @@ export const useBoardDetailContent = () => {
     }
   };
 
+  const onLike = async () => {
+    try {
+      await likeBoard(board!.seq, userInfo!.seq);
+      refetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const onDeleteBoard = async (boardSeq: string) => {
+    if (!window.confirm("정말로 삭제하시겠습니까?")) return;
+    try {
+      await deleteBoard(boardSeq);
+      alert("삭제되었습니다.");
+      navigator(-1);
+    } catch (err) {
+      toast.error("삭제에 실패했습니다.");
+    }
+  };
   return {
     board,
     loginUserLike,
@@ -58,5 +78,7 @@ export const useBoardDetailContent = () => {
     onPostCocomment,
     showCommentCreate,
     setShowCommentCreate,
+    onLike,
+    onDeleteBoard,
   };
 };
