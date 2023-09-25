@@ -176,7 +176,7 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
-		HttpServletRequest request) {
+		HttpServletRequest request) throws Exception {
 		log.info("========== 좋아요 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
@@ -218,11 +218,11 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllViewBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
-		HttpServletRequest request) {
+		HttpServletRequest request) throws Exception {
 		log.info("========== 조회수 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
-		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageSize, period);
+		List<BoardDTO> boardDTOList = boardService.findMostViewPosts(pageSize, period);
 
 		log.info("검색 결과 : " + boardDTOList);
 		//토큰으로 유저 이메일 얻기

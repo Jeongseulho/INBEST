@@ -214,7 +214,7 @@ public class BoardService {
 		return boardEntity.toBoardDTO();
 	}
 
-	public List<BoardDTO> findMostLikesPosts(int pageSize, int period) {
+	public List<BoardDTO> findMostLikesPosts(int pageSize, int period) throws Exception {
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = end.minusDays(period);
 
@@ -227,13 +227,21 @@ public class BoardService {
 		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
 
 		for (BoardEntity boardEntity : boardEntityList) {
-			boardDTOList.add(boardEntity.toBoardDTO());
+			BoardDTO boardDTO = boardEntity.toBoardDTO();
+
+			if (boardDTO.getUserSeq() != null) {
+				UserDTO userDTO = userService.findBySeq(boardDTO.getUserSeq());
+				log.info("작성자 : " + userDTO.toString());
+				boardDTO.setWriter(userDTO);
+			}
+
+			boardDTOList.add(boardDTO);
 		}
 
 		return boardDTOList;
 	}
 
-	public List<BoardDTO> findMostViewPosts(int pageSize, int period, String type) {
+	public List<BoardDTO> findMostViewPosts(int pageSize, int period) throws Exception {
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = end.minusDays(period);
 
@@ -245,24 +253,13 @@ public class BoardService {
 		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
 
 		for (BoardEntity boardEntity : boardEntityList) {
-			boardDTOList.add(boardEntity.toBoardDTO());
-		}
+			BoardDTO boardDTO = boardEntity.toBoardDTO();
 
-		return boardDTOList;
-	}
-
-	public List<BoardDTO> findMostRepliesPosts(int pageSize, int period, String type) {
-		LocalDateTime end = LocalDateTime.now();
-		LocalDateTime start = end.minusDays(period);
-
-		// 좋아요(likes)가 많은 순으로 정렬하고 상위 10개를 가져옵니다.
-		PageRequest pageRequest =
-			PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "view"));
-
-		List<BoardEntity> boardEntityList = boardRepository.findByCreatedDateBetween(start, end, pageRequest);
-		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
-
-		for (BoardEntity boardEntity : boardEntityList) {
+			if (boardDTO.getUserSeq() != null) {
+				UserDTO userDTO = userService.findBySeq(boardDTO.getUserSeq());
+				log.info("작성자 : " + userDTO.toString());
+				boardDTO.setWriter(userDTO);
+			}
 			boardDTOList.add(boardEntity.toBoardDTO());
 		}
 
