@@ -127,7 +127,8 @@ public class BoardController {
 	})
 	@GetMapping("")
 	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "pageNo") int page,
-		@RequestParam(name = "pageSize") int size) throws Exception {
+		@RequestParam(name = "pageSize") int size,
+		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 목록 검색 시작 ==========");
 		log.info("page : " + page + " size : " + size);
 
@@ -135,11 +136,31 @@ public class BoardController {
 
 		log.info("검색 결과 : " + boardDTOList);
 
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = "";
+
+		try {
+			loginEmail = jwtProvider.getEmail(request);
+			log.info("로그인 유저 이메일 : " + loginEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		loginEmail = jwtProvider.getEmail(request);
+
+		//로그인한 유저가 좋아요를 누른 경우 처리
+		for (int i = 0; i < boardDTOList.size(); i++) {
+			List<UserDTO> likeUserList = boardDTOList.get(i).getLikesUserList();
+			for (int j = 0; j < likeUserList.size(); j++) {
+				if (likeUserList.get(j).getEmail().equals(loginEmail)) {
+					boardDTOList.get(i).setLoginLike(true);
+				}
+			}
+		}
+
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);
 		resultMap.put("board", boardDTOList);
-		resultMap.put("total", boardDTOList);
-
+		resultMap.put("total", boardDTOList.size());
 		log.info("========== 게시판 검색 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -152,17 +173,38 @@ public class BoardController {
 	@GetMapping("/most-likes")
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
-		@RequestParam(name = "period") int period) {
+		@RequestParam(name = "period") int period,
+		HttpServletRequest request) {
 		log.info("========== 좋아요 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
 		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageSize, period);
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = "";
 
+		try {
+			loginEmail = jwtProvider.getEmail(request);
+			log.info("로그인 유저 이메일 : " + loginEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		loginEmail = jwtProvider.getEmail(request);
+
+		//로그인한 유저가 좋아요를 누른 경우 처리
+		for (int i = 0; i < boardDTOList.size(); i++) {
+			List<UserDTO> likeUserList = boardDTOList.get(i).getLikesUserList();
+			for (int j = 0; j < likeUserList.size(); j++) {
+				if (likeUserList.get(j).getEmail().equals(loginEmail)) {
+					boardDTOList.get(i).setLoginLike(true);
+				}
+			}
+		}
 		log.info("검색 결과 : " + boardDTOList);
 
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);
 		resultMap.put("board", boardDTOList);
+		resultMap.put("total", boardDTOList.size());
 
 		log.info("========== 좋아요 많은 게시판 목록 검색 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -171,17 +213,38 @@ public class BoardController {
 	@GetMapping("/most-views")
 	public ResponseEntity<Map<String, Object>> findAllViewBoards(
 		@RequestParam(name = "pageSize") int pageSize,
-		@RequestParam(name = "period") int period) {
+		@RequestParam(name = "period") int period,
+		HttpServletRequest request) {
 		log.info("========== 조회수 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
 		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageSize, period);
 
 		log.info("검색 결과 : " + boardDTOList);
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = "";
 
+		try {
+			loginEmail = jwtProvider.getEmail(request);
+			log.info("로그인 유저 이메일 : " + loginEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		loginEmail = jwtProvider.getEmail(request);
+
+		//로그인한 유저가 좋아요를 누른 경우 처리
+		for (int i = 0; i < boardDTOList.size(); i++) {
+			List<UserDTO> likeUserList = boardDTOList.get(i).getLikesUserList();
+			for (int j = 0; j < likeUserList.size(); j++) {
+				if (likeUserList.get(j).getEmail().equals(loginEmail)) {
+					boardDTOList.get(i).setLoginLike(true);
+				}
+			}
+		}
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);
 		resultMap.put("board", boardDTOList);
+		resultMap.put("total", boardDTOList.size());
 
 		log.info("========== 조회수 많은 게시판 목록 검색 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -226,17 +289,28 @@ public class BoardController {
 	}
 
 	@Operation(summary = "게시물 좋아요")
-	@PutMapping("/{boardSeq}/likes/{userSeq}")
+	@PutMapping("/{boardSeq}/likes")
 	public ResponseEntity<Map<String, Object>> updateBoardLikes(
-		@PathVariable(value = "boardSeq") String boardId, @PathVariable(value = "userSeq") Long userSeq) throws
+		@PathVariable(value = "boardSeq") String boardId,
+		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 게시판 좋아요 시작 ==========");
-		log.info("유저 seq : " + userSeq + " 게시판 seq " + boardId);
+		//토큰으로 유저 이메일 얻기
+		String loginEmail = jwtProvider.getEmail(request);
+		if (loginEmail.equals("")) {
+			throw new Exception("로그인 이메일 정보가 없습니다.");
+		}
 
-		BoardDTO boardDTO = boardService.updateLikes(userSeq, boardId);
+		log.info("로그인 유저 이메일 : " + loginEmail);
+		UserDTO userDTO = userService.findByEmail(loginEmail);
+		if (loginEmail.equals("")) {
+			throw new Exception("해당 이메일의 유저 정보가 없습니다.");
+		}
+
+		log.info("게시판 seq " + boardId);
+		BoardDTO boardDTO = boardService.updateLikes(userDTO.getSeq(), boardId);
 
 		log.info("좋아요 결과 : " + boardDTO);
-
 		Map<String, Object> resultMap = new HashMap<>();
 
 		if (boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()) {

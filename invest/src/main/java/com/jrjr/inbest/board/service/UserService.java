@@ -25,6 +25,16 @@ public class UserService {
 		return userEntity.toUserDTO();
 	}
 
+	public UserDTO findByEmail(String email) throws Exception {
+		UserEntity userEntity = userRepository.findByEmail(email);
+
+		if (userEntity == null) {
+			throw new Exception("해당 유저가 없습니다.");
+		}
+
+		return userEntity.toUserDTO();
+	}
+
 	public Boolean checkExistByEmail(String loginEmail, Long userSeq) {
 		UserEntity userEntity = userRepository.findBySeq(userSeq);
 
@@ -40,5 +50,5 @@ public class UserService {
 
 		return true;
 	}
-	
+
 }

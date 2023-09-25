@@ -4,16 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.xml.stream.events.Comment;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jrjr.inbest.board.entity.BoardEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,6 +38,8 @@ public class BoardDTO implements Serializable {
 	private String context;
 	@Schema(description = "제목")
 	private String title;
+	@Schema(description = "로그인한 유저가 좋아요를 눌렀는지 확인하는 변수")
+	private boolean loginLike;
 	@Schema(description = "게시물에 올리는 사진들")
 	private List<MultipartFile> files;
 	@Schema(description = "게시물에 사용되고 있는 사진들")
@@ -58,7 +55,7 @@ public class BoardDTO implements Serializable {
 	@Schema(description = "최종 글 수정일")
 	private LocalDateTime lastModifiedDate;
 
-	public BoardEntity toBoardEntity(){
+	public BoardEntity toBoardEntity() {
 		log.info(this.toString());
 		return BoardEntity.builder().
 			userSeq(this.userSeq).view(this.view == null ? 0 : this.view)
