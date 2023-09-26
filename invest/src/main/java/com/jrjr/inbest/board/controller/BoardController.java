@@ -289,12 +289,14 @@ public class BoardController {
 		} else {
 			resultMap.put("success", true);
 			boolean like = false;
-
-			for (UserDTO likeUserDTO : boardDTO.getLikesUserList()) {
-				if (likeUserDTO.getEmail().equals(loginEmail)) {
-					like = true;
+			if (boardDTO.getLikesUserList() != null) {
+				for (UserDTO likeUserDTO : boardDTO.getLikesUserList()) {
+					if (likeUserDTO.getEmail().equals(loginEmail)) {
+						like = true;
+					}
 				}
 			}
+
 			resultMap.put("loginUserLike", like);
 		}
 		resultMap.put("board", boardDTO);
