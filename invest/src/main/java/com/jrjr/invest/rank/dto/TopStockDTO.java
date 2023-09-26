@@ -18,7 +18,9 @@ public class TopStockDTO {
 
 	private String stockName;
 
-	private String stockMarketPrice;
+	private Long stockMarketPrice;
+
+	private Long totalStockPrice;
 
 	private String stockImgSearchName;
 }
