@@ -2,7 +2,6 @@ package com.jrjr.invest.simulation.controller;
 
 import java.util.List;
 
-import com.jrjr.invest.simulation.dto.GroupDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
+import com.jrjr.invest.simulation.dto.GroupDTO;
 import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.service.GroupService;
 
@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public class GroupController {
 
 	private final GroupService groupService;
-
 
 	// 그룹 생성
 	@PostMapping("/")
@@ -60,9 +59,9 @@ public class GroupController {
 	// 내 그룹 - 진행 중 상세
 	// 참여 가능 그룹 - 상세
 	@GetMapping("/details")
-	ResponseEntity<?> getDetails(@RequestParam String userNickname, @RequestParam String progressState) {
+	ResponseEntity<?> getDetails(@RequestParam Long simulationSeq, @RequestParam String progressState) {
 
-		Object detailsDTO = groupService.getDetails(userNickname, progressState);
+		Object detailsDTO = groupService.getDetails(simulationSeq, progressState);
 		// 내 그룹 - 시작 전 상세
 		if (progressState == "waiting") {
 
@@ -77,9 +76,10 @@ public class GroupController {
 		if (progressState == "waiting") {
 
 		}
-	    // {simulationSeq : long, title : string, currentMemberNum : int, seedMoney : long, averageTier : int, period : int}
-	}
+		// {simulationSeq : long, title : string, currentMemberNum : int, seedMoney : long, averageTier : int, period : int}
 
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 	// 그룹 참여하기
 	// 그룹 나가기 | 방장 나가기
