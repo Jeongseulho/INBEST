@@ -28,14 +28,14 @@ public class GroupController {
 	private final GroupService groupService;
 
 	// 그룹 생성
-	@PostMapping("/")
+	@PostMapping()
 	ResponseEntity<?> createGroup(@RequestBody CreatedGroupDTO groupDTO) throws Exception {
 		groupService.createGroup(groupDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// 그룹 생성 시, 초대를 위한 유저 목록 검색
-	@GetMapping("/")
+	@GetMapping()
 	ResponseEntity<?> searchUsers(@RequestParam String keyword) {
 		List<UserDTO> users = groupService.searchUsers(keyword);
 		return new ResponseEntity<>(users, HttpStatus.OK);
@@ -61,23 +61,18 @@ public class GroupController {
 	@GetMapping("/details")
 	ResponseEntity<?> getDetails(@RequestParam Long simulationSeq, @RequestParam String progressState) {
 
-		Object detailsDTO = groupService.getDetails(simulationSeq, progressState);
 		// 내 그룹 - 시작 전 상세
 		if (progressState.equals("waiting")) {
-
+			groupService.getDetails(simulationSeq, progressState);
 		}
-		// {seedMoney : long, period: int, averageTier : int, currentMemberImage : Array<string>, ownerSeq : long}
 		// 내 그룹 - 진행 중 상세
 		if (progressState.equals("inProgress")) {
 
 		}
-		// {seedMoney : long, averageTier : int, rankInGroup : int, rankInGroupFluctuation : int, currentMemberImage : Array<string>, startDate : LocalDate, endDate : LocalDate}
 		// 참여 가능 그룹 - 상세
 		if (progressState.equals("waiting")) {
 
 		}
-		// {simulationSeq : long, title : string, currentMemberNum : int, seedMoney : long, averageTier : int, period : int}
-
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
