@@ -71,11 +71,11 @@ export const useCreateModal = () => {
     onMutate: async (groupSetting) => {
       if (groupSetting.title.trim().length < 1) {
         toast.error("방 제목을 1자이상 입력해주세요.");
-        return;
+        throw new Error("방 제목을 1자이상 입력해주세요.");
       }
       const { userInfo } = userStore();
       dispatch({ type: "OWNER_SEQ", payload: userInfo?.seq as number });
-      return await createGroup(groupSetting);
+      return groupSetting;
     },
     onSuccess: () => {
       onNextStep();

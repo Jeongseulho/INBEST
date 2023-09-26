@@ -10,9 +10,11 @@ import RemainPeriod from "../atoms/RemainPeriod";
 import { useQuery } from "react-query";
 import { getInProgressGroupDetail } from "../../../api/group";
 import spinner from "../../../asset/image/spinner.svg";
+import { useNavigate } from "react-router-dom";
 
 const InProgressGroupModal = () => {
   const { modalType, closeModal, simulationSeq } = modalStore();
+  const navigate = useNavigate();
   const { isLoading, data } = useQuery(["detailInProgressGroup", simulationSeq], () => {
     return getInProgressGroupDetail(simulationSeq);
   });
@@ -54,7 +56,15 @@ const InProgressGroupModal = () => {
           </div>
 
           <p className=" font-regular text-md text-myGray ">모의투자가 진행중인 그룹입니다.</p>
-          <button className=" main-dark-btn">모의투자 하러가기</button>
+          <button
+            onClick={() => {
+              navigate(`/invest/${simulationSeq}`);
+              closeModal();
+            }}
+            className=" main-dark-btn"
+          >
+            모의투자 하러가기
+          </button>
         </>
       )}
     </Modal>
