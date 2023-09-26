@@ -1,7 +1,6 @@
 package com.jrjr.invest.simulation.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -42,8 +41,8 @@ public class GroupController {
 	// 그룹 생성 시, 초대를 위한 유저 목록 검색
 	@GetMapping()
 	ResponseEntity<?> searchUsers(@RequestParam String keyword) throws UnsupportedEncodingException {
-		String decodedKeyword = URLDecoder.decode(keyword, "UTF-8");
-		log.info(keyword + " -> " + decodedKeyword);
+		// String decodedKeyword = URLDecoder.decode(keyword, "UTF-8");
+		log.info(keyword);
 		List<UserDTO> users = groupService.searchUsers(keyword);
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
