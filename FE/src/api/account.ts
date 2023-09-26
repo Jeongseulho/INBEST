@@ -55,6 +55,7 @@ export const upadateUserInfo = async (seq: number, user: FormData): Promise<ApiG
 
 export const passwordUpdate = async (seq: number, password: string): Promise<ApiSuccessMessage> => {
   const { data } = await apiWithAuth.put(`/users/${seq}/password`, { password });
+  console.log(data);
   return data;
 };
 export const changeDefaultImg = async (seq: number): Promise<ApiSuccessMessage> => {

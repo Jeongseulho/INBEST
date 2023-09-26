@@ -4,7 +4,7 @@ import { getImgSrc } from "../../../util/getImgSrc";
 import { removeHtmltag } from "../../../util/removeHtmltag";
 import { AiOutlineEye } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
-import { BiCommentDetail } from "react-icons/bi";
+import { BiCommentDetail, BiSolidLike } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useBoardItem } from "./useBoardItem";
 import { getTimeAgo } from "../../../util/formatDateSign";
@@ -38,7 +38,12 @@ const BoardItem = ({ board }: { board: Board }) => {
               className="flex items-center hover:cursor-pointer hover:text-blue-600"
               onClick={() => onLike(board.seq)}
             >
-              <BiLike />
+              {board.loginLike && (
+                <div className="text-blue-400">
+                  <BiSolidLike />
+                </div>
+              )}
+              {!board.loginLike && <BiLike />}
               <span className="ms-1">{board.likes}</span>
             </div>
 

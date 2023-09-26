@@ -48,7 +48,7 @@ export const useBoardDetailContent = () => {
 
   const onLike = async () => {
     try {
-      await likeBoard(board!.seq, userInfo!.seq);
+      await likeBoard(board!.seq);
       refetch();
     } catch (err) {
       console.log(err);

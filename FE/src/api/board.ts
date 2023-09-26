@@ -36,12 +36,45 @@ export const postCocomment = async (
   return data;
 };
 
-export const likeBoard = async (boardSeq: string, userSeq: number): Promise<ApiSuccessMessage> => {
-  const { data } = await apiWithAuth.put(`/${boardSeq}/likes/${userSeq}`);
+export const likeBoard = async (boardSeq: string): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.put(`/${boardSeq}/likes`);
   return data;
 };
 
 export const deleteBoard = async (boardSeq: string): Promise<ApiSuccessMessage> => {
   const { data } = await apiWithAuth.delete(`${boardSeq}`);
+  return data;
+};
+export const deleteComment = async (boardSeq: string, commentSeq: string): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.delete(`${boardSeq}/comments/${commentSeq}`);
+  return data;
+};
+
+export const putBoard = async (
+  boardSeq: string,
+  userSeq: number,
+  context: string,
+  title: string
+): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.put(`${boardSeq}`, {
+    userSeq,
+    context,
+    title,
+  });
+  console.log(data);
+
+  return data;
+};
+export const putComment = async (boardSeq: string, commentSeq: string, context: string): Promise<Comment> => {
+  const { data } = await apiWithAuth.put(`/${boardSeq}/comments/${commentSeq}`, { context });
+  return data;
+};
+export const putCocomment = async (
+  boardSeq: string,
+  commentSeq: string,
+  context: string,
+  cocomentSeq: string
+): Promise<Comment> => {
+  const { data } = await apiWithAuth.put(`/${boardSeq}/comments/${commentSeq}/cocoments/${cocomentSeq}`, { context });
   return data;
 };
