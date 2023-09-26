@@ -19,13 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @ToString
-public class MyInProgressDetailsDTO {
-
+public class MyInProgressGroupDetailsDTO {
 	private Long seedMoney;
 	private Integer averageTier;
 	private Integer rankInGroup;
 	private Integer rankInGroupFluctuation;
-	private List<String> currentMemberImage;
+	private List<String> currentMemberImageList;
 	private LocalDateTime startDate;
-	private LocalDateTime endDate;
+	private LocalDateTime finishedDate;
 }

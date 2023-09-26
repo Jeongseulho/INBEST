@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.GroupDTO;
+import com.jrjr.invest.simulation.dto.JoinableGroupDetailsDTO;
+import com.jrjr.invest.simulation.dto.MyInProgressGroupDetailsDTO;
+import com.jrjr.invest.simulation.dto.MyWaitingGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
 import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.entity.Simulation;
@@ -101,6 +104,7 @@ public class GroupService {
 		}
 	}
 
+	// redis Key 생성
 	private String generateKey(Long seq) {
 		return "simulation_" + seq.toString();
 	}
@@ -163,7 +167,56 @@ public class GroupService {
 		return groupList;
 	}
 
-	public Object getDetails(Long simulationSeq, String progressState) {
-		return "";
+	public MyWaitingGroupDetailsDTO getMyWaitingGroupDetails(Long simulationSeq) {
+		log.info("[내 대기중인 그룹 - 상세]");
+
+		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
+		return MyWaitingGroupDetailsDTO.builder()
+			.title(simulation.getTitle())
+			.seedMoney(simulation.getSeedMoney())
+			.period(simulation.getPeriod())
+			.averageTier(null) // 추후에 추가 예정
+			.ownerSeq(simulation.getOwner().getSeq())
+			.currentMemberImageList(getMemberImageList(simulationSeq))
+			.build();
+	}
+
+	public MyInProgressGroupDetailsDTO getMyInProgressGroupDetails(Long simulationSeq) {
+		log.info("[내 진행중인 그룹 - 상세]");
+
+		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
+
+		return MyInProgressGroupDetailsDTO.builder()
+			.seedMoney(simulation.getSeedMoney())
+			.currentMemberImageList(getMemberImageList(simulationSeq))
+			.startDate(simulation.getStartDate())
+			.averageTier(null) // 추후에 추가 예정
+			.rankInGroup(null) // 추후에 추가 예쩡
+			.rankInGroupFluctuation(null) // 추후에 추가 예정
+			.finishedDate(simulation.getFinishedDate())
+			.build();
+	}
+
+	public JoinableGroupDetailsDTO getJoinableGroupDetails(Long simulationSeq) {
+		log.info("[참여 가능 그룹 - 상세]");
+		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
+		return JoinableGroupDetailsDTO.builder()
+			.simulationSeq(simulationSeq)
+			.title(simulation.getTitle())
+			.currentMemberNum(simulation.getMemberNum())
+			.seedMoney(simulation.getSeedMoney())
+			.averageTier(null) // 추후에 추가 예정
+			.period(simulation.getPeriod())
+			.build();
+	}
+
+	// 멤버 프로필 이미지 리스트 구하기
+	private List<String> getMemberImageList(Long simulationSeq) {
+		List<SimulationUser> simulationUserList = simulationUserRepository.findBySimulationSeq(simulationSeq);
+		List<String> memberImageList = new ArrayList<>();
+		for (SimulationUser simulationUser : simulationUserList) {
+			memberImageList.add(simulationUser.getUser().getProfileImgSearchName());
+		}
+		return memberImageList;
 	}
 }
