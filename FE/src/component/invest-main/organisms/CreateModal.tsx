@@ -69,7 +69,6 @@ const CreateModal = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          transition: "all 0.3s ease",
         },
         overlay: OVERLAY_MODAL_STYLE,
       }}
