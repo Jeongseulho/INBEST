@@ -96,7 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 		// accessToken 재발급
 		LoginDto loginDto = jwtProvider.getUserInfoFromToken(refreshToken);
-		AccessTokenDto accessTokenDto = jwtProvider.generateAccessToken(loginDto.getEmail(), loginDto.getRole());
+		AccessTokenDto accessTokenDto = jwtProvider.generateAccessToken(loginDto);
 		response.setHeader("Authorization", accessTokenDto.getAccessToken());
 		log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
 		throw new JwtException("REISSUE_ACCESS_TOKEN");

@@ -16,6 +16,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LoginDto {
 
+	private Long userSeq;
+
 	private String email;
 
 	private Role role;
