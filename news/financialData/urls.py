@@ -2,12 +2,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("koreatop/", views.koreatop),
+    path("korserach/", views.koreaSearch),
     path("koreahigh/", views.koreahigh),
-    path("korealow/", views.korealow),
-    path("usatop/", views.usatop),
+    path("korearise/", views.korearise),
     path("usahigh/", views.usahigh),
-    path("usalow/", views.usalow),
+    path("usastock/", views.usastock),
+    path("usatop/", views.usatop),
     path("cointop/", views.cointop),
     path("coinhigh/", views.coinhigh),
     path("coinlow/", views.coinlow),
