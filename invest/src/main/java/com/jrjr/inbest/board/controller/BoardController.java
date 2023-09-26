@@ -80,6 +80,7 @@ public class BoardController {
 		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 수정 시작 ==========");
+		boardDTO.setSeq(boardId);
 		log.info("입력 받은 데이터");
 		log.info(boardDTO.toString());
 
@@ -268,6 +269,7 @@ public class BoardController {
 		} else {
 			resultMap.put("success", true);
 			boolean like = false;
+
 			if (boardDTO.getLikesUserList() != null) {
 				for (UserDTO likeUserDTO : boardDTO.getLikesUserList()) {
 					if (likeUserDTO.getEmail().equals(loginEmail)) {
