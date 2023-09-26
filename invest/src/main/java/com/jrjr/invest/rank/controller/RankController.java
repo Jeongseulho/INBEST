@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jrjr.invest.rank.dto.RedisSimulationDTO;
 import com.jrjr.invest.rank.dto.RedisSimulationUserRankingDTO;
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
-import com.jrjr.invest.rank.service.SimulationUserRankService;
+import com.jrjr.invest.rank.service.SimulationRankService;
 import com.jrjr.invest.rank.service.UserRankService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RankController {
 
 	private final UserRankService userRankService;
-	private final SimulationUserRankService simulationUserRankService;
+	private final SimulationRankService simulationRankService;
 
 	@Operation(summary = "회원 정보 추가 (Redis user hash table)")
 	@Parameters(value = {
@@ -155,7 +156,7 @@ public class RankController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
-			= simulationUserRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
+			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
 
 		log.info("========== 시뮬레이션 랭킹: 전체 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
@@ -175,11 +176,30 @@ public class RankController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		RedisSimulationUserRankingDTO mySimulationUserRankingInfo
-			= simulationUserRankService.getSimulationUserRankingInfo(simulationSeq, userSeq);
+			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, userSeq);
 
 		log.info("========== 시뮬레이션 랭킹: 내 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
 		resultMap.put("MySimulationUserRankingInfo", mySimulationUserRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "종료된 시뮬레이션 랭킹 정보 불러오기", description = "start ~ end 범위의 개인 랭킹 정보 불러오기")
+	@Parameters(value = {
+		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
+		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수")
+	})
+	@GetMapping("/simulation")
+	ResponseEntity<Map<String, Object>> getSimulationRankingInfo(@RequestParam Long start,
+		@RequestParam Long end) {
+		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		Set<RedisSimulationDTO> simulationRankingInfo = simulationRankService.getSimulationRankingInfo(start, end);
+
+		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 완료 ==========");
+		resultMap.put("success", true);
+		resultMap.put("SimulationRankingInfo", simulationRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
