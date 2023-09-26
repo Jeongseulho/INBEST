@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.jrjr.security.constant.Role;
 import com.jrjr.security.dto.AccessTokenDto;
 import com.jrjr.security.dto.LoginDto;
 import com.jrjr.security.dto.TokenExpireTime;
@@ -44,14 +43,15 @@ public class JwtProvider {
 	private final LoginRepository loginRepository;
 	private static final String GRANT_TYPE = "Bearer";
 
-	public AccessTokenDto generateAccessToken(String email, Role role) {
+	public AccessTokenDto generateAccessToken(LoginDto loginDto) {
 		log.info("JwtProvider - generateAccessToken 실행");
 
 		String accessToken = Jwts.builder()
 			.setIssuer("inbest")
-			.setSubject(email)
+			.setSubject(loginDto.getEmail())
 			.setExpiration(new Date(System.currentTimeMillis() + TokenExpireTime.ACCESS_TOKEN_EXPIRE_TIME))
-			.claim("role", role.toString())
+			.claim("seq", loginDto.getUserSeq())
+			.claim("role", loginDto.getRole().toString())
 			.signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
 			.compact();
 
@@ -132,6 +132,7 @@ public class JwtProvider {
 		}
 
 		return LoginDto.builder()
+			.userSeq(loginEntity.get().getUserSeq())
 			.email(loginEntity.get().getEmail())
 			.role(loginEntity.get().getRole())
 			.build();
