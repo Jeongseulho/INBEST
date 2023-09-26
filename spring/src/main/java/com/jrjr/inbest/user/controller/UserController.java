@@ -3,7 +3,6 @@ package com.jrjr.inbest.user.controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.jrjr.inbest.jwt.service.JwtProvider;
 import com.jrjr.inbest.user.dto.JoinDto;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.service.UserService;
@@ -28,7 +26,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final UserService userService;
-	private final JwtProvider jwtProvider;
 
 	@Operation(summary = "회원가입",
 		description = "필수 값: email, password, name, nickname 선택 값: birth, gender")
@@ -101,13 +97,11 @@ public class UserController {
 	@PutMapping("/{seq}/password")
 	ResponseEntity<Map<String, Object>> updatePassword(@PathVariable(value = "seq") Long seq,
 		@RequestBody Map<String, String> passwordMap,
-		HttpServletRequest request) {
+		@RequestParam Long loginSeq) {
 		log.info("UserController - updatePassword 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
-		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
-		userService.updatePassword(seq, email, passwordMap.get("password"));
+		userService.updatePassword(seq, loginSeq, passwordMap.get("password"));
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -120,13 +114,11 @@ public class UserController {
 	})
 	@DeleteMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> withdraw(@PathVariable(value = "seq") Long seq,
-		HttpServletRequest request) {
+		@RequestParam Long loginSeq) {
 		log.info("UserController - withdraw 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
-		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
-		userService.withdraw(seq, email);
+		userService.withdraw(seq, loginSeq);
 		userService.deleteUserRankingInfo(seq);
 
 		resultMap.put("success", true);
@@ -158,13 +150,11 @@ public class UserController {
 	})
 	@PutMapping("/{seq}/img")
 	ResponseEntity<Map<String, Object>> updateProfileDefaultImg(@PathVariable(value = "seq") Long seq,
-		HttpServletRequest request) {
+		@RequestParam Long loginSeq) {
 		log.info("UserController - updateProfileDefaultImg 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
-		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
-		userService.updateDefaultImg(seq, email);
+		userService.updateDefaultImg(seq, loginSeq);
 
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -181,14 +171,12 @@ public class UserController {
 	ResponseEntity<Map<String, Object>> updateProfile(@PathVariable(value = "seq") Long seq,
 		@RequestParam(value = "file", required = false) MultipartFile file,
 		@ModelAttribute UserDto userDto,
-		HttpServletRequest request) throws IOException {
+		@RequestParam Long loginSeq) throws IOException {
 		log.info("========== 프로필 정보 업데이트 시작 ==========");
 		log.info("회원 seq: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		Optional<String> accessToken = jwtProvider.resolveAccessToken(request);
-		String email = jwtProvider.getUserInfoFromToken(accessToken.orElse("accessToken")).getEmail();
-		UserDto userInfo = userService.updateUserInfo(seq, file, userDto, email);
+		UserDto userInfo = userService.updateUserInfo(seq, file, userDto, loginSeq);
 		userService.updateUserRankingInfo(userInfo);
 
 		log.info("========== 프로필 정보 업데이트 완료 ==========");
