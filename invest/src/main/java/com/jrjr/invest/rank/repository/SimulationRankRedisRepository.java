@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
-public class SimulationUserRankRedisRepository {
+public class SimulationRankRedisRepository {
 
 	private final HashOperations<String, String, RedisUserDTO> userHash;
 	private final HashOperations<String, String, RedisSimulationUserDTO> simulationUserHash;
@@ -37,13 +37,13 @@ public class SimulationUserRankRedisRepository {
 	/*
 		userHash 의 key: USER_HASH_KEY
 		simulationUserHash 의 key: simulation_simulationSeq
-		stockHash 의 key: stockCode
+		stockHash 의 key: STOCK_HASH_KEY
 		stockUserHash 의 key: simulation_simulationSeq_user_userSeq
 		simulationUserRankingZSet 의 key: simulation_simulationSeq_sort
 	 */
 
 	@Autowired
-	public SimulationUserRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
+	public SimulationRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
 		RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate,
 		RedisTemplate<String, RedisStockDTO> stockRedisTemplate,
 		RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate,
@@ -64,7 +64,7 @@ public class SimulationUserRankRedisRepository {
 	}
 
 	/*
-		시뮬레이션 정보 가져오기
+		시뮬레이션 별 정보 가져오기
 	 */
 	public Map<String, RedisSimulationUserDTO> getSimulationUserInfoMap(Long simulationSeq) {
 		String simulationUserHashKey = "simulation_" + simulationSeq;
@@ -125,7 +125,7 @@ public class SimulationUserRankRedisRepository {
 	}
 
 	/*
-		시뮬레이션 랭킹 정보 삭제
+		시뮬레이션 별 랭킹 정보 삭제
 	 */
 	public void deleteSimulationUserRankingInfo(Long simulationSeq) {
 		String simulationUserRankingKey = "simulation_" + simulationSeq + "_sort";
