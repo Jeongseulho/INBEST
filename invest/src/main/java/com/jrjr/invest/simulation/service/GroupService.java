@@ -83,8 +83,7 @@ public class GroupService {
 				continue;
 			}
 
-			// db에 저장
-			simulationUserRepository.save(SimulationUser.builder()
+			SimulationUser simulationUser = SimulationUser.builder()
 				.user(user)
 				.simulation(simulation)
 				.seedMoney(groupDTO.getSeedMoney())
@@ -92,19 +91,22 @@ public class GroupService {
 				.isExited(false)
 				.currentRank(null)
 				.previousRank(null)
-				.build());
+				.build();
+			// db에 저장
+			simulationUserRepository.save(simulationUser);
 
 			// redis에 저장
-			redisSimulationUserDTORedisTemplate.opsForHash().put(generateKey(simulation.getSeq()), userSeq,
-				RedisSimulationUserDTO.builder()
-					.userSeq(user.getSeq())
-					.simulationSeq(simulation.getSeq())
-					.seedMoney(groupDTO.getSeedMoney())
-					.currentMoney(groupDTO.getSeedMoney())
-					.isExited(false)
-					.currentRank(null)
-					.previousRank(null)
-					.build());
+			redisSimulationUserDTORedisTemplate.opsForHash()
+				.put(generateKey(simulation.getSeq()), String.valueOf(userSeq),
+					RedisSimulationUserDTO.builder()
+						.userSeq(user.getSeq())
+						.simulationSeq(simulation.getSeq())
+						.seedMoney(groupDTO.getSeedMoney())
+						.currentMoney(groupDTO.getSeedMoney())
+						.isExited(false)
+						.currentRank(null)
+						.previousRank(null)
+						.build());
 		}
 
 	}
