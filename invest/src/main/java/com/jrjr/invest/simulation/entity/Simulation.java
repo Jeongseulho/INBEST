@@ -5,8 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jrjr.invest.simulation.dto.SimulationDTO;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "simulation")
@@ -64,12 +76,12 @@ public class Simulation {
 		this.revenuRate = revenuRate;
 	}
 
-	public SimulationDTO simulationDTO(){
-		return  SimulationDTO.builder()
-				.seq(seq).finishedDate(finishedDate)
-				.owner(owner).period(period).title(title).startDate(startDate)
-				.revenuRate(revenuRate).seedMoney(seedMoney)
-				.build();
+	public SimulationDTO simulationDTO() {
+		return SimulationDTO.builder()
+			.seq(seq).finishedDate(finishedDate)
+			.owner(owner).period(period).title(title).startDate(startDate)
+			.revenuRate(revenuRate).seedMoney(seedMoney)
+			.build();
 	}
 
 	public String getProgressState() {
@@ -78,7 +90,7 @@ public class Simulation {
 		}
 
 		if (startDate != null) {
-			return "inprogress";
+			return "inProgress";
 		}
 
 		return "waiting";

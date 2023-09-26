@@ -63,17 +63,17 @@ public class GroupController {
 
 		Object detailsDTO = groupService.getDetails(simulationSeq, progressState);
 		// 내 그룹 - 시작 전 상세
-		if (progressState == "waiting") {
+		if (progressState.equals("waiting")) {
 
 		}
 		// {seedMoney : long, period: int, averageTier : int, currentMemberImage : Array<string>, ownerSeq : long}
 		// 내 그룹 - 진행 중 상세
-		if (progressState == "inprogress") {
+		if (progressState.equals("inProgress")) {
 
 		}
 		// {seedMoney : long, averageTier : int, rankInGroup : int, rankInGroupFluctuation : int, currentMemberImage : Array<string>, startDate : LocalDate, endDate : LocalDate}
 		// 참여 가능 그룹 - 상세
-		if (progressState == "waiting") {
+		if (progressState.equals("waiting")) {
 
 		}
 		// {simulationSeq : long, title : string, currentMemberNum : int, seedMoney : long, averageTier : int, period : int}

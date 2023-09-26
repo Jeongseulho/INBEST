@@ -139,7 +139,7 @@ public class GroupService {
 			Simulation simulation = simulationUser.getSimulation();
 
 			// 대기 중인 그룹만 추가
-			if (simulation.getProgressState() != "waiting") {
+			if (!simulation.getProgressState().equals("waiting")) {
 				continue;
 			}
 
