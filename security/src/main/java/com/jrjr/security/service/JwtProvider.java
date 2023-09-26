@@ -28,6 +28,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -149,5 +151,22 @@ public class JwtProvider {
 
 		UserDetails userDetails = new User(claims.getSubject(), "", authorities);
 		return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
+	}
+
+	public void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {
+		// refreshToken 만료
+		if (!this.isValidToken(refreshToken)) {
+			throw new JwtException("EXPIRED_REFRESH_TOKEN");
+		}
+		// redis 에 저장된 refreshToken 과 비교
+		if (!this.compareRefreshTokens(refreshToken)) {
+			throw new JwtException("INVALID_TOKEN");
+		}
+		// accessToken 재발급
+		LoginDto loginDto = this.getUserInfoFromToken(refreshToken);
+		AccessTokenDto accessTokenDto = this.generateAccessToken(loginDto);
+		response.setHeader("Authorization", accessTokenDto.getAccessToken());
+		log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
+		throw new JwtException("REISSUE_ACCESS_TOKEN");
 	}
 }
