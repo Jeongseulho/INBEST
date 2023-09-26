@@ -61,7 +61,7 @@ public class UpdateController {
 	}
 
 	@Operation(summary = "개인 랭킹 산정")
-	@GetMapping("/sort/users")
+	@GetMapping("/users")
 	ResponseEntity<Map<String, Object>> sortUserRankingInfo() {
 		log.info("========== 개인 랭킹: 랭킹 산정 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
@@ -74,7 +74,7 @@ public class UpdateController {
 	}
 
 	@Operation(summary = "티어 분포도 산정")
-	@GetMapping("/sort/tiers")
+	@GetMapping("/tiers")
 	ResponseEntity<Map<String, Object>> sortTierInfo() {
 		log.info("========== 티어 분포도: 티어 분포도 산정 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
@@ -90,7 +90,7 @@ public class UpdateController {
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk")
 	})
-	@GetMapping("/sort/simulation/{simulationSeq}")
+	@GetMapping("/simulation/{simulationSeq}")
 	ResponseEntity<Map<String, Object>> sortSimulationRankingInfo(
 		@PathVariable(value = "simulationSeq") Long simulationSeq) {
 		log.info("========== 시뮬레이션 랭킹: {} 시뮬레이션 랭킹 산정 시작 ==========", simulationSeq);
@@ -100,6 +100,24 @@ public class UpdateController {
 
 		log.info("========== 시뮬레이션 랭킹: 시뮬레이션 랭킹 산정 완료 ==========");
 		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "시뮬레이션 별 평균 티어 정보 산정")
+	@Parameters(value = {
+		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk")
+	})
+	@GetMapping("/simulation/{simulationSeq}/tier")
+	ResponseEntity<Map<String, Object>> getSimulationAvgTierInfo(
+		@PathVariable(value = "simulationSeq") Long simulationSeq) {
+		log.info("========== 시뮬레이션 {} 평균 티어 정보 불러오기 시작 ==========", simulationSeq);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		Integer simulationAvgTierInfo = simulationUserRankService.getSimulationAvgTierInfo(simulationSeq);
+
+		log.info("========== 시뮬레이션 평균 티어 정보 불러오기 완료 ==========");
+		resultMap.put("success", true);
+		resultMap.put("SimulationAvgTierInfo", simulationAvgTierInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
