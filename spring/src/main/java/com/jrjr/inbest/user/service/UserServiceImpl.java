@@ -190,16 +190,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void updatePassword(Long userSeq, String inputEmail, String password) {
+	public void updatePassword(Long userSeq, Long tokenSeq, String password) {
 		log.info("UserServiceImpl - updatePassword 실행: {}", userSeq);
+
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치");
+		}
 
 		Optional<Login> loginEntity = loginRepository.findByUserSeq(userSeq);
 		if (loginEntity.isEmpty()) {
 			throw new AuthenticationFailedException("회원 정보 없음");
-		}
-
-		if (!loginEntity.get().getEmail().equals(inputEmail)) {
-			throw new AuthenticationFailedException("토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치");
 		}
 
 		loginEntity.get().updatePassword(passwordEncoder.encode(password));
@@ -207,16 +207,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void withdraw(Long seq, String inputEmail) {
-		log.info("UserServiceImpl - withdraw 실행: {}", seq);
+	public void withdraw(Long userSeq, Long tokenSeq) {
+		log.info("UserServiceImpl - withdraw 실행: {}", userSeq);
 
-		Optional<User> userEntity = userRepository.findById(seq);
-		if (userEntity.isEmpty()) {
-			throw new AuthenticationFailedException("회원 정보 없음");
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치");
 		}
 
-		if (!userEntity.get().getEmail().equals(inputEmail)) {
-			throw new AuthenticationFailedException("토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치");
+		Optional<User> userEntity = userRepository.findById(userSeq);
+		if (userEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
 		}
 
 		userEntity.get().withdraw(LocalDateTime.now());
@@ -252,16 +252,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void updateDefaultImg(Long seq, String inputEmail) {
-		log.info("UserServiceImpl - updateDefaultImg 실행: {}", seq);
+	public void updateDefaultImg(Long userSeq, Long tokenSeq) {
+		log.info("UserServiceImpl - updateDefaultImg 실행: {}", userSeq);
 
-		Optional<User> userEntity = userRepository.findById(seq);
-		if (userEntity.isEmpty()) {
-			throw new AuthenticationFailedException("회원 정보 없음");
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
 		}
 
-		if (!userEntity.get().getEmail().equals(inputEmail)) {
-			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
+		Optional<User> userEntity = userRepository.findById(userSeq);
+		if (userEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
 		}
 
 		String oldSearchName = userEntity.get().getProfileImgSearchName();
@@ -275,24 +275,24 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) throws
+	public UserDto updateUserInfo(Long userSeq, MultipartFile file, UserDto inputUserDto, Long tokenSeq) throws
 		IOException {
 		log.info("회원 정보: {}", inputUserDto);
+
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
+		}
 
 		if (file == null) {
 			log.info("파일 없음");
 		} else {
 			log.info("파일 이름 : " + file.getOriginalFilename());
 		}
-		Optional<User> userEntity = userRepository.findById(seq);
+
+		Optional<User> userEntity = userRepository.findById(userSeq);
 		if (userEntity.isEmpty()) {
 			log.info("회원 정보 없음");
 			throw new AuthenticationFailedException("회원 정보 없음");
-		}
-
-		if (!userEntity.get().getEmail().equals(inputEmail)) {
-			log.info("이메일 불일치");
-			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
 		}
 
 		if (file != null) {

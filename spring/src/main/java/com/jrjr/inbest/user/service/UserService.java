@@ -23,17 +23,17 @@ public interface UserService {
 
 	void checkNicknameExists(String nickname);
 
-	void updatePassword(Long seq, String email, String password);
+	void updatePassword(Long userSeq, Long tokenSeq, String password);
 
-	void withdraw(Long seq, String email);
+	void withdraw(Long userSeq, Long tokenSeq);
 
 	void deleteUserRankingInfo(Long seq);
 
 	UserDto getUserInfo(Long seq);
 
-	void updateDefaultImg(Long seq, String email);
+	void updateDefaultImg(Long userSeq, Long tokenSeq);
 
-	UserDto updateUserInfo(Long seq, MultipartFile file, UserDto userDto, String email) throws IOException;
+	UserDto updateUserInfo(Long userSeq, MultipartFile file, UserDto userDto, Long tokenSeq) throws IOException;
 
 	void updateUserRankingInfo(UserDto userDto);
 }
