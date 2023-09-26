@@ -1,6 +1,7 @@
 package com.jrjr.invest.rank.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrjr.invest.rank.dto.RedisSimulationDTO;
 import com.jrjr.invest.rank.dto.RedisSimulationUserRankingDTO;
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
+import com.jrjr.invest.rank.dto.SimulationRankingDTO;
 import com.jrjr.invest.rank.service.SimulationRankService;
 import com.jrjr.invest.rank.service.UserRankService;
 
@@ -195,7 +196,7 @@ public class RankController {
 		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		Set<RedisSimulationDTO> simulationRankingInfo = simulationRankService.getSimulationRankingInfo(start, end);
+		List<SimulationRankingDTO> simulationRankingInfo = simulationRankService.getSimulationRankingInfo(start, end);
 
 		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
