@@ -23,8 +23,8 @@ public class UserRankRedisRepository {
 	private final ZSetOperations<String, RedisUserDTO> userZSetOperations;
 
 	static final String USER_HASH_KEY = "user";
-	static final String TIER_RANK_HASH_KEY = "tier-rank";
-	static final String USER_SORT_KEY = "user-sort";
+	static final String TIER_RANK_HASH_KEY = "tier_rank";
+	static final String USER_SORT_KEY = "user_sort";
 
 	@Autowired
 	public UserRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
@@ -58,7 +58,11 @@ public class UserRankRedisRepository {
 
 	public void updateUserProfileInfo(RedisUserDTO inputRedisUserDto) {
 		RedisUserDTO redisUserDto = userHashOperations.get(USER_HASH_KEY, String.valueOf(inputRedisUserDto.getSeq()));
-		log.info("변경 전 회원 정보: {}", redisUserDto.toString());
+		if (redisUserDto == null) {
+			log.info("updateUserProfileInfo: 해당 회원 정보가 없음");
+			return;
+		}
+		log.info("변경 전 회원 정보: {}", redisUserDto);
 
 		redisUserDto.setNickname(inputRedisUserDto.getNickname());
 		redisUserDto.setProfileImgSearchName(inputRedisUserDto.getProfileImgSearchName());
@@ -87,7 +91,7 @@ public class UserRankRedisRepository {
 	}
 
 	public void updateUserRankingList() {
-		// user-sort set 에 user hash table 정보 저장 (기존 정보 초기화 후 저장)
+		// user_sort set 에 user hash table 정보 저장 (기존 정보 초기화 후 저장)
 		Map<String, RedisUserDTO> userDtoMap = this.getUserInfoMap();
 		this.removeAllFromSortedUserSet();
 		for (RedisUserDTO redisUserDto : userDtoMap.values()) {
@@ -160,6 +164,10 @@ public class UserRankRedisRepository {
 
 	public RedisTierRankDTO getTierRankList() {
 		RedisTierRankDTO redisTierRankDto = tierRankHashOperations.get(TIER_RANK_HASH_KEY, "rank");
+		if (redisTierRankDto == null) {
+			log.info("getTierRankList: 티어 분포도 정보가 없음");
+			return null;
+		}
 		log.info(redisTierRankDto.toString());
 		return redisTierRankDto;
 	}
