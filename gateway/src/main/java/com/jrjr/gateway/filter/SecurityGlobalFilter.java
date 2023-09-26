@@ -37,8 +37,8 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
 		log.info("uri: {}", uri);
 		log.info("accessToken: {}", accessToken);
 		log.info("refreshToken: {}", refreshToken);
-		// WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8104");
-		WebClient webClient = WebClient.create("http://localhost:9104");
+		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8104");
+		// WebClient webClient = WebClient.create("http://localhost:9104");
 		return webClient.get()
 			.uri(uriBuilder -> uriBuilder
 				.path("/security")
