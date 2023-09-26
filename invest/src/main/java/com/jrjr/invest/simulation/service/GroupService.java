@@ -154,4 +154,8 @@ public class GroupService {
 
 		return groupList;
 	}
+
+	public Object getDetails(String userNickname, String progressState) {
+
+	}
 }
