@@ -2,7 +2,6 @@ package com.jrjr.invest.simulation.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -85,45 +84,5 @@ public class User extends BaseEntity {
 			.gender(user.getGender())
 			.profileImgSearchName(user.getProfileImgSearchName())
 			.build();
-	}
-
-	public void withdraw(LocalDateTime date) {
-		this.deletedDate = date;
-	}
-
-	public void updateProfileImg() {
-		this.profileImgOriginalName = "DefaultProfile.png";
-		this.profileImgSearchName = "https://in-best.s3.ap-northeast-2.amazonaws.com/profile/DefaultProfile.png";
-	}
-
-	public void updateProfileImg(String originName, String searchName) {
-		this.profileImgOriginalName = originName;
-		this.profileImgSearchName = searchName;
-	}
-
-	public void updateUserInfo(UserDTO userDto) {
-		// 닉네임
-		if (userDto.getNickname() != null) {
-			this.nickname = userDto.getNickname();
-		}
-		// 성별
-		if (userDto.getGender() != null) {
-			this.gender = userDto.getGender();
-		} else {
-			this.gender = 0;
-		}
-		// 생일
-		if (userDto.getBirth() != null) {
-			try {
-				StringTokenizer st = new StringTokenizer(userDto.getBirth(), "-");
-				this.birthyear = st.nextToken();
-				this.birthday = st.nextToken() + st.nextToken();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			this.birthyear = null;
-			this.birthday = null;
-		}
 	}
 }
