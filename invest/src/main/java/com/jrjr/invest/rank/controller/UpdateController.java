@@ -93,7 +93,7 @@ public class UpdateController {
 	@GetMapping("/simulation/{simulationSeq}")
 	ResponseEntity<Map<String, Object>> sortSimulationRankingInfo(
 		@PathVariable(value = "simulationSeq") Long simulationSeq) {
-		log.info("========== 시뮬레이션 랭킹: {} 시뮬레이션 랭킹 산정 시작 ==========", simulationSeq);
+		log.info("========== 시뮬레이션 랭킹: {}번 시뮬레이션 랭킹 산정 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		simulationUserRankService.updateSimulationUserRanking(simulationSeq);
@@ -110,7 +110,7 @@ public class UpdateController {
 	@GetMapping("/simulation/{simulationSeq}/tier")
 	ResponseEntity<Map<String, Object>> getSimulationAvgTierInfo(
 		@PathVariable(value = "simulationSeq") Long simulationSeq) {
-		log.info("========== 시뮬레이션 {} 평균 티어 정보 불러오기 시작 ==========", simulationSeq);
+		log.info("========== 시뮬레이션 {}번 평균 티어 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Integer simulationAvgTierInfo = simulationUserRankService.getSimulationAvgTierInfo(simulationSeq);

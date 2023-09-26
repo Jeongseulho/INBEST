@@ -151,7 +151,7 @@ public class RankController {
 	ResponseEntity<Map<String, Object>> getSimulationUserRankingInfo(
 		@PathVariable(value = "simulationSeq") Long simulationSeq,
 		@RequestParam Long start, @RequestParam Long end) {
-		log.info("========== 시뮬레이션 {} 랭킹: 전체 랭킹 정보 불러오기 시작 ==========", simulationSeq);
+		log.info("========== 시뮬레이션 {}번 랭킹: 전체 랭킹 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
@@ -171,7 +171,7 @@ public class RankController {
 	@GetMapping("/simulation/{simulationSeq}/{userSeq}")
 	ResponseEntity<Map<String, Object>> getSimulationUserRankingInfo(
 		@PathVariable(value = "simulationSeq") Long simulationSeq, @PathVariable(value = "userSeq") Long userSeq) {
-		log.info("========== 시뮬레이션 {} 랭킹: 내 랭킹 정보 불러오기 시작 ==========", simulationSeq);
+		log.info("========== 시뮬레이션 {}번 랭킹: 내 랭킹 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		RedisSimulationUserRankingDTO mySimulationUserRankingInfo
