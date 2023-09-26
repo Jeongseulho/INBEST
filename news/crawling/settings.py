@@ -34,7 +34,9 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'chatbot',
+    # 'mongodb_app',
+    'financialData',
+    'chatbot',
     'news',
     'corsheaders',
     'django.contrib.admin',
@@ -88,8 +90,12 @@ WSGI_APPLICATION = 'crawling.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 's09p22d110',
+        'USER': 'S09P22D110',
+        'PASSWORD': 'M2hFMrhLIv',
+        'HOST': 'stg-yswa-kr-practice-db-master.mariadb.database.azure.com',
+        'PORT': '3306',
     }
 }
 
