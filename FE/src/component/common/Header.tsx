@@ -90,28 +90,25 @@ const Header = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={async () => {
+                          try {
+                            const res = await getUserInfo(userInfo!.seq);
+                            setMyInfo(res.UserInfo);
+                            console.log(myInfo);
+                            setShowModal(true);
+                            console.log(res);
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          " px-4 py-2 flex items-center"
+                          " px-4 py-2 flex items-center cursor-pointer"
                         )}
                       >
                         <BsPencilSquare />
                         <span className="ms-3">
-                          <button
-                            onClick={async () => {
-                              try {
-                                const res = await getUserInfo(userInfo!.seq);
-                                setMyInfo(res.UserInfo);
-                                console.log(myInfo);
-                                setShowModal(true);
-                                console.log(res);
-                              } catch (err) {
-                                console.log(err);
-                              }
-                            }}
-                          >
-                            회원정보수정
-                          </button>
+                          <button>회원정보수정</button>
                         </span>
                       </div>
                     )}
@@ -119,20 +116,17 @@ const Header = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={() => {
+                          setShowPasswordModal(() => true);
+                        }}
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          " px-4 py-2 flex items-center"
+                          " px-4 py-2 flex items-center cursor-pointer"
                         )}
                       >
                         <RiLockPasswordLine />
                         <span className="ms-3">
-                          <button
-                            onClick={() => {
-                              setShowPasswordModal(() => true);
-                            }}
-                          >
-                            비밀번호 변경
-                          </button>
+                          <button>비밀번호 변경</button>
                         </span>
                       </div>
                     )}
@@ -140,27 +134,23 @@ const Header = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={async () => {
+                          try {
+                            await logout();
+                            setAccessToken(null);
+                            setRefreshToken(null);
+                            setUserInfo(null);
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "px-4 py-2 flex items-center text-red-500 hover:cursor-pointer z-30"
+                          "px-4 py-2 flex items-center text-red-500 hover:cursor-pointer z-30 cursor-pointer"
                         )}
                       >
                         <FiLogOut />
-                        <span
-                          className="ms-3"
-                          onClick={async () => {
-                            try {
-                              await logout();
-                              setAccessToken(null);
-                              setRefreshToken(null);
-                              setUserInfo(null);
-                            } catch (err) {
-                              console.log(err);
-                            }
-                          }}
-                        >
-                          로그아웃
-                        </span>
+                        <span className="ms-3">로그아웃</span>
                       </div>
                     )}
                   </Menu.Item>
