@@ -1,7 +1,6 @@
 package com.jrjr.invest.rank.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -142,7 +141,7 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "시뮬레이션 별 랭킹 정보 불러오기 - 구현 중")
+	@Operation(summary = "시뮬레이션 별 랭킹 정보 불러오기")
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk"),
 		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
@@ -155,7 +154,7 @@ public class RankController {
 		log.info("========== 시뮬레이션 {} 랭킹: 전체 랭킹 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		List<RedisSimulationUserRankingDTO> simulationUserRankingInfo
+		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
 			= simulationUserRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
 
 		log.info("========== 시뮬레이션 랭킹: 전체 랭킹 정보 불러오기 완료 ==========");
@@ -164,7 +163,7 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "시뮬레이션 별 참가자 랭킹 정보 불러오기 - 구현 중")
+	@Operation(summary = "시뮬레이션 별 참가자 랭킹 정보 불러오기")
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk"),
 		@Parameter(required = true, name = "userSeq", description = "조회 할 회원 pk")
@@ -176,7 +175,7 @@ public class RankController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		RedisSimulationUserRankingDTO mySimulationUserRankingInfo
-			= simulationUserRankService.getMySimulationUserRankingInfo(simulationSeq, userSeq);
+			= simulationUserRankService.getSimulationUserRankingInfo(simulationSeq, userSeq);
 
 		log.info("========== 시뮬레이션 랭킹: 내 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
