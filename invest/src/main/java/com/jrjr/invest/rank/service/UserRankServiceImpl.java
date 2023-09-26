@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
-import com.jrjr.invest.rank.repository.UserRepository;
+import com.jrjr.invest.rank.repository.UserRankRedisRepository;
 import com.jrjr.invest.simulation.entity.Rate;
 import com.jrjr.invest.simulation.entity.Tier;
 import com.jrjr.invest.simulation.repository.RateRepository;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserRankServiceImpl implements UserRankService {
 
-	private final UserRepository redisUserRepository;
+	private final UserRankRedisRepository userRankRedisRepository;
 	private final TierRepository tierRepository;
 	private final RateRepository rateRepository;
 
@@ -30,7 +30,7 @@ public class UserRankServiceImpl implements UserRankService {
 	public void insertUserInfo(RedisUserDTO redisUserDto) {
 		log.info("추가 할 회원 정보: {}", redisUserDto.toString());
 
-		redisUserRepository.insertUserInfo(redisUserDto);
+		userRankRedisRepository.insertUserInfo(redisUserDto);
 		log.info("회원 정보 추가 완료");
 
 		this.updateUserRankingInfo();
@@ -40,7 +40,7 @@ public class UserRankServiceImpl implements UserRankService {
 	public void updateUserProfileInfo(RedisUserDTO redisUserDto) {
 		log.info("수정 할 회원 정보: {}", redisUserDto.toString());
 
-		redisUserRepository.updateUserProfileInfo(redisUserDto);
+		userRankRedisRepository.updateUserProfileInfo(redisUserDto);
 		this.updateUserRankingInfo();
 	}
 
@@ -48,7 +48,7 @@ public class UserRankServiceImpl implements UserRankService {
 	public void deleteUserInfo(Long seq) {
 		log.info("삭제 할 회원 정보 seq: {}", seq);
 
-		redisUserRepository.deleteUserInfo(seq);
+		userRankRedisRepository.deleteUserInfo(seq);
 		this.updateUserRankingInfo();
 	}
 
@@ -76,12 +76,12 @@ public class UserRankServiceImpl implements UserRankService {
 		Integer avgRate = (int)Math.round(totalRate * 1.0 / rates.size());
 		log.info("avgRate: " + avgRate);
 
-		redisUserRepository.updateUserTierAndRateInfo(seq, totalTier, avgRate);
+		userRankRedisRepository.updateUserTierAndRateInfo(seq, totalTier, avgRate);
 	}
 
 	@Override
 	public void updateAllUserTierAndRateInfo() {
-		Set<String> hashKeys = redisUserRepository.getAllHashKeys();
+		Set<String> hashKeys = userRankRedisRepository.getAllHashKeys();
 		for (String seq : hashKeys) {
 			this.updateUserTierAndRateInfo(Long.parseLong(seq));
 		}
@@ -89,33 +89,33 @@ public class UserRankServiceImpl implements UserRankService {
 
 	@Override
 	public void updateUserRankingInfo() {
-		redisUserRepository.updateUserRankingList();
+		userRankRedisRepository.updateUserRankingList();
 	}
 
 	@Override
 	public Set<RedisUserDTO> getUserRankingInfo(long start, long end) {
-		return redisUserRepository.getUserInfoSet(start, end);
+		return userRankRedisRepository.getUserInfoSet(start, end);
 	}
 
 	@Override
-	public RedisUserDTO getMyRankingInfo(Long seq) {
-		return redisUserRepository.getMyRankingInfo(seq);
+	public RedisUserDTO getMyUserRankingInfo(Long seq) {
+		return userRankRedisRepository.getMyUserRankingInfo(seq);
 	}
 
 	@Override
 	public void updateTierRankInfo() {
-		redisUserRepository.updateTierRankList();
+		userRankRedisRepository.updateTierRankList();
 	}
 
 	@Override
 	public RedisTierRankDTO getTierRankInfo() {
-		return redisUserRepository.getTierRankList();
+		return userRankRedisRepository.getTierRankList();
 	}
 
 	@Override
 	public void printUserInfoList() {
 		log.info("========== 회원 정보 ==========");
-		Map<String, RedisUserDTO> userDtoMap = redisUserRepository.getUserInfoMap();
+		Map<String, RedisUserDTO> userDtoMap = userRankRedisRepository.getUserInfoMap();
 		for (String seq : userDtoMap.keySet()) {
 			log.info(userDtoMap.get(seq).toString());
 		}
@@ -125,7 +125,7 @@ public class UserRankServiceImpl implements UserRankService {
 	@Override
 	public void printSortedUserInfoList(long start, long end) {
 		log.info("========== 정렬된 회원 랭킹 정보 ==========");
-		Set<RedisUserDTO> sortedUserSet = redisUserRepository.getUserInfoSet(start, end);
+		Set<RedisUserDTO> sortedUserSet = userRankRedisRepository.getUserInfoSet(start, end);
 		for (RedisUserDTO redisUserDto : sortedUserSet) {
 			log.info(redisUserDto.toString());
 		}

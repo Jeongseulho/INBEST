@@ -21,7 +21,7 @@ public interface UserRankService {
 
 	Set<RedisUserDTO> getUserRankingInfo(long start, long end);
 
-	RedisUserDTO getMyRankingInfo(Long seq);
+	RedisUserDTO getMyUserRankingInfo(Long seq);
 
 	void updateTierRankInfo();
 

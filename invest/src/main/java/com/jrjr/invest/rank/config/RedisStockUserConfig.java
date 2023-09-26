@@ -7,25 +7,25 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.jrjr.invest.rank.dto.RedisTierRankDTO;
+import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class RedisTierRankConfig {
+public class RedisStockUserConfig {
 
 	private final RedisConnectionFactory redisConnectionFactory;
 
 	@Bean
-	public RedisTemplate<String, RedisTierRankDTO> tierRankRedisTemplate() {
-		RedisTemplate<String, RedisTierRankDTO> redisTemplate = new RedisTemplate<>();
+	public RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate() {
+		RedisTemplate<String, RedisStockUserDTO> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RedisTierRankDTO.class));
+		redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(RedisStockUserDTO.class));
 		redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-		redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(RedisTierRankDTO.class));
+		redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(RedisStockUserDTO.class));
 		redisTemplate.setEnableTransactionSupport(true);
 
 		return redisTemplate;

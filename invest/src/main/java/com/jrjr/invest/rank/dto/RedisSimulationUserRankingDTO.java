@@ -1,6 +1,7 @@
-package com.jrjr.invest.simulation.dto;
+package com.jrjr.invest.rank.dto;
 
-import jakarta.validation.constraints.NotNull;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,21 +16,27 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class RedisSimulationUserDTO {
+public class RedisSimulationUserRankingDTO {
 
-	@NotNull
 	private Long simulationSeq;
 
-	@NotNull
 	private Long userSeq;
 
-	private Long seedMoney;
+	private String nickname;
 
-	private Long currentMoney;
+	private String profileImgSearchName;
+
+	private Boolean isExited;
 
 	private Integer previousRank;
 
 	private Integer currentRank;
 
-	private Boolean isExited;
+	private Long currentMoney;
+
+	private Long totalMoney;
+
+	private Integer rate;
+
+	private List<TopStockDTO> topNStockInfo;
 }

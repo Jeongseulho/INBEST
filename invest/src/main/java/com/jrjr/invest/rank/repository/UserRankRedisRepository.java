@@ -16,55 +16,53 @@ import lombok.extern.slf4j.Slf4j;
 
 @Repository
 @Slf4j
-public class UserRedisRepository implements UserRepository {
+public class UserRankRedisRepository {
 
 	private final HashOperations<String, String, RedisUserDTO> userHashOperations;
 	private final HashOperations<String, String, RedisTierRankDTO> tierRankHashOperations;
 	private final ZSetOperations<String, RedisUserDTO> userZSetOperations;
 
 	static final String USER_HASH_KEY = "user";
-	static final String TIER_RANK_HASH_KEY = "tier-rank";
-	static final String USER_SORT_KEY = "user-sort";
+	static final String TIER_RANK_HASH_KEY = "tier_rank";
+	static final String USER_SORT_KEY = "user_sort";
 
 	@Autowired
-	public UserRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
+	public UserRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
 		RedisTemplate<String, RedisTierRankDTO> tierRankRedisTemplate) {
 		this.userHashOperations = userRedisTemplate.opsForHash();
 		this.userZSetOperations = userRedisTemplate.opsForZSet();
 		this.tierRankHashOperations = tierRankRedisTemplate.opsForHash();
 	}
 
-	@Override
 	public RedisUserDTO getUserInfo(Long seq) {
 		return userHashOperations.get(USER_HASH_KEY, String.valueOf(seq));
 	}
 
-	@Override
 	public Map<String, RedisUserDTO> getUserInfoMap() {
 		return userHashOperations.entries(USER_HASH_KEY);
 	}
 
-	@Override
 	public Set<String> getAllHashKeys() {
 		return userHashOperations.keys(USER_HASH_KEY);
 	}
 
-	@Override
 	public Set<RedisUserDTO> getUserInfoSet(long start, long end) {
 		return userZSetOperations.reverseRange(USER_SORT_KEY, start, end);
 	}
 
-	@Override
 	public void insertUserInfo(RedisUserDTO redisUserDto) {
 		redisUserDto.setTier(0);
 		redisUserDto.setRate(0);
 		userHashOperations.put(USER_HASH_KEY, String.valueOf(redisUserDto.getSeq()), redisUserDto);
 	}
 
-	@Override
 	public void updateUserProfileInfo(RedisUserDTO inputRedisUserDto) {
 		RedisUserDTO redisUserDto = userHashOperations.get(USER_HASH_KEY, String.valueOf(inputRedisUserDto.getSeq()));
-		log.info("변경 전 회원 정보: {}", redisUserDto.toString());
+		if (redisUserDto == null) {
+			log.info("updateUserProfileInfo: 해당 회원 정보가 없음");
+			return;
+		}
+		log.info("변경 전 회원 정보: {}", redisUserDto);
 
 		redisUserDto.setNickname(inputRedisUserDto.getNickname());
 		redisUserDto.setProfileImgSearchName(inputRedisUserDto.getProfileImgSearchName());
@@ -73,12 +71,10 @@ public class UserRedisRepository implements UserRepository {
 		log.info("변경 후 회원 정보: {}", redisUserDto);
 	}
 
-	@Override
 	public void deleteUserInfo(Long seq) {
 		userHashOperations.delete(USER_HASH_KEY, String.valueOf(seq));
 	}
 
-	@Override
 	public void updateUserTierAndRateInfo(Long seq, Integer tier, Integer rate) {
 		RedisUserDTO redisUserDto = this.getUserInfo(seq);
 		log.info("변경 전 회원 정보: {}", redisUserDto.toString());
@@ -90,14 +86,12 @@ public class UserRedisRepository implements UserRepository {
 		log.info("변경 후 회원 정보: {}", redisUserDto);
 	}
 
-	@Override
 	public void removeAllFromSortedUserSet() {
 		userZSetOperations.removeRange(USER_SORT_KEY, 0, -1);
 	}
 
-	@Override
 	public void updateUserRankingList() {
-		// user-sort set 에 user hash table 정보 저장 (기존 정보 초기화 후 저장)
+		// user_sort set 에 user hash table 정보 저장 (기존 정보 초기화 후 저장)
 		Map<String, RedisUserDTO> userDtoMap = this.getUserInfoMap();
 		this.removeAllFromSortedUserSet();
 		for (RedisUserDTO redisUserDto : userDtoMap.values()) {
@@ -128,8 +122,7 @@ public class UserRedisRepository implements UserRepository {
 		}
 	}
 
-	@Override
-	public RedisUserDTO getMyRankingInfo(Long seq) {
+	public RedisUserDTO getMyUserRankingInfo(Long seq) {
 		Set<RedisUserDTO> userDtoSet = this.getUserInfoSet(0, -1);
 		for (RedisUserDTO redisUserDto : userDtoSet) {
 			if (redisUserDto.getSeq().equals(seq)) {
@@ -139,7 +132,6 @@ public class UserRedisRepository implements UserRepository {
 		return null;
 	}
 
-	@Override
 	public void updateTierRankList() {
 		int bronze = 0;
 		int silver = 0;
@@ -170,9 +162,12 @@ public class UserRedisRepository implements UserRepository {
 		tierRankHashOperations.put(TIER_RANK_HASH_KEY, "rank", redisTierRankDto);
 	}
 
-	@Override
 	public RedisTierRankDTO getTierRankList() {
 		RedisTierRankDTO redisTierRankDto = tierRankHashOperations.get(TIER_RANK_HASH_KEY, "rank");
+		if (redisTierRankDto == null) {
+			log.info("getTierRankList: 티어 분포도 정보가 없음");
+			return null;
+		}
 		log.info(redisTierRankDto.toString());
 		return redisTierRankDto;
 	}
