@@ -22,15 +22,17 @@ public class RedisSimulationUserRankingDTO {
 
 	private Long userSeq;
 
+	private String nickname;
+
+	private String profileImgSearchName;
+
+	private Boolean isExited;
+
 	private Integer previousRank;
 
 	private Integer currentRank;
 
 	private Long currentMoney;
-
-	private String nickname;
-
-	private String profileImgSearchName;
 
 	private Long totalMoney;
 
