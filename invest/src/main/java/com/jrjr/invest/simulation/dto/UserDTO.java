@@ -19,26 +19,15 @@ import lombok.ToString;
 public class UserDTO {
 
 	private Long seq;
-
 	private String email;
-
 	private String name;
-
 	private String nickname;
-
 	private String birth;
-
 	private String birthyear;
-
 	private String birthday;
-
 	private Integer gender;
-
 	private String profileImgSearchName;
-
 	private String profileImgOriginalName;
-
 	private String provider;
-
 	private Role role;
 }

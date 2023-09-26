@@ -8,4 +8,5 @@ import com.jrjr.invest.simulation.entity.SimulationUser;
 @Repository
 public interface SimulationUserRepository extends JpaRepository<SimulationUser, Long> {
 
+    SimulationUser findBySimulationSeq(Long simulationSeq);
 }
