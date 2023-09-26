@@ -81,8 +81,6 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
 					}
 
 					if (securityResponse.containsKey("seq") && securityResponse.containsKey("email")) {
-						String seq = securityResponse.get("seq").toString();
-						String email = securityResponse.get("email").toString();
 						UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(exchange.getRequest().getURI())
 							.queryParam("loginSeq", securityResponse.get("seq"))
 							.queryParam("loginEmail", securityResponse.get("email"));
@@ -94,7 +92,7 @@ public class SecurityGlobalFilter implements GlobalFilter, Ordered {
 						log.info(newExchange.getRequest().getURI().toString());
 						return chain.filter(newExchange);
 					}
-					
+
 					return chain.filter(exchange);
 				}
 			)
