@@ -14,3 +14,4 @@ class BreakingNews(models.Model):
     image = models.URLField(max_length=400, blank=True)
     url = models.URLField(max_length=400)
     date = models.DateField()
+
