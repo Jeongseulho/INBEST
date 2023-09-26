@@ -39,12 +39,12 @@ export const getMyGroupList = async (): Promise<MyGroupList> => {
 };
 
 export const getWaitingGroupDetail = async (simulationSeq: number): Promise<WaitingGroupDetail> => {
-  const { data } = await api.get("/detail", { params: { simulationSeq, progressState: "waiting" } });
+  const { data } = await api.get("/details", { params: { simulationSeq, progressState: "waiting" } });
   return data;
 };
 
 export const getInProgressGroupDetail = async (simulationSeq: number): Promise<InProgressGroupDetail> => {
-  const { data } = await api.get("/detail", { params: { simulationSeq, progressState: "inprogress" } });
+  const { data } = await api.get("/details", { params: { simulationSeq, progressState: "inprogress" } });
   return data;
 };
 
@@ -57,7 +57,7 @@ export const getJoinableGroupList = async (): Promise<JoinableGroupList> => {
 };
 
 export const getJoinableGroupDetail = async (simulationSeq: number): Promise<JoinableGroupDetail> => {
-  const { data } = await api.get("/detail", { params: { simulationSeq, progressState: "waiting" } });
+  const { data } = await api.get("/details", { params: { simulationSeq, progressState: "waiting" } });
   return data;
 };
 
