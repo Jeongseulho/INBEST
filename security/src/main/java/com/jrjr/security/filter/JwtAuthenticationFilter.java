@@ -8,8 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.jrjr.security.dto.AccessTokenDto;
-import com.jrjr.security.dto.LoginDto;
 import com.jrjr.security.service.JwtProvider;
 import com.jrjr.security.service.UriService;
 
@@ -65,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (refreshToken.isEmpty()) {
 				throw new JwtException("EXPIRED_REFRESH_TOKEN");
 			}
-			this.reissueAccessToken(response, refreshToken);
+			jwtProvider.reissueAccessToken(response, refreshToken);
 		}
 
 		// accessToken 있을 때 -> 손상: 로그아웃, 만료: 재발급
@@ -76,29 +74,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				if (refreshToken.isEmpty()) {
 					throw new JwtException("EXPIRED_REFRESH_TOKEN");
 				}
-				this.reissueAccessToken(response, refreshToken);
+				jwtProvider.reissueAccessToken(response, refreshToken);
 			}
 			log.info("AccessToken 정상 - 권한 저장");
 			Authentication authentication = jwtProvider.getAuthentication(accessToken.get());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			filterChain.doFilter(request, response);
 		}
-	}
-
-	private void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {
-		// refreshToken 만료
-		if (!jwtProvider.isValidToken(refreshToken)) {
-			throw new JwtException("EXPIRED_REFRESH_TOKEN");
-		}
-		// redis 에 저장된 refreshToken 과 비교
-		if (!jwtProvider.compareRefreshTokens(refreshToken)) {
-			throw new JwtException("INVALID_TOKEN");
-		}
-		// accessToken 재발급
-		LoginDto loginDto = jwtProvider.getUserInfoFromToken(refreshToken);
-		AccessTokenDto accessTokenDto = jwtProvider.generateAccessToken(loginDto);
-		response.setHeader("Authorization", accessTokenDto.getAccessToken());
-		log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
-		throw new JwtException("REISSUE_ACCESS_TOKEN");
 	}
 }
