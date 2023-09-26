@@ -32,7 +32,10 @@ public class GroupService {
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
 
 	public List<UserDTO> searchUsers(String keyword) {
-		List<User> users = userRepository.findByNameContains(keyword);
+		log.info("[그룹 생성 시, 초대를 위한 유저 목록 검색]");
+		log.info(keyword);
+		List<User> users = userRepository.findByNicknameContains(keyword);
+		log.info(users.toString());
 		List<UserDTO> list = new ArrayList<>();
 		for (User user : users) {
 			list.add(UserDTO.builder()
@@ -41,12 +44,13 @@ public class GroupService {
 				.nickname(user.getNickname())
 				.build());
 		}
+		log.info(list.toString());
 		return list;
 	}
 
 	@Transactional
 	public void createGroup(CreatedGroupDTO groupDTO) throws Exception {
-
+		log.info("[그룹 생성]");
 		// Simulation 저장
 		User owner = userRepository.findBySeq(groupDTO.getOwnerSeq());
 
@@ -102,7 +106,7 @@ public class GroupService {
 	}
 
 	public List<GroupDTO> getMyGroupList(String nickname) throws Exception {
-
+		log.info("[내 그룹 리스트]");
 		User user = userRepository.findByNickname(nickname);
 		if (user == null) {
 			throw new Exception("해당하는 유저가 없습니다.");
@@ -127,6 +131,8 @@ public class GroupService {
 	}
 
 	public List<GroupDTO> getJoinableList(String nickname) throws Exception {
+		log.info("[참여 가능 그룹 리스트]");
+
 		User user = userRepository.findByNickname(nickname);
 
 		if (user == null) {
