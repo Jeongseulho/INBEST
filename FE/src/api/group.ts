@@ -23,7 +23,9 @@ export const getInvestingStatus = async (): Promise<InvestingStatusList> => {
 };
 
 export const createGroup = async (groupSetting: GroupSetting): Promise<ApiSuccessMessage> => {
+  const { userInfo } = userStore.getState();
   const invitedUserSeqList = groupSetting.invitedUsers.map((user) => user.seq);
+  invitedUserSeqList.push(userInfo!.seq);
   const { invitedUsers, ...rest } = groupSetting;
   console.log(invitedUsers);
   const { data } = await apiWithAuth.post("", {

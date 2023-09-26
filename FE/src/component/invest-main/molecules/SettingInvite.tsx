@@ -5,6 +5,7 @@ import modalStore from "../../../store/modalStore";
 import { useSettingInvite } from "./useSettingInvite";
 import { BsSearch } from "react-icons/bs";
 import spinner from "../../../asset/image/spinner.svg";
+import userStore from "../../../store/userStore";
 
 type Action = { type: "ADD_INVITE"; payload: SearchUser } | { type: "DELETE_INVITE"; payload: number };
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteUsers }: Props) => {
   const { closeModal } = modalStore();
   const { data, isLoading, searchUserNickname, onChangeSearchUserNickname } = useSettingInvite();
+  const { userInfo } = userStore();
 
   return (
     <div className=" relative w-full h-full overflow-hidden my-2">
@@ -55,15 +57,18 @@ const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteU
             </div>
           ) : (
             <div className=" flex flex-wrap overflow-y-scroll h-full">
-              {data?.map((user) => (
-                <UserItem
-                  key={user.seq}
-                  nickname={user.nickname}
-                  profileImg={user.profileImgSearchName}
-                  dispatch={dispatch}
-                  payload={user}
-                />
-              ))}
+              {data?.map((user) => {
+                if (user.seq === userInfo?.seq) return null;
+                return (
+                  <UserItem
+                    key={user.seq}
+                    nickname={user.nickname}
+                    profileImg={user.profileImgSearchName}
+                    dispatch={dispatch}
+                    payload={user}
+                  />
+                );
+              })}
             </div>
           )}
         </div>
