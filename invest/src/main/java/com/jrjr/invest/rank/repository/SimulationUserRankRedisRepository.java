@@ -34,6 +34,14 @@ public class SimulationUserRankRedisRepository {
 
 	static final String STOCK_HASH_KEY = "stock";
 
+	/*
+		userHash 의 key: USER_HASH_KEY
+		simulationUserHash 의 key: simulation_simulationSeq
+		stockHash 의 key: stockCode
+		stockUserHash 의 key: simulation_simulationSeq_user_userSeq
+		simulationUserRankingZSet 의 key: simulation_simulationSeq_sort
+	 */
+
 	@Autowired
 	public SimulationUserRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
 		RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate,
@@ -92,15 +100,32 @@ public class SimulationUserRankRedisRepository {
 	}
 
 	/*
-		정렬된 시뮬레이션 랭킹 정보 가져오기
+		시뮬레이션 별 전체 랭킹 정보 가져오기 
 	 */
-	public Set<RedisSimulationUserRankingDTO> getSimulationUserRankingInfo(Long simulationSeq, long start, long end) {
+	public Set<RedisSimulationUserRankingDTO> getSimulationUserRankingInfoSet(Long simulationSeq, long start,
+		long end) {
 		String simulationUserRankingKey = "simulation_" + simulationSeq + "_sort";
 		return simulationUserRankingZSet.reverseRange(simulationUserRankingKey, start, end);
 	}
 
 	/*
-		정렬된 시뮬레이션 랭킹 정보 삭제
+		시뮬레이션 별 참가자 랭킹 정보 가져오기
+	 */
+	public RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq) {
+		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
+			= this.getSimulationUserRankingInfoSet(simulationSeq, 0, -1);
+		for (RedisSimulationUserRankingDTO redisSimulationUserRankingDto : simulationUserRankingInfo) {
+			if (redisSimulationUserRankingDto.getUserSeq().equals(userSeq)) {
+				log.info(redisSimulationUserRankingDto.toString());
+				return redisSimulationUserRankingDto;
+			}
+		}
+		log.info("해당 시뮬레이션에 없는 참가자 정보");
+		return null;
+	}
+
+	/*
+		시뮬레이션 랭킹 정보 삭제
 	 */
 	public void deleteSimulationUserRankingInfo(Long simulationSeq) {
 		String simulationUserRankingKey = "simulation_" + simulationSeq + "_sort";
@@ -108,15 +133,9 @@ public class SimulationUserRankRedisRepository {
 	}
 
 	/*
-		시뮬레이션 별 랭킹 정보 업데이트
+		시뮬레이션 별 랭킹 정보 산정
 	 */
 	public void updateSimulationUserRankingList(Long simulationSeq) {
-		// userHash 의 key: USER_HASH_KEY
-		// simulationUserHash 의 key: simulation_simulationSeq
-		// stockHash 의 key: stockCode
-		// stockUserHash 의 key: simulation_simulationSeq_user_userSeq
-		// simulationUserRankingZSet 의 key: simulation_simulationSeq_sort
-
 		// simulation_seq_sort 기존 랭킹 정보 초기화
 		this.deleteSimulationUserRankingInfo(simulationSeq);
 		String simulationUserRankingKey = "simulation_" + simulationSeq + "_sort";
@@ -204,7 +223,7 @@ public class SimulationUserRankRedisRepository {
 		long previousTotalMoney = Integer.MAX_VALUE;
 
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingSet
-			= this.getSimulationUserRankingInfo(simulationSeq, 0, -1);
+			= this.getSimulationUserRankingInfoSet(simulationSeq, 0, -1);
 
 		for (RedisSimulationUserRankingDTO simulationUserRankingDto : simulationUserRankingSet) {
 			log.info(simulationUserRankingDto.toString());
@@ -252,5 +271,22 @@ public class SimulationUserRankRedisRepository {
 			simulationUserHash.put(simulationUserHashKey, String.valueOf(userSeq), simulationUserDto);
 			log.info(simulationUserDto.toString());
 		}
+	}
+
+	/*
+		시뮬레이션 별 평균 티어 점수 산정
+	 */
+	public Integer getSimulationAvgTierInfo(Long simulationSeq) {
+		Map<String, RedisSimulationUserDTO> simulationUserDtoMap = this.getSimulationUserInfoMap(simulationSeq);
+		int totalTier = 0;
+		for (String userSeq : simulationUserDtoMap.keySet()) {
+			totalTier += this.getUserInfo(userSeq).getTier();
+		}
+		log.info("티어 점수 총합: {}", totalTier);
+
+		int avgTier = totalTier / simulationUserDtoMap.size();
+		log.info("평균 티어 점수: {}", avgTier);
+
+		return avgTier;
 	}
 }
