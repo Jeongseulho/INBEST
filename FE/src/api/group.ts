@@ -51,7 +51,7 @@ export const getInProgressGroupDetail = async (simulationSeq: number): Promise<I
 export const getJoinableGroupList = async (): Promise<JoinableGroupList> => {
   const { userInfo } = userStore.getState();
   const { data } = await api.get("/joinable-list", {
-    params: { userNickname: userInfo?.nickname, progressState: "waiting" },
+    params: { userNickname: userInfo?.nickname },
   });
   return data;
 };

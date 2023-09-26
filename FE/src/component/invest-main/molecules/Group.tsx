@@ -3,7 +3,7 @@ import { formatNumberToWon } from "../../../util/formatMoney";
 import modalStore from "../../../store/modalStore";
 import { JoinableGroup } from "../../../type/Group";
 
-interface Props extends JoinableGroup {
+interface Props extends Omit<JoinableGroup, "progressState"> {
   index: number;
 }
 

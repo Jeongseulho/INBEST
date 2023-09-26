@@ -1,10 +1,11 @@
 import News from "../../investing-news/molecules/News";
-import { useBreakingNews } from "./useBreakingNews";
+import { useQuery } from "react-query";
+import { getBreakingNews } from "../../../api/investingNews";
 import news from "../../../asset/image/news.png";
 import NewsSkeleton from "../../investing-news/molecules/NewsSkeleton";
 
 const BreakingNews = () => {
-  const { data, isLoading } = useBreakingNews();
+  const { data, isLoading } = useQuery(["breakingNews"], getBreakingNews);
   return (
     <div className=" shadow-component col-span-1 row-span-2 p-4">
       <div className=" flex items-center mb-4 gap-4">

@@ -26,11 +26,13 @@ export interface MyGroup {
   seedMoney: number;
   averageTier: number;
   progressState: string;
+  period: number;
 }
 
 export type MyGroupList = MyGroup[];
 
 export interface WaitingGroupDetail {
+  title: string;
   seedMoney: number;
   period: number;
   averageTier: number;
@@ -39,6 +41,7 @@ export interface WaitingGroupDetail {
 }
 
 export interface InProgressGroupDetail {
+  title: string;
   seedMoney: number;
   averageTier: number;
   rankInGroup: number;
@@ -55,6 +58,7 @@ export interface JoinableGroup {
   seedMoney: number;
   averageTier: number;
   period: number;
+  progressState: string;
 }
 
 export type JoinableGroupList = JoinableGroup[];

@@ -1,25 +1,28 @@
 import Modal from "react-modal";
-import modalStore from "../../../store/modalStore";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
+import modalStore from "../../../store/modalStore";
 import SeedMoneyTag from "../atoms/SeedMoneyTag";
 import Period from "../atoms/Period";
 import MeanTier from "../atoms/MeanTier";
-import JoinBtn from "../atoms/JoinBtn";
-import { useQuery } from "react-query";
-import { getJoinableGroupDetail } from "../../../api/group";
-import spinner from "../../../asset/image/spinner.svg";
-import CurJoinPeople from "../atoms/CurJoinPeople";
 import default_image from "../../../asset/image/default_image.png";
+import StartBtn from "../atoms/StartBtn";
+import ExitBtn from "../atoms/ExitBtn";
+import userStore from "../../../store/userStore";
+import CurJoinPeople from "../atoms/CurJoinPeople";
+import { getWaitingGroupDetail } from "../../../api/group";
+import { useQuery } from "react-query";
+import spinner from "../../../asset/image/spinner.svg";
 
-const QuestionJoinModal = () => {
+const WaitingGroupModal = () => {
   const { modalType, closeModal, simulationSeq } = modalStore();
-  const { isLoading, data } = useQuery(["detailJoinableGroup", simulationSeq], () => {
-    return getJoinableGroupDetail(simulationSeq);
+  const { userInfo } = userStore();
+  const { isLoading, data } = useQuery(["detailWaitingGroup", simulationSeq], () => {
+    return getWaitingGroupDetail(simulationSeq);
   });
 
   return (
     <Modal
-      isOpen={modalType === "questionJoin"}
+      isOpen={modalType === "waitingGroup"}
       ariaHideApp={false}
       onRequestClose={closeModal}
       closeTimeoutMS={300}
@@ -38,7 +41,7 @@ const QuestionJoinModal = () => {
       }}
     >
       {isLoading ? (
-        <img src={spinner} className=" my-auto" />
+        <img src={spinner} />
       ) : (
         <>
           <h3>그룹 이름 : {data?.title}</h3>
@@ -48,10 +51,23 @@ const QuestionJoinModal = () => {
             <MeanTier tier={data?.averageTier} />
             <CurJoinPeople profileImageList={data?.currentMemberImage || [default_image]} />
           </div>
-          <JoinBtn />
+          {userInfo?.seq === data?.ownerSeq ? (
+            <>
+              <p className=" font-regular text-md text-myGray ">이 그룹의 방장입니다, 게임을 시작할 수 있어요.</p>
+              <div className=" flex items-center gap-3">
+                <StartBtn />
+                <ExitBtn />
+              </div>
+            </>
+          ) : (
+            <>
+              <p className=" font-regular text-md text-myGray">방장이 모의투자를 시작할 때 까지 기다려주세요.</p>
+              <ExitBtn />
+            </>
+          )}
         </>
       )}
     </Modal>
   );
 };
-export default QuestionJoinModal;
+export default WaitingGroupModal;

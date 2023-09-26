@@ -15,8 +15,8 @@ const MyGroup = ({ index, title, currentMemberNum, seedMoney, averageTier, progr
   return (
     <div
       onClick={() => {
-        if (progressState === "beforeStart") {
-          openModal("beforeStartGroup", simulationSeq);
+        if (progressState === "waiting") {
+          openModal("waitingGroup", simulationSeq);
         } else if (progressState === "inProgress") {
           openModal("inProgressGroup", simulationSeq);
         }
