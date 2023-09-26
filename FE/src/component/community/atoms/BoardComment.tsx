@@ -104,8 +104,8 @@ const BoardComment = ({ comment, cocommentText, setCocommentText, onPostCocommen
               )}
             </span>
             {showCocoment &&
-              comment.cocommentList.map((cocoment) => (
-                <CocommentItem commentSeq={comment.seq} board={board} comment={cocoment} />
+              comment.cocommentList.map((cocomment, idx) => (
+                <CocommentItem key={idx} comment={comment} board={board} cocomment={cocomment} />
               ))}
           </div>
         </div>

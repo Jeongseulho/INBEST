@@ -75,6 +75,6 @@ export const putCocomment = async (
   context: string,
   cocomentSeq: string
 ): Promise<Comment> => {
-  const { data } = await apiWithAuth.put(`/${boardSeq}/comments/${commentSeq}/cocoments/${cocomentSeq}`, { context });
+  const { data } = await apiWithAuth.put(`/${boardSeq}/comments/${commentSeq}/cocomments/${cocomentSeq}`, { context });
   return data;
 };

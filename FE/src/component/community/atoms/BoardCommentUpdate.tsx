@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface CommentProps {
   setCommentText: React.Dispatch<React.SetStateAction<string>>;
   onUpdateComment?: (boardSeq: string, commentSeq: string, context: string) => Promise<void>;
@@ -6,6 +8,7 @@ interface CommentProps {
   cocommentSeq?: string;
   onCancel: React.Dispatch<React.SetStateAction<boolean>>;
   boardSeq: string;
+  onUpdateCocoment?: (boardSeq: string, commentSeq: string, context: string, cocomentSeq: string) => Promise<void>;
 }
 const BoardCommentUpdate = ({
   setCommentText,
@@ -15,8 +18,10 @@ const BoardCommentUpdate = ({
   onCancel,
   cocommentSeq,
   boardSeq,
+  onUpdateCocoment,
 }: CommentProps) => {
-  // const { userInfo } = userStore();
+  const [originalCommentText] = useState(commentText);
+
   return (
     <>
       <div>
@@ -27,12 +32,19 @@ const BoardCommentUpdate = ({
           value={commentText}
         />
         <div className="flex justify-end items-center">
-          <button className="me-5 text-red-500" onClick={() => onCancel((prev) => !prev)}>
+          <button
+            className="me-5 text-red-500"
+            onClick={() => {
+              setCommentText(originalCommentText);
+              onCancel((prev) => !prev);
+            }}
+          >
             취소
           </button>
           <button
             onClick={() => {
               if (onUpdateComment) onUpdateComment(boardSeq, commentSeq, commentText);
+              else if (onUpdateCocoment) onUpdateCocoment(boardSeq, commentSeq, commentText, cocommentSeq!);
             }}
           >
             수정

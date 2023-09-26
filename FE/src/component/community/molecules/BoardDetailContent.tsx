@@ -102,8 +102,9 @@ const BoardDetailContent = () => {
         )}
       </div>
       <div>
-        {board?.commentList.map((comment) => (
+        {board?.commentList.map((comment, idx) => (
           <BoardComment
+            key={idx}
             comment={comment}
             cocommentText={cocommentText}
             setCocommentText={setCocommentText}

@@ -9,8 +9,8 @@ interface MenuProps {
   board: Board;
   comment: Comment | null;
   cocomment: Comment | null;
-  onDelete: ((board: string) => Promise<void>) | null;
-  onDeleteComment: ((boardSeq: string, commentSeq: string, cocoment: string | null) => Promise<void>) | null;
+  onDelete?: ((board: string) => Promise<void>) | null;
+  onDeleteComment?: ((boardSeq: string, commentSeq: string, cocoment: string | null) => Promise<void>) | null;
   onShowUpdateForm?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const BoardMenubar = ({ board, comment, cocomment, onDelete, onDeleteComment, onShowUpdateForm }: MenuProps) => {
