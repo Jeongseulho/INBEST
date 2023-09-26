@@ -1,6 +1,6 @@
 package com.jrjr.invest.rank.service;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -23,14 +23,17 @@ public class SimulationUserRankServiceImpl implements SimulationUserRankService 
 	}
 
 	@Override
-	public List<RedisSimulationUserRankingDTO> getSimulationUserRankingInfo(Long simulationSeq, Long start, Long end) {
-		// sorted set (RedisSimulationUserRankingDTO) 의 정보 반환
-		return null;
+	public Set<RedisSimulationUserRankingDTO> getSimulationUserRankingInfo(Long simulationSeq, Long start, Long end) {
+		return simulationUserRankRedisRepository.getSimulationUserRankingInfoSet(simulationSeq, start, end);
 	}
 
 	@Override
-	public RedisSimulationUserRankingDTO getMySimulationUserRankingInfo(Long simulationSeq, Long userSeq) {
-		// sorted set (RedisSimulationUserRankingDTO) 의 정보 반환
-		return null;
+	public RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq) {
+		return simulationUserRankRedisRepository.getSimulationUserRankingInfo(simulationSeq, userSeq);
+	}
+
+	@Override
+	public Integer getSimulationAvgTierInfo(Long simulationSeq) {
+		return simulationUserRankRedisRepository.getSimulationAvgTierInfo(simulationSeq);
 	}
 }
