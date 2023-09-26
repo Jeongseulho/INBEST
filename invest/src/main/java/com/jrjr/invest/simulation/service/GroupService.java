@@ -78,8 +78,11 @@ public class GroupService {
 			Long userSeq : groupDTO.getUserSeqList()) {
 			User user = userRepository.findBySeq(userSeq);
 
+			log.info("userSeq : " + user.getSeq() + " userNickname : " + user.getNickname());
+
 			// 존재하지 않는 유저 제외하고 진행
 			if (user == null) {
+				log.info("존재하지 않은 유저 제외하고 진행");
 				continue;
 			}
 
