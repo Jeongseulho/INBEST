@@ -143,19 +143,12 @@ public class BoardController {
 		log.info("page : " + page + " size : " + size);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 		List<BoardDTO> boardDTOList = boardService.findAllBoards(page, size);
-
 		log.info("검색 결과 : " + boardDTOList);
 
-		//로그인한 유저가 좋아요를 누른 경우 처리
+		//게시물 좋아요/덧글 수 통계 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
-			List<UserDTO> likeUserList = boardDTOList.get(i).getLikesUserList();
-			if (likeUserList != null) {
-				for (int j = 0; j < likeUserList.size(); j++) {
-					if (likeUserList.get(j).getEmail().equals(loginEmail)) {
-						boardDTOList.get(i).setLoginLike(true);
-					}
-				}
-			}
+			BoardDTO boardDTO = boardDTOList.get(i);
+			boardDTO = boardService.setBoardInfo(boardDTO, loginEmail);
 		}
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -185,17 +178,12 @@ public class BoardController {
 		//토큰으로 유저 이메일 얻기
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
-		//로그인한 유저가 좋아요를 누른 경우 처리
+		//게시물 좋아요/덧글 수 통계 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
-			List<UserDTO> likeUserList = boardDTOList.get(i).getLikesUserList();
-			if (likeUserList != null) {
-				for (int j = 0; j < likeUserList.size(); j++) {
-					if (likeUserList.get(j).getEmail().equals(loginEmail)) {
-						boardDTOList.get(i).setLoginLike(true);
-					}
-				}
-			}
+			BoardDTO boardDTO = boardDTOList.get(i);
+			boardDTO = boardService.setBoardInfo(boardDTO, loginEmail);
 		}
+
 		log.info("검색 결과 : " + boardDTOList);
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -223,7 +211,11 @@ public class BoardController {
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
 		List<BoardDTO> boardDTOList = boardService.findMostViewPosts(pageSize, period);
-
+		//게시물 좋아요/덧글 수 통계 처리
+		for (int i = 0; i < boardDTOList.size(); i++) {
+			BoardDTO boardDTO = boardDTOList.get(i);
+			boardDTO = boardService.setBoardInfo(boardDTO, loginEmail);
+		}
 		log.info("검색 결과 : " + boardDTOList);
 		//토큰으로 유저 이메일 얻기
 		log.info("로그인 유저 이메일 : " + loginEmail);
@@ -264,24 +256,16 @@ public class BoardController {
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		Map<String, Object> resultMap = new HashMap<>();
+		int likesCount = 0;
+		int commentCount = 0;
 		if (boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()) {
 			resultMap.put("success", false);
 		} else {
 			resultMap.put("success", true);
-			boolean like = false;
 
-			if (boardDTO.getLikesUserList() != null) {
-				for (UserDTO likeUserDTO : boardDTO.getLikesUserList()) {
-					if (likeUserDTO.getEmail().equals(loginEmail)) {
-						like = true;
-					}
-				}
-			}
-
-			resultMap.put("loginUserLike", like);
+			boardDTO = boardService.setBoardInfo(boardDTO, loginEmail);
 		}
 		resultMap.put("board", boardDTO);
-
 		log.info("========== 게시판 상세 정보 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -352,6 +336,47 @@ public class BoardController {
 		resultMap.put("comment", resultDto);
 
 		log.info("========== 덧글 등록 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "댓글 좋아요")
+	@PutMapping("/{boardSeq}/comments/{commentSeq}/likes")
+	public ResponseEntity<Map<String, Object>> updateCommentLikes(
+		@PathVariable(value = "boardSeq") String boardId,
+		@PathVariable(value = "commentSeq") String commentId,
+		HttpServletRequest request,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq) throws
+		Exception {
+		log.info("========== 댓글 좋아요 시작 ==========");
+
+		if (loginEmail.equals("")) {
+			log.info("로그인 이메일 정보가 없습니다.");
+		} else {
+			log.info("로그인 유저 이메일 : " + loginEmail);
+		}
+
+		UserDTO userDTO = userService.findByEmail(loginEmail);
+		if (loginEmail.equals("")) {
+			throw new Exception("해당 이메일의 유저 정보가 없습니다.");
+		}
+
+		log.info("댓글 seq " + commentId);
+
+		CommentDTO commentDTO = commentService.updateCommentLikes(userDTO.getSeq(), boardId);
+
+		log.info("좋아요 결과 : " + commentDTO);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (commentDTO.getSeq() == null || commentDTO.getSeq().isEmpty()) {
+			resultMap.put("success", false);
+		} else {
+			resultMap.put("success", true);
+		}
+
+		resultMap.put("board", commentDTO);
+
+		log.info("========== 댓글 좋아요 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
@@ -526,4 +551,47 @@ public class BoardController {
 		log.info("========== 대댓글 삭제 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
+	@Operation(summary = "대댓글 좋아요")
+	@PutMapping("/{boardSeq}/comments/{commentSeq}/cocomments/{cocommentSeq}/likes")
+	public ResponseEntity<Map<String, Object>> updateCocommentLikes(
+		@PathVariable(value = "boardSeq") String boardId,
+		@PathVariable(value = "commentSeq") String commentId,
+		@PathVariable(value = "cocommentSeq") String cocommentId,
+		HttpServletRequest request,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq) throws
+		Exception {
+		log.info("========== 댓글 좋아요 시작 ==========");
+
+		if (loginEmail.equals("")) {
+			log.info("로그인 이메일 정보가 없습니다.");
+		} else {
+			log.info("로그인 유저 이메일 : " + loginEmail);
+		}
+
+		UserDTO userDTO = userService.findByEmail(loginEmail);
+		if (loginEmail.equals("")) {
+			throw new Exception("해당 이메일의 유저 정보가 없습니다.");
+		}
+
+		log.info("대댓글 seq " + cocommentId);
+
+		CommentDTO cocommentDTO = commentService.updateCoCommentLikes(userDTO.getSeq(), cocommentId);
+
+		log.info("좋아요 결과 : " + cocommentDTO);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (cocommentDTO.getSeq() == null || cocommentDTO.getSeq().isEmpty()) {
+			resultMap.put("success", false);
+		} else {
+			resultMap.put("success", true);
+		}
+
+		resultMap.put("board", cocommentDTO);
+
+		log.info("========== 댓글 좋아요 종료 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
 }

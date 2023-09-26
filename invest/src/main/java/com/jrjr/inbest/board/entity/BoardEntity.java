@@ -60,8 +60,8 @@ public class BoardEntity extends BaseEntity implements Serializable {
 		BoardDTO boardDTO = BoardDTO.builder().
 			seq(id)
 			.userSeq(userSeq)
-			.view(view).
-			likes(likes)
+			.view(view)
+			.likes(likes)
 			.context(context)
 			.title(title)
 			.createdDate(getCreatedDate())
@@ -83,13 +83,6 @@ public class BoardEntity extends BaseEntity implements Serializable {
 			}
 		}
 		boardDTO.setCommentList(commentDTOList);
-
-		// List<UserDTO> likeUserDTOList = new ArrayList<>();
-		// if (likeUserList != null) {
-		// 	for (UserDTO userEntity : likeUserList) {
-		// 		likeUserDTOList.add(userEntity.toUserDTO());
-		// 	}
-		// }
 		boardDTO.setLikesUserList(likeUserList);
 
 		return boardDTO;

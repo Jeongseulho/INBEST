@@ -164,4 +164,43 @@ public class CommentService {
 		coCommentRepository.save(coCommentEntity);
 	}
 
+	@Transactional
+	public CommentDTO updateCommentLikes(Long userSeq, String commentId) throws Exception {
+		CommentEntity commentEntity = commentRepository.findById(commentId).orElse(null);
+
+		//게시물 있는지 확인
+		if (commentEntity == null) {
+			throw new Exception("대상 댓글이 없습니다.");
+		}
+
+		UserEntity userEntity = userRepository.findBySeq(userSeq);
+		//유저가 있는지 확인
+		if (userEntity == null) {
+			throw new Exception("대상 유저가 없습니다.");
+		}
+
+		commentEntity.updateLikeUserList(userEntity.toUserDTO());
+		commentRepository.save(commentEntity);
+		return commentEntity.toCommentDTO();
+	}
+
+	@Transactional
+	public CommentDTO updateCoCommentLikes(Long userSeq, String commentId) throws Exception {
+		CoCommentEntity coCommentEntity = coCommentRepository.findById(commentId).orElse(null);
+
+		//게시물 있는지 확인
+		if (coCommentEntity == null) {
+			throw new Exception("대상 대댓글이 없습니다.");
+		}
+
+		UserEntity userEntity = userRepository.findBySeq(userSeq);
+		//유저가 있는지 확인
+		if (userEntity == null) {
+			throw new Exception("대상 유저가 없습니다.");
+		}
+
+		coCommentEntity.updateLikeUserList(userEntity.toUserDTO());
+		coCommentRepository.save(coCommentEntity);
+		return coCommentEntity.toCommentDTO();
+	}
 }

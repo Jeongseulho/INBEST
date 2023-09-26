@@ -214,6 +214,55 @@ public class BoardService {
 		return boardEntity.toBoardDTO();
 	}
 
+	public BoardDTO setBoardInfo(BoardDTO boardDTO, String loginEmail) {
+		int likesCount = 0;
+		int commentCount = 0;
+		if (boardDTO.getLikesUserList() != null) {
+			likesCount = boardDTO.getLikesUserList().size();
+			for (UserDTO likeUserDTO : boardDTO.getLikesUserList()) {
+				if (likeUserDTO.getEmail().equals(loginEmail)) {
+					boardDTO.setLoginLike(true);
+					break;
+				}
+			}
+		}
+		//게시물의 댓글/대댓글 좋아요를 눌렀는지 확인
+		if (boardDTO.getCommentList() != null) {
+			commentCount += boardDTO.getCommentList().size();
+			for (CommentDTO commentDTO : boardDTO.getCommentList()) {
+				//유저가 댓글 좋아요를 눌렀는지 확인
+				if (commentDTO.getLikeUserList() != null) {
+					for (UserDTO likeUserDTO : commentDTO.getLikeUserList()) {
+						if (likeUserDTO.getEmail().equals(loginEmail)) {
+							commentDTO.setLoginLike(true);
+							break;
+						}
+					}
+				}
+				//대댓글이 있는지 확인
+				if (commentDTO.getCocommentList() != null) {
+					commentCount += commentDTO.getCocommentList().size();
+					if (commentDTO.getCocommentList() != null) {
+						for (CommentDTO cocommentDTO : commentDTO.getCocommentList()) {
+							//유저가 대댓글 좋아요를 했는지 확인
+							if (cocommentDTO.getLikeUserList() != null) {
+								for (UserDTO likeUserDTO : cocommentDTO.getLikeUserList()) {
+									if (likeUserDTO.getEmail().equals(loginEmail)) {
+										cocommentDTO.setLoginLike(true);
+										break;
+									}
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+		boardDTO.setCommentCount(commentCount);
+		return boardDTO;
+	}
+
 	public List<BoardDTO> findMostLikesPosts(int pageSize, int period) throws Exception {
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = end.minusDays(period);
