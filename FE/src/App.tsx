@@ -11,12 +11,14 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: false,
       staleTime: 1000 * 60,
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -34,7 +36,7 @@ function App() {
               <Route path="/invest" element={<InvestMain />} />
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
-              <Route path="/invest/:groupCode" element={<Investing />} />
+              <Route path="/invest/:simulationSeq" element={<Investing />} />
               <Route path="/community" element={<Community />}></Route>
             </Routes>
           </AnimatePresence>

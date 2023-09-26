@@ -1,11 +1,16 @@
 import modalStore from "../../../store/modalStore";
+import { GroupSetting } from "../../../type/GroupSetting";
+import { UseMutateFunction } from "react-query";
+import { ApiSuccessMessage } from "../../../type/ApiSuccessMessage";
 interface Props {
   resetStepAndGroupSetting: () => void;
   dispatch: React.Dispatch<{ type: "TITLE"; payload: string }>;
   title: string;
+  groupSetting: GroupSetting;
+  createGroupMutation: UseMutateFunction<ApiSuccessMessage, unknown, GroupSetting, unknown>;
 }
 
-const SettingTitle = ({ resetStepAndGroupSetting, dispatch, title }: Props) => {
+const SettingTitle = ({ resetStepAndGroupSetting, dispatch, title, createGroupMutation, groupSetting }: Props) => {
   const { closeModal } = modalStore();
   return (
     <div className=" relative w-full h-full">
@@ -36,7 +41,9 @@ const SettingTitle = ({ resetStepAndGroupSetting, dispatch, title }: Props) => {
         >
           취소
         </button>
-        <button className=" me-10 ms-5 main-dark-btn">모의 투자 그룹 생성</button>
+        <button onClick={() => createGroupMutation(groupSetting)} className=" me-10 ms-5 main-dark-btn">
+          모의 투자 그룹 생성
+        </button>
       </div>
     </div>
   );

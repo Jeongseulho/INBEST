@@ -28,11 +28,13 @@ const ProfileUpdate = ({
     <>
       <Modal
         isOpen={showModal}
+        ariaHideApp={false}
+        closeTimeoutMS={300}
         style={{
           content: {
             ...CONTENT_MODAL_STYLE,
             width: "500px",
-            height: "510px",
+            height: "541px",
             margin: "auto",
           },
           overlay: OVERLAY_MODAL_STYLE,

@@ -59,6 +59,8 @@ const ProfileUpdate = ({
     <>
       <Modal
         isOpen={showModal}
+        ariaHideApp={false}
+        closeTimeoutMS={300}
         style={{
           content: {
             ...CONTENT_MODAL_STYLE,

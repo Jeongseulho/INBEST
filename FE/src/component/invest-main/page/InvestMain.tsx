@@ -3,7 +3,7 @@ import FilterModal from "../organisms/FilterModal";
 import GroupList from "../organisms/GroupList";
 import MyGroupList from "../organisms/MyGroupList";
 import InvestingTotalInfo from "../organisms/InvestingTotalInfo";
-import BeforeStartGroupModal from "../organisms/BeforeStartGroupModal";
+import WaitingGroupModal from "../organisms/WaitingGroupModal";
 import InProgressGroupModal from "../organisms/InProgressGroupModal";
 import QuestionJoinModal from "../organisms/QuestionJoinModal";
 
@@ -13,7 +13,7 @@ const InvestMain = () => {
       <InvestingTotalInfo />
       <CreateModal />
       <FilterModal />
-      <BeforeStartGroupModal />
+      <WaitingGroupModal />
       <InProgressGroupModal />
       <QuestionJoinModal />
       <MyGroupList />

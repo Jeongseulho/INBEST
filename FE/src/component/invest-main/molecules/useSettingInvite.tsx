@@ -1,7 +1,27 @@
-import { useQuery } from "react-query/types/react";
+import { searchUser } from "../../../api/group";
+import { useQuery } from "react-query";
+import { useState } from "react";
 
 export const useSettingInvite = () => {
-  const inviteUserQuery = useQuery(["invite_users"], () => {});
+  const [searchUserNickname, setSearchUserNickname] = useState<string>("");
+  const onChangeSearchUserNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchUserNickname(e.target.value);
+  };
 
-  return inviteUserQuery;
+  const { data, isLoading } = useQuery(
+    ["searchUserList", searchUserNickname],
+    () => {
+      return searchUser(searchUserNickname);
+    },
+    {
+      enabled: searchUserNickname.length >= 1,
+    }
+  );
+
+  return {
+    data,
+    isLoading,
+    searchUserNickname,
+    onChangeSearchUserNickname,
+  };
 };
