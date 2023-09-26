@@ -1,6 +1,12 @@
 package com.jrjr.invest.rank.dto;
 
-import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,18 +23,15 @@ import lombok.ToString;
 @ToString
 public class RedisStockUserDTO {
 
-	@NotNull
-	private Long simulationSeq;
-
-	@NotNull
-	private Long userSeq;
-
-	@NotNull
-	private String category;
-
-	@NotNull
 	private String stockCode;
 
-	@NotNull
-	private Integer count;
+	private int type;
+
+	private String name;
+
+	private Long amount;
+
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	private LocalDateTime lastModifiedDate;
 }
