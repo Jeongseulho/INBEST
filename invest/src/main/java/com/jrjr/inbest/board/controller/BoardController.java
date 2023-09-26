@@ -76,18 +76,19 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> updateBoard(
 		@PathVariable String boardId,
 		@RequestBody BoardDTO boardDTO,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 수정 시작 ==========");
 		log.info("입력 받은 데이터");
 		log.info(boardDTO.toString());
 
 		//토큰으로 유저 이메일 얻기
-		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		BoardDTO originalBoard = boardService.findBySeq(boardId);
 
-		if (!loginEmail.equals(originalBoard.getWriter().getEmail())) {
+		if (loginEmail == null || !loginEmail.equals(originalBoard.getWriter().getEmail())) {
 			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
 		}
 
@@ -103,18 +104,18 @@ public class BoardController {
 	@Operation(summary = "게시물 삭제")
 	@DeleteMapping("/{boardId}")
 	public ResponseEntity<Map<String, Object>> deleteBoard(
-		@PathVariable String boardId, HttpServletRequest request) throws Exception {
+		@PathVariable String boardId, @RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq, HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 삭제 시작 ==========");
 		log.info("입력 받은 데이터");
 		log.info(boardId);
 
 		//토큰으로 유저 이메일 얻기
-		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		BoardDTO originalBoard = boardService.findBySeq(boardId);
 
-		if (!loginEmail.equals(originalBoard.getWriter().getEmail())) {
+		if (loginEmail == null || !loginEmail.equals(originalBoard.getWriter().getEmail())) {
 			throw new Exception("로그인한 유저와 게시물의 작성자와 다릅니다.");
 		}
 
@@ -134,24 +135,15 @@ public class BoardController {
 	})
 	@GetMapping("")
 	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "pageNo") int page,
-		@RequestParam(name = "pageSize") int size,
+		@RequestParam(name = "pageSize") int size, @RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 목록 검색 시작 ==========");
 		log.info("page : " + page + " size : " + size);
-
+		log.info("로그인 유저 이메일 : " + loginEmail);
 		List<BoardDTO> boardDTOList = boardService.findAllBoards(page, size);
 
 		log.info("검색 결과 : " + boardDTOList);
-
-		//토큰으로 유저 이메일 얻기
-		String loginEmail = "";
-
-		try {
-			loginEmail = jwtProvider.getEmail(request);
-			log.info("로그인 유저 이메일 : " + loginEmail);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		//로그인한 유저가 좋아요를 누른 경우 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
@@ -182,20 +174,15 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 좋아요 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
 		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageSize, period);
 		//토큰으로 유저 이메일 얻기
-		String loginEmail = "";
-
-		try {
-			loginEmail = jwtProvider.getEmail(request);
-			log.info("로그인 유저 이메일 : " + loginEmail);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		//로그인한 유저가 좋아요를 누른 경우 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
@@ -228,6 +215,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllViewBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 조회수 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
@@ -236,14 +225,7 @@ public class BoardController {
 
 		log.info("검색 결과 : " + boardDTOList);
 		//토큰으로 유저 이메일 얻기
-		String loginEmail = "";
-
-		try {
-			loginEmail = jwtProvider.getEmail(request);
-			log.info("로그인 유저 이메일 : " + loginEmail);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		//로그인한 유저가 좋아요를 누른 경우 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
@@ -268,20 +250,17 @@ public class BoardController {
 	@Operation(summary = "게시판 상세정보")
 	@GetMapping("/{seq}")
 	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable(value = "seq") String seq,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 상세 정보 시작 ==========");
 		log.info("seq : " + seq);
 
 		BoardDTO boardDTO = boardService.findBySeq(seq);
-		String loginEmail = "";
 		log.info("검색 결과 : " + boardDTO);
 		//토큰으로 유저 이메일 얻기
-		try {
-			loginEmail = jwtProvider.getEmail(request);
-			log.info("로그인 유저 이메일 : " + loginEmail);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		Map<String, Object> resultMap = new HashMap<>();
 		if (boardDTO.getSeq() == null || boardDTO.getSeq().isEmpty()) {
@@ -309,16 +288,18 @@ public class BoardController {
 	@PutMapping("/{boardSeq}/likes")
 	public ResponseEntity<Map<String, Object>> updateBoardLikes(
 		@PathVariable(value = "boardSeq") String boardId,
-		HttpServletRequest request) throws
+		HttpServletRequest request,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq) throws
 		Exception {
 		log.info("========== 게시판 좋아요 시작 ==========");
-		//토큰으로 유저 이메일 얻기
-		String loginEmail = jwtProvider.getEmail(request);
+
 		if (loginEmail.equals("")) {
-			throw new Exception("로그인 이메일 정보가 없습니다.");
+			log.info("로그인 이메일 정보가 없습니다.");
+		} else {
+			log.info("로그인 유저 이메일 : " + loginEmail);
 		}
 
-		log.info("로그인 유저 이메일 : " + loginEmail);
 		UserDTO userDTO = userService.findByEmail(loginEmail);
 		if (loginEmail.equals("")) {
 			throw new Exception("해당 이메일의 유저 정보가 없습니다.");
@@ -380,6 +361,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> updateComment(
 		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 덧글 수정 시작 ==========");
@@ -388,7 +371,6 @@ public class BoardController {
 		log.info(commentDTO.toString());
 
 		//토큰으로 유저 이메일 얻기
-		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		CommentDTO originalComment = commentService.findCommentBySeq(commentSeq);
@@ -416,13 +398,14 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> deleteComment(
 		@PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 덧글 삭제 시작 ==========");
 		log.info("덧글 id : " + commentSeq);
 
 		//토큰으로 유저 이메일 얻기
-		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		CommentDTO originalComment = commentService.findCommentBySeq(commentSeq);
@@ -450,7 +433,9 @@ public class BoardController {
 	@PostMapping("/{boardSeq}/comments/{commentSeq}/cocomments")
 	public ResponseEntity<Map<String, Object>> insertCoComment(
 		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq
-		, @PathVariable(name = "commentSeq") String commentSeq) throws
+		, @PathVariable(name = "commentSeq") String commentSeq,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq) throws
 		Exception {
 		log.info("========== 대댓글 등록 시작 ==========");
 		log.info("대댓글 : " + commentDTO);
@@ -479,6 +464,8 @@ public class BoardController {
 		@RequestBody CommentDTO cocommentDTO, @PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
 		@PathVariable(name = "cocommentSeq") String cocommentSeq,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 대댓글 수정 시작 ==========");
@@ -486,8 +473,6 @@ public class BoardController {
 		log.info("대댓글 : " + cocommentDTO);
 		log.info(cocommentDTO.toString());
 
-		//토큰으로 유저 이메일 얻기
-		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		CommentDTO originalCocomment = commentService.findCocommentBySeq(cocommentSeq);
@@ -515,13 +500,12 @@ public class BoardController {
 		@PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
 		@PathVariable(name = "cocommentSeq") String cocommentSeq,
+		@RequestParam(required = false) String loginEmail,
+		@RequestParam(required = false) String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 대댓글 삭제 시작 ==========");
 		log.info("덧글 id : " + cocommentSeq);
-
-		//토큰으로 유저 이메일 얻기
-		String loginEmail = jwtProvider.getEmail(request);
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
 		CommentDTO originalComment = commentService.findCocommentBySeq(cocommentSeq);
