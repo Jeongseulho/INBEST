@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jrjr.security.dto.LoginDto;
 import com.jrjr.security.service.JwtProvider;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,11 +26,18 @@ public class SecurityController {
 	private final JwtProvider jwtProvider;
 
 	@GetMapping("/security")
-	ResponseEntity<Map<String, Object>> get(HttpServletRequest request) {
+	ResponseEntity<Map<String, Object>> get(HttpServletRequest request, HttpServletResponse response) {
 		log.info("========== Security Controller 실행 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request.getParameter("accessToken"));
+		String refreshToken = request.getParameter("refreshToken");
 		if (accessToken.isPresent()) {
+			if (!jwtProvider.isValidToken(accessToken.get())) {
+				if (refreshToken.isEmpty()) {
+					throw new JwtException("EXPIRED_REFRESH_TOKEN");
+				}
+				jwtProvider.reissueAccessToken(response, refreshToken);
+			}
 			LoginDto loginDto = jwtProvider.getUserInfoFromToken(accessToken.get());
 			log.info("seq: {}", loginDto.getUserSeq());
 			log.info("email: {}", loginDto.getEmail());
