@@ -17,9 +17,15 @@ import { exitGroup } from "../../../api/group";
 const WaitingGroupModal = () => {
   const { modalType, closeModal, simulationSeq } = modalStore();
   const { userInfo } = userStore();
-  const { isLoading, data } = useQuery(["detailWaitingGroup", simulationSeq], () => {
-    return getWaitingGroupDetail(simulationSeq);
-  });
+  const { isLoading, data } = useQuery(
+    ["detailWaitingGroup", simulationSeq],
+    () => {
+      return getWaitingGroupDetail(simulationSeq);
+    },
+    {
+      enabled: modalType === "waitingGroup",
+    }
+  );
   const queryClient = useQueryClient();
   const [isJoin, setIsJoin] = useState(true);
 
@@ -61,7 +67,7 @@ const WaitingGroupModal = () => {
                 <SeedMoneyTag seedMoney={data?.seedMoney} />
                 <Period period={data?.period} />
                 <MeanTier tier={data?.averageTier} />
-                <CurJoinPeople profileImageList={data?.currentMemberImage || [default_image]} />
+                <CurJoinPeople profileImageList={data?.currentMemberImageList || [default_image]} />
               </div>
               {userInfo?.seq === data?.ownerSeq ? (
                 <>

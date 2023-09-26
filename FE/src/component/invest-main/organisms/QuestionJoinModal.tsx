@@ -14,9 +14,15 @@ import { useState } from "react";
 
 const QuestionJoinModal = () => {
   const { modalType, closeModal, simulationSeq } = modalStore();
-  const { isLoading, data } = useQuery(["detailJoinableGroup", simulationSeq], () => {
-    return getJoinableGroupDetail(simulationSeq);
-  });
+  const { isLoading, data } = useQuery(
+    ["detailJoinableGroup", simulationSeq],
+    () => {
+      return getJoinableGroupDetail(simulationSeq);
+    },
+    {
+      enabled: modalType === "questionJoin",
+    }
+  );
   const queryClient = useQueryClient();
   const [isJoin, setIsJoin] = useState(false);
 
@@ -58,7 +64,7 @@ const QuestionJoinModal = () => {
                 <SeedMoneyTag seedMoney={data?.seedMoney} />
                 <Period period={data?.period} />
                 <MeanTier tier={data?.averageTier} />
-                <CurJoinPeople profileImageList={data?.currentMemberImage || [default_image]} />
+                <CurJoinPeople profileImageList={data?.currentMemberImageList || [default_image]} />
               </div>
               <button
                 onClick={() => mutate(simulationSeq)}

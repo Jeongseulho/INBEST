@@ -6,7 +6,7 @@ import { useSettingInvite } from "./useSettingInvite";
 import { BsSearch } from "react-icons/bs";
 import spinner from "../../../asset/image/spinner.svg";
 
-type Action = { type: "ADD_INVITE"; payload: SearchUser } | { type: "DELETE_INVITE"; payload: SearchUser };
+type Action = { type: "ADD_INVITE"; payload: SearchUser } | { type: "DELETE_INVITE"; payload: number };
 interface Props {
   onNextStep: () => void;
   dispatch: React.Dispatch<Action>;
@@ -18,13 +18,13 @@ const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteU
   const { data, isLoading, searchUserNickname, onChangeSearchUserNickname } = useSettingInvite();
 
   return (
-    <div className=" relative w-full h-full">
-      <div className=" flex flex-col items-center justify-around h-5/6">
+    <div className=" relative w-full h-full overflow-hidden my-2">
+      <div className=" flex flex-col items-center h-full gap-4">
         <h3 className=" text-center text-dark">어떤 사람을 초대할까요?</h3>
 
         <div className=" flex flex-col w-full">
           <label htmlFor="nickname-search" className="text-left">
-            <p className="my-2 font-regular">유저 검색</p>
+            <p className=" font-regular">유저 검색</p>
             <div className=" relative">
               <input
                 type="text"
@@ -47,19 +47,19 @@ const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteU
             </div>
           </label>
         </div>
-        <div className=" w-full h-1/5">
-          <p className=" my-2 font-regular text-left">검색 결과</p>
+        <div className=" w-full h-1/4 ">
+          <p className=" my-1 font-regular text-left">검색 결과</p>
           {isLoading ? (
             <div className=" flex items-center justify-center">
               <img src={spinner} alt="Loading Spinner" width={80} />
             </div>
           ) : (
-            <div className=" flex flex-wrap">
+            <div className=" flex flex-wrap overflow-y-scroll h-full">
               {data?.map((user) => (
                 <UserItem
-                  key={user.userSeq}
+                  key={user.seq}
                   nickname={user.nickname}
-                  profileImg={user.profile}
+                  profileImg={user.profileImgSearchName}
                   dispatch={dispatch}
                   payload={user}
                 />
@@ -68,22 +68,24 @@ const SettingInvite = ({ onNextStep, resetStepAndGroupSetting, dispatch, inviteU
           )}
         </div>
 
-        <div className=" w-full h-1/5">
+        <div className=" w-full h-1/5 mt-6">
           <p className=" my-2 font-regular text-left">초대 목록</p>
-          <div className=" flex flex-wrap">
+          <div className=" flex flex-wrap overflow-y-scroll h-full">
             {inviteUsers.map((user) => (
               <UserTag
-                key={user.userSeq}
+                key={user.seq}
                 nickname={user.nickname}
-                profileImg={user.profile}
+                profileImg={user.profileImgSearchName}
                 dispatch={dispatch}
-                payload={user}
+                payload={user.seq}
               />
             ))}
           </div>
         </div>
 
-        <p className=" text-myGray text-center">아무도 초대하지 않아도 다음 단계로 넘어갈 수 있습니다.</p>
+        <p className=" text-myGray text-center relative top-8">
+          아무도 초대하지 않아도 다음 단계로 넘어갈 수 있습니다.
+        </p>
       </div>
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button

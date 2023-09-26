@@ -12,10 +12,29 @@ import SettingTitle from "../molecules/SettingTitle";
 import modalStore from "../../../store/modalStore";
 import Complete from "../molecules/Complete";
 import complete from "../../../asset/image/complete.png";
+import { toast } from "react-toastify";
+import { createGroup } from "../../../api/group";
+import { useMutation, useQueryClient } from "react-query";
+import { GroupSetting } from "../../../type/GroupSetting";
 
 const CreateModal = () => {
-  const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting, createGroupMutation } = useCreateModal();
+  const queryClient = useQueryClient();
+
+  const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting } = useCreateModal();
   const { modalType, closeModal } = modalStore();
+  const { mutate } = useMutation((groupSetting: GroupSetting) => createGroup(groupSetting), {
+    onMutate: async (groupSetting) => {
+      if (groupSetting.title.trim().length < 1) {
+        toast.error("방 제목을 1자이상 입력해주세요.");
+        throw new Error("방 제목을 1자이상 입력해주세요.");
+      }
+      return groupSetting;
+    },
+    onSuccess: () => {
+      onNextStep();
+      queryClient.invalidateQueries(["myGroupList", "joinableGroupList"]);
+    },
+  });
 
   const CreateModalStepComponent = [
     <InitGroup onNextStep={onNextStep} resetStepAndGroupSetting={resetStepAndGroupSetting} />,
@@ -41,7 +60,7 @@ const CreateModal = () => {
       resetStepAndGroupSetting={resetStepAndGroupSetting}
       dispatch={dispatch}
       title={groupSetting.title}
-      createGroupMutation={createGroupMutation}
+      mutate={mutate}
       groupSetting={groupSetting}
     />,
     <Complete resetStepAndGroupSetting={resetStepAndGroupSetting} />,
@@ -62,7 +81,7 @@ const CreateModal = () => {
           width: "500px",
           height:
             step === GROUP_CREATE_STEP_MAP.INVITE_USER
-              ? "700px"
+              ? "720px"
               : step === GROUP_CREATE_STEP_MAP.COMPLETE_GROUP
               ? "350px"
               : "500px",

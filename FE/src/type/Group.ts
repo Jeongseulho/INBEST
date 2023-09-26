@@ -13,9 +13,9 @@ export type InvestingStatusList = {
 }[];
 
 export interface SearchUser {
-  profile: string;
+  profileImgSearchName: string;
   nickname: string;
-  userSeq: number;
+  seq: number;
 }
 export type SearchUserList = SearchUser[];
 
@@ -36,7 +36,7 @@ export interface WaitingGroupDetail {
   seedMoney: number;
   period: number;
   averageTier: number;
-  currentMemberImage: string[];
+  currentMemberImageList: string[];
   ownerSeq: number;
 }
 
@@ -46,7 +46,7 @@ export interface InProgressGroupDetail {
   averageTier: number;
   rankInGroup: number;
   rankInGroupFluctuation: number;
-  currentMemberImage: string[];
+  currentMemberImageList: string[];
   startDate: string;
   endDate: string;
 }

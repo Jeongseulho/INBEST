@@ -15,9 +15,15 @@ import { useNavigate } from "react-router-dom";
 const InProgressGroupModal = () => {
   const { modalType, closeModal, simulationSeq } = modalStore();
   const navigate = useNavigate();
-  const { isLoading, data } = useQuery(["detailInProgressGroup", simulationSeq], () => {
-    return getInProgressGroupDetail(simulationSeq);
-  });
+  const { isLoading, data } = useQuery(
+    ["detailInProgressGroup", simulationSeq],
+    () => {
+      return getInProgressGroupDetail(simulationSeq);
+    },
+    {
+      enabled: modalType === "inProgressGroup",
+    }
+  );
 
   return (
     <Modal
@@ -51,7 +57,7 @@ const InProgressGroupModal = () => {
               rankInGroup={data?.rankInGroup || 0}
               rankInGroupFluctuation={data?.rankInGroupFluctuation || 0}
             />
-            <CurJoinPeople profileImageList={data?.currentMemberImage || [default_image]} />
+            <CurJoinPeople profileImageList={data?.currentMemberImageList || [default_image]} />
             <RemainPeriod startDate={data?.startDate || ""} endDate={data?.endDate || ""} />
           </div>
 
