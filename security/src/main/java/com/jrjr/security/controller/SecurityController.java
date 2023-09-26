@@ -29,15 +29,22 @@ public class SecurityController {
 	ResponseEntity<Map<String, Object>> get(HttpServletRequest request, HttpServletResponse response) {
 		log.info("========== Security Controller 실행 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
+
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(request.getParameter("accessToken"));
 		String refreshToken = request.getParameter("refreshToken");
+
+		log.info("accessToken: {}", accessToken);
+		log.info("refreshToken: {}", refreshToken);
+
 		if (accessToken.isPresent()) {
+			log.info("accessToken.isPresent() 실행");
 			if (!jwtProvider.isValidToken(accessToken.get())) {
 				if (refreshToken.isEmpty()) {
 					throw new JwtException("EXPIRED_REFRESH_TOKEN");
 				}
 				jwtProvider.reissueAccessToken(response, refreshToken);
 			}
+			log.info("accessToken 정상");
 			LoginDto loginDto = jwtProvider.getUserInfoFromToken(accessToken.get());
 			log.info("seq: {}", loginDto.getUserSeq());
 			log.info("email: {}", loginDto.getEmail());
