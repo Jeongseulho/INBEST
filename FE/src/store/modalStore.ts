@@ -3,17 +3,17 @@ import { devtools } from "zustand/middleware";
 
 interface ModalManagerState {
   modalType: string;
-  detailGroupCode: string | null;
-  openModal: (modalType: string, detailGroupCode?: string | null) => void;
+  simulationSeq: number;
+  openModal: (modalType: string, simulationSeq?: number) => void;
   closeModal: () => void;
 }
 
 const modalStore = create<ModalManagerState>()(
   devtools((set) => ({
     modalType: "",
-    detailGroupCode: null,
-    openModal: (modalType, detailGroupCode = null) => set({ modalType, detailGroupCode }),
-    closeModal: () => set({ modalType: "", detailGroupCode: null }),
+    simulationSeq: 0,
+    openModal: (modalType, simulationSeq) => set({ modalType, simulationSeq }),
+    closeModal: () => set({ modalType: "", simulationSeq: 0 }),
   }))
 );
 

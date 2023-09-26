@@ -1,15 +1,11 @@
+import { SearchUser } from "./Group";
 export type Period = number;
 export type SeedMoney = number;
-export type GroupInviteUser = {
-  userSeq: number;
-  nickname: string;
-  profileImg: string;
-};
 
 export interface GroupSetting {
   period: Period;
   seedMoney: SeedMoney;
-  unInviteUsers: GroupInviteUser[] | [];
-  inviteUsers: GroupInviteUser[] | [];
+  invitedUsers: SearchUser[] | [];
   title: string;
+  ownerSeq: number;
 }

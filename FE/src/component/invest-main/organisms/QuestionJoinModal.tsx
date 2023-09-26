@@ -3,13 +3,30 @@ import modalStore from "../../../store/modalStore";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
 import SeedMoneyTag from "../atoms/SeedMoneyTag";
 import Period from "../atoms/Period";
-import people from "../../../asset/image/people.png";
 import MeanTier from "../atoms/MeanTier";
-import JoinBtn from "../atoms/JoinBtn";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getJoinableGroupDetail } from "../../../api/group";
+import spinner from "../../../asset/image/spinner.svg";
+import CurJoinPeople from "../atoms/CurJoinPeople";
 import default_image from "../../../asset/image/default_image.png";
+import { joinGroup } from "../../../api/group";
+import { useState } from "react";
 
 const QuestionJoinModal = () => {
-  const { modalType, closeModal, detailGroupCode } = modalStore();
+  const { modalType, closeModal, simulationSeq } = modalStore();
+  const { isLoading, data } = useQuery(["detailJoinableGroup", simulationSeq], () => {
+    return getJoinableGroupDetail(simulationSeq);
+  });
+  const queryClient = useQueryClient();
+  const [isJoin, setIsJoin] = useState(false);
+
+  const { mutate } = useMutation((simulationSeq: number) => joinGroup(simulationSeq), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myGroupList", "joinableGroupList"]);
+      setIsJoin(true);
+    },
+  });
+
   return (
     <Modal
       isOpen={modalType === "questionJoin"}
@@ -20,7 +37,7 @@ const QuestionJoinModal = () => {
         content: {
           ...CONTENT_MODAL_STYLE,
           width: "400px",
-          height: "570px",
+          height: isJoin ? "350px" : "570px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -30,28 +47,42 @@ const QuestionJoinModal = () => {
         overlay: OVERLAY_MODAL_STYLE,
       }}
     >
-      <h3>그룹 이름 : title1</h3>
-      <div className=" flex flex-col w-full gap-5">
-        <SeedMoneyTag />
-        <Period />
+      {!isJoin ? (
+        <>
+          {isLoading ? (
+            <img src={spinner} className=" my-auto" />
+          ) : (
+            <>
+              <h3>그룹 이름 : {data?.title}</h3>
+              <div className=" flex flex-col w-full gap-5">
+                <SeedMoneyTag seedMoney={data?.seedMoney} />
+                <Period period={data?.period} />
+                <MeanTier tier={data?.averageTier} />
+                <CurJoinPeople profileImageList={data?.currentMemberImage || [default_image]} />
+              </div>
+              <button
+                onClick={() => mutate(simulationSeq)}
+                className=" rounded-full text-white bg-mainDark py-2 px-4 transition-colors duration-500 hover:text-mainDark border-2 border-mainDark hover:bg-opacity-10"
+              >
+                그룹 참여하기
+              </button>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <div className="  w-full h-full flex flex-col items-center justify-between mt-5 ">
+            <h3 className=" text-center text-dark">
+              참여가 완료되었어요,
+              <br />내 그룹에서 확인할 수 있어요
+            </h3>
 
-        <MeanTier tier={100} />
-
-        <div className=" flex flex-col gap-2">
-          <div className=" flex items-end">
-            <p className=" font-regular me-2">현재 참여 인원</p>
-            <img src={people} width={40} />
+            <button onClick={closeModal} className=" main-dark-btn">
+              확인
+            </button>
           </div>
-          <div className=" flex items-center gap-2">
-            <img src={default_image} width={40} />
-            <img src={default_image} width={40} />
-            <img src={default_image} width={40} />
-            <img src={default_image} width={40} />
-            <img src={default_image} width={40} />
-          </div>
-        </div>
-      </div>
-      <JoinBtn />
+        </>
+      )}
     </Modal>
   );
 };
