@@ -7,6 +7,7 @@ import { BiLike } from "react-icons/bi";
 import { BiCommentDetail } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useBoardItem } from "./useBoardItem";
+import { getTimeAgo } from "../../../util/formatDateSign";
 const BoardItem = ({ board }: { board: Board }) => {
   const imgSrc = getImgSrc(board.context);
   const imgCnt = getImgCount(board.context);
@@ -26,6 +27,7 @@ const BoardItem = ({ board }: { board: Board }) => {
             <img src={board.writer ? board.writer.profileImgSearchName : "임시"} className="w-9 rounded-full" />
             <p className="text-sm font-bold ms-2">{board.writer ? board.writer.nickname : "임시"}</p>
           </div>
+
           <div className="mt-5 grid grid-flow-col gap-1 w-28 absolute bottom-3">
             <div className="flex items-center">
               <AiOutlineEye />
@@ -47,11 +49,18 @@ const BoardItem = ({ board }: { board: Board }) => {
           </div>
         </div>
       </div>
+      <div className="absolute right-5 bottom-4 text-gray-500 text-sm font-regular">
+        {getTimeAgo(board.createdDate)}
+      </div>
 
       {imgSrc && (
-        <div className="w-2/6 flex items-center justify-center relative">
-          <img src={imgSrc} className={`w-32 h-32 rounded-md ${imgCnt && imgCnt > 1 ? "brightness-50 " : ""}`} />
-          {imgCnt && imgCnt > 1 && <p className="absolute text-white text-6xl">+{imgCnt - 1}</p>}
+        <div className="absolute right-5 top-8">
+          <div className=" flex items-center justify-center relative">
+            <Link to={{ pathname: "detail", search: "?seq=" + board.seq }}>
+              <img src={imgSrc} className={`w-32 h-32 rounded-md ${imgCnt && imgCnt > 1 ? "brightness-50 " : ""}`} />
+              {imgCnt && imgCnt > 1 && <p className="absolute text-white text-6xl">+{imgCnt - 1}</p>}
+            </Link>
+          </div>
         </div>
       )}
     </div>

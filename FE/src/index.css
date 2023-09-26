@@ -218,9 +218,8 @@ body{
 .ql-toolbar{
   @apply bg-gray-100
 }
-/* .quill {
-  height: 100%;
-} */
-/* .ql-container{
-  height: 500px;
-} */
+
+
+.animate__animated.animate__fadeIn {
+  --animate-duration: 0.5s;
+}

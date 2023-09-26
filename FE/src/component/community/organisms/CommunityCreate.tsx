@@ -8,6 +8,7 @@ const CommunityCreate = () => {
         type="text"
         className="w-full mt-10 h-12 border-gray-300 px-3 border-b-2"
         placeholder="제목"
+        value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
       <BoardEditor title={title} />

@@ -87,5 +87,6 @@ export const useQuillEdit = ({ quillRef }: { quillRef: React.LegacyRef<ReactQuil
       },
     };
   }, []);
+
   return { modules };
 };

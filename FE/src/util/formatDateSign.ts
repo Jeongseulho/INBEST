@@ -26,3 +26,17 @@ export const getTimeAgo = (dateString: string) => {
     return "방금 전";
   }
 };
+
+export const getKorTime = (dateString: string) => {
+  const dateObject = new Date(dateString);
+  dateObject.setTime(dateObject.getTime() + 9 * 60 * 60 * 1000); // 9시간 추가
+
+  const year = dateObject.getFullYear();
+  const month = String(dateObject.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고 두 자리로 포맷합니다.
+  const day = String(dateObject.getDate()).padStart(2, "0");
+  const hours = String(dateObject.getHours()).padStart(2, "0");
+  const minutes = String(dateObject.getMinutes()).padStart(2, "0");
+
+  // 'YYYY-MM-DD HH:MM' 형태로 반환합니다.
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
