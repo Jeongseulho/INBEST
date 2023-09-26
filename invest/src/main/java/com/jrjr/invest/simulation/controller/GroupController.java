@@ -30,6 +30,9 @@ public class GroupController {
 	// 그룹 생성
 	@PostMapping()
 	ResponseEntity<?> createGroup(@RequestBody CreatedGroupDTO groupDTO) throws Exception {
+		log.info("[그룹 생성 시작]");
+		log.info("[입력 파라미터 : " + groupDTO + " ]");
+
 		groupService.createGroup(groupDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -55,25 +58,26 @@ public class GroupController {
 		return new ResponseEntity<>(groupDTOList, HttpStatus.OK);
 	}
 
-	// 내 그룹 - 시작 전 상세
-	// 내 그룹 - 진행 중 상세
-	// 참여 가능 그룹 - 상세
+	// 그룹 상세
 	@GetMapping("/details")
 	ResponseEntity<?> getDetails(@RequestParam Long simulationSeq, @RequestParam String progressState) {
 
-		// 내 그룹 - 시작 전 상세
-		if (progressState.equals("waiting")) {
-			groupService.getDetails(simulationSeq, progressState);
-		}
-		// 내 그룹 - 진행 중 상세
-		if (progressState.equals("inProgress")) {
+		Object details = null;
 
+		// 내 대기중인 그룹 - 상세
+		if (progressState.equals("waiting")) {
+			details = groupService.getMyWaitingGroupDetails(simulationSeq);
+		}
+		// 내 진행중인 그룹 - 상세
+		if (progressState.equals("inProgress")) {
+			details = groupService.getMyInProgressGroupDetails(simulationSeq);
 		}
 		// 참여 가능 그룹 - 상세
 		if (progressState.equals("waiting")) {
-
+			details = groupService.getJoinableGroupDetails(simulationSeq);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+
+		return new ResponseEntity<>(details, HttpStatus.OK);
 	}
 
 	// 그룹 참여하기

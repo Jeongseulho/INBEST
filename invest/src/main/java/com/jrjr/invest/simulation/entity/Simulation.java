@@ -34,7 +34,7 @@ public class Simulation {
 	@Column(nullable = false)
 	private String title;
 
-	@Column(nullable = false)
+	@Column()
 	private LocalDateTime startDate;
 
 	@Column(nullable = false)
@@ -43,17 +43,17 @@ public class Simulation {
 	@Column(nullable = false)
 	private Long seedMoney;
 
-	@Column(nullable = false)
+	@Column()
 	private Integer memberNum;
 
 	@OneToOne
 	@JoinColumn(name = "owner_seq", nullable = false)
 	private User owner;
 
-	@Column(nullable = false)
+	@Column()
 	private LocalDateTime finishedDate;
 
-	@Column(nullable = false)
+	@Column()
 	private Integer revenuRate; // simulation 평균 수익률
 
 	@OneToMany(mappedBy = "simulation")

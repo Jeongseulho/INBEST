@@ -18,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 @Getter
 @Setter
-public class MyWaitingDetailsDTO {
-	// seedMoney :long,period:int,averageTier :int,currentMemberImage :Array<string>,ownerSeq :long,title :string
+public class MyWaitingGroupDetailsDTO {
 	private Long seedMoney;
 	private Integer period;
-	private List<String> currentMemberImage;
+	private Integer averageTier;
+	private List<String> currentMemberImageList;
 	private Long ownerSeq;
 	private String title;
 }
