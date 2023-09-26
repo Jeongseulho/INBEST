@@ -7,12 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrjr.invest.rank.dto.RedisSimulationDTO;
 import com.jrjr.invest.rank.service.SimulationRankService;
 import com.jrjr.invest.rank.service.UserRankService;
 
@@ -102,33 +99,6 @@ public class UpdateController {
 		simulationRankService.updateSimulationUserRanking(simulationSeq);
 
 		log.info("========== 시뮬레이션 랭킹: 시뮬레이션 랭킹 산정 완료 ==========");
-		resultMap.put("success", true);
-		return new ResponseEntity<>(resultMap, HttpStatus.OK);
-	}
-
-	@Operation(summary = "종료된 시뮬레이션 정보 추가")
-	@PostMapping("/simulation")
-	ResponseEntity<Map<String, Object>> insertSimulationRankingInfo(
-		@RequestBody RedisSimulationDTO redisSimulationDTO) {
-		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 정보 추가 시작 ==========");
-		Map<String, Object> resultMap = new HashMap<>();
-
-		simulationRankService.insertSimulationInfo(redisSimulationDTO);
-
-		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 정보 추가 완료 ==========");
-		resultMap.put("success", true);
-		return new ResponseEntity<>(resultMap, HttpStatus.OK);
-	}
-
-	@Operation(summary = "종료된 시뮬레이션 랭킹 산정")
-	@GetMapping("/simulation")
-	ResponseEntity<Map<String, Object>> sortSimulationRankingInfo() {
-		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 산정 시작 ==========");
-		Map<String, Object> resultMap = new HashMap<>();
-
-		simulationRankService.updateSimulationRanking();
-
-		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 산정 완료 ==========");
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
