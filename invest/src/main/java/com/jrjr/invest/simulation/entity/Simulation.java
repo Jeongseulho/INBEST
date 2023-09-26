@@ -43,7 +43,7 @@ public class Simulation {
 	@Column(nullable = false)
 	private Long seedMoney;
 
-	@Column(nullable = false)
+	@Column()
 	private Integer memberNum;
 
 	@OneToOne
@@ -53,7 +53,7 @@ public class Simulation {
 	@Column()
 	private LocalDateTime finishedDate;
 
-	@Column(nullable = false)
+	@Column()
 	private Integer revenuRate; // simulation 평균 수익률
 
 	@OneToMany(mappedBy = "simulation")

@@ -9,7 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Builder
@@ -34,16 +38,16 @@ public class SimulationUser {
 	@Column(nullable = false)
 	private Long seedMoney;
 
-	@Column(nullable = false)
+	@Column()
 	private Long currentMoney;
 
-	@Column(nullable = false)
+	@Column()
 	private Integer previousRank;
 
-	@Column(nullable = false)
+	@Column()
 	private Integer currentRank;
 
-	@Column(nullable = false)
+	@Column()
 	private Boolean isExited;
 
 }

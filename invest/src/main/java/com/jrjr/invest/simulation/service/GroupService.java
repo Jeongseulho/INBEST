@@ -71,7 +71,11 @@ public class GroupService {
 		simulationRepository.save(simulation);
 
 		// SimulationUser 저장
-		for (Long userSeq : groupDTO.getUserSeqList()) {
+		if (groupDTO.getUserSeqList() == null) {
+			throw new Exception("방에 참가하는 인원이 존재하지 않습니다.");
+		}
+		for (
+			Long userSeq : groupDTO.getUserSeqList()) {
 			User user = userRepository.findBySeq(userSeq);
 
 			// 존재하지 않는 유저 제외하고 진행
@@ -102,6 +106,7 @@ public class GroupService {
 					.previousRank(null)
 					.build());
 		}
+
 	}
 
 	// redis Key 생성

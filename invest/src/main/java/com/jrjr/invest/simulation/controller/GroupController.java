@@ -30,6 +30,9 @@ public class GroupController {
 	// 그룹 생성
 	@PostMapping()
 	ResponseEntity<?> createGroup(@RequestBody CreatedGroupDTO groupDTO) throws Exception {
+		log.info("[그룹 생성 시작]");
+		log.info("[입력 파라미터 : " + groupDTO + " ]");
+
 		groupService.createGroup(groupDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
