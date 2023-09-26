@@ -28,17 +28,19 @@ const Header = () => {
   return (
     <header className="w-full h-[8vh] flex justify-between items-center bg-gray-50  bg-opacity-90">
       <Link to="/">
-        <img className="h-[8vh] mx-24 " src={temp_logo} />
+        <img className="h-[8vh] ms-24 " src={temp_logo} />
       </Link>
-      <div className="flex w-1/2 justify-around">
-        <Link to="/invest" className=" text-center text-lg">
+      <div className="grid grid-flow-col gap-24 me-20">
+        <Link to="/invest" className=" text-center text-xl">
           모의 투자
         </Link>
-        <a className=" text-center text-lg">랭킹</a>
-        <a className=" text-center text-lg">게시판</a>
-        <a className=" text-center text-lg">금융 상품 추천</a>
-        <a className=" text-center text-lg">금융 사전</a>
-        <a className=" text-center text-lg">관리자 페이지</a>
+        <a className=" text-center text-xl">랭킹</a>
+        <Link to={"/community"} className=" text-center text-xl">
+          게시판
+        </Link>
+        <a className=" text-center text-xl">금융 상품 추천</a>
+        <a className=" text-center text-xl">금융 사전</a>
+        <a className=" text-center text-xl">관리자 페이지</a>
       </div>
       <div className="me-20 flex items-center justify-center">
         {!accessToken && (
@@ -101,7 +103,7 @@ const Header = () => {
                                 const res = await getUserInfo(userInfo!.seq);
                                 setMyInfo(res.UserInfo);
                                 console.log(myInfo);
-                                setShowModal(() => true);
+                                setShowModal(true);
                                 console.log(res);
                               } catch (err) {
                                 console.log(err);
@@ -137,11 +139,10 @@ const Header = () => {
                   </Menu.Item>
                   <Menu.Item>
                     {({ active }) => (
-                      <a
-                        href="#"
+                      <div
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "px-4 py-2 flex items-center text-red-500"
+                          "px-4 py-2 flex items-center text-red-500 hover:cursor-pointer z-30"
                         )}
                       >
                         <FiLogOut />
@@ -160,7 +161,7 @@ const Header = () => {
                         >
                           로그아웃
                         </span>
-                      </a>
+                      </div>
                     )}
                   </Menu.Item>
                 </div>

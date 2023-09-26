@@ -11,6 +11,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
+import CommunityList from "./component/community/organisms/CommunityList";
+import CommunityCreate from "./component/community/organisms/CommunityCreate";
+import CommunityDetail from "./component/community/organisms/CommunityDetail";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const queryClient = new QueryClient({
@@ -36,6 +39,12 @@ function App() {
               <Route path="/invest" element={<InvestMain />} />
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
+              <Route path="community" element={<Community />}>
+                <Route index element={<CommunityList />} />
+                <Route path="create" element={<CommunityCreate />} />
+                <Route path="detail" element={<CommunityDetail />} />
+              </Route>
+              <Route path="/invest/:groupCode" element={<Investing />} />
               <Route path="/invest/:simulationSeq" element={<Investing />} />
               <Route path="/community" element={<Community />}></Route>
             </Routes>

@@ -17,7 +17,7 @@ const StepSide = ({ curStep }: StepSideProps) => {
   ];
 
   return (
-    <div className="fixed left-32  top-48 z-50 bg-transparent w-2/3">
+    <div className="fixed left-32  top-48 z-10 bg-transparent w-2/3">
       <StepPagination curStep={curStep} />
       <StepPaginationDesc title={title[curStep]} desc={desc[curStep]} />
     </div>

@@ -210,3 +210,16 @@ body{
 .rc-slider-mark-text {
   width: 50px;
 }
+
+.ql-editor{
+  height: 30rem;
+  @apply bg-white
+}
+.ql-toolbar{
+  @apply bg-gray-100
+}
+
+
+.animate__animated.animate__fadeIn {
+  --animate-duration: 0.5s;
+}

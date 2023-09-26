@@ -25,18 +25,21 @@ export const setInterceptors = (instance: AxiosInstance) => {
     },
     async (error: AxiosError) => {
       const { accessToken } = userStore.getState();
-      const { setAccessToken } = userStore.getState();
-      const { setRefreshToken } = userStore.getState();
-      const { setUserInfo } = userStore.getState();
+      const { setAccessToken, setRefreshToken, setUserInfo } = userStore.getState();
+
       const { config } = error;
       const { data } = error.response!;
       const { message } = data as { message: string };
+      const newToken: string = (data as { accessToken: string }).accessToken;
 
       if (message === "REISSUE_ACCESS_TOKEN") {
         const originRequest = config!;
-        setAccessToken(error.response!.headers.authorization);
 
-        originRequest!.headers.Authorization = `Bearer ${accessToken}`;
+        setAccessToken(newToken);
+        originRequest!.headers.Authorization = `Bearer ${newToken}`;
+        console.log(`Bearer ${accessToken}`);
+        console.log(error.response!.data);
+        console.log(newToken);
         return instance(originRequest);
       } else if (message === "ACCESS_DENIED") {
         return toast.error("권한이 부족합니다.");
@@ -46,14 +49,14 @@ export const setInterceptors = (instance: AxiosInstance) => {
         setAccessToken(null);
         setRefreshToken(null);
         setUserInfo(null);
-        return toast.error("토큰이 손상되었습니다. 다시 로그인 해주세요.");
+        return alert("토큰이 손상되었습니다. 다시 로그인 해주세요.");
       } else if (message === "EXPIRED_REFRESH_TOKEN") {
         console.log(message);
         window.location.assign("/login");
         setAccessToken(null);
         setRefreshToken(null);
         setUserInfo(null);
-        return toast.error("토큰이 만료되었습니다. 다시 로그인 해주세요.");
+        return alert("토큰이 만료되었습니다. 다시 로그인 해주세요.");
       } else {
         throw error;
       }

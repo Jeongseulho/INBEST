@@ -139,6 +139,7 @@ const ProfileUpdate = ({
                 }}
                 ref={selectImg}
                 type="file"
+                accept="image/*"
                 id="file"
                 style={{ display: "none" }}
               />
