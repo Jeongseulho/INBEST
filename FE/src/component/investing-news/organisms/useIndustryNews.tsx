@@ -1,20 +1,23 @@
-// import { useQuery } from "react-query";
-// import { getIndustryNews } from "../../../api/investingNews";
+import { useQuery } from "react-query";
+import { getIndustryNews } from "../../../api/investingNews";
 import { useState } from "react";
+import { INDUSTRY_NEWS_TAB } from "../../../constant/INDUSTRY_NEWS_TAB";
 
-//TODO: 이부분 구현
 export const useIndustryNews = () => {
-  // const { data, isLoading, isError } = useQuery(["industryNews", industry], () => getIndustryNews(industry), {
-  //   retry: false,
-  // });
+  const [curIndustryTab, setCurIndustryTab] = useState<string>("금융");
 
-  const [industryTab, setIndustryTab] = useState("electronics");
+  const { data, isLoading } = useQuery(
+    ["industryNews", curIndustryTab],
+    () => getIndustryNews(INDUSTRY_NEWS_TAB[curIndustryTab]),
+    {
+      enabled: !!curIndustryTab,
+    }
+  );
 
   return {
-    // data,
-    // isLoading,
-    // isError,
-    industryTab,
-    setIndustryTab,
+    data,
+    isLoading,
+    curIndustryTab,
+    setCurIndustryTab,
   };
 };

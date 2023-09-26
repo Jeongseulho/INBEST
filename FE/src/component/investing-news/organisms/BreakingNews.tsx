@@ -1,9 +1,11 @@
 import News from "../../investing-news/molecules/News";
-import { useBreakingNews } from "./useBreakingNews";
+import { useQuery } from "react-query";
+import { getBreakingNews } from "../../../api/investingNews";
 import news from "../../../asset/image/news.png";
+import NewsSkeleton from "../../investing-news/molecules/NewsSkeleton";
 
 const BreakingNews = () => {
-  const { data, isLoading, isError } = useBreakingNews();
+  const { data, isLoading } = useQuery(["breakingNews"], getBreakingNews);
   return (
     <div className=" shadow-component col-span-1 row-span-2 p-4">
       <div className=" flex items-center mb-4 gap-4">
@@ -11,9 +13,13 @@ const BreakingNews = () => {
         <h3>속보</h3>
       </div>
       {isLoading ? (
-        <p>로딩중...</p>
-      ) : isError ? (
-        <p>에러가 발생했습니다.</p>
+        <div className=" flex flex-col gap-4">
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
+        </div>
       ) : (
         <div className=" flex flex-col gap-4 ">
           {data?.map((news, idx) => (

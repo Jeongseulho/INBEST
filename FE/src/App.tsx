@@ -14,6 +14,7 @@ import Community from "./component/community/page/Community";
 import CommunityList from "./component/community/organisms/CommunityList";
 import CommunityCreate from "./component/community/organisms/CommunityCreate";
 import CommunityDetail from "./component/community/organisms/CommunityDetail";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,6 +45,8 @@ function App() {
                 <Route path="detail" element={<CommunityDetail />} />
               </Route>
               <Route path="/invest/:groupCode" element={<Investing />} />
+              <Route path="/invest/:simulationSeq" element={<Investing />} />
+              <Route path="/community" element={<Community />}></Route>
             </Routes>
           </AnimatePresence>
         </Layout>

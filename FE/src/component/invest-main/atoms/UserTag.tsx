@@ -1,11 +1,11 @@
 import { IoMdRemoveCircleOutline } from "react-icons/io";
-import { GroupInviteUser } from "../../../type/GroupSetting";
+import { SearchUser } from "../../../type/Group";
 
 interface Props {
   nickname: string;
   profileImg: string;
-  dispatch: React.Dispatch<{ type: "DELETE_INVITE"; payload: GroupInviteUser }>;
-  payload: GroupInviteUser;
+  dispatch: React.Dispatch<{ type: "DELETE_INVITE"; payload: SearchUser }>;
+  payload: SearchUser;
 }
 
 const UserTag = ({ nickname, profileImg, dispatch, payload }: Props) => {

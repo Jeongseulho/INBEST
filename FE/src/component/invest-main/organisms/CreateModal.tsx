@@ -10,9 +10,11 @@ import SettingInvite from "../molecules/SettingInvite";
 import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
 import SettingTitle from "../molecules/SettingTitle";
 import modalStore from "../../../store/modalStore";
+import Complete from "../molecules/Complete";
+import complete from "../../../asset/image/complete.png";
 
 const CreateModal = () => {
-  const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting } = useCreateModal();
+  const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting, createGroupMutation } = useCreateModal();
   const { modalType, closeModal } = modalStore();
 
   const CreateModalStepComponent = [
@@ -32,11 +34,17 @@ const CreateModal = () => {
     <SettingInvite
       onNextStep={onNextStep}
       resetStepAndGroupSetting={resetStepAndGroupSetting}
-      inviteUsers={groupSetting.inviteUsers}
-      unInviteUsers={groupSetting.unInviteUsers}
+      inviteUsers={groupSetting.invitedUsers}
       dispatch={dispatch}
     />,
-    <SettingTitle resetStepAndGroupSetting={resetStepAndGroupSetting} dispatch={dispatch} title={groupSetting.title} />,
+    <SettingTitle
+      resetStepAndGroupSetting={resetStepAndGroupSetting}
+      dispatch={dispatch}
+      title={groupSetting.title}
+      createGroupMutation={createGroupMutation}
+      groupSetting={groupSetting}
+    />,
+    <Complete resetStepAndGroupSetting={resetStepAndGroupSetting} />,
   ];
 
   return (
@@ -52,16 +60,27 @@ const CreateModal = () => {
         content: {
           ...CONTENT_MODAL_STYLE,
           width: "500px",
-          height: step === GROUP_CREATE_STEP_MAP.INVITE_USER ? "700px" : "500px",
+          height:
+            step === GROUP_CREATE_STEP_MAP.INVITE_USER
+              ? "700px"
+              : step === GROUP_CREATE_STEP_MAP.COMPLETE_GROUP
+              ? "350px"
+              : "500px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          transition: "all 0.3s ease",
         },
         overlay: OVERLAY_MODAL_STYLE,
       }}
     >
-      {step === GROUP_CREATE_STEP_MAP.INIT_GROUP ? <img src={group} width={120} /> : <ProgressCircle step={step} />}
+      {step === GROUP_CREATE_STEP_MAP.INIT_GROUP ? (
+        <img src={group} width={120} />
+      ) : step === GROUP_CREATE_STEP_MAP.COMPLETE_GROUP ? (
+        <img src={complete} width={120} />
+      ) : (
+        <ProgressCircle step={step} />
+      )}
+
       {CreateModalStepComponent[step]}
     </Modal>
   );

@@ -1,10 +1,10 @@
 import { IoIosAddCircleOutline } from "react-icons/io";
-import { GroupInviteUser } from "../../../type/GroupSetting";
+import { SearchUser } from "../../../type/Group";
 interface Props {
   nickname: string;
   profileImg: string;
-  dispatch: React.Dispatch<{ type: "ADD_INVITE"; payload: GroupInviteUser }>;
-  payload: GroupInviteUser;
+  dispatch: React.Dispatch<{ type: "ADD_INVITE"; payload: SearchUser }>;
+  payload: SearchUser;
 }
 
 const UserItem = ({ nickname, profileImg, dispatch, payload }: Props) => {

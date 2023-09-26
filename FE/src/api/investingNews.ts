@@ -12,8 +12,8 @@ export const getBreakingNews = async (): Promise<BreakingNews[]> => {
   return data;
 };
 
-export const getIndustryNews = async (industry: string): Promise<IndustryNews[]> => {
-  const { data } = await api.get(`industry/${industry}/`);
+export const getIndustryNews = async (industryCode: number): Promise<IndustryNews[]> => {
+  const { data } = await api.get(`industry/${industryCode}/`);
   return data;
 };
 
