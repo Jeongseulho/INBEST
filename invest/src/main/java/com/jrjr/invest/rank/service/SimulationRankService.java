@@ -1,9 +1,10 @@
 package com.jrjr.invest.rank.service;
 
+import java.util.List;
 import java.util.Set;
 
-import com.jrjr.invest.rank.dto.RedisSimulationDTO;
 import com.jrjr.invest.rank.dto.RedisSimulationUserRankingDTO;
+import com.jrjr.invest.rank.dto.SimulationRankingDTO;
 
 public interface SimulationRankService {
 
@@ -13,11 +14,7 @@ public interface SimulationRankService {
 
 	RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq);
 
-	void insertSimulationInfo(RedisSimulationDTO redisSimulationDto);
-
-	void updateSimulationRanking();
-
-	Set<RedisSimulationDTO> getSimulationRankingInfo(Long start, Long end);
+	List<SimulationRankingDTO> getSimulationRankingInfo(Long start, Long end);
 
 	Integer getSimulationAvgTierInfo(Long simulationSeq);
 }
