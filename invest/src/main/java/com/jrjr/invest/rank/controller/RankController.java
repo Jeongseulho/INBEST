@@ -118,12 +118,12 @@ public class RankController {
 	})
 	@GetMapping("/users/{userSeq}")
 	ResponseEntity<Map<String, Object>> getMyRankingInfo(@PathVariable(value = "userSeq") Long userSeq) {
-		log.info("========== 개인 랭킹: 내 랭킹 정보 불러오기 시작 ==========");
+		log.info("========== 개인 랭킹: 내 랭킹 정보 ({}번) 불러오기 시작 ==========", userSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		RedisUserDTO myUserRankingInfo = userRankService.getMyUserRankingInfo(userSeq);
 
-		log.info("========== 개인 랭킹: 내 랭킹 정보 불러오기 완료 ==========");
+		log.info("========== 개인 랭킹: 내 랭킹 정보 ({}번) 불러오기 완료 ==========", userSeq);
 		resultMap.put("success", true);
 		resultMap.put("MyUserRankingInfo", myUserRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -159,7 +159,7 @@ public class RankController {
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
 			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
 
-		log.info("========== 시뮬레이션 랭킹: 전체 랭킹 정보 불러오기 완료 ==========");
+		log.info("========== 시뮬레이션 {}번 랭킹: 전체 랭킹 정보 불러오기 완료 ==========", simulationSeq);
 		resultMap.put("success", true);
 		resultMap.put("SimulationUserRankingInfo", simulationUserRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -179,7 +179,7 @@ public class RankController {
 		RedisSimulationUserRankingDTO mySimulationUserRankingInfo
 			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, userSeq);
 
-		log.info("========== 시뮬레이션 랭킹: 내 랭킹 정보 불러오기 완료 ==========");
+		log.info("========== 시뮬레이션 {}번 랭킹: 내 랭킹 정보 불러오기 완료 ==========", simulationSeq);
 		resultMap.put("success", true);
 		resultMap.put("MySimulationUserRankingInfo", mySimulationUserRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -196,6 +196,24 @@ public class RankController {
 		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
 		resultMap.put("SimulationRankingInfo", simulationRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "시뮬레이션 별 높은 수익률, 손실률, 인기 산업군 3가지 정보 불러오기")
+	@Parameters(value = {
+		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk")
+	})
+	@GetMapping("/simulation/{simulationSeq}/stocks")
+	ResponseEntity<Map<String, Object>> getSimulationStockRankingInfo(
+		@PathVariable(value = "simulationSeq") Long simulationSeq) {
+		log.info("========== 시뮬레이션 {} 번 랭킹: 수익률, 손실률, 인기 산업군 정보 불러오기 시작 ==========", simulationSeq);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		Map<String, List<Object>> simulationStockRankingInfo
+			= simulationRankService.getSimulationStockRankingInfo(simulationSeq);
+
+		log.info("========== 시뮬레이션 {} 번랭킹: 수익률, 손실률, 인기 산업군 정보 불러오기 완료 ==========", simulationSeq);
+		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
