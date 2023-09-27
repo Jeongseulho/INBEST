@@ -84,14 +84,14 @@ public class CommentService {
 
 	public CommentDTO updateComment(CommentDTO commentDTO) throws Exception {
 		CommentEntity commentEntity = commentRepository.findById(commentDTO.getSeq()).orElse(null);
-
+		log.info("변경 전 : " + commentEntity.toString());
 		if (commentEntity == null) {
 			throw new Exception("해당 덧글이 없습니다.");
 		}
 
 		commentEntity.update(commentDTO);
 		commentRepository.save(commentEntity);
-
+		log.info("변경 후 : " + commentEntity.toString());
 		return commentEntity.toCommentDTO();
 	}
 
@@ -167,7 +167,7 @@ public class CommentService {
 	@Transactional
 	public CommentDTO updateCommentLikes(Long userSeq, String commentId) throws Exception {
 		CommentEntity commentEntity = commentRepository.findById(commentId).orElse(null);
-
+		log.info("좋아요 변경 전 : " + commentEntity.toString());
 		//게시물 있는지 확인
 		if (commentEntity == null) {
 			throw new Exception("대상 댓글이 없습니다.");
@@ -181,6 +181,7 @@ public class CommentService {
 
 		commentEntity.updateLikeUserList(userEntity.toUserDTO());
 		commentRepository.save(commentEntity);
+		log.info("좋아요 변경 후 : " + commentEntity.toString());
 		return commentEntity.toCommentDTO();
 	}
 
