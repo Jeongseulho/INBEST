@@ -87,7 +87,7 @@ public class CoCommentEntity extends BaseEntity implements Serializable {
 	}
 
 	public void delete() {
-		this.context = "삭제된 덧글입니다.";
+		this.context = "(삭제된 덧글입니다.)";
 		this.userSeq = 0L;
 	}
 }
