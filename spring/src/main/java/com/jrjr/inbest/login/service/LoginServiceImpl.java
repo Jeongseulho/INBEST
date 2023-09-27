@@ -52,9 +52,9 @@ public class LoginServiceImpl implements LoginService {
 			throw new AuthenticationFailedException("비밀번호 불일치");
 		}
 
-		HashOperations<String,Long,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
+		HashOperations<String,String,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
 		String hashKey = "loginHistory";
-		hashOperations.put(hashKey,userEntity.get().getSeq()
+		hashOperations.put(hashKey,String.valueOf(userEntity.get().getSeq())
 			,LoginHistoryDTO.builder()
 					.loginTime(LocalDateTime.now())
 					.userSeq(userEntity.get().getSeq())
