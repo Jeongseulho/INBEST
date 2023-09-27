@@ -224,6 +224,7 @@ public class GroupService {
 			.simulationSeq(simulationSeq)
 			.title(simulation.getTitle())
 			.currentMemberNum(simulation.getMemberNum())
+			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.seedMoney(simulation.getSeedMoney())
 			.averageTier(null) // 추후에 추가 예정
 			.period(simulation.getPeriod())
