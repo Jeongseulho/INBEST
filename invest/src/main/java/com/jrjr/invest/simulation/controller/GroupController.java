@@ -88,7 +88,7 @@ public class GroupController {
 	// 그룹 참여하기
 	@PostMapping("/join")
 	ResponseEntity<?> joinGroup(@RequestBody GroupUserDTO groupUserDTO) {
-		groupService.joinGroup(groupUserDTO);
+		groupService.joinGroup(groupUserDTO.getSimulationSeq(), groupUserDTO.getUserSeq());
 		return ResponseEntity.ok().build();
 	}
 	// 그룹 나가기 | 방장 나가기

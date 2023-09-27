@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.jrjr.invest.rank.service.SimulationRankService;
 import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.GroupDTO;
-import com.jrjr.invest.simulation.dto.GroupUserDTO;
 import com.jrjr.invest.simulation.dto.JoinableGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.MyInProgressGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.MyWaitingGroupDetailsDTO;
@@ -30,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GroupService {
 
+	private final SimulationRankService simulationRankServiceImpl;
 	private final UserRepository userRepository;
 	private final SimulationRepository simulationRepository;
 	private final SimulationUserRepository simulationUserRepository;
@@ -65,13 +66,13 @@ public class GroupService {
 		Simulation simulation = Simulation.builder()
 			.title(groupDTO.getTitle())
 			.period(groupDTO.getPeriod())
-			.seedMoney(groupDTO.getSeedMoney())
 			.memberNum(groupDTO.getUserSeqList().size())
+			.seedMoney(groupDTO.getSeedMoney())
 			.owner(owner)
 			.build();
 
 		simulationRepository.save(simulation);
-
+		// simulation = simulationRepository.findBySeq(simulation.getSeq());
 		// SimulationUser 저장
 		if (groupDTO.getUserSeqList() == null) {
 			throw new Exception("방에 참가하는 인원이 존재하지 않습니다.");
@@ -137,7 +138,7 @@ public class GroupService {
 				.title(simulation.getTitle())
 				.currentMemberNum(simulation.getMemberNum())
 				.seedMoney(simulation.getSeedMoney())
-				.averageTier(null) // 추후에 필요
+				.averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
 				.progressState(simulation.getProgressState())
 				.build();
 			groupList.add(groupDTO);
@@ -181,7 +182,7 @@ public class GroupService {
 				.title(simulation.getTitle())
 				.currentMemberNum(simulation.getMemberNum())
 				.seedMoney(simulation.getSeedMoney())
-				.averageTier(null) // 추후에 필요
+				.averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
 				.period(simulation.getPeriod())
 				.build();
 			groupList.add(groupDTO);
@@ -197,7 +198,7 @@ public class GroupService {
 			.title(simulation.getTitle())
 			.seedMoney(simulation.getSeedMoney())
 			.period(simulation.getPeriod())
-			.averageTier(null) // 추후에 추가 예정
+			.averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
 			.ownerSeq(simulation.getOwner().getSeq())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.build();
@@ -210,9 +211,9 @@ public class GroupService {
 			.seedMoney(simulation.getSeedMoney())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.startDate(simulation.getStartDate())
-			.averageTier(null) // 추후에 추가 예정
-			.rankInGroup(null) // 추후에 추가 예쩡
-			.rankInGroupFluctuation(null) // 추후에 추가 예정
+			.averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
+			.rankInGroup(null) // todo : 추후에 추가
+			.rankInGroupFluctuation(null) // todo : 추후에 추가
 			.period(simulation.getPeriod())
 			.build();
 	}
@@ -226,7 +227,7 @@ public class GroupService {
 			.currentMemberNum(simulation.getMemberNum())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.seedMoney(simulation.getSeedMoney())
-			.averageTier(null) // 추후에 추가 예정
+			.averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
 			.period(simulation.getPeriod())
 			.build();
 	}
@@ -243,51 +244,47 @@ public class GroupService {
 	}
 
 	@Transactional
-	public void joinGroup(GroupUserDTO groupUserDTO) {
+	public void joinGroup(Long simulationSeq, Long userSeq) {
 		log.info("[그룹 참여하기]");
-		// Simulation 업데이트
+
+		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
 
 		// SimulationUser 생성
-		// if (groupUserDTO.getUserSeq() == null) {
-		// 	throw new RuntimeException("유저가 존재하지 않습니다.");
-		// }
-		// for (
-		// 	Long userSeq : groupDTO.getUserSeqList()) {
-		// 	User user = userRepository.findBySeq(userSeq);
-		//
-		// 	log.info("userSeq : " + user.getSeq() + " userNickname : " + user.getNickname());
-		//
-		// 	// 존재하지 않는 유저 제외하고 진행
-		// 	if (user == null) {
-		// 		log.info("존재하지 않은 유저 제외하고 진행");
-		// 		continue;
-		// 	}
-		//
-		// 	SimulationUser simulationUser = SimulationUser.builder()
-		// 		.user(user)
-		// 		.simulation(simulation)
-		// 		.seedMoney(groupDTO.getSeedMoney())
-		// 		.currentMoney(groupDTO.getSeedMoney())
-		// 		.isExited(false)
-		// 		.currentRank(null)
-		// 		.previousRank(null)
-		// 		.build();
-		// 	// db에 저장
-		// 	simulationUserRepository.save(simulationUser);
-		//
-		// 	// redis에 저장
-		// 	redisSimulationUserDTORedisTemplate.opsForHash()
-		// 		.put(generateKey(simulation.getSeq()), String.valueOf(userSeq),
-		// 			RedisSimulationUserDTO.builder()
-		// 				.userSeq(user.getSeq())
-		// 				.simulationSeq(simulation.getSeq())
-		// 				.seedMoney(groupDTO.getSeedMoney())
-		// 				.currentMoney(groupDTO.getSeedMoney())
-		// 				.isExited(false)
-		// 				.currentRank(null)
-		// 				.previousRank(null)
-		// 				.build());
-		// }
+		if (userSeq == null) {
+			throw new RuntimeException("유저가 존재하지 않습니다.");
+		}
+
+		User user = userRepository.findBySeq(userSeq);
+
+		SimulationUser simulationUser = SimulationUser.builder()
+			.user(user)
+			.simulation(simulation)
+			.seedMoney(simulation.getSeedMoney())
+			.currentMoney(simulation.getSeedMoney())
+			.isExited(false)
+			.currentRank(null) // todo : 추후에 추가
+			.previousRank(null) // todo : 추후에 추가
+			.build();
+
+		// db에 저장
+		simulationUserRepository.save(simulationUser);
+
+		// redis에 저장
+		redisSimulationUserDTORedisTemplate.opsForHash()
+			.put(generateKey(simulation.getSeq()), String.valueOf(userSeq),
+				RedisSimulationUserDTO.builder()
+					.userSeq(user.getSeq())
+					.simulationSeq(simulation.getSeq())
+					.seedMoney(simulation.getSeedMoney())
+					.currentMoney(simulation.getSeedMoney())
+					.isExited(false)
+					.currentRank(null) // todo : 추후에 추가
+					.previousRank(null) // todo : 추후에 추가
+					.build());
+
+		// Simulation 업데이트
+		int memberNum = simulation.getMemberNum() + 1;
+		simulation.updateMemberNum(memberNum);
 	}
 
 }
