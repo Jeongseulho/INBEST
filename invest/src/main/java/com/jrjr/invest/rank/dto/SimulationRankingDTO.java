@@ -20,8 +20,6 @@ public class SimulationRankingDTO {
 
 	private String title;
 
-	private Integer previousRank;
-
 	private Integer currentRank;
 
 	private Integer period;
