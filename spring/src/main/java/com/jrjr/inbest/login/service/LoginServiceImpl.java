@@ -1,11 +1,15 @@
 package com.jrjr.inbest.login.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
+import com.jrjr.inbest.jwt.dto.LoginHistoryDTO;
 import com.jrjr.inbest.jwt.repository.RefreshTokenRepository;
 import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.entity.Login;
@@ -26,6 +30,7 @@ public class LoginServiceImpl implements LoginService {
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
+	private final RedisTemplate<String, LoginHistoryDTO> loginHistoryDTORedisTemplate;
 
 	@Override
 	public UserDto login(LoginDto inputLoginDto) {
@@ -46,6 +51,14 @@ public class LoginServiceImpl implements LoginService {
 		if (!passwordEncoder.matches(inputLoginDto.getPassword(), loginEntity.get().getPassword())) {
 			throw new AuthenticationFailedException("비밀번호 불일치");
 		}
+
+		HashOperations<String,Long,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
+		String hashKey = "loginHistory";
+		hashOperations.put(hashKey,userEntity.get().getSeq()
+			,LoginHistoryDTO.builder()
+					.loginTime(LocalDateTime.now())
+					.userSeq(userEntity.get().getSeq())
+				.build());
 
 		return UserDto.builder()
 			.email(userEntity.get().getEmail())

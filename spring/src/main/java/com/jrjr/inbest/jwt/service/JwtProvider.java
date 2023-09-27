@@ -58,7 +58,7 @@ public class JwtProvider {
 			.setIssuer("inbest")
 			.setSubject(email)
 			.setExpiration(new Date(System.currentTimeMillis() + TokenExpireTime.REFRESH_TOKEN_EXPIRE_TIME))
-			.setIssuedAt(new Date())
+			// .setIssuedAt(new Date())
 			.signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
 			.compact();
 
