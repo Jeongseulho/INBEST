@@ -89,8 +89,9 @@ public class SimulationRankRedisRepository {
 	/*
 		주식의 현재 시가 정보 가져오기
 	 */
-	public String getStockMarketPrice(String stockCode) {
-		RedisStockDTO redisStockDto = stockHash.get(STOCK_HASH_KEY, stockCode);
+	public String getStockMarketPrice(Integer stockType, String stockCode) {
+		String stockHashKey = stockType + "_" + stockCode;
+		RedisStockDTO redisStockDto = stockHash.get(STOCK_HASH_KEY, stockHashKey);
 		if (redisStockDto == null) {
 			log.info("getStockMarketPrice: 해당 주식의 정보가 없음");
 			return null;
@@ -170,11 +171,12 @@ public class SimulationRankRedisRepository {
 			// 보유 주식 정보 가져오기
 			log.info("--- 보유 중인 주식 정보 가져오기 ---");
 			Map<String, RedisStockUserDTO> stockUserDtoMap = this.getStockUserInfoMap(simulationSeq, userSeq);
-			for (String stockCode : stockUserDtoMap.keySet()) {
-				RedisStockUserDTO redisStockUserDto = stockUserDtoMap.get(stockCode);
+			for (String stockTypeCode : stockUserDtoMap.keySet()) {
+				RedisStockUserDTO redisStockUserDto = stockUserDtoMap.get(stockTypeCode);
 				Long amount = redisStockUserDto.getAmount(); // 주식 보유량
-				Long stockMarketPrice = Long.parseLong(this.getStockMarketPrice(stockCode)); // 주식 시가 정보
-				long totalStockPrice = amount * stockMarketPrice; // 보유 중인 주식 가격
+				String stockMarketPrice = this.getStockMarketPrice(redisStockUserDto.getType(),
+					redisStockUserDto.getStockCode()); // 주식 시가 정보
+				long totalStockPrice = amount * Long.parseLong(stockMarketPrice); // 보유 중인 주식 가격
 				// 참가자가 보유 중인 주식 정보 추가
 				TopStockDTO topStockDto = TopStockDTO.builder()
 					.stockName(redisStockUserDto.getName())

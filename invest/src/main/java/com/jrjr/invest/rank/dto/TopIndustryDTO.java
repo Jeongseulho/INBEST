@@ -14,13 +14,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class TopStockDTO {
+public class TopIndustryDTO {
 
-	private String stockName;
+	private String industry;
 
-	private String stockMarketPrice;
-
-	private Long totalStockPrice;
-
-	private String stockImgSearchName;
+	private Long amount;
 }
