@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jrjr.invest.rank.dto.RedisSimulationUserRankingDTO;
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
-import com.jrjr.invest.rank.service.SimulationUserRankService;
+import com.jrjr.invest.rank.dto.SimulationRankingDTO;
+import com.jrjr.invest.rank.service.SimulationRankService;
 import com.jrjr.invest.rank.service.UserRankService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RankController {
 
 	private final UserRankService userRankService;
-	private final SimulationUserRankService simulationUserRankService;
+	private final SimulationRankService simulationRankService;
 
 	@Operation(summary = "회원 정보 추가 (Redis user hash table)")
 	@Parameters(value = {
@@ -142,7 +143,7 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "시뮬레이션 별 랭킹 정보 불러오기 - 구현 중")
+	@Operation(summary = "시뮬레이션 별 랭킹 정보 불러오기")
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk"),
 		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
@@ -152,11 +153,11 @@ public class RankController {
 	ResponseEntity<Map<String, Object>> getSimulationUserRankingInfo(
 		@PathVariable(value = "simulationSeq") Long simulationSeq,
 		@RequestParam Long start, @RequestParam Long end) {
-		log.info("========== 시뮬레이션 {} 랭킹: 전체 랭킹 정보 불러오기 시작 ==========", simulationSeq);
+		log.info("========== 시뮬레이션 {}번 랭킹: 전체 랭킹 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		List<RedisSimulationUserRankingDTO> simulationUserRankingInfo
-			= simulationUserRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
+		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
+			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
 
 		log.info("========== 시뮬레이션 랭킹: 전체 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
@@ -164,7 +165,7 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "시뮬레이션 별 참가자 랭킹 정보 불러오기 - 구현 중")
+	@Operation(summary = "시뮬레이션 별 참가자 랭킹 정보 불러오기")
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk"),
 		@Parameter(required = true, name = "userSeq", description = "조회 할 회원 pk")
@@ -172,15 +173,29 @@ public class RankController {
 	@GetMapping("/simulation/{simulationSeq}/{userSeq}")
 	ResponseEntity<Map<String, Object>> getSimulationUserRankingInfo(
 		@PathVariable(value = "simulationSeq") Long simulationSeq, @PathVariable(value = "userSeq") Long userSeq) {
-		log.info("========== 시뮬레이션 {} 랭킹: 내 랭킹 정보 불러오기 시작 ==========", simulationSeq);
+		log.info("========== 시뮬레이션 {}번 랭킹: 내 랭킹 정보 불러오기 시작 ==========", simulationSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		RedisSimulationUserRankingDTO mySimulationUserRankingInfo
-			= simulationUserRankService.getMySimulationUserRankingInfo(simulationSeq, userSeq);
+			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, userSeq);
 
 		log.info("========== 시뮬레이션 랭킹: 내 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
 		resultMap.put("MySimulationUserRankingInfo", mySimulationUserRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "종료된 시뮬레이션 랭킹 정보 불러오기", description = "평균 수익률 기준으로 내림차순")
+	@GetMapping("/simulation")
+	ResponseEntity<Map<String, Object>> getSimulationRankingInfo() {
+		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		List<SimulationRankingDTO> simulationRankingInfo = simulationRankService.getSimulationRankingInfo();
+
+		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 완료 ==========");
+		resultMap.put("success", true);
+		resultMap.put("SimulationRankingInfo", simulationRankingInfo);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }
