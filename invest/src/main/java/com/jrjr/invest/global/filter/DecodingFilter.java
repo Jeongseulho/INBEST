@@ -2,6 +2,7 @@ package com.jrjr.invest.global.filter;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class DecodingFilter implements Filter {
 		log.info("디코딩된 파라미터 ");
 
 		for(String key : decodedParameters.keySet()){
-			log.info(key+" : "+decodedParameters.get(key));
+			log.info(key+" : "+ Arrays.toString(decodedParameters.get(key)));
 		}
 
 		HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
