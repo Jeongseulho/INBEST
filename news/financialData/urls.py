@@ -9,6 +9,4 @@ urlpatterns = [
     path("usastock/", views.usastock),
     path("usatop/", views.usatop),
     path("cointop/", views.cointop),
-    path("coinhigh/", views.coinhigh),
-    path("coinlow/", views.coinlow),
 ]

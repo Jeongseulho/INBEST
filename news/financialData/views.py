@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import requests
 from rest_framework.decorators import (api_view)
 import time
+import re
 
 
 
@@ -321,55 +322,59 @@ def usatop(request):
 # 코인 시총 순
 @api_view(['GET'])
 def cointop(request):
-    url = "https://coinmarketcap.com/ko/gainers-losers/"
+    url = "https://www.coindalin.com/"
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
     res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, 'lxml')
 
-    print(soup)
     crypto_data = []
 
-    table = soup.find('table', class_='sc-f61b15d2-3 iQblET cmc-table')
-    rows = table.find_all('tr')
-    print(table)
+    # 테이블에서 데이터 추출
+    table = soup.find('ul', id='coinList', class_='table-main')
+    rows = table.find_all('li', class_='tbody')
     
-    if table:
-        # Extract rows from the table
-        rows = table.find_all('tr')
-        for row in rows[1:]:  # Skip the header row
-            columns = row.find_all('td')
-            if len(columns) >= 10:  # Ensure there are enough columns
-                coin_rank = columns[0].text.strip()
-                coin_name = columns[2].text.strip()
-                coin_symbol = columns[3].text.strip()
-                coin_price = columns[4].text.strip()
-                change_1h = columns[5].text.strip()
-                change_24h = columns[6].text.strip()
-                change_7d = columns[7].text.strip()
-                market_cap = columns[8].text.strip()
+    for row in rows:
+        rank = row.find('div', class_='rankNo').text.strip()
+        symbol = row.find('div', class_='symbol').text.strip()
 
-                crypto_info = {
-                    '랭킹': coin_rank,
-                    '종목명': coin_name,
-                    '심볼': coin_symbol,
-                    '가격': coin_price,
-                    '변동(1시간)': change_1h,
-                    '변동(24시간)': change_24h,
-                    '변동(7일)': change_7d,
-                    '시가총액': market_cap,
-                }
-                crypto_data.append(crypto_info)
+        style_attribute = row.find('span', class_='name')['style']
+        image_url_match = re.search(r"url\('([^']+)'\)", style_attribute)
+        
+        if image_url_match:
+            image_url = image_url_match.group(1)
+        else:
+            image_url = None
+
+        name_element = row.find('span', class_='name')
+
+        name_with_percent_change = name_element.text.strip()
+        name = name_with_percent_change.split(' ')[0].strip()
+
+        percent_change_match = re.search(r"[▼▲] (.+)%", name_with_percent_change)
+        percent_change = percent_change_match.group(1) if percent_change_match else None
+
+        price = row.find('div', class_='market_cap_krw').text.strip()
+        market_cap = row.find_all('div', class_='market_cap_krw')[1].text.strip()
+        volume_24h = row.find_all('div', class_='market_cap_krw')[2].text.strip()
+
+        circulating_supply = row.find('span', class_='circulating_supply').text.strip()
+        
+        # 데이터를 딕셔너리로 저장
+        crypto_dict = {
+            'Rank': rank,
+            'Symbol': symbol,
+            'image_url' : image_url,
+            'Name': name,
+            '등락률인데 영어로 뭘로 해야되는지 모름': percent_change,
+            'Price': price,
+            'Market Cap': market_cap,
+            'Volume (24h)': volume_24h,
+            'Circulating Supply': circulating_supply,
+        }
+        crypto_data.append(crypto_dict)
 
     
     time.sleep(1)
 
     return JsonResponse(crypto_data, safe=False)
-
-@api_view(['GET'])
-def coinhigh(request):
-    return
-
-@api_view(['GET'])
-def coinlow(request):
-    return
