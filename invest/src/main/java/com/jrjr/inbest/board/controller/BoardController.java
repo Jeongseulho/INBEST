@@ -45,7 +45,7 @@ public class BoardController {
 
 	@Operation(summary = "게시판 개수", description = "검색한 게시물 결과의 전체 개수를 long으로 보내줌. 이때 검색어가 없는 경우는 전체 게시물을 줌")
 	@Parameters(value = {
-		@Parameter(required = true, name = "keyword", description = "검색어"),
+		@Parameter(required = false, name = "keyword", description = "검색어"),
 	})
 	@GetMapping("/count")
 	public ResponseEntity<Map<String, Object>> countBoard(HttpServletRequest request,
