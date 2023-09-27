@@ -19,17 +19,11 @@ public class RedisSimulationUserDTO {
 
 	@NotNull
 	private Long simulationSeq;
-
 	@NotNull
 	private Long userSeq;
-
 	private Long seedMoney;
-
 	private Long currentMoney;
-
 	private Integer previousRank;
-
 	private Integer currentRank;
-
 	private Boolean isExited;
 }

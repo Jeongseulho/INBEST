@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.GroupDTO;
+import com.jrjr.invest.simulation.dto.GroupUserDTO;
 import com.jrjr.invest.simulation.dto.JoinableGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.MyInProgressGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.MyWaitingGroupDetailsDTO;
@@ -163,24 +164,27 @@ public class GroupService {
 				continue;
 			}
 
+			// 내가 속한 그룹은 제외
+			boolean mygroup = false;
 			for (SimulationUser simulationUser : simulation.getSimulationUserList()) {
-				User member = simulationUser.getUser();
-
-				// 내가 속한 그룹은 제외
-				if (member.getSeq() == user.getSeq()) {
+				if (simulationUser.getUser().getSeq() == user.getSeq()) {
+					mygroup = true;
 					break;
 				}
-
-				GroupDTO groupDTO = GroupDTO.builder()
-					.simulationSeq(simulation.getSeq())
-					.title(simulation.getTitle())
-					.currentMemberNum(simulation.getMemberNum())
-					.seedMoney(simulation.getSeedMoney())
-					.averageTier(null) // 추후에 필요
-					.period(simulation.getPeriod())
-					.build();
-				groupList.add(groupDTO);
 			}
+			if (mygroup) {
+				continue;
+			}
+
+			GroupDTO groupDTO = GroupDTO.builder()
+				.simulationSeq(simulation.getSeq())
+				.title(simulation.getTitle())
+				.currentMemberNum(simulation.getMemberNum())
+				.seedMoney(simulation.getSeedMoney())
+				.averageTier(null) // 추후에 필요
+				.period(simulation.getPeriod())
+				.build();
+			groupList.add(groupDTO);
 		}
 
 		return groupList;
@@ -236,4 +240,53 @@ public class GroupService {
 		log.info("memberImageList" + memberImageList.toString());
 		return memberImageList;
 	}
+
+	@Transactional
+	public void joinGroup(GroupUserDTO groupUserDTO) {
+		log.info("[그룹 참여하기]");
+		// Simulation 업데이트
+
+		// SimulationUser 생성
+		// if (groupUserDTO.getUserSeq() == null) {
+		// 	throw new RuntimeException("유저가 존재하지 않습니다.");
+		// }
+		// for (
+		// 	Long userSeq : groupDTO.getUserSeqList()) {
+		// 	User user = userRepository.findBySeq(userSeq);
+		//
+		// 	log.info("userSeq : " + user.getSeq() + " userNickname : " + user.getNickname());
+		//
+		// 	// 존재하지 않는 유저 제외하고 진행
+		// 	if (user == null) {
+		// 		log.info("존재하지 않은 유저 제외하고 진행");
+		// 		continue;
+		// 	}
+		//
+		// 	SimulationUser simulationUser = SimulationUser.builder()
+		// 		.user(user)
+		// 		.simulation(simulation)
+		// 		.seedMoney(groupDTO.getSeedMoney())
+		// 		.currentMoney(groupDTO.getSeedMoney())
+		// 		.isExited(false)
+		// 		.currentRank(null)
+		// 		.previousRank(null)
+		// 		.build();
+		// 	// db에 저장
+		// 	simulationUserRepository.save(simulationUser);
+		//
+		// 	// redis에 저장
+		// 	redisSimulationUserDTORedisTemplate.opsForHash()
+		// 		.put(generateKey(simulation.getSeq()), String.valueOf(userSeq),
+		// 			RedisSimulationUserDTO.builder()
+		// 				.userSeq(user.getSeq())
+		// 				.simulationSeq(simulation.getSeq())
+		// 				.seedMoney(groupDTO.getSeedMoney())
+		// 				.currentMoney(groupDTO.getSeedMoney())
+		// 				.isExited(false)
+		// 				.currentRank(null)
+		// 				.previousRank(null)
+		// 				.build());
+		// }
+	}
+
 }
