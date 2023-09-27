@@ -65,6 +65,7 @@ public class GroupService {
 			.title(groupDTO.getTitle())
 			.period(groupDTO.getPeriod())
 			.seedMoney(groupDTO.getSeedMoney())
+			.memberNum(groupDTO.getUserSeqList().size())
 			.owner(owner)
 			.build();
 
@@ -155,23 +156,31 @@ public class GroupService {
 
 		List<GroupDTO> groupList = new ArrayList<>();
 
-		for (SimulationUser simulationUser : user.getSimulationUserList()) {
-			Simulation simulation = simulationUser.getSimulation();
+		for (Simulation simulation : simulationRepository.findAll()) {
 
 			// 대기 중인 그룹만 추가
 			if (!simulation.getProgressState().equals("waiting")) {
 				continue;
 			}
 
-			GroupDTO groupDTO = GroupDTO.builder()
-				.simulationSeq(simulation.getSeq())
-				.title(simulation.getTitle())
-				.currentMemberNum(simulation.getMemberNum())
-				.seedMoney(simulation.getSeedMoney())
-				.averageTier(null) // 추후에 필요
-				.period(simulation.getPeriod())
-				.build();
-			groupList.add(groupDTO);
+			for (SimulationUser simulationUser : simulation.getSimulationUserList()) {
+				User member = simulationUser.getUser();
+
+				// 내가 속한 그룹은 제외
+				if (member.getSeq() == user.getSeq()) {
+					break;
+				}
+
+				GroupDTO groupDTO = GroupDTO.builder()
+					.simulationSeq(simulation.getSeq())
+					.title(simulation.getTitle())
+					.currentMemberNum(simulation.getMemberNum())
+					.seedMoney(simulation.getSeedMoney())
+					.averageTier(null) // 추후에 필요
+					.period(simulation.getPeriod())
+					.build();
+				groupList.add(groupDTO);
+			}
 		}
 
 		return groupList;
@@ -179,7 +188,6 @@ public class GroupService {
 
 	public MyWaitingGroupDetailsDTO getMyWaitingGroupDetails(Long simulationSeq) {
 		log.info("[내 대기중인 그룹 - 상세]");
-
 		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
 		return MyWaitingGroupDetailsDTO.builder()
 			.title(simulation.getTitle())
@@ -193,9 +201,7 @@ public class GroupService {
 
 	public MyInProgressGroupDetailsDTO getMyInProgressGroupDetails(Long simulationSeq) {
 		log.info("[내 진행중인 그룹 - 상세]");
-
 		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
-
 		return MyInProgressGroupDetailsDTO.builder()
 			.seedMoney(simulation.getSeedMoney())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
@@ -203,7 +209,7 @@ public class GroupService {
 			.averageTier(null) // 추후에 추가 예정
 			.rankInGroup(null) // 추후에 추가 예쩡
 			.rankInGroupFluctuation(null) // 추후에 추가 예정
-			.finishedDate(simulation.getFinishedDate())
+			.period(simulation.getPeriod())
 			.build();
 	}
 
@@ -227,6 +233,7 @@ public class GroupService {
 		for (SimulationUser simulationUser : simulationUserList) {
 			memberImageList.add(simulationUser.getUser().getProfileImgSearchName());
 		}
+		log.info("memberImageList" + memberImageList.toString());
 		return memberImageList;
 	}
 }

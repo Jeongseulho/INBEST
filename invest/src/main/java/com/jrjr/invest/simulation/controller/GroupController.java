@@ -63,24 +63,23 @@ public class GroupController {
 
 	// 그룹 상세
 	@GetMapping("/details")
-	ResponseEntity<?> getDetails(@RequestParam Long simulationSeq, @RequestParam String progressState) {
-
-		Object details = null;
+	ResponseEntity<?> getDetails(@RequestParam Long simulationSeq, @RequestParam String progressState) throws
+		RuntimeException {
 
 		// 내 대기중인 그룹 - 상세
 		if (progressState.equals("waiting")) {
-			details = groupService.getMyWaitingGroupDetails(simulationSeq);
+			return ResponseEntity.ok(groupService.getMyWaitingGroupDetails(simulationSeq));
 		}
 		// 내 진행중인 그룹 - 상세
-		if (progressState.equals("inProgress")) {
-			details = groupService.getMyInProgressGroupDetails(simulationSeq);
+		else if (progressState.equals("inProgress")) {
+			return ResponseEntity.ok(groupService.getMyInProgressGroupDetails(simulationSeq));
 		}
 		// 참여 가능 그룹 - 상세
-		if (progressState.equals("waiting")) {
-			details = groupService.getJoinableGroupDetails(simulationSeq);
+		else if (progressState.equals("waiting")) {
+			return ResponseEntity.ok(groupService.getJoinableGroupDetails(simulationSeq));
+		} else {
+			throw new RuntimeException("해당하는 시뮬레이션이 존재하지 않습니다.");
 		}
-
-		return new ResponseEntity<>(details, HttpStatus.OK);
 	}
 
 	// 그룹 참여하기

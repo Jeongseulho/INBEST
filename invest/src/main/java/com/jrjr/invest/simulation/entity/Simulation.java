@@ -30,32 +30,23 @@ public class Simulation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
-
 	@Column(nullable = false)
 	private String title;
-
 	@Column()
 	private LocalDateTime startDate;
-
 	@Column(nullable = false)
 	private Integer period;
-
 	@Column(nullable = false)
 	private Long seedMoney;
-
 	@Column()
 	private Integer memberNum;
-
 	@ManyToOne
 	@JoinColumn(name = "owner_seq", nullable = false)
 	private User owner;
-
 	@Column()
 	private LocalDateTime finishedDate;
-
 	@Column()
 	private Integer revenuRate; // simulation 평균 수익률
-
 	@OneToMany(mappedBy = "simulation")
 	private List<SimulationUser> simulationUserList = new ArrayList<>();
 

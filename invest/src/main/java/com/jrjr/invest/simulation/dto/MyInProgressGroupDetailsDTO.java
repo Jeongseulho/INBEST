@@ -26,5 +26,5 @@ public class MyInProgressGroupDetailsDTO {
 	private Integer rankInGroupFluctuation;
 	private List<String> currentMemberImageList;
 	private LocalDateTime startDate;
-	private LocalDateTime finishedDate;
+	private Integer period;
 }
