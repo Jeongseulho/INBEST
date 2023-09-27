@@ -50,4 +50,16 @@ public class SimulationUser {
 	@Column()
 	private Boolean isExited;
 
+	@Override
+	public String toString() {
+		return "SimulationUser{" +
+			"simulation=" + simulation +
+			", user=" + user +
+			", seedMoney=" + seedMoney +
+			", currentMoney=" + currentMoney +
+			", previousRank=" + previousRank +
+			", currentRank=" + currentRank +
+			", isExited=" + isExited +
+			'}';
+	}
 }
