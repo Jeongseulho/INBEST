@@ -31,4 +31,5 @@ public class InProgressGroupDetailsDTO {
 	private List<String> currentMemberImageList;
 	private LocalDateTime startDate;
 	private Integer period;
+	private String title;
 }

@@ -391,6 +391,7 @@ public class GroupService {
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.startDate(simulation.getStartDate())
 			.period(simulation.getPeriod())
+			.title(simulation.getTitle())
 			.build();
 
 		return inProgressGroupDetailsDTO;
