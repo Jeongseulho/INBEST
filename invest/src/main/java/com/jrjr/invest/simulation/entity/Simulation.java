@@ -55,10 +55,10 @@ public class Simulation {
 		LocalDateTime finishedDate, User owner, List<SimulationUser> simulationUserList) {
 		this.title = title;
 		this.seedMoney = seedMoney;
+		this.memberNum = memberNum;
 		this.startDate = startDate;
 		this.period = period;
 		this.owner = owner;
-		this.memberNum = memberNum;
 		this.finishedDate = finishedDate;
 		this.simulationUserList = simulationUserList;
 	}
@@ -67,11 +67,24 @@ public class Simulation {
 		this.revenuRate = revenuRate;
 	}
 
+	public void updateMemberNum() {
+
+		if (simulationUserList == null) {
+			this.memberNum = 0;
+		}
+		this.memberNum = simulationUserList.size();
+	}
+
 	public SimulationDTO simulationDTO() {
 		return SimulationDTO.builder()
-			.seq(seq).finishedDate(finishedDate)
-			.owner(owner).period(period).title(title).startDate(startDate)
-			.revenuRate(revenuRate).seedMoney(seedMoney)
+			.seq(seq)
+			.finishedDate(finishedDate)
+			.owner(owner)
+			.period(period)
+			.title(title)
+			.startDate(startDate)
+			.revenuRate(revenuRate)
+			.seedMoney(seedMoney)
 			.build();
 	}
 
@@ -86,4 +99,21 @@ public class Simulation {
 
 		return "waiting";
 	}
+
+	@Override
+	public String toString() {
+		return "Simulation{" +
+			"seq=" + seq +
+			", title='" + title + '\'' +
+			", startDate=" + startDate +
+			", period=" + period +
+			", seedMoney=" + seedMoney +
+			", memberNum=" + memberNum +
+			", owner=" + owner +
+			", finishedDate=" + finishedDate +
+			", revenuRate=" + revenuRate +
+			", simulationUserList=" + simulationUserList +
+			'}';
+	}
+
 }

@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @ToString
 public class MyInProgressGroupDetailsDTO {
+
 	private Long seedMoney;
 	private Integer averageTier;
 	private Integer rankInGroup;

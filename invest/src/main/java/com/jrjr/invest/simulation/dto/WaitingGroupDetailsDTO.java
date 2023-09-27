@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 @Getter
 @Setter
-public class MyWaitingGroupDetailsDTO {
+public class WaitingGroupDetailsDTO {
 
 	private Long seedMoney;
 	private Integer period;

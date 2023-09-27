@@ -67,6 +67,21 @@ public class User extends BaseEntity {
 		this.profileImgOriginalName = profileImgOriginalName;
 	}
 
+	@Override
+	public String toString() {
+		return "User{" +
+			"email='" + email + '\'' +
+			", name='" + name + '\'' +
+			", nickname='" + nickname + '\'' +
+			", birthyear='" + birthyear + '\'' +
+			", birthday='" + birthday + '\'' +
+			", gender=" + gender +
+			", profileImgSearchName='" + profileImgSearchName + '\'' +
+			", profileImgOriginalName='" + profileImgOriginalName + '\'' +
+			", deletedDate=" + deletedDate +
+			'}';
+	}
+
 	public UserDTO convertToUserDto(User user) {
 		String birth = null;
 		if (user.getBirthyear() != null && user.getBirthday() != null) {

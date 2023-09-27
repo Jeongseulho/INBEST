@@ -1,5 +1,6 @@
 package com.jrjr.invest.simulation.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -11,19 +12,20 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-@Builder
 @Slf4j
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 @Getter
 @Setter
-public class MyWaitingGroupDetailsDTO {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@ToString
+public class InProgressGroupDetailsDTO {
 
 	private Long seedMoney;
-	private Integer period;
 	private Integer averageTier;
+	private Integer rankInGroup;
+	private Integer rankInGroupFluctuation;
 	private List<String> currentMemberImageList;
-	private Long ownerSeq;
-	private String title;
+	private LocalDateTime startDate;
+	private Integer period;
 }

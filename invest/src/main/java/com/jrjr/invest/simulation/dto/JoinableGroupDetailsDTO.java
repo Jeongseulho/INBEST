@@ -1,5 +1,7 @@
 package com.jrjr.invest.simulation.dto;
 
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,10 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @ToString
 public class JoinableGroupDetailsDTO {
+
 	private Long simulationSeq;
 	private String title;
 	private Integer currentMemberNum;
 	private Long seedMoney;
 	private Integer averageTier;
 	private Integer period;
+	private List<String> currentMemberImageList;
 }
