@@ -34,7 +34,7 @@ const InvestMain = () => {
       <FilterModal />
       <WaitingGroupModal />
       <InProgressGroupModal />
-      <QuestionJoinModal />
+      <QuestionJoinModal refetchMyGroupList={refetchMyGroupList} refetchJoinableGroupList={refetchJoinableGroupList} />
       <MyGroupList data={myGroupList} isLoading={isLoadingMyGroupList} />
       <GroupList data={joinableGroupList} isLoading={isLoadingJoinableGroupList} />
     </div>

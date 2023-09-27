@@ -11,8 +11,14 @@ import CurJoinPeople from "../atoms/CurJoinPeople";
 import default_image from "../../../asset/image/default_image.png";
 import { joinGroup } from "../../../api/group";
 import { useState } from "react";
+import complete from "../../../asset/image/complete.png";
 
-const QuestionJoinModal = () => {
+interface Props {
+  refetchMyGroupList: () => void;
+  refetchJoinableGroupList: () => void;
+}
+
+const QuestionJoinModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Props) => {
   const { modalType, closeModal, simulationSeq } = modalStore();
   const { isLoading, data } = useQuery(
     ["detailJoinableGroup", simulationSeq],
@@ -44,7 +50,7 @@ const QuestionJoinModal = () => {
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,
-          width: "400px",
+          width: "450px",
           height: isJoin ? "350px" : "570px",
           display: "flex",
           flexDirection: "column",
@@ -79,13 +85,21 @@ const QuestionJoinModal = () => {
         </>
       ) : (
         <>
+          <img src={complete} width={120} />
           <div className="  w-full h-full flex flex-col items-center justify-between mt-5 ">
             <h3 className=" text-center text-dark">
               참여가 완료되었어요,
               <br />내 그룹에서 확인할 수 있어요
             </h3>
 
-            <button onClick={closeModal} className=" main-dark-btn">
+            <button
+              onClick={() => {
+                closeModal();
+                refetchMyGroupList();
+                refetchJoinableGroupList();
+              }}
+              className=" main-dark-btn"
+            >
               확인
             </button>
           </div>
