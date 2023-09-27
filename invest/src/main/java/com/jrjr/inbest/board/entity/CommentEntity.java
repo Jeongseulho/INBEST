@@ -56,6 +56,7 @@ public class CommentEntity extends BaseEntity implements Serializable {
 			.context(context)
 			.createdDate(getCreatedDate())
 			.lastModifiedDate(getLastModifiedDate())
+			.likeUserList(getLikeUserList())
 			.build();
 
 		List<CommentDTO> cocommentDTOList = new ArrayList<>();

@@ -48,7 +48,8 @@ public class CoCommentEntity extends BaseEntity implements Serializable {
 	public CommentDTO toCommentDTO() {
 		CommentDTO commentDTO = CommentDTO.builder().
 			seq(id).userSeq(userSeq).
-			likes(likes).context(context).createdDate(getCreatedDate()).lastModifiedDate(getLastModifiedDate()).
+			likes(likes).context(context)
+			.createdDate(getCreatedDate()).lastModifiedDate(getLastModifiedDate()).
 			likeUserList(likeUserList)
 			.build();
 		return commentDTO;
