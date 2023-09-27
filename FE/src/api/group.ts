@@ -52,7 +52,7 @@ export const getWaitingGroupDetail = async (simulationSeq: number): Promise<Wait
 };
 
 export const getInProgressGroupDetail = async (simulationSeq: number): Promise<InProgressGroupDetail> => {
-  const { data } = await apiWithAuth.get("/details", { params: { simulationSeq, progressState: "inprogress" } });
+  const { data } = await apiWithAuth.get("/details", { params: { simulationSeq, progressState: "inProgress" } });
   return data;
 };
 

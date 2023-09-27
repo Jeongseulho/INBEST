@@ -28,9 +28,7 @@ const InProgressGroupModal = () => {
   return (
     <Modal
       isOpen={modalType === "inProgressGroup"}
-      ariaHideApp={false}
       onRequestClose={closeModal}
-      closeTimeoutMS={300}
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,
@@ -64,7 +62,13 @@ const InProgressGroupModal = () => {
           <p className=" font-regular text-md text-myGray ">모의투자가 진행중인 그룹입니다.</p>
           <button
             onClick={() => {
-              navigate(`/invest/${simulationSeq}`);
+              navigate(`/invest/${simulationSeq}`, {
+                state: {
+                  seedMoney: data?.seedMoney,
+                  startDate: data?.startDate,
+                  period: data?.period,
+                },
+              });
               closeModal();
             }}
             className=" main-dark-btn"

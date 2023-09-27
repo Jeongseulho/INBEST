@@ -13,11 +13,13 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@nivo/bar": "^0.83.0",
+    "@nivo/boxplot": "^0.83.0",
     "@nivo/core": "^0.83.0",
     "@stomp/stompjs": "^7.0.0",
     "animate.css": "^4.1.1",
     "aws-sdk": "^2.1462.0",
     "axios": "^1.5.0",
+    "d3-shape": "^3.2.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
     "dompurify": "^3.0.5",

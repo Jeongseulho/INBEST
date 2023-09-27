@@ -40,3 +40,51 @@ export const getKorTime = (dateString: string) => {
   // 'YYYY-MM-DD HH:MM' 형태로 반환합니다.
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
+
+export function calEndDateAndProceed(
+  startDate: string,
+  period: number
+): {
+  formattedStartDate: string;
+  formattedEndDate: string;
+  proceed: number;
+  remainDays: number;
+} {
+  // startDate를 Date 객체로 변환
+  const startDateObj = new Date(startDate);
+
+  // formattedStartDate 계산
+  const formattedStartDate =
+    startDateObj.getFullYear() +
+    "." +
+    String(startDateObj.getMonth() + 1).padStart(2, "0") +
+    "." +
+    String(startDateObj.getDate()).padStart(2, "0");
+
+  // endDate 계산 (startDate에 period일을 더함)
+  const endDateObj = new Date(startDateObj.getTime() + period * 24 * 60 * 60 * 1000);
+
+  // formattedEndDate 계산
+  const formattedEndDate =
+    endDateObj.getFullYear() +
+    "." +
+    String(endDateObj.getMonth() + 1).padStart(2, "0") +
+    "." +
+    String(endDateObj.getDate()).padStart(2, "0");
+
+  // 현재 날짜와 startDate 사이의 경과 시간을 계산하여 proceed 계산
+  const currentDate = new Date();
+  const elapsedTime = currentDate.getTime() - startDateObj.getTime();
+  const totalPeriod = period * 24 * 60 * 60 * 1000;
+  const proceed = Math.round((elapsedTime / totalPeriod) * 100); // 반올림
+
+  // 남은 일수 계산
+  const remainDays = Math.max(Math.ceil((endDateObj.getTime() - currentDate.getTime()) / (24 * 60 * 60 * 1000)), 0);
+
+  return {
+    formattedStartDate,
+    formattedEndDate,
+    proceed,
+    remainDays,
+  };
+}

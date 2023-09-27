@@ -25,19 +25,19 @@ const InvestingCrypto = ({ setCompanyCode }: Props) => {
           setCompanyCode={setCompanyCode}
           stockList={data?.slice(0, 10)}
           isLoading={isLoading}
-          title="많이 검색되는 주식"
+          title="시가총액 높은 가상화폐"
         />
         <CryptoStockList
           setCompanyCode={setCompanyCode}
           stockList={data?.slice(10, 20)}
           isLoading={isLoading}
-          title="시가총액 높은 주식"
+          title="많이 검색된 가상화폐"
         />
         <CryptoStockList
           setCompanyCode={setCompanyCode}
           stockList={data?.slice(20, 30)}
           isLoading={isLoading}
-          title="급상승 주식"
+          title="거래량 많은 가상화폐"
         />
       </div>
     </div>

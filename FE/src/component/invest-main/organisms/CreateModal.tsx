@@ -27,9 +27,9 @@ const CreateModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Props) =>
   const { modalType, closeModal } = modalStore();
   const { mutateAsync } = useMutation((groupSetting: GroupSetting) => createGroup(groupSetting), {
     onMutate: async (groupSetting) => {
-      if (groupSetting.title.trim().length < 1) {
-        toast.error("방 제목을 1자이상 입력해주세요.");
-        throw new Error("방 제목을 1자이상 입력해주세요.");
+      if (groupSetting.title.trim().length < 1 && groupSetting.title.length > 9) {
+        toast.error("방 제목을 1자이상, 9자이하로 입력해주세요.");
+        throw new Error("방 제목 길이 오류");
       }
       return groupSetting;
     },
