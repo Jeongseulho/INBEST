@@ -3,6 +3,7 @@ package com.jrjr.invest.simulation.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class GroupService {
-
 	private final SimulationRankService simulationRankServiceImpl;
 	private final UserRepository userRepository;
 	private final SimulationRepository simulationRepository;
@@ -68,7 +68,7 @@ public class GroupService {
 		Simulation simulation = Simulation.builder()
 			.title(groupDTO.getTitle())
 			.period(groupDTO.getPeriod())
-			.memberNum(groupDTO.getUserSeqList().size())
+			.memberNum(0)
 			.seedMoney(groupDTO.getSeedMoney())
 			.owner(owner)
 			.build();
@@ -147,7 +147,8 @@ public class GroupService {
 				.title(simulation.getTitle())
 				.currentMemberNum(simulation.getMemberNum())
 				.seedMoney(simulation.getSeedMoney())
-				.averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
+				// .averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
+				.averageTier(0)
 				.progressState(simulation.getProgressState())
 				.build();
 			groupList.add(groupDTO);
@@ -273,12 +274,18 @@ public class GroupService {
 		
 		// 모의 투자 방 탐색
 		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
+		//참여할 수 없는 경우 예외 처리
 		if (simulationSeq == null) {
 			throw new RuntimeException(simulationSeq+ " 번 방이 존재하지 않습니다.");
+		}else if(simulation.getStartDate() != null){
+			throw new Exception(simulationSeq+" 번 방은 이미 시작해 참여할 수 없습니다.");
 		}
 			
 		//가입할 유저 탐색
 		User user = userRepository.findBySeq(userSeq);
+
+		log.info("참가 유저 : "+user.toString());
+		log.info("모의투자방 : "+simulation.toString());
 
 		if (user == null) {
 			throw new RuntimeException(userSeq+" 유저가 존재하지 않습니다.");
@@ -324,8 +331,46 @@ public class GroupService {
 		// 			.build());
 
 		//Simulation 맴버 수 업데이트
-		simulation.updateMemberNum();
+		simulation.addMemberNum();
 		simulationRepository.save(simulation);
+	}
+	//시뮬레이션 시작 메소드
+	@Transactional
+	public void startSimulation(Long simulationSeq,Long loginSeq) throws Exception {
+		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
+		
+		//예외 처리
+		if(simulation == null){
+			throw new Exception(simulationSeq+"번 모의 투자방이 없습니다.");
+		}else if(simulation.getOwner().getSeq() != loginSeq){
+			throw new Exception(loginSeq+"는 "+simulationSeq+"번 모의 투자방을 실행시킬 권한이 없습니다.");
+		}else if(simulation.getStartDate()!=null) {
+			throw new Exception("이미 진행중인 모의 투자 입니다.");
+		}
+		//시뮬레이션 시작 데이터를 시뮬레이션 데이터에 저장
+		simulation.start();
+		simulationRepository.save(simulation);
+
+		//실시간 유저 정보 변환을 위해 redis에 저장
+		//레디스 접근을 위해 해시오퍼레이션과 해시키 생성
+		HashOperations<String,String,RedisSimulationUserDTO> simulationUserHashOperations
+			= redisSimulationUserDTORedisTemplate.opsForHash();
+		String hashKey = "simulation_"+simulation.getSeq();
+		System.out.println("시뮬레이션 해시 키 :"+hashKey);
+		//유저 정보를 시뮬레이션-유저 테이블에 저장
+		for(SimulationUser simulationUser : simulation.getSimulationUserList()){
+			RedisSimulationUserDTO redisSimulationUserDTO =
+				RedisSimulationUserDTO.builder()
+					.simulationSeq(simulationUser.getSimulation().getSeq())
+					.userSeq(simulationUser.getUser().getSeq())
+					.previousRank(1)
+					.currentRank(1)
+					.currentMoney(simulation.getSeedMoney())
+					.isExited(false)
+					.build();
+
+			simulationUserHashOperations.put(hashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),redisSimulationUserDTO);
+		}
 	}
 
 	//진행 중인 그룹 상세정보가져오기

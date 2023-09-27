@@ -53,8 +53,8 @@ public class SimulationUser {
 	@Override
 	public String toString() {
 		return "SimulationUser{" +
-			"simulation=" + simulation +
-			", user=" + user +
+			"simulation=" + simulation.getSeq() +
+			", user=" + user.getSeq() +
 			", seedMoney=" + seedMoney +
 			", currentMoney=" + currentMoney +
 			", previousRank=" + previousRank +
