@@ -1,17 +1,23 @@
-export interface KorSearchStockInfo {
-  거래량: string;
+export interface KorStockInfo {
   등락률: string;
-  순위: string;
   종목명: string;
   현재가: string;
 }
 
-export type KorSearchStockInfoList = KorSearchStockInfo[];
+export type KorStockInfoList = KorStockInfo[];
 
-export interface KorMarketCapStockInfo extends KorSearchStockInfo {}
+export interface AmericaStockInfo {
+  종목명: string;
+  시세: string;
+  등락률: string;
+}
 
-export type KorMarketCapStockInfoList = KorMarketCapStockInfo[];
+export type AmericaStockInfoList = AmericaStockInfo[];
 
-export interface KorIncreaseStockInfo extends KorSearchStockInfo {}
+export interface CoinStockInfo {
+  Name: string;
+  Fluctuation: string;
+  Price: string;
+}
 
-export type KorIncreaseStockInfoList = KorIncreaseStockInfo[];
+export type CoinStockInfoList = CoinStockInfo[];

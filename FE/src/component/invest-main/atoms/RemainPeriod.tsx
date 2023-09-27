@@ -2,10 +2,10 @@ import calendar from "../../../asset/image/calendar.png";
 
 interface Props {
   startDate: string;
-  endDate: string;
+  period: number;
 }
 
-const RemainPeriod = ({ startDate, endDate }: Props) => {
+const RemainPeriod = ({ startDate, period }: Props) => {
   return (
     <div>
       <div className=" flex items-end">
@@ -20,7 +20,7 @@ const RemainPeriod = ({ startDate, endDate }: Props) => {
       <div className=" flex justify-between font-regular">
         <p>{startDate}</p>
         <p>진행도 : 25%</p>
-        <p>{endDate}</p>
+        <p>PERIOD : {period}</p>
       </div>
     </div>
   );

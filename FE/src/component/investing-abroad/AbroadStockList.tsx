@@ -1,6 +1,6 @@
-import IncreaseIcon from "./IncreaseIcon";
-import DecreaseIcon from "./DecreaseIcon";
-import { KorSearchStockInfoList } from "../../type/InvestingStockInfo";
+import IncreaseIcon from "../../component/common/IncreaseIcon";
+import DecreaseIcon from "../../component/common/DecreaseIcon";
+import { AmericaStockInfoList } from "../../type/InvestingStockInfo";
 import { fluctuationStringToNumber } from "../../util/formatStockInfo";
 import { truncateContent } from "../../util/formatContent";
 import Skeleton from "react-loading-skeleton";
@@ -8,10 +8,11 @@ import Skeleton from "react-loading-skeleton";
 interface Props {
   title: string;
   isLoading: boolean;
-  stockList: KorSearchStockInfoList | undefined;
+  stockList: AmericaStockInfoList | undefined;
+  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const StockList = ({ title, stockList, isLoading }: Props) => {
+const AbroadStockList = ({ title, stockList, isLoading }: Props) => {
   return (
     <div className=" shadow-component flex flex-col p-4 gap-2 w-1/3">
       <h4>{title}</h4>
@@ -36,9 +37,9 @@ const StockList = ({ title, stockList, isLoading }: Props) => {
                 className=" flex justify-center gap-12 cursor-pointer hover:bg-gray-400 hover:bg-opacity-20 items-center py-1 rounded-md transition-colors duration-300"
                 key={index}
               >
-                <p className=" text-center w-1/2">{truncateContent(stock.종목명, 10)}</p>
+                <p className=" text-center w-1/2">{truncateContent(stock.종목명, 8)}</p>
                 <div className=" flex items-center justify-center w-1/2">
-                  <p className=" text-center">{stock.현재가}</p>
+                  <p className=" text-center">${stock.시세}</p>
                   {fluctuationStringToNumber(stock.등락률) >= 0 ? (
                     <IncreaseIcon number={fluctuationStringToNumber(stock.등락률)} />
                   ) : (
@@ -54,4 +55,4 @@ const StockList = ({ title, stockList, isLoading }: Props) => {
     </div>
   );
 };
-export default StockList;
+export default AbroadStockList;

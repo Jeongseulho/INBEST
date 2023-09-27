@@ -58,7 +58,7 @@ const InProgressGroupModal = () => {
               rankInGroupFluctuation={data?.rankInGroupFluctuation || 0}
             />
             <CurJoinPeople profileImageList={data?.currentMemberImageList || [default_image]} />
-            <RemainPeriod startDate={data?.startDate || ""} endDate={data?.endDate || ""} />
+            <RemainPeriod startDate={data?.startDate || ""} period={data?.period || 1} />
           </div>
 
           <p className=" font-regular text-md text-myGray ">모의투자가 진행중인 그룹입니다.</p>

@@ -1,10 +1,13 @@
-import StockList from "../common/StockList";
+import DomesticStockList from "./DomesticStockList";
 import DecreaseGraphIcon from "../common/DecreaseGraphIcon";
 import IncreaseGraphIcon from "../common/IncreaseGraphIcon";
 import { getKorSearchStockList, getKorMarketCapStockList, getKorIncreaseStockList } from "../../api/investingStockInfo";
 import { useQuery } from "react-query";
+interface Props {
+  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const InvestingDomestic = () => {
+const InvestingDomestic = ({ setCompanyCode }: Props) => {
   const { data: searchStockList, isLoading: isLoadingSearchStockList } = useQuery(
     ["korSearchStockList"],
     getKorSearchStockList
@@ -28,9 +31,24 @@ const InvestingDomestic = () => {
         <IncreaseGraphIcon title="환율" desc="급하락 주식에 대한 설명입니다." />
       </div>
       <div className=" flex gap-4 w-full">
-        <StockList stockList={searchStockList} isLoading={isLoadingSearchStockList} title="많이 검색되는 주식" />
-        <StockList stockList={marketCapStockList} isLoading={isLoadingMarketCapStockList} title="시가총액 높은 주식" />
-        <StockList stockList={increaseStockList} isLoading={isLoadingIncreaseStockList} title="급상승 주식" />
+        <DomesticStockList
+          setCompanyCode={setCompanyCode}
+          stockList={searchStockList}
+          isLoading={isLoadingSearchStockList}
+          title="많이 검색되는 주식"
+        />
+        <DomesticStockList
+          setCompanyCode={setCompanyCode}
+          stockList={marketCapStockList}
+          isLoading={isLoadingMarketCapStockList}
+          title="시가총액 높은 주식"
+        />
+        <DomesticStockList
+          setCompanyCode={setCompanyCode}
+          stockList={increaseStockList}
+          isLoading={isLoadingIncreaseStockList}
+          title="급상승 주식"
+        />
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ export interface InProgressGroupDetail {
   rankInGroupFluctuation: number;
   currentMemberImageList: string[];
   startDate: string;
-  endDate: string;
+  period: number;
 }
 
 export interface JoinableGroup {
