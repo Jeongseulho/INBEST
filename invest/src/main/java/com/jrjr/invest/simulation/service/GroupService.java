@@ -284,12 +284,12 @@ public class GroupService {
 		//가입할 유저 탐색
 		User user = userRepository.findBySeq(userSeq);
 
-		log.info("참가 유저 : "+user.toString());
-		log.info("모의투자방 : "+simulation.toString());
-
 		if (user == null) {
 			throw new RuntimeException(userSeq+" 유저가 존재하지 않습니다.");
 		}
+
+		log.info("참가 유저 : "+user.toString());
+		log.info("모의투자방 : "+simulation.toString());
 
 		//현재 해당 모의 투자에 참여 중인 유저가 아닌 경우를 탐색
 		List<SimulationUser> simulationUserList = simulation.getSimulationUserList();
@@ -331,7 +331,7 @@ public class GroupService {
 		// 			.build());
 
 		//Simulation 맴버 수 업데이트
-		simulation.addMemberNum();
+		simulation.updateMemberNum();
 		simulationRepository.save(simulation);
 	}
 	//시뮬레이션 시작 메소드
@@ -355,10 +355,11 @@ public class GroupService {
 		//레디스 접근을 위해 해시오퍼레이션과 해시키 생성
 		HashOperations<String,String,RedisSimulationUserDTO> simulationUserHashOperations
 			= redisSimulationUserDTORedisTemplate.opsForHash();
-		String hashKey = "simulation_"+simulation.getSeq();
+		String hashKey = generateKey(simulation.getSeq());
 		System.out.println("시뮬레이션 해시 키 :"+hashKey);
 		//유저 정보를 시뮬레이션-유저 테이블에 저장
 		for(SimulationUser simulationUser : simulation.getSimulationUserList()){
+			log.info(simulation.getSeq()+"방에 "+simulationUser.getUser().getNickname()+"님을 추가합니다.");
 			RedisSimulationUserDTO redisSimulationUserDTO =
 				RedisSimulationUserDTO.builder()
 					.simulationSeq(simulationUser.getSimulation().getSeq())
@@ -369,7 +370,8 @@ public class GroupService {
 					.isExited(false)
 					.build();
 
-			simulationUserHashOperations.put(hashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),redisSimulationUserDTO);
+			simulationUserHashOperations.put(hashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),
+				redisSimulationUserDTO);
 		}
 	}
 
@@ -412,5 +414,48 @@ public class GroupService {
 			.build();
 
 		return waitingGroupDetailsDTO;
+	}
+	public void leaveGroup(Long simulationSeq, Long userSeq) throws Exception {
+		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
+
+		//모의투자방이 없는 예외 처리
+		if(simulation == null){
+			throw new Exception(simulationSeq+"번 모의 투자방이 없습니다.");
+		}
+
+		User user = userRepository.findBySeq(userSeq);
+		
+		//유저 없는 예외 처리
+		if(user == null){
+			throw new Exception(userSeq+"유저가 없습니다.");
+		}
+
+		SimulationUser simulationUser = simulationUserRepository.findBySimulationAndUser(simulation,user);
+		//모의 투자방에 없는 유저 예외 처리
+		if(simulationUser == null){
+			throw new Exception(user.getNickname()+"님 ( "+ user.getSeq()+"번 ) 이 참가학있는 "+simulation.getSeq()+"번 방이 없습니다.");
+		}
+		
+		//유저 방 나감 처리
+		simulationUserRepository.delete(simulationUser);
+
+		//방장이 나간 경우 모든 맴버 없애기
+		if(simulation.getOwner().getSeq() == user.getSeq()){
+			List<SimulationUser> simulationUserList = simulationUserRepository.findBySimulationSeq(simulation.getSeq());
+
+			for(SimulationUser participant : simulationUserList){
+				simulationUserRepository.delete(participant);
+			}
+		}
+		
+		//맴버 수 업데이트
+		simulation = simulationRepository.findBySeq(simulation.getSeq());
+		simulation.updateMemberNum();
+		simulation = simulationRepository.save(simulation);
+		
+		//맴버수가 없는 경우 방 없애기
+		if(simulation.getMemberNum() == 0){
+			simulationRepository.delete(simulation);
+		}
 	}
 }

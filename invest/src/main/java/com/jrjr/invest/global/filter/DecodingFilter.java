@@ -34,7 +34,11 @@ public class DecodingFilter implements Filter {
 			decodedParameters.put(key, values);
 		}
 
-		log.info("디코딩된 파라미터 " + decodedParameters);
+		log.info("디코딩된 파라미터 ");
+
+		for(String key : decodedParameters.keySet()){
+			log.info(key+" : "+decodedParameters.get(key));
+		}
 
 		HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
 			@Override
