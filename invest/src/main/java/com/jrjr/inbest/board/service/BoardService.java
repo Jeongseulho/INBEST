@@ -46,6 +46,18 @@ public class BoardService {
 	@Value(value = "${cloud.aws.s3.uri}")
 	private String bucketUrl;
 
+	public Long countBoard(String keyword) {
+		Long count = 0L;
+
+		if (keyword.equals("")) {
+			count = boardRepository.count();
+		} else {
+			count = boardRepository.countByTitleContainingOrContextContaining(keyword, keyword);
+		}
+
+		return count;
+	}
+
 	@Transactional
 	public void insertBoard(BoardDTO boardDTO) throws Exception {
 		BoardEntity board = boardDTO.toBoardEntity();
@@ -119,9 +131,17 @@ public class BoardService {
 		return;
 	}
 
-	public List<BoardDTO> findAllBoards(int page, int size) throws Exception {
-		Page<BoardEntity> boardEntityList = boardRepository.findAll(
-			PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdDate"));
+	public List<BoardDTO> findAllBoards(int page, int size, String keyword) throws Exception {
+		Page<BoardEntity> boardEntityList;
+
+		if (keyword == null || keyword.equals("")) {
+			boardEntityList = boardRepository.findAll(
+				PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdDate"));
+		} else {
+			boardEntityList = boardRepository.findAllByTitleContainingOrContextContaining(keyword, keyword,
+				PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdDate"));
+		}
+
 		List<BoardDTO> boardDTOList = new ArrayList<>();
 
 		log.info("========== 대상 게시물 ==========");

@@ -43,7 +43,26 @@ public class BoardController {
 	private final JwtProvider jwtProvider;
 	private final UserService userService;
 
-	@Operation(summary = "게시판 등록")
+	@Operation(summary = "게시판 개수", description = "검색한 게시물 결과의 전체 개수를 long으로 보내줌. 이때 검색어가 없는 경우는 전체 게시물을 줌")
+	@Parameters(value = {
+		@Parameter(required = true, name = "keyword", description = "검색어"),
+	})
+	@GetMapping("/count")
+	public ResponseEntity<Map<String, Object>> countBoard(HttpServletRequest request,
+		@RequestParam(required = false, name = "keyword", defaultValue = "") String keyword) throws Exception {
+		log.info("========== 게시판 검색어 개수 시작 ==========");
+		log.info("입력 받은 검색어 : " + keyword);
+
+		Long count = boardService.countBoard(keyword);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+		resultMap.put("count", count);
+		log.info("========== 게시판 검색어 개수 끝 ==========");
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "게시판 등록", description = "(주의) post 요청이기 때문에 requestBody에 넣어야함")
 	@Parameters(value = {
 		@Parameter(required = true, name = "userSeq", description = "유저 pk"),
 		@Parameter(required = true, name = "context", description = "글 내용"),
@@ -138,11 +157,12 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllBoards(@RequestParam(name = "pageNo") int page,
 		@RequestParam(name = "pageSize") int size, @RequestParam(required = false) String loginEmail,
 		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false) String keyword,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 목록 검색 시작 ==========");
 		log.info("page : " + page + " size : " + size);
 		log.info("로그인 유저 이메일 : " + loginEmail);
-		List<BoardDTO> boardDTOList = boardService.findAllBoards(page, size);
+		List<BoardDTO> boardDTOList = boardService.findAllBoards(page, size, keyword);
 		log.info("검색 결과 : " + boardDTOList);
 
 		//게시물 좋아요/덧글 수 통계 처리
@@ -168,8 +188,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 좋아요 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
@@ -204,8 +224,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllViewBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 조회수 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
@@ -243,8 +263,8 @@ public class BoardController {
 	@Operation(summary = "게시판 상세정보")
 	@GetMapping("/{seq}")
 	public ResponseEntity<Map<String, Object>> findBoardBySeq(@PathVariable(value = "seq") String seq,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 게시판 상세 정보 시작 ==========");
 		log.info("seq : " + seq);
@@ -275,8 +295,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> updateBoardLikes(
 		@PathVariable(value = "boardSeq") String boardId,
 		HttpServletRequest request,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq) throws
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq) throws
 		Exception {
 		log.info("========== 게시판 좋아요 시작 ==========");
 
@@ -345,8 +365,8 @@ public class BoardController {
 		@PathVariable(value = "boardSeq") String boardId,
 		@PathVariable(value = "commentSeq") String commentId,
 		HttpServletRequest request,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq) throws
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq) throws
 		Exception {
 		log.info("========== 댓글 좋아요 시작 ==========");
 
@@ -363,7 +383,7 @@ public class BoardController {
 
 		log.info("댓글 seq " + commentId);
 
-		CommentDTO commentDTO = commentService.updateCommentLikes(userDTO.getSeq(), boardId);
+		CommentDTO commentDTO = commentService.updateCommentLikes(userDTO.getSeq(), commentId);
 
 		log.info("좋아요 결과 : " + commentDTO);
 		Map<String, Object> resultMap = new HashMap<>();
@@ -388,8 +408,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> updateComment(
 		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 덧글 수정 시작 ==========");
@@ -425,8 +445,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> deleteComment(
 		@PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 덧글 삭제 시작 ==========");
@@ -461,8 +481,8 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> insertCoComment(
 		@RequestBody CommentDTO commentDTO, @PathVariable(name = "boardSeq") String boardSeq
 		, @PathVariable(name = "commentSeq") String commentSeq,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq) throws
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq) throws
 		Exception {
 		log.info("========== 대댓글 등록 시작 ==========");
 		log.info("대댓글 : " + commentDTO);
@@ -491,8 +511,8 @@ public class BoardController {
 		@RequestBody CommentDTO cocommentDTO, @PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
 		@PathVariable(name = "cocommentSeq") String cocommentSeq,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 대댓글 수정 시작 ==========");
@@ -527,8 +547,8 @@ public class BoardController {
 		@PathVariable(name = "boardSeq") String boardSeq,
 		@PathVariable(name = "commentSeq") String commentSeq,
 		@PathVariable(name = "cocommentSeq") String cocommentSeq,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq,
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq,
 		HttpServletRequest request) throws
 		Exception {
 		log.info("========== 대댓글 삭제 시작 ==========");
@@ -559,8 +579,8 @@ public class BoardController {
 		@PathVariable(value = "commentSeq") String commentId,
 		@PathVariable(value = "cocommentSeq") String cocommentId,
 		HttpServletRequest request,
-		@RequestParam(required = false) String loginEmail,
-		@RequestParam(required = false) String loginSeq) throws
+		@RequestParam(required = false, defaultValue = "") String loginEmail,
+		@RequestParam(required = false, defaultValue = "") String loginSeq) throws
 		Exception {
 		log.info("========== 댓글 좋아요 시작 ==========");
 
