@@ -9,4 +9,5 @@ urlpatterns = [
     path("usastock/", views.usastock),
     path("usatop/", views.usatop),
     path("cointop/", views.cointop),
+    path("kospi/", views.kospi)
 ]

@@ -368,7 +368,7 @@ def cointop(request):
             'Symbol': symbol,
             'image_url' : image_url,
             'Name': name,
-            '등락률인데 영어로 뭘로 해야되는지 모름': percent_change,
+            'Fluctuation': percent_change,
             'Price': price,
             'Market Cap': market_cap,
             'Volume (24h)': volume_24h,
@@ -384,3 +384,31 @@ def cointop(request):
     time.sleep(1)
 
     return JsonResponse(crypto_data, safe=False)
+
+
+# 코스피
+@api_view(['GET'])
+def kospi(request):
+    url = "https://finance.naver.com/sise/sise_index.naver?code=KOSPI"
+    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+    
+    res = requests.get(url, headers=headers)
+    soup = BeautifulSoup(res.text, 'lxml')
+    print(soup)
+    data = []
+    change_element = soup.find('td', class_='number_1')
+    # print(change_element)
+    change_text = change_element.text.strip()
+
+    numeric_change = float(change_text.replace('%', '').strip())
+
+    check = 1 if numeric_change >= 0 else 0
+
+    data_dict = {
+        'check': check,
+    }
+
+    data.append(data_dict)
+
+    time.sleep(1)
+    return JsonResponse(data, safe=False)
