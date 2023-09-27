@@ -94,40 +94,90 @@ def BreakingNewsList(request):
 
 
 # 산업별 뉴스 목록
+# @api_view(['GET'])
+# def IndustryByNewsList(request, category):
+#     url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
+#     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+
+#     res = requests.get(url, headers=headers, verify=False)
+#     soup = BeautifulSoup(res.text, 'lxml')
+
+#     newslist = soup.select(".list .item-box01")
+#     news_data = []
+
+#     for news in newslist:
+#         try:
+#             image_url = "https:" + news.select_one(".img-con img")['src']
+#         except Exception:
+#             continue
+
+#         try:
+#             content = news.select_one(".lead").text.strip()    
+#         except Exception:
+#             continue
+
+#         try:
+#             link_url = news.select_one(".news-con a")['href']
+#         except Exception:
+#             continue
+
+#         title = news.select_one(".tit-news").text.strip()
+
+#         data_dict ={
+#             'title': title,
+#             'content' : content,
+#             'image_url': image_url,
+#             'link_url' : link_url
+#         }
+
+#         news_data.append(data_dict)
+
+#     time.sleep(1)
+
+#     return JsonResponse(news_data, safe=False)
+
 @api_view(['GET'])
-def IndustryByNewsList(request, category):
-    url = f'https://www.yna.co.kr/industry/{category}?site=navi_industry_depth02'
+def IndustryByNewsList3(request, category_num_first):
+
+    if category_num_first in [259, 258, 261, 771]:
+        category_num_second = 101
+    elif category_num_first in [241, 239, 238, 376]:
+        category_num_second = 103
+    elif category_num_first in [230, 229, 228]:
+        category_num_second = 105
+
+    url = f'https://news.naver.com/main/list.naver?mode=LS2D&mid=shm&sid1={category_num_second}&sid2={category_num_first}'
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
 
-    res = requests.get(url, headers=headers, verify=False)
+    res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, 'lxml')
 
-    newslist = soup.select(".list .item-box01")
+    newslist = soup.select("ul.type06_headline li")
     news_data = []
 
     for news in newslist:
         try:
-            image_url = "https:" + news.select_one(".img-con img")['src']
+            image_url=news.select_one("dt.photo img")['src']
         except Exception:
             continue
 
         try:
-            content = news.select_one(".lead").text.strip()    
+            title=news.select_one("dt:not(.photo) a").text.strip()
+            content=news.select_one(".lede").text.strip()
+
         except Exception:
             continue
 
         try:
-            link_url = news.select_one(".news-con a")['href']
+            link_url=news.select_one("dt:not(.photo) a")['href']
         except Exception:
             continue
-
-        title = news.select_one(".tit-news").text.strip()
 
         data_dict ={
             'title': title,
             'content' : content,
             'image_url': image_url,
-            'link_url' : link_url
+            'link_url' : link_url,
         }
 
         news_data.append(data_dict)
@@ -135,8 +185,6 @@ def IndustryByNewsList(request, category):
     time.sleep(1)
 
     return JsonResponse(news_data, safe=False)
-
-
 
 
 
