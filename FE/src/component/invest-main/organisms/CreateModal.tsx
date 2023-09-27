@@ -14,15 +14,18 @@ import Complete from "../molecules/Complete";
 import complete from "../../../asset/image/complete.png";
 import { toast } from "react-toastify";
 import { createGroup } from "../../../api/group";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { GroupSetting } from "../../../type/GroupSetting";
 
-const CreateModal = () => {
-  const queryClient = useQueryClient();
+interface Props {
+  refetchMyGroupList: () => void;
+  refetchJoinableGroupList: () => void;
+}
 
+const CreateModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Props) => {
   const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting } = useCreateModal();
   const { modalType, closeModal } = modalStore();
-  const { mutate } = useMutation((groupSetting: GroupSetting) => createGroup(groupSetting), {
+  const { mutateAsync } = useMutation((groupSetting: GroupSetting) => createGroup(groupSetting), {
     onMutate: async (groupSetting) => {
       if (groupSetting.title.trim().length < 1) {
         toast.error("방 제목을 1자이상 입력해주세요.");
@@ -31,8 +34,9 @@ const CreateModal = () => {
       return groupSetting;
     },
     onSuccess: () => {
+      refetchMyGroupList();
+      refetchJoinableGroupList();
       onNextStep();
-      queryClient.invalidateQueries(["myGroupList", "joinableGroupList"]);
     },
   });
 
@@ -60,7 +64,7 @@ const CreateModal = () => {
       resetStepAndGroupSetting={resetStepAndGroupSetting}
       dispatch={dispatch}
       title={groupSetting.title}
-      mutate={mutate}
+      mutate={mutateAsync}
       groupSetting={groupSetting}
     />,
     <Complete resetStepAndGroupSetting={resetStepAndGroupSetting} />,

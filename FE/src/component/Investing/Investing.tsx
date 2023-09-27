@@ -24,7 +24,7 @@ const Investing = () => {
         {activeTab === INVESTING_TAB.INFO && <InvestingInfo />}
         {activeTab === INVESTING_TAB.MY_INFO && <InvestingMyInfo />}
         {activeTab === INVESTING_TAB.SEARCH && <InvestingSearch setCompanyCode={setCompanyCode} />}
-        {activeTab === INVESTING_TAB.DOMESTIC && <InvestingDomestic setCompanyCode={setCompanyCode} />}
+        {activeTab === INVESTING_TAB.DOMESTIC && <InvestingDomestic />}
         {activeTab === INVESTING_TAB.ABROAD && <InvestingAbroad setCompanyCode={setCompanyCode} />}
         {activeTab === INVESTING_TAB.CRYPTO && <InvestingCrypto setCompanyCode={setCompanyCode} />}
         {activeTab === INVESTING_TAB.NEWS && <InvestingNews />}

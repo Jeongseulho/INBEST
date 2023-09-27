@@ -25,7 +25,9 @@ export const useBoardEditor = (title: string) => {
     try {
       await createBoard(userInfo!.seq, description, title);
       alert("게시물이 등록되었습니다.");
-      queryClient.invalidateQueries("getBoardList"); // 여기서 'myQueryKey'는 원하는 쿼리 키입니다.
+      queryClient.invalidateQueries({
+        queryKey: ["getBoardList"],
+      });
 
       navigate("/community");
     } catch (err) {

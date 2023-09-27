@@ -17,7 +17,7 @@ export const useBoardItem = () => {
   const onLike = async (boardSeq: string) => {
     try {
       await likeBoard(boardSeq, userInfo!.seq);
-      queryClient.invalidateQueries("getBoardList");
+      queryClient.invalidateQueries({ queryKey: ["getBoardList"] });
     } catch (err) {
       console.log(err);
     }

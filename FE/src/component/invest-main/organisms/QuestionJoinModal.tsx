@@ -28,7 +28,9 @@ const QuestionJoinModal = () => {
 
   const { mutate } = useMutation((simulationSeq: number) => joinGroup(simulationSeq), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["myGroupList", "joinableGroupList"]);
+      queryClient.invalidateQueries({
+        queryKey: ["myGroupList", "joinableGroupList"],
+      });
       setIsJoin(true);
     },
   });

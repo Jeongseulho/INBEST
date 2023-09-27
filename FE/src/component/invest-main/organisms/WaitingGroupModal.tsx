@@ -31,7 +31,9 @@ const WaitingGroupModal = () => {
 
   const { mutate } = useMutation((simulationSeq: number) => exitGroup(simulationSeq), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["myGroupList", "joinableGroupList"]);
+      queryClient.invalidateQueries({
+        queryKey: ["myGroupList", "joinableGroupList"],
+      });
       setIsJoin(false);
     },
   });
