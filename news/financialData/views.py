@@ -21,6 +21,7 @@ def koreaSearch(request):
     data_list = []
 
     # 테이블에서 데이터 추출
+    count = 0
     table = soup.find('table', class_='type_5')
     if table:
         rows = table.find_all('tr')
@@ -51,6 +52,10 @@ def koreaSearch(request):
                 }
                 data_list.append(data_dict)
 
+                count += 1
+                if count >= 30:  # 처음 30개 데이터만 추출
+                    break  # 반복문 종료
+
 
 
     time.sleep(1)
@@ -70,6 +75,7 @@ def koreahigh(request):
     data_list = []
 
     # 테이블에서 데이터 추출
+    count = 0
     table = soup.find('table', class_='type_2')
     if table:
         rows = table.find_all('tr')
@@ -98,6 +104,10 @@ def koreahigh(request):
                 }
                 data_list.append(data_dict)
 
+                count += 1
+                if count >= 30:  # 처음 30개 데이터만 추출
+                    break  # 반복문 종료
+
 
     time.sleep(1)
 
@@ -116,6 +126,7 @@ def korearise(request):
     data_list = []
 
     # 테이블에서 데이터 추출
+    count = 0
     table = soup.find('table', class_='type_2')
     if table:
         rows = table.find_all('tr')
@@ -140,6 +151,10 @@ def korearise(request):
                 }
                 data_list.append(data_dict)
 
+                count += 1
+                if count >= 30:  # 처음 30개 데이터만 추출
+                    break  # 반복문 종료
+
 
     time.sleep(1)
 
@@ -158,6 +173,7 @@ def usahigh(request):
     data_list = []
 
     # Find the table with the class "table-stock"
+    count = 0
     table = soup.find('table', class_='table-stock')
     if table:
         # Extract table headers
@@ -188,6 +204,10 @@ def usahigh(request):
                     '시가총액(백만 USD)': market_cap_usd,
                 }
                 data_list.append(data_dict)
+
+                count += 1
+                if count >= 30:  # 처음 30개 데이터만 추출
+                    break  # 반복문 종료
     
     time.sleep(1)
 
@@ -206,6 +226,7 @@ def usastock(request):
     data_list = []
 
     # Find the table with the class "table-stock"
+    count = 0
     table = soup.find('table', class_='table-stock')
     if table:
         # Extract table headers
@@ -236,6 +257,10 @@ def usastock(request):
                     '시가총액(백만 USD)': market_cap_usd,
                 }
                 data_list.append(data_dict)
+
+                count += 1
+                if count >= 30:  # 처음 30개 데이터만 추출
+                    break  # 반복문 종료
 
     time.sleep(1)
 
@@ -253,6 +278,7 @@ def usatop(request):
     data_list = []
 
     # Find the table with the class "table-stock"
+    count = 0
     table = soup.find('table', class_='table-stock')
     if table:
         # Extract table headers
@@ -283,6 +309,10 @@ def usatop(request):
                     '시가총액(백만 USD)': market_cap_usd,
                 }
                 data_list.append(data_dict)
+
+                count += 1
+                if count >= 30:  # 처음 30개 데이터만 추출
+                    break  # 반복문 종료
     
     time.sleep(1)
 
