@@ -31,7 +31,6 @@ def koreaSearch(request):
                 company_name = cols[1].text.strip()
                 search_ratio = cols[2].text.strip()
                 current_price = cols[3].text.strip()
-                # yesterday_price_change = cols[4].text.strip()
                 price_change_ratio = cols[5].text.strip()
                 volume = cols[6].text.strip()
                 market_capitalization = cols[7].text.strip()
@@ -44,7 +43,6 @@ def koreaSearch(request):
                     '종목명': company_name,
                     '검색비율': search_ratio,
                     '현재가': current_price,
-                    # '전일비': yesterday_price_change,
                     '등락률': price_change_ratio,
                     '거래량': volume,
                     '시가총액': market_capitalization,
@@ -81,7 +79,6 @@ def koreahigh(request):
                 rank = cols[0].text.strip()
                 company_name = cols[1].text.strip()
                 current_price = cols[2].text.strip()
-                # yesterday_price_change = cols[3].text.strip()
                 price_change_ratio = cols[4].text.strip()
                 volume = cols[6].text.strip()
                 market_capitalization = cols[7].text.strip()
@@ -93,7 +90,6 @@ def koreahigh(request):
                     '순위': rank,
                     '종목명': company_name,
                     '현재가': current_price,
-                    # '전일비': yesterday_price_change,
                     '등락률': price_change_ratio,
                     '시가총액': volume,
                     '상장주식수': market_capitalization,
