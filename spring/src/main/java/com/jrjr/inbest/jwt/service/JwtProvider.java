@@ -1,6 +1,7 @@
 package com.jrjr.inbest.jwt.service;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +58,7 @@ public class JwtProvider {
 			.setIssuer("inbest")
 			.setSubject(email)
 			.setExpiration(new Date(System.currentTimeMillis() + TokenExpireTime.REFRESH_TOKEN_EXPIRE_TIME))
+			.setIssuedAt(new Date())
 			.signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
 			.compact();
 
