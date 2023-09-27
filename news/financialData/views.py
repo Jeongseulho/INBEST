@@ -333,6 +333,8 @@ def cointop(request):
     # 테이블에서 데이터 추출
     table = soup.find('ul', id='coinList', class_='table-main')
     rows = table.find_all('li', class_='tbody')
+
+    count = 0
     
     for row in rows:
         rank = row.find('div', class_='rankNo').text.strip()
@@ -352,7 +354,7 @@ def cointop(request):
         name = name_with_percent_change.split(' ')[0].strip()
 
         percent_change_match = re.search(r"[▼▲] (.+)%", name_with_percent_change)
-        percent_change = percent_change_match.group(1) if percent_change_match else None
+        percent_change = percent_change_match.group(1) if percent_change_match else "0"
 
         price = row.find('div', class_='market_cap_krw').text.strip()
         market_cap = row.find_all('div', class_='market_cap_krw')[1].text.strip()
@@ -373,6 +375,10 @@ def cointop(request):
             'Circulating Supply': circulating_supply,
         }
         crypto_data.append(crypto_dict)
+
+        count += 1
+        if count >= 35:  # 처음 30개 데이터만 추출
+            break  # 반복문 종료
 
     
     time.sleep(1)
