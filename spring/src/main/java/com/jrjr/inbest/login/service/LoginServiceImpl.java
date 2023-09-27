@@ -2,6 +2,7 @@ package com.jrjr.inbest.login.service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -51,7 +52,8 @@ public class LoginServiceImpl implements LoginService {
 		if (!passwordEncoder.matches(inputLoginDto.getPassword(), loginEntity.get().getPassword())) {
 			throw new AuthenticationFailedException("비밀번호 불일치");
 		}
-
+	
+		//로그인 기록 남기기
 		HashOperations<String,String,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
 		String hashKey = "loginHistory";
 		hashOperations.put(hashKey,String.valueOf(userEntity.get().getSeq())
@@ -59,6 +61,8 @@ public class LoginServiceImpl implements LoginService {
 					.loginTime(LocalDateTime.now())
 					.userSeq(userEntity.get().getSeq())
 				.build());
+		//5분뒤에 만료 시키기
+		loginHistoryDTORedisTemplate.expire(hashKey,5, TimeUnit.MINUTES);
 
 		return UserDto.builder()
 			.email(userEntity.get().getEmail())
@@ -83,7 +87,9 @@ public class LoginServiceImpl implements LoginService {
 		if (refreshTokenRepository.existsById(email)) {
 			refreshTokenRepository.deleteById(email);
 		}
-
-		log.info("로그아웃 성공: {}", email);
+		//로그인 기록 삭제
+		HashOperations<String,String,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
+		String hashKey = "loginHistory";
+		hashOperations.delete(hashKey,loginEntity.get().getSeq());
 	}
 }
