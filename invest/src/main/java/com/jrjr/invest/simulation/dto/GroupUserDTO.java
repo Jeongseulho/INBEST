@@ -16,12 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Builder
 @ToString
-public class JoinableGroupDetailsDTO {
-
+public class GroupUserDTO {
 	private Long simulationSeq;
-	private String title;
-	private Integer currentMemberNum;
-	private Long seedMoney;
-	private Integer averageTier;
-	private Integer period;
+	private Long userSeq;
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.GroupDTO;
+import com.jrjr.invest.simulation.dto.GroupUserDTO;
 import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.service.GroupService;
 
@@ -77,12 +78,19 @@ public class GroupController {
 		// 참여 가능 그룹 - 상세
 		else if (progressState.equals("waiting")) {
 			return ResponseEntity.ok(groupService.getJoinableGroupDetails(simulationSeq));
-		} else {
+		}
+		// 해당하는 그룹이 없을 때
+		else {
 			throw new RuntimeException("해당하는 시뮬레이션이 존재하지 않습니다.");
 		}
 	}
 
 	// 그룹 참여하기
+	@PostMapping("/join")
+	ResponseEntity<?> joinGroup(@RequestBody GroupUserDTO groupUserDTO) {
+		groupService.joinGroup(groupUserDTO);
+		return ResponseEntity.ok().build();
+	}
 	// 그룹 나가기 | 방장 나가기
 	// 모의 투자 시작
 }
