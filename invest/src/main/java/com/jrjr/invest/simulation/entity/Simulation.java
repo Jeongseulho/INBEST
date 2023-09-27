@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "simulation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 public class Simulation {
 
 	@Id
@@ -67,12 +66,14 @@ public class Simulation {
 		this.revenuRate = revenuRate;
 	}
 
-	public void updateMemberNum() {
-
+	public void addMemberNum() {
 		if (simulationUserList == null) {
 			this.memberNum = 0;
+			this.simulationUserList = new ArrayList<>();
 		}
-		this.memberNum = simulationUserList.size();
+		else{
+			this.memberNum = simulationUserList.size();
+		}
 	}
 
 	public SimulationDTO simulationDTO() {
@@ -86,6 +87,10 @@ public class Simulation {
 			.revenuRate(revenuRate)
 			.seedMoney(seedMoney)
 			.build();
+	}
+
+	public void start(){
+		this.startDate = LocalDateTime.now();
 	}
 
 	public String getProgressState() {
