@@ -185,18 +185,13 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "종료된 시뮬레이션 랭킹 정보 불러오기", description = "start ~ end 범위의 개인 랭킹 정보 불러오기")
-	@Parameters(value = {
-		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
-		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수")
-	})
+	@Operation(summary = "종료된 시뮬레이션 랭킹 정보 불러오기", description = "평균 수익률 기준으로 내림차순")
 	@GetMapping("/simulation")
-	ResponseEntity<Map<String, Object>> getSimulationRankingInfo(@RequestParam Long start,
-		@RequestParam Long end) {
+	ResponseEntity<Map<String, Object>> getSimulationRankingInfo() {
 		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		List<SimulationRankingDTO> simulationRankingInfo = simulationRankService.getSimulationRankingInfo(start, end);
+		List<SimulationRankingDTO> simulationRankingInfo = simulationRankService.getSimulationRankingInfo();
 
 		log.info("========== 시뮬레이션 랭킹: 종료된 시뮬레이션 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
