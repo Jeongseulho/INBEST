@@ -14,7 +14,7 @@ public interface SimulationRankService {
 
 	RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq);
 
-	List<SimulationRankingDTO> getSimulationRankingInfo(Long start, Long end);
+	List<SimulationRankingDTO> getSimulationRankingInfo();
 
 	Integer getSimulationAvgTierInfo(Long simulationSeq);
 }
