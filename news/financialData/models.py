@@ -7,7 +7,7 @@ class Company(models.Model):
     company_stock_code = models.CharField(max_length=10)
     company_real_industry_code = models.CharField(max_length=10, null=True)
     company_industry = models.CharField(max_length=50)
-    stock_type = models.IntegerField(null=True, default=0)
+    company_stock_type = models.IntegerField(null=True, default=0)
 
 class FinancialStatement(models.Model):
     seq = models.AutoField(primary_key=True)
