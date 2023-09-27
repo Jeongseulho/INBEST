@@ -171,8 +171,11 @@ public class BoardService {
 		BoardDTO boardDTO = boardEntity.toBoardDTO();
 		boardDTO.setWriter(userDTO);
 
+		log.info(userDTO + " ");
+
 		//댓글 유저 가져오기
 		for (CommentDTO commentDTO : boardDTO.getCommentList()) {
+			log.info("덧글 : " + commentDTO);
 			UserEntity commentWriter = userRepository.findBySeq(commentDTO.getUserSeq());
 			UserDTO commentWriterDTO;
 
@@ -190,6 +193,7 @@ public class BoardService {
 
 			//대댓글 유저 가져오기
 			for (CommentDTO cocomentDTO : commentDTO.getCocommentList()) {
+				log.info("대댓글 : " + cocomentDTO);
 				UserEntity cocommentWriter = userRepository.findBySeq(cocomentDTO.getUserSeq());
 				UserDTO cocommentWriterDTO;
 
