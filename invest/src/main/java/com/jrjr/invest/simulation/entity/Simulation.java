@@ -67,12 +67,11 @@ public class Simulation {
 		this.revenuRate = revenuRate;
 	}
 
-	public void updateMemberNum(int i) {
+	public void updateMemberNum() {
 
 		if (simulationUserList == null) {
 			this.memberNum = 0;
 		}
-
 		this.memberNum = simulationUserList.size();
 	}
 
