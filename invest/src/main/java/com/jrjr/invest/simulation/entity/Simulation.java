@@ -66,7 +66,7 @@ public class Simulation {
 		this.revenuRate = revenuRate;
 	}
 
-	public void addMemberNum() {
+	public void updateMemberNum() {
 		if (simulationUserList == null) {
 			this.memberNum = 0;
 			this.simulationUserList = new ArrayList<>();

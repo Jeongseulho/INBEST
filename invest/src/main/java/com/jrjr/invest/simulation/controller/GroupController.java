@@ -152,21 +152,24 @@ public class GroupController {
 		@Parameter(description = "로그인한 유저 pk(실제 사용 시 자동으로 엑세스 토큰에서 가져오므로 안넣어도 괜찮음)"
 			,name="loginSeq",required = true),
 	})
-	@PostMapping("/start")
-	ResponseEntity<?> exitGroup(@RequestBody SimulationSeqDTO simulationSeqDTO,
+	@PostMapping("/exit")
+	ResponseEntity<?> exitGroup(@RequestBody GroupUserDTO groupUserDTO,
 		@RequestParam(required = false, defaultValue = "",name="loginSeq") String loginSeq
 	) throws Exception {
-		log.info("===== 그룹 시작하기 시작  ===== ");
-		log.info("방 seq :  "+simulationSeqDTO);
+		log.info("===== 그룹 나가기 시작  ===== ");
+		log.info("입력 파라미터: "+groupUserDTO);
+		log.info("로그인 유저: "+loginSeq);
 	
 		//비로그인 처리
 		if(loginSeq.equals("")){
 			throw new Exception("로그인하지 않은 유저입니다.");
+		}else if(Long.valueOf(loginSeq) != groupUserDTO.getUserSeq()){
+			throw new Exception(loginSeq+"로그인 유저는 "+groupUserDTO.getUserSeq()+"유저가 아닙니다.");
 		}
 
-		groupService.startSimulation(simulationSeqDTO.getSimulationSeq(),Long.valueOf(loginSeq));
+		groupService.leaveGroup(groupUserDTO.getSimulationSeq(),groupUserDTO.getUserSeq());
 
-		log.info("===== 그룹 시작하기 끝  ===== ");
+		log.info("===== 그룹 나가기 끝  ===== ");
 		return ResponseEntity.ok().build();
 	}
 }
