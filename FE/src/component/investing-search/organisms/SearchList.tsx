@@ -1,7 +1,7 @@
 import SearchItem from "../molecules/SearchItem";
 import search from "../../../asset/image/search.png";
 import { CompanySearchList } from "../../../type/InvestingStockInfo";
-// import Skeleton from "react-loading-skeleton";
+import spinner from "../../../asset/image/spinner.svg";
 
 interface Props {
   searchList: CompanySearchList;
@@ -24,17 +24,12 @@ const SearchList = ({ searchList, setCompanyCode, isLoading }: Props) => {
       </div>
       <div>
         {isLoading ? (
-          <>
-            {/* {Array(30)
-              .fill(null)
-              .map((_, index) => (
-                <Skeleton key={index} height={32} />
-              ))} */}
-          </>
+          <img src={spinner} className=" mx-auto" />
         ) : (
           <>
             {searchList.map((item, index) => (
               <SearchItem
+                key={index}
                 index={index}
                 name={item.company_name}
                 code={item.company_stock_code}
