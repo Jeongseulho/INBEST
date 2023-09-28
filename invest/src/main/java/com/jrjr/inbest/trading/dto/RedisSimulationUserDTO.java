@@ -9,41 +9,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@ToString
 public class RedisSimulationUserDTO {
-
     @NotNull
     private Long simulationSeq;
-
     @NotNull
     private Long userSeq;
-
-    @NotNull
-    private Long startMoney;
-
+    private Long seedMoney;
     private Long currentMoney;
-
     private Integer previousRank;
-
     private Integer currentRank;
-
-    @NotNull
-    private LocalDateTime startTime;
-
-    @NotNull
-    private Integer period;
-
-    @NotNull
-    private Boolean linkingMode;
-
-    private Boolean leave;
-
-    private Boolean gameOver;
-
-    private Boolean manager;
+    private Boolean isExited;
 }

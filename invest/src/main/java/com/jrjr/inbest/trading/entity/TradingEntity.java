@@ -19,10 +19,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class TradingEntity extends BaseEntity {
+	//시뮬레이션 pk 넣어야함
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
 	private Long userSeq;
+	private Long simulationSeq;
 	private String nickname;
 	private Long amount;
 	private Long price;
@@ -39,7 +41,8 @@ public class TradingEntity extends BaseEntity {
 	 	String stockCode,
 	 	Integer tradingType,
 		Integer conclusionType,
-		String stockName){
+		String stockName,
+		Long simulationSeq){
 		this.userSeq = userSeq;
 		this.amount = amount;
 		this.price = price;
@@ -48,6 +51,7 @@ public class TradingEntity extends BaseEntity {
 		this.tradingType = tradingType;
 		this.conclusionType = conclusionType;
 		this.stockName = stockName;
+		this.simulationSeq = simulationSeq;
 	}
 
 	public void setConclusionType(Integer conclusionType) {

@@ -31,7 +31,7 @@ public class RedisTradingEntity {
 	@Id
 	private Long seq;
 	private Long userSeq;
-	private Long gameSeq;
+	private Long simulationSeq;
 	private String nickname;
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -46,6 +46,6 @@ public class RedisTradingEntity {
 	private String stockCode;
 	private Integer tradingType;
 	private Integer stockType;
-	private Integer gameType;
+	private Integer simulationType;
 	private Integer conclusionType;
 }

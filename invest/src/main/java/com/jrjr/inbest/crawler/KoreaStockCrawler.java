@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.jrjr.inbest.trading.constant.StockType;
-import com.jrjr.inbest.trading.dto.StockDTO;
+import com.jrjr.inbest.trading.dto.RedisStockDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class KoreaStockCrawler implements StockCrawler{
-	private final RedisTemplate<String, StockDTO> redisStockTemplate;
+	private final RedisTemplate<String, RedisStockDTO> redisStockTemplate;
 
 	@Value("${stock.url.market-price}")
 	public String url;
@@ -53,13 +53,14 @@ public class KoreaStockCrawler implements StockCrawler{
 			marketPrice = Long.valueOf(priceText);
 
 			//시가를 Redis에 저장
-			StockDTO stockDTO = StockDTO.builder()
+			RedisStockDTO stockDTO = RedisStockDTO.builder()
 				.name(name.text())
 				.stockCode(stockCode)
 				.marketPrice(marketPrice)
-				.type(StockType.KOREA)
-				.lastModifiedDate(LocalDateTime.now()).build();
-			HashOperations<String, String, StockDTO> stockHashOperations = redisStockTemplate.opsForHash();
+				.stockType(StockType.KOREA)
+				.build();
+				// .lastModifiedDate(LocalDateTime.now()).build();
+			HashOperations<String, String, RedisStockDTO> stockHashOperations = redisStockTemplate.opsForHash();
 			stockHashOperations.put("stock",stockCode,stockDTO);
 		} catch (IOException e) {
 			e.printStackTrace();

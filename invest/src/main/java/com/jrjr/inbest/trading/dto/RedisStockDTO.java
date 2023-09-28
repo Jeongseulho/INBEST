@@ -12,6 +12,7 @@ import com.jrjr.inbest.trading.entity.TradingEntity;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,17 +23,20 @@ import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Builder
-@Slf4j
-public class StockDTO implements Serializable {
+@ToString
+public class RedisStockDTO {
+
+	private Integer stockType;
+
 	private String stockCode;
+
 	private Long marketPrice;
+
+	private Long amount;
+
 	private String name;
-	private int type;
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	private LocalDateTime lastModifiedDate;
+
 }

@@ -1,9 +1,6 @@
 package com.jrjr.inbest.trading.scheduler;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,22 +9,15 @@ import java.util.concurrent.CompletableFuture;
 import com.jrjr.inbest.crawler.StockCrawler;
 import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.jrjr.inbest.trading.dto.StockDTO;
-import com.jrjr.inbest.trading.dto.StockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.constant.TradingType;
-import com.jrjr.inbest.trading.handler.KoreaRegularTradingHandler;
-import com.jrjr.inbest.trading.handler.TradingHandler;
-import com.jrjr.inbest.trading.repository.TradingRepository;
+
 import com.jrjr.inbest.trading.service.TradingService;
 
 import lombok.RequiredArgsConstructor;

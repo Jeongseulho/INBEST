@@ -1,6 +1,6 @@
 package com.jrjr.inbest.trading.handler;
 
-import com.jrjr.inbest.trading.dto.StockDTO;
+import com.jrjr.inbest.trading.dto.RedisStockDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KoreaTradingHandler implements TradingHandler{
     private TradingHandler tradingHandler;
-    private final RedisTemplate<String, StockDTO> redisStockTemplate;
+    private final RedisTemplate<String, RedisStockDTO> redisStockTemplate;
     @Override
     public void setNext(TradingHandler tradingHandler) {
         this.tradingHandler = tradingHandler;

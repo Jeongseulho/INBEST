@@ -3,7 +3,6 @@ package com.jrjr.inbest.trading.handler;
 import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.constant.TradingType;
 import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
-import com.jrjr.inbest.trading.dto.StockDTO;
 import com.jrjr.inbest.trading.dto.StockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.entity.TradingEntity;
@@ -61,13 +60,13 @@ public class KoreaRegularTradingHandler implements TradingHandler{
 
                     //거래로 인한 유저의 자산 보유량 변경
                     HashOperations<String, String, RedisSimulationUserDTO> simulationUserHashOperations = redisSimulationUserTemplate.opsForHash();
-                    String simulationHashKey = "simulation_"+tradingDTO.getGameSeq();
+                    String simulationHashKey = "simulation_"+tradingDTO.getSimulationSeq();
                     RedisSimulationUserDTO redisSimulationUserDTO = simulationUserHashOperations.get(simulationHashKey,String.valueOf(tradingDTO.getUserSeq()));
                     redisSimulationUserDTO.setCurrentMoney(redisSimulationUserDTO.getCurrentMoney() + tradingDTO.getPrice());
                     simulationUserHashOperations.put(simulationHashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),redisSimulationUserDTO);
 
                     //거래로 인한 주식 개수 변경
-                    String simulationUserHashKey = "simulation_"+tradingDTO.getGameSeq()+"_"+tradingDTO.getUserSeq();
+                    String simulationUserHashKey = "simulation_"+tradingDTO.getSimulationSeq()+"_"+tradingDTO.getUserSeq();
                     String simulationUserKey = tradingDTO.getStockType()+"_"+tradingDTO.getStockCode();
                     HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
                     StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);

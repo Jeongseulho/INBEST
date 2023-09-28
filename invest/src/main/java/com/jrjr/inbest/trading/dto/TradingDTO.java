@@ -32,7 +32,7 @@ public class TradingDTO implements Serializable {
 	@NotNull
 	private Long userSeq;
 	@NotNull
-	private Long gameSeq;
+	private Long simulationSeq;
 	@Column(columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
 	private String nickname;
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -54,26 +54,25 @@ public class TradingDTO implements Serializable {
 	@NotNull
 	private String stockName;
 	@NotNull
-	private Integer gameType;
+	private Integer simulationType;
 	private Integer conclusionType;
 
 	public TradingEntity toTradingEntity(){
-		// log.info(this.toString());
 		return TradingEntity.builder().
 			userSeq(this.userSeq).nickname(this.nickname).
 			amount(this.amount).stockCode(this.stockCode).
 			tradingType(this.tradingType).conclusionType(this.conclusionType).
-			price(price).stockName(stockName).
+			price(price).stockName(stockName).simulationSeq(simulationSeq).
 			build();
 	}
 	public RedisTradingEntity toRedisTradingEntity(){
 		// log.info(this.toString());
 		return RedisTradingEntity.builder().
-			seq(this.seq).price(price).gameSeq(gameSeq).
+			seq(this.seq).price(price).simulationSeq(simulationSeq).
 			userSeq(this.userSeq).nickname(this.nickname).
 			amount(this.amount).stockCode(this.stockCode).
 			tradingType(this.tradingType).conclusionType(this.conclusionType).
-			gameType(gameType).stockType(stockType).createdDate(createdDate).
+			simulationType(simulationType).stockType(stockType).createdDate(createdDate).
 			build();
 	}
 }

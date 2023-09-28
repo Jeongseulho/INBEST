@@ -55,8 +55,8 @@ public class TradingController {
 				.userSeq(2L)
 					.simulationSeq(1L)
 						.currentMoney(100_000_000L)
-							.gameOver(false)
-								.startMoney(100_000_000L)
+							.isExited(false)
+								.seedMoney(100_000_000L)
 									.build();
 
 		simulationUserHashOperations.put(simulationHashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),redisSimulationUserDTO);

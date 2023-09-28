@@ -15,7 +15,6 @@ import com.jrjr.inbest.trading.dto.StockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.entity.RedisTradingEntity;
 import com.jrjr.inbest.trading.entity.TradingEntity;
-import com.jrjr.inbest.trading.repository.RedisTradingRepository;
 import com.jrjr.inbest.trading.repository.TradingRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -61,6 +60,7 @@ public class TradingService {
 				.amount(tradingDTO.getAmount())
 				.stockCode(tradingDTO.getStockCode())
 				.name(tradingDTO.getStockName())
+				// .marketPrice(tradingDTO.)
 				.stockType(tradingDTO.getStockType())
 				.build();
 
@@ -90,7 +90,7 @@ public class TradingService {
 	public void sellStock(TradingDTO tradingDTO) throws Exception{
 		//거래로 인한 주식 개수 변경
 		log.info("보유 주식 개수 변경");
-		String simulationUserHashKey = "simulation_"+tradingDTO.getGameSeq()+"_user_"+tradingDTO.getUserSeq();
+		String simulationUserHashKey = "simulation_"+tradingDTO.getSimulationSeq()+"_user_"+tradingDTO.getUserSeq();
 		String simulationUserKey = tradingDTO.getStockType()+"_"+tradingDTO.getStockCode();
 		HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
 		StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);
@@ -120,7 +120,7 @@ public class TradingService {
 		//거래로 인한 유저의 자산 보유량 변경
 		log.info("유저 현재 자산 보유량 변경");
 		HashOperations<String, String, RedisSimulationUserDTO> simulationUserHashOperations = redisSimulationUserTemplate.opsForHash();
-		String simulationHashKey = "simulation_"+tradingDTO.getGameSeq();
+		String simulationHashKey = "simulation_"+tradingDTO.getSimulationSeq();
 		RedisSimulationUserDTO redisSimulationUserDTO = simulationUserHashOperations.get(simulationHashKey,String.valueOf(tradingDTO.getUserSeq()));
 		Map<String,RedisSimulationUserDTO> map = simulationUserHashOperations.entries(simulationHashKey);
 
@@ -130,7 +130,7 @@ public class TradingService {
 		//매매 작업 대기 열에 입력받은 크롤링해야하는 주식 정보 감소
 		String crawlingHashKey = instanceId+"-crawling-task";
 		HashOperations<String,String,CrawlingDTO> redisCrawlingOperations = redisCrawlingTemplate.opsForHash();
-		CrawlingDTO savedCrawling = redisCrawlingOperations.get(crawlingHashKey,tradingDTO.getAmount());
+		CrawlingDTO savedCrawling = redisCrawlingOperations.get(crawlingHashKey,tradingDTO.getStockCode());
 		savedCrawling.setAmount(savedCrawling.getAmount() - tradingDTO.getAmount());
 
 		//더이상 크롤링할 필요가 없다면 삭제
@@ -146,7 +146,7 @@ public class TradingService {
 		//거래로 인한 유저의 자산 보유량 변경
 		log.info("현재 자산 보유량 변경");
 		HashOperations<String, String, RedisSimulationUserDTO> simulationUserHashOperations = redisSimulationUserTemplate.opsForHash();
-		String simulationHashKey = "simulation_"+tradingDTO.getGameSeq();
+		String simulationHashKey = "simulation_"+tradingDTO.getSimulationSeq();
 		RedisSimulationUserDTO redisSimulationUserDTO = simulationUserHashOperations.get(simulationHashKey,String.valueOf(tradingDTO.getUserSeq()));
 		redisSimulationUserDTO.setCurrentMoney(redisSimulationUserDTO.getCurrentMoney() - tradingDTO.getPrice()*tradingDTO.getAmount());
 		if(redisSimulationUserDTO.getCurrentMoney()<0){
@@ -168,7 +168,7 @@ public class TradingService {
 
 		//거래로 인한 주식 개수 변경
 		log.info("보유 주식 개수 변경");
-		String simulationUserHashKey = "simulation_"+tradingDTO.getGameSeq()+"_user_"+tradingDTO.getUserSeq();
+		String simulationUserHashKey = "simulation_"+tradingDTO.getSimulationSeq()+"_user_"+tradingDTO.getUserSeq();
 		String simulationUserKey = tradingDTO.getStockType()+"_"+tradingDTO.getStockCode();
 		HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
 		StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);
