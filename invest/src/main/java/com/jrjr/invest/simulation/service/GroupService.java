@@ -540,8 +540,18 @@ public class GroupService {
 	}
 	//종료된 모든 그룹의 수익률을 계산하여 수익률 변화 %
 	public Integer getRevenueRateFluctuation  (){
+		LocalDateTime yesterday = LocalDateTime.of(LocalDateTime.now().minusDays(1).toLocalDate(),
+			LocalTime.of(0,0,0));
 
-		Double averageRate = simulationRepository.getAverageRevenuRate().orElse(0D);
+		Double averageRate = simulationRepository.getAverageRevenuRate(yesterday).orElse(0D);
+
+		return averageRate.intValue();
+	}
+	public Integer getRevenueRate(){
+		LocalDateTime before2days = LocalDateTime.of(LocalDateTime.now().minusDays(2).toLocalDate(),
+			LocalTime.of(0,0,0));
+
+		Double averageRate = simulationRepository.getAverageRevenuRate(before2days).orElse(0D);
 
 		return averageRate.intValue();
 	}
