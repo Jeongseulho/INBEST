@@ -104,7 +104,7 @@ public class RankController {
 		log.info("========== 개인 랭킹: 전체 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		Set<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfo(start - 1, end - 1);
+		List<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfo(start - 1, end - 1);
 
 		log.info("========== 개인 랭킹: 전체 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
