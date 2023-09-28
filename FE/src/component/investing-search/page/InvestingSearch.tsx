@@ -11,13 +11,19 @@ const InvestingSearch = ({ setCompanyCode }: Props) => {
       logo: "",
       name: "삼성전자",
       code: "005930",
-      price: 60000,
+      type: "국내주식",
     },
     {
       logo: "",
       name: "삼성전자",
       code: "005930",
-      price: 60000,
+      type: "해외주식",
+    },
+    {
+      logo: "",
+      name: "삼성전자",
+      code: "005930",
+      type: "가상자산",
     },
   ];
 

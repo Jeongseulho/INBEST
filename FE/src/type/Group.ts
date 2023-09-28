@@ -1,17 +1,17 @@
-export type InvestingStatusType =
-  | "totalUserNum"
-  | "currentUserNum"
-  | "InprogressUserNum"
-  | "InprogressGroupNum"
-  | "finishedGroupNum"
-  | "revenueRateFluctuation";
-
-export type InvestingStatusList = {
-  type: InvestingStatusType;
-  value: number;
-  fluctuation: number;
-}[];
-
+export interface InvestingStatus {
+  totalUserNum: number;
+  totalUserNumFluctuation: number;
+  currentUserNum: number;
+  currentUserNumFluctuation: number;
+  inprogressUserNum: number;
+  inprogressUserNumFluctuation: number;
+  finishedGroupNum: number;
+  finishedGroupNumFluctuation: number;
+  inprogressGroupNum: number;
+  inprogressGroupNumFluctuation: number;
+  revenueRate: number;
+  revenueRateFluctuation: number;
+}
 export interface SearchUser {
   profileImgSearchName: string;
   nickname: string;

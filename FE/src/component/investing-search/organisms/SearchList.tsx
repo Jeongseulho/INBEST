@@ -5,7 +5,7 @@ interface SearchItem {
   logo: string;
   name: string;
   code: string;
-  price: number;
+  type: string;
 }
 
 interface Props {
@@ -14,7 +14,6 @@ interface Props {
 }
 
 const SearchList = ({ searchList, setCompanyCode }: Props) => {
-  console.log(setCompanyCode);
   return (
     <div className=" shadow-component flex flex-col p-6 w-[50%]">
       <div className=" mb-4 flex items-center gap-2">
@@ -25,11 +24,18 @@ const SearchList = ({ searchList, setCompanyCode }: Props) => {
         <p className=" w-2 font-medium text-center">#</p>
         <p className=" w-28 font-medium text-center">종목 명</p>
         <p className=" w-28 font-medium text-center">종목 코드</p>
-        <p className=" w-28 font-medium text-center">가격</p>
+        <p className=" w-28 font-medium text-center">분류</p>
       </div>
       <div>
         {searchList.map((item, index) => (
-          <SearchItem index={index} logo={item.logo} name={item.name} code={item.code} price={item.price} />
+          <SearchItem
+            index={index}
+            logo={item.logo}
+            name={item.name}
+            code={item.code}
+            type={item.type}
+            setCompanyCode={setCompanyCode}
+          />
         ))}
       </div>
     </div>

@@ -8,7 +8,7 @@ import {
   InProgressGroupDetail,
   JoinableGroupList,
   JoinableGroupDetail,
-  InvestingStatusList,
+  InvestingStatus,
 } from "../type/Group";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 // import { apiInstance } from ".";
@@ -17,7 +17,7 @@ import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 const apiWithAuth = instanceWithAuth("invest-service/group");
 // const api = apiInstance("invest-service/group");
 
-export const getInvestingStatus = async (): Promise<InvestingStatusList> => {
+export const getInvestingStatus = async (): Promise<InvestingStatus> => {
   const { data } = await apiWithAuth.get("/status");
   return data;
 };
