@@ -28,6 +28,7 @@ const InProgressGroupModal = () => {
   return (
     <Modal
       isOpen={modalType === "inProgressGroup"}
+      ariaHideApp={false}
       onRequestClose={closeModal}
       style={{
         content: {
@@ -67,6 +68,7 @@ const InProgressGroupModal = () => {
                   seedMoney: data?.seedMoney,
                   startDate: data?.startDate,
                   period: data?.period,
+                  title: data?.title,
                 },
               });
               closeModal();

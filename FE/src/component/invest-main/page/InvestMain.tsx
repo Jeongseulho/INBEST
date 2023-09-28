@@ -17,6 +17,7 @@ const InvestMain = () => {
   } = useQuery(["myGroupList"], getMyGroupList, {
     cacheTime: 0,
     staleTime: 0,
+    retry: 3,
   });
   const {
     data: joinableGroupList,
@@ -25,6 +26,7 @@ const InvestMain = () => {
   } = useQuery(["joinableGroupList"], getJoinableGroupList, {
     cacheTime: 0,
     staleTime: 0,
+    retry: 3,
   });
 
   return (
