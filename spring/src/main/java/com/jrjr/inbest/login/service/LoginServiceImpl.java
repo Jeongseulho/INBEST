@@ -14,8 +14,10 @@ import com.jrjr.inbest.jwt.dto.LoginHistoryDTO;
 import com.jrjr.inbest.jwt.repository.RefreshTokenRepository;
 import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.entity.Login;
+import com.jrjr.inbest.login.repository.LoginHistoryRepository;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.user.dto.UserDto;
+import com.jrjr.inbest.user.entity.LoginHistory;
 import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.UserRepository;
 
@@ -32,6 +34,7 @@ public class LoginServiceImpl implements LoginService {
 	private final UserRepository userRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final RedisTemplate<String, LoginHistoryDTO> loginHistoryDTORedisTemplate;
+	private final LoginHistoryRepository loginHistoryRepository;
 
 	@Override
 	public UserDto login(LoginDto inputLoginDto) {
@@ -54,15 +57,10 @@ public class LoginServiceImpl implements LoginService {
 		}
 	
 		//로그인 기록 남기기
-		HashOperations<String,String,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
-		String hashKey = "loginHistory";
-		hashOperations.put(hashKey,String.valueOf(userEntity.get().getSeq())
-			,LoginHistoryDTO.builder()
-					.loginTime(LocalDateTime.now())
-					.userSeq(userEntity.get().getSeq())
-				.build());
-		//5분뒤에 만료 시키기
-		loginHistoryDTORedisTemplate.expire(hashKey,5, TimeUnit.MINUTES);
+		loginHistoryRepository.save(LoginHistory
+			.builder()
+			.userSeq(userEntity.get().getSeq())
+			.build());
 
 		return UserDto.builder()
 			.email(userEntity.get().getEmail())
