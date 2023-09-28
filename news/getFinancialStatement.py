@@ -1,6 +1,6 @@
 import requests
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "finance.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "crawling.settings")
 
 import django
 django.setup()
@@ -11,7 +11,7 @@ url = "https://opendart.fss.or.kr/api/fnlttSinglAcntAll.json"
 api_key = "ac30ceeeb8ac94447e5e065876a5783d79e5b3ec"
 
 # 모든 Company 모델의 company_code를 가져옴
-company_codes = Company.objects.values_list('company_code', flat=True)[:500]
+company_codes = Company.objects.values_list('company_code', flat=True)[320:500]
 print(company_codes)
 count = 1
 for company_code in company_codes:
@@ -19,7 +19,7 @@ for company_code in company_codes:
     params = {
         "crtfc_key": api_key,
         "corp_code": company_code,
-        "bsns_year": "2022",
+        "bsns_year": "2023",
         "reprt_code" : "11012",
         "fs_div" : "OFS"
     }
@@ -193,7 +193,7 @@ for company_code in company_codes:
 
                 
             # 'company_seq' 동일한 FinancialStatement 인스턴스 찾아서 생성 or 수정
-            fs_instance, created = FinancialStatement_2022.objects.update_or_create(
+            fs_instance, created = FinancialStatement.objects.update_or_create(
                 company_seq = financial_statement_dict["company_seq"],
                 defaults=financial_statement_dict
             )

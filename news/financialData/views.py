@@ -6,7 +6,7 @@ import requests
 from rest_framework.decorators import (api_view)
 import time
 import re
-
+from .models import Company
 
 
 # 한국 최다검색 주식 목록
@@ -377,7 +377,7 @@ def cointop(request):
         crypto_data.append(crypto_dict)
 
         count += 1
-        if count >= 35:  # 처음 30개 데이터만 추출
+        if count >= 35:  # 처음 35개 데이터만 추출
             break  # 반복문 종료
 
     
@@ -411,4 +411,11 @@ def kospi(request):
     data.append(data_dict)
 
     time.sleep(1)
+    return JsonResponse(data, safe=False)
+
+
+def search(request):
+    query = request.GET.get('q', '')
+    results = Company.objects.filter(company_name__icontains=query)
+    data = list(results.values('company_name', 'company_stock_code', 'company_stock_type'))
     return JsonResponse(data, safe=False)
