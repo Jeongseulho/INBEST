@@ -1,4 +1,4 @@
-package com.jrjr.inbest.user.entity;
+package com.jrjr.inbest.login.entity;
 
 import java.time.LocalDateTime;
 import java.util.StringTokenizer;

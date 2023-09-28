@@ -1,8 +1,6 @@
 package com.jrjr.inbest.login.service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +15,7 @@ import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginHistoryRepository;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.user.dto.UserDto;
-import com.jrjr.inbest.user.entity.LoginHistory;
+import com.jrjr.inbest.login.entity.LoginHistory;
 import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.UserRepository;
 
@@ -85,9 +83,9 @@ public class LoginServiceImpl implements LoginService {
 		if (refreshTokenRepository.existsById(email)) {
 			refreshTokenRepository.deleteById(email);
 		}
-		//로그인 기록 삭제
-		HashOperations<String,String,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
-		String hashKey = "loginHistory";
-		hashOperations.delete(hashKey,loginEntity.get().getSeq());
+		// //로그인 기록 삭제
+		// HashOperations<String,String,LoginHistoryDTO> hashOperations = loginHistoryDTORedisTemplate.opsForHash();
+		// String hashKey = "loginHistory";
+		// hashOperations.delete(hashKey,loginEntity.get().getSeq());
 	}
 }
