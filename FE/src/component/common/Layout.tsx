@@ -6,7 +6,7 @@ interface Props {
 
 export const Layout = ({ children }: Props) => {
   return (
-    <div className="bg-gray-100 min-h-screen pb-10">
+    <div className="bg-gray-100 min-h-screen">
       <Header />
       {children}
     </div>

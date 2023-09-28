@@ -1,5 +1,10 @@
 import { apiInstance } from "./index";
-import { KorStockInfoList, AmericaStockInfoList, CoinStockInfoList } from "../type/InvestingStockInfo";
+import {
+  KorStockInfoList,
+  AmericaStockInfoList,
+  CoinStockInfoList,
+  CompanySearchList,
+} from "../type/InvestingStockInfo";
 
 const api = apiInstance("news-service/financialData/");
 
@@ -35,5 +40,14 @@ export const getAmericaTradeVolumeStockList = async (): Promise<AmericaStockInfo
 
 export const getCoinStockList = async (): Promise<CoinStockInfoList> => {
   const { data } = await api.get("cointop/");
+  return data;
+};
+
+export const getSearchCompany = async (searchKeyword: string): Promise<CompanySearchList> => {
+  const { data } = await api.get("search/", {
+    params: {
+      q: searchKeyword,
+    },
+  });
   return data;
 };

@@ -37,7 +37,10 @@ const CryptoStockList = ({ title, stockList, isLoading }: Props) => {
                 className=" flex justify-center gap-12 cursor-pointer hover:bg-gray-400 hover:bg-opacity-20 items-center py-1 rounded-md transition-colors duration-300"
                 key={index}
               >
-                <p className=" text-center w-1/2">{truncateContent(stock.Name, 8)}</p>
+                <div className=" flex items-center justify-center w-1/2 gap-1">
+                  <img src={stock.image_url} width={20} />
+                  <p className=" text-center ">{truncateContent(stock.Name, 8)}</p>
+                </div>
                 <div className=" flex items-center justify-center w-1/2">
                   <p className=" text-center">${stock.Price}</p>
                   {fluctuationStringToNumber(stock.Fluctuation) >= 0 ? (

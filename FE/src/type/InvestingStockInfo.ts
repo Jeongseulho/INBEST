@@ -18,6 +18,15 @@ export interface CoinStockInfo {
   Name: string;
   Fluctuation: string;
   Price: string;
+  image_url: string;
 }
 
 export type CoinStockInfoList = CoinStockInfo[];
+
+export type CompanyStockType = 0 | 1 | 2;
+
+export type CompanySearchList = {
+  company_name: string;
+  company_stock_code: string;
+  company_stock_type: CompanyStockType;
+}[];
