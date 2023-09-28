@@ -1,6 +1,6 @@
 import { Board, Comment } from "../../../type/Board";
 import { getTimeAgo } from "../../../util/formatDateSign";
-import { BiLike } from "react-icons/bi";
+import { BiLike, BiSolidLike } from "react-icons/bi";
 import { useBoardComment } from "./useBoardComment";
 import BoardCommentCreate from "./BoardCommentCreate";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
@@ -13,7 +13,7 @@ interface CommentProps {
   setCocommentText: React.Dispatch<React.SetStateAction<string>>;
   onPostCocomment: (commentSeq: string) => Promise<void>;
   board: Board;
-  userSeq: number;
+  userSeq?: number;
 }
 const BoardComment = ({ comment, cocommentText, setCocommentText, onPostCocomment, board, userSeq }: CommentProps) => {
   const {
@@ -27,6 +27,7 @@ const BoardComment = ({ comment, cocommentText, setCocommentText, onPostCocommen
     commentUpdateText,
     setCommentUpdateText,
     onUpdateComment,
+    onLikeComment,
   } = useBoardComment(comment);
   return (
     <>
@@ -36,7 +37,10 @@ const BoardComment = ({ comment, cocommentText, setCocommentText, onPostCocommen
           <div className="flex justify-between items-center">
             <div>
               {comment.writer.nickname}
-              <span className="ms-3 text-xs text-gray-400">{getTimeAgo(comment.createdDate)}</span>
+              <span className="ms-3 text-xs text-gray-400">
+                {getTimeAgo(comment.createdDate)}{" "}
+                {comment.createdDate !== comment.lastModifiedDate && !comment.writer.seq && "(삭제됨)"}
+              </span>
             </div>
             {userSeq === comment?.writer.seq && (
               <div className="text-2xl me-3 mt-5">
@@ -66,11 +70,25 @@ const BoardComment = ({ comment, cocommentText, setCocommentText, onPostCocommen
             )}
           </div>
           <div className="flex items-center mb-3">
-            <BiLike />
-            <span className="ms-1">{comment.likes}</span>
-            <span className="hover:cursor-pointer ms-5" onClick={() => setShowCocommentCreate((prev) => !prev)}>
-              답글달기
-            </span>
+            {comment.writer.seq && (
+              <>
+                <div onClick={() => onLikeComment(board.seq, comment.seq)} className="hover:cursor-pointer">
+                  {comment.loginLike && (
+                    <div className="text-blue-400">
+                      <BiSolidLike />
+                    </div>
+                  )}
+                  {!comment.loginLike && <BiLike />}
+                </div>
+                <span className="ms-1">{comment.likes}</span>
+              </>
+            )}
+
+            {(comment.writer.seq || (!comment.writer.seq && comment.cocommentList.length > 0)) && (
+              <span className="hover:cursor-pointer ms-5" onClick={() => setShowCocommentCreate((prev) => !prev)}>
+                답글달기
+              </span>
+            )}
           </div>
 
           <div>
@@ -105,7 +123,13 @@ const BoardComment = ({ comment, cocommentText, setCocommentText, onPostCocommen
             </span>
             {showCocoment &&
               comment.cocommentList.map((cocomment, idx) => (
-                <CocommentItem key={idx} comment={comment} board={board} cocomment={cocomment} />
+                <CocommentItem
+                  key={idx}
+                  onDeleteComment={onDeleteComment}
+                  comment={comment}
+                  board={board}
+                  cocomment={cocomment}
+                />
               ))}
           </div>
         </div>

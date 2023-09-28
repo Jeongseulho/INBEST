@@ -10,7 +10,7 @@ interface MenuProps {
   comment: Comment | null;
   cocomment: Comment | null;
   onDelete?: ((board: string) => Promise<void>) | null;
-  onDeleteComment?: ((boardSeq: string, commentSeq: string, cocoment: string | null) => Promise<void>) | null;
+  onDeleteComment: ((boardSeq: string, commentSeq: string, cocomentSeq: string | null) => Promise<void>) | null;
   onShowUpdateForm?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const BoardMenubar = ({ board, comment, cocomment, onDelete, onDeleteComment, onShowUpdateForm }: MenuProps) => {
@@ -32,13 +32,15 @@ const BoardMenubar = ({ board, comment, cocomment, onDelete, onDeleteComment, on
               {comment && !cocomment && (
                 <span onClick={() => onShowUpdateForm && onShowUpdateForm(true)}>수정하기</span>
               )}
+              {comment && cocomment && <span onClick={() => onShowUpdateForm && onShowUpdateForm(true)}>수정하기</span>}
             </div>
 
             <div
               className=" hover:bg-gray-200 h-12 flex items-center justify-center text-red-400"
               onClick={() => {
                 if (onDelete) onDelete(board.seq);
-                else if (onDeleteComment) onDeleteComment(board.seq, comment!.seq, null);
+                else if (comment && !cocomment) onDeleteComment!(board.seq, comment!.seq, null);
+                else if (comment && cocomment) onDeleteComment!(board.seq, comment!.seq, cocomment.seq);
               }}
             >
               <div className="me-1">

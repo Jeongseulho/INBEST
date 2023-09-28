@@ -292,6 +292,7 @@ const ProfileUpdate = ({
                     type: "nicknameerror",
                     message: "",
                   });
+                  setIsDefaultImg(false);
                   reset();
                 }}
               >

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQueryClient } from "react-query";
 import { Comment } from "../../../type/Board";
-import { putCocomment } from "../../../api/board";
+import { likeCocomment, putCocomment } from "../../../api/board";
 import { toast } from "react-toastify";
 
 export const useCocommentItem = (comment: Comment) => {
@@ -19,5 +19,20 @@ export const useCocommentItem = (comment: Comment) => {
       console.log(err);
     }
   };
-  return { showCommentUpdate, setShowCommentUpdate, commentUpdateText, setCommentUpdateText, onUpdateCocoment };
+  const onLikeCocomment = async (boardSeq: string, commentSeq: string, cocomentSeq: string) => {
+    try {
+      await likeCocomment(boardSeq, commentSeq, cocomentSeq);
+      queryClient.invalidateQueries("getBoardDetail");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  return {
+    showCommentUpdate,
+    setShowCommentUpdate,
+    commentUpdateText,
+    setCommentUpdateText,
+    onUpdateCocoment,
+    onLikeCocomment,
+  };
 };

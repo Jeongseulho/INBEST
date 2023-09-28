@@ -21,7 +21,6 @@ const BoardDetailContent = () => {
     setShowCommentCreate,
     onLike,
     onDeleteBoard,
-    loginUserLike,
   } = useBoardDetailContent();
   const { userInfo } = userStore();
   return (
@@ -66,16 +65,16 @@ const BoardDetailContent = () => {
           <div className="absolute bottom-5 flex mt-10">
             <div className="flex items-center text-lg">
               <div className="flex items-center hover:cursor-pointer" onClick={onLike}>
-                {loginUserLike && (
+                {board?.loginLike && (
                   <div className="text-blue-400">
                     <BiSolidLike />
                   </div>
                 )}
-                {!loginUserLike && <BiLike />}
+                {!board?.loginLike && <BiLike />}
                 <span className="ms-1 me-3">{board?.likes}</span>
               </div>
               <BiCommentDetail />
-              <span className="ms-1">{board?.commentList.length}</span>
+              <span className="ms-1">{board?.commentCount}</span>
             </div>
           </div>
         </div>
@@ -110,7 +109,7 @@ const BoardDetailContent = () => {
             setCocommentText={setCocommentText}
             onPostCocomment={onPostCocomment}
             board={board}
-            userSeq={userInfo!.seq}
+            userSeq={userInfo?.seq}
           />
         ))}
       </div>

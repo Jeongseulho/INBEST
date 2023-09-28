@@ -12,7 +12,6 @@ export const useBoardDetailContent = () => {
   const seq = searchParams.get("seq") ? searchParams.get("seq") : "";
   const { data, isLoading, isError, error, refetch } = useQuery(["getBoardDetail", seq], () => getBoardDetail(seq!));
   const board = data?.board;
-  const loginUserLike = data?.loginUserLike;
   const [showCommentCreate, setShowCommentCreate] = useState(false);
   const navigator = useNavigate();
   console.log(data);
@@ -66,7 +65,6 @@ export const useBoardDetailContent = () => {
   };
   return {
     board,
-    loginUserLike,
     isLoading,
     isError,
     error,
