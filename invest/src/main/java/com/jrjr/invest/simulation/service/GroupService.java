@@ -551,7 +551,7 @@ public class GroupService {
 		LocalDateTime before2days = LocalDateTime.of(LocalDateTime.now().minusDays(2).toLocalDate(),
 			LocalTime.of(0,0,0));
 
-		Double averageRate = simulationRepository.getAverageRevenuRate(before2days).orElse(0D);
+		Double averageRate = simulationRepository.getAverageRevenuRate(before2days	).orElse(0D);
 
 		return averageRate.intValue();
 	}
