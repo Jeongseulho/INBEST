@@ -41,4 +41,5 @@ public class StatusDTO {
 	private Integer finishedGroupNumFluctuation; //어제 종료된 모의투자 수
 
 	private Integer revenueRateFluctuation; //종료된 모든 그룹의 수익률을 계산하여 수익률 변화 %
+	private Integer revenueRate; // 2일전 까지의 수익율
 }

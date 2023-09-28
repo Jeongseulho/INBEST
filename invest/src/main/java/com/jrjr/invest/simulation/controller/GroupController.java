@@ -82,6 +82,7 @@ public class GroupController {
 		statusDTO.setFinishedGroupNum(groupService.getFinishedGroupNum());
 		statusDTO.setFinishedGroupNumFluctuation(groupService.getFinishedGroupNumFluctuation());
 		statusDTO.setRevenueRateFluctuation(groupService.getRevenueRateFluctuation());
+		statusDTO.setRevenueRate(groupService.getRevenueRate());
 
 		log.info("===== 모의투자 상태 검색 끝 ===== ");
 		return new ResponseEntity<>(statusDTO, HttpStatus.OK);
