@@ -111,6 +111,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		Map<String, Long> stockInfoMap = new HashMap<>(); // 주식 별 수익, 손실 합을 저장
 		Map<String, Long> industryInfoMap = new HashMap<>(); // 산업군 별 거래량 저장
 		for (Trading trading : tradingInfoList) {
+			log.info("trading: {}", trading.toString());
 			// stockInfoMap 에 주식 별 수익, 손실 합을 저장
 			String stockType = trading.getStockType();
 			String stockCode = trading.getStockCode();
@@ -135,18 +136,20 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		}
 
 		// stockInfoMap 정렬
-		log.info("stockInfoMap 정렬 전");
+		log.info("----- stockInfoMap 정렬 전 -----");
 		for (String key : stockInfoMap.keySet()) {
 			log.info(key + ": " + stockInfoMap.get(key));
 		}
+		log.info("------------------------------");
 
 		List<String> sortedStockInfoKeyList = new ArrayList<>(stockInfoMap.keySet());
 		sortedStockInfoKeyList.sort((s1, s2) -> stockInfoMap.get(s2).compareTo(stockInfoMap.get(s1)));
 
-		log.info("stockInfoMap 정렬 후");
+		log.info("----- stockInfoMap 정렬 후 -----");
 		for (String key : sortedStockInfoKeyList) {
 			log.info(key + ": " + stockInfoMap.get(key));
 		}
+		log.info("------------------------------");
 
 		Map<String, List<Object>> simulationStockRankingInfo = new HashMap<>();
 		List<TopStockDTO> topNProfitList = new ArrayList<>();
@@ -155,7 +158,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 
 		// topNProfitList 만들기
 		log.info("===== topNProfitList 만들기 =====");
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < sortedStockInfoKeyList.size() && i < 3; i++) {
 			// stockInfoMap key: stockType_stockCode
 			st = new StringTokenizer(sortedStockInfoKeyList.get(i), "-");
 			String stockType = st.nextToken();
@@ -170,7 +173,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 
 		// topNLossList 만들기
 		log.info("===== topNLossList 만들기 =====");
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < sortedStockInfoKeyList.size() && i < 3; i++) {
 			// stockInfoMap key: stockType_stockCode
 			st = new StringTokenizer(sortedStockInfoKeyList.get(sortedStockInfoKeyList.size() - 1 - i), "-");
 			String stockType = st.nextToken();
@@ -184,23 +187,25 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		simulationStockRankingInfo.put("topNLossList", Collections.singletonList(topNLossList));
 
 		// companyIndustryInfoMap 정렬
-		log.info("industryInfoMap 정렬 전");
+		log.info("----- industryInfoMap 정렬 전 -----");
 		for (String key : industryInfoMap.keySet()) {
 			log.info(key + ": " + industryInfoMap.get(key));
 		}
+		log.info("------------------------------");
 
 		List<String> sortedIndustryInfoKeyList = new ArrayList<>(industryInfoMap.keySet());
 		sortedIndustryInfoKeyList.sort((s1, s2) -> industryInfoMap.get(s2).compareTo(industryInfoMap.get(s1)));
 
-		log.info("industryInfoMap 정렬 후");
+		log.info("----- industryInfoMap 정렬 후 -----");
 		for (String key : sortedIndustryInfoKeyList) {
 			log.info(key + ": " + industryInfoMap.get(key));
 		}
+		log.info("------------------------------");
 
 		// topNIndustryList 만들기
 		List<TopIndustryDTO> topNIndustryList = new ArrayList<>();
 		log.info("===== topNIndustryList 만들기 =====");
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < sortedIndustryInfoKeyList.size() && i < 3; i++) {
 			String industry = sortedIndustryInfoKeyList.get(i);
 			TopIndustryDTO topIndustryDto
 				= TopIndustryDTO.builder()
