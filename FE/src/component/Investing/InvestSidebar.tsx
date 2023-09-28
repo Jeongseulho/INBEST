@@ -8,6 +8,7 @@ import { BsCurrencyBitcoin } from "react-icons/bs";
 import { BsNewspaper } from "react-icons/bs";
 import { LiaCoinsSolid } from "react-icons/lia";
 import { INVESTING_TAB } from "../../constant/INVESTING_TAB";
+import { useLocation } from "react-router-dom";
 
 interface Props {
   activeTab: number;
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
+  const location = useLocation();
   const theme = {
     sidebar: {
       backgroundColor: "#ffffff",
@@ -62,7 +64,7 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
 
   return (
     <div className=" bg-white">
-      <h3 className=" my-10 text-center font-regular text-dark">그룹 이름</h3>
+      <h3 className=" my-10 text-center font-regular text-dark">{location.state.title}</h3>
       <Sidebar
         backgroundColor={theme.sidebar.backgroundColor}
         rootStyles={{

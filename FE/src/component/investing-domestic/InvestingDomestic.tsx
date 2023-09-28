@@ -1,35 +1,26 @@
-import StockList from "../common/StockList";
+import DomesticStockList from "./DomesticStockList";
 import DecreaseGraphIcon from "../common/DecreaseGraphIcon";
 import IncreaseGraphIcon from "../common/IncreaseGraphIcon";
+import { getKorSearchStockList, getKorMarketCapStockList, getKorIncreaseStockList } from "../../api/investingStockInfo";
+import { useQuery } from "react-query";
 interface Props {
   setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const InvestingDomestic = ({ setCompanyCode }: Props) => {
-  const stockList = [
-    {
-      name: "삼성전자",
-      code: "005930",
-      price: 100000,
-      percentage: 10,
-      favorite: true,
-    },
-    {
-      name: "삼성전자",
-      code: "005930",
-      price: 10000,
-      percentage: -10,
-      favorite: true,
-    },
-    {
-      name: "삼성전자",
-      code: "005930",
-      price: 288900,
-      percentage: 100,
-      favorite: false,
-    },
-  ];
-  // TODO: desc 수정
+  const { data: searchStockList, isLoading: isLoadingSearchStockList } = useQuery(
+    ["korSearchStockList"],
+    getKorSearchStockList
+  );
+  const { data: marketCapStockList, isLoading: isLoadingMarketCapStockList } = useQuery(
+    ["korMarketCapStockList"],
+    getKorMarketCapStockList
+  );
+  const { data: increaseStockList, isLoading: isLoadingIncreaseStockList } = useQuery(
+    ["korIncreaseStockList"],
+    getKorIncreaseStockList
+  );
+
   return (
     <div className=" flex flex-col items-center gap-4">
       <div className=" flex gap-4">
@@ -40,9 +31,24 @@ const InvestingDomestic = ({ setCompanyCode }: Props) => {
         <IncreaseGraphIcon title="환율" desc="급하락 주식에 대한 설명입니다." />
       </div>
       <div className=" flex gap-4 w-full">
-        <StockList stockList={stockList} title="많이 사고 파는 주식" setCompanyCode={setCompanyCode} />
-        <StockList stockList={stockList} title="급상승 주식" setCompanyCode={setCompanyCode} />
-        <StockList stockList={stockList} title="시가총액 높은 주식" setCompanyCode={setCompanyCode} />
+        <DomesticStockList
+          setCompanyCode={setCompanyCode}
+          stockList={searchStockList}
+          isLoading={isLoadingSearchStockList}
+          title="많이 검색되는 주식"
+        />
+        <DomesticStockList
+          setCompanyCode={setCompanyCode}
+          stockList={marketCapStockList}
+          isLoading={isLoadingMarketCapStockList}
+          title="시가총액 높은 주식"
+        />
+        <DomesticStockList
+          setCompanyCode={setCompanyCode}
+          stockList={increaseStockList}
+          isLoading={isLoadingIncreaseStockList}
+          title="급상승 주식"
+        />
       </div>
     </div>
   );

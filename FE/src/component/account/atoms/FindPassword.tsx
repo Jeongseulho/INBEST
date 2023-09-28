@@ -14,6 +14,7 @@ const FindPassword = ({
     <>
       <Modal
         isOpen={showModal}
+        ariaHideApp={false}
         style={{
           content: {
             ...CONTENT_MODAL_STYLE,

@@ -3,12 +3,15 @@ import group from "../../../asset/image/group.png";
 import { LuSettings2 } from "react-icons/lu";
 import modalStore from "../../../store/modalStore";
 import GroupSkeleton from "../molecules/GroupSkeleton";
-import { useQuery } from "react-query";
-import { getJoinableGroupList } from "../../../api/group";
+import { JoinableGroupList } from "../../../type/Group";
+interface Props {
+  data: JoinableGroupList | undefined;
+  isLoading: boolean;
+}
 
-const GroupList = () => {
+const GroupList = ({ data, isLoading }: Props) => {
   const { openModal } = modalStore();
-  const { data, isLoading } = useQuery("joinableGroupList", getJoinableGroupList);
+
   return (
     <div className="w-4/5 flex flex-col text-center px-4 shadow-component">
       <div className=" flex items-center gap-4">
