@@ -184,6 +184,7 @@ public class BoardController {
 
 	@Operation(summary = "좋아요가 많은 게시판 목록", description = "기간(period)와 한번에 출력하는 양(pageSize)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
 	@Parameters(value = {
+		@Parameter(required = true, name = "pageNo", description = "페이지 번호"),
 		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
 		@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
 	})
@@ -191,13 +192,14 @@ public class BoardController {
 	public ResponseEntity<Map<String, Object>> findAllLikesBoards(
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
+		@RequestParam(name = "pageNo") int pageNo,
 		@RequestParam(required = false, defaultValue = "", name = "loginEmail") String loginEmail,
 		@RequestParam(required = false, defaultValue = "", name = "loginSeq") String loginSeq,
 		HttpServletRequest request) throws Exception {
 		log.info("========== 좋아요 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
-		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageSize, period);
+		List<BoardDTO> boardDTOList = boardService.findMostLikesPosts(pageNo, pageSize, period);
 		//토큰으로 유저 이메일 얻기
 		log.info("로그인 유저 이메일 : " + loginEmail);
 
@@ -220,11 +222,13 @@ public class BoardController {
 
 	@Operation(summary = "조회수가 많은 게시판 목록", description = "기간(period)와 한번에 출력하는 양(pageSize)를 이용해 지정된 범위 내의 게시물을 가장 최신 순서로 찾는 기능")
 	@Parameters(value = {
+		@Parameter(required = true, name = "pageNo", description = "페이지 번호"),
 		@Parameter(required = true, name = "pageSize", description = "한번에 보여줄 글의 개수"),
 		@Parameter(required = true, name = "period", description = "탐색 기간 ex) 3 : 3일전 ~ 현재까지 "),
 	})
 	@GetMapping("/most-views")
 	public ResponseEntity<Map<String, Object>> findAllViewBoards(
+		@RequestParam(name = "pageNo") int pageNo,
 		@RequestParam(name = "pageSize") int pageSize,
 		@RequestParam(name = "period") int period,
 		@RequestParam(required = false, defaultValue = "", name = "loginEmail") String loginEmail,
@@ -233,7 +237,7 @@ public class BoardController {
 		log.info("========== 조회수 많은 게시판 목록 검색 시작 ==========");
 		log.info("페이지 크기 : " + pageSize + " 기간 : " + period);
 
-		List<BoardDTO> boardDTOList = boardService.findMostViewPosts(pageSize, period);
+		List<BoardDTO> boardDTOList = boardService.findMostViewPosts(pageNo, pageSize, period);
 		//게시물 좋아요/덧글 수 통계 처리
 		for (int i = 0; i < boardDTOList.size(); i++) {
 			BoardDTO boardDTO = boardDTOList.get(i);

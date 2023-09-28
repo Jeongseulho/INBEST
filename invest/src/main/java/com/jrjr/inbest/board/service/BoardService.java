@@ -287,13 +287,13 @@ public class BoardService {
 		return boardDTO;
 	}
 
-	public List<BoardDTO> findMostLikesPosts(int pageSize, int period) throws Exception {
+	public List<BoardDTO> findMostLikesPosts(int pageNo, int pageSize, int period) throws Exception {
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = end.minusDays(period);
 
 		// 좋아요(likes)가 많은 순으로 정렬하고 상위 10개를 가져옵니다.
 		PageRequest pageRequest =
-			PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "likes"));
+			PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC, "likes"));
 
 		List<BoardEntity> boardEntityList = boardRepository.findByCreatedDateBetween(start, end, pageRequest);
 
@@ -314,13 +314,13 @@ public class BoardService {
 		return boardDTOList;
 	}
 
-	public List<BoardDTO> findMostViewPosts(int pageSize, int period) throws Exception {
+	public List<BoardDTO> findMostViewPosts(int pageNo, int pageSize, int period) throws Exception {
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = end.minusDays(period);
 
 		// 좋아요(likes)가 많은 순으로 정렬하고 상위 10개를 가져옵니다.
 		PageRequest pageRequest =
-			PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "view"));
+			PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC, "view"));
 
 		List<BoardEntity> boardEntityList = boardRepository.findByCreatedDateBetween(start, end, pageRequest);
 		ArrayList<BoardDTO> boardDTOList = new ArrayList<>();
