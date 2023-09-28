@@ -11,8 +11,8 @@ const CurJoinPeople = ({ profileImageList }: Props) => {
         <img src={people} width={40} />
       </div>
       <div className=" flex items-center gap-2">
-        {profileImageList.map((profileImage) => {
-          return <img src={profileImage} width={40} />;
+        {profileImageList.map((profileImage, index) => {
+          return <img src={profileImage} width={40} key={index} />;
         })}
       </div>
     </div>

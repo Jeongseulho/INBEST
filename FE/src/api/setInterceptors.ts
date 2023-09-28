@@ -24,7 +24,6 @@ export const setInterceptors = (instance: AxiosInstance) => {
       return response;
     },
     async (error: AxiosError) => {
-      const { accessToken } = userStore.getState();
       const { setAccessToken, setRefreshToken, setUserInfo } = userStore.getState();
 
       const { config } = error;
@@ -37,21 +36,15 @@ export const setInterceptors = (instance: AxiosInstance) => {
 
         setAccessToken(newToken);
         originRequest!.headers.Authorization = `Bearer ${newToken}`;
-        console.log(`Bearer ${accessToken}`);
-        console.log(error.response!.data);
-        console.log(newToken);
-        return instance(originRequest);
       } else if (message === "ACCESS_DENIED") {
         return toast.error("권한이 부족합니다.");
       } else if (message === "INVALID_TOKEN") {
-        console.log(message);
         window.location.assign("/login");
         setAccessToken(null);
         setRefreshToken(null);
         setUserInfo(null);
         return alert("토큰이 손상되었습니다. 다시 로그인 해주세요.");
       } else if (message === "EXPIRED_REFRESH_TOKEN") {
-        console.log(message);
         window.location.assign("/login");
         setAccessToken(null);
         setRefreshToken(null);

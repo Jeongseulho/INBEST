@@ -14,11 +14,13 @@ const BreakingNews = () => {
       </div>
       {isLoading ? (
         <div className=" flex flex-col gap-4">
-          <NewsSkeleton />
-          <NewsSkeleton />
-          <NewsSkeleton />
-          <NewsSkeleton />
-          <NewsSkeleton />
+          <>
+            {Array(10)
+              .fill(null)
+              .map((_, index) => (
+                <NewsSkeleton key={index} />
+              ))}
+          </>
         </div>
       ) : (
         <div className=" flex flex-col gap-4 ">

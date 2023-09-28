@@ -12,21 +12,37 @@ import { useQuery } from "react-query";
 import spinner from "../../../asset/image/spinner.svg";
 import { useMutation, useQueryClient } from "react-query";
 import { useState } from "react";
-import { exitGroup } from "../../../api/group";
+import { exitGroup, startInvesting } from "../../../api/group";
+import { useNavigate } from "react-router-dom";
 
 const WaitingGroupModal = () => {
+  const navigate = useNavigate();
   const { modalType, closeModal, simulationSeq } = modalStore();
   const { userInfo } = userStore();
-  const { isLoading, data } = useQuery(["detailWaitingGroup", simulationSeq], () => {
-    return getWaitingGroupDetail(simulationSeq);
-  });
+  const { isLoading, data } = useQuery(
+    ["detailWaitingGroup", simulationSeq],
+    () => {
+      return getWaitingGroupDetail(simulationSeq);
+    },
+    {
+      enabled: modalType === "waitingGroup",
+    }
+  );
   const queryClient = useQueryClient();
   const [isJoin, setIsJoin] = useState(true);
 
   const { mutate } = useMutation((simulationSeq: number) => exitGroup(simulationSeq), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["myGroupList", "joinableGroupList"]);
+      queryClient.invalidateQueries({
+        queryKey: ["myGroupList", "joinableGroupList"],
+      });
       setIsJoin(false);
+    },
+  });
+
+  const { mutate: startMutate } = useMutation((simulationSeq: number) => startInvesting(simulationSeq), {
+    onSuccess: () => {
+      navigate(`/invest/${simulationSeq}`);
     },
   });
 
@@ -35,7 +51,6 @@ const WaitingGroupModal = () => {
       isOpen={modalType === "waitingGroup"}
       ariaHideApp={false}
       onRequestClose={closeModal}
-      closeTimeoutMS={300}
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,
@@ -61,17 +76,26 @@ const WaitingGroupModal = () => {
                 <SeedMoneyTag seedMoney={data?.seedMoney} />
                 <Period period={data?.period} />
                 <MeanTier tier={data?.averageTier} />
-                <CurJoinPeople profileImageList={data?.currentMemberImage || [default_image]} />
+                <CurJoinPeople profileImageList={data?.currentMemberImageList || [default_image]} />
               </div>
               {userInfo?.seq === data?.ownerSeq ? (
                 <>
                   <p className=" font-regular text-md text-myGray ">이 그룹의 방장입니다, 게임을 시작할 수 있어요.</p>
                   <div className=" flex items-center gap-3">
-                    <button className=" rounded-full text-white bg-purple-500 py-2 px-4 transition-colors duration-500 hover:text-purple-500 border-2 border-purple-500 hover:bg-opacity-10">
+                    <button
+                      onClick={() => {
+                        startMutate(simulationSeq);
+                        closeModal();
+                      }}
+                      className=" rounded-full text-white bg-purple-500 py-2 px-4 transition-colors duration-500 hover:text-purple-500 border-2 border-purple-500 hover:bg-opacity-10"
+                    >
                       모의 투자 시작
                     </button>
                     <button
-                      onClick={() => mutate(simulationSeq)}
+                      onClick={() => {
+                        mutate(simulationSeq);
+                        closeModal();
+                      }}
                       className=" bg-lightRed text-white hover:text-lightRed py-2 rounded-full px-4 transition-all duration-500 border-2 border-lightRed hover:bg-opacity-10"
                     >
                       그룹 나가기

@@ -15,16 +15,21 @@ import { useNavigate } from "react-router-dom";
 const InProgressGroupModal = () => {
   const { modalType, closeModal, simulationSeq } = modalStore();
   const navigate = useNavigate();
-  const { isLoading, data } = useQuery(["detailInProgressGroup", simulationSeq], () => {
-    return getInProgressGroupDetail(simulationSeq);
-  });
+  const { isLoading, data } = useQuery(
+    ["detailInProgressGroup", simulationSeq],
+    () => {
+      return getInProgressGroupDetail(simulationSeq);
+    },
+    {
+      enabled: modalType === "inProgressGroup",
+    }
+  );
 
   return (
     <Modal
       isOpen={modalType === "inProgressGroup"}
       ariaHideApp={false}
       onRequestClose={closeModal}
-      closeTimeoutMS={300}
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,
@@ -51,14 +56,21 @@ const InProgressGroupModal = () => {
               rankInGroup={data?.rankInGroup || 0}
               rankInGroupFluctuation={data?.rankInGroupFluctuation || 0}
             />
-            <CurJoinPeople profileImageList={data?.currentMemberImage || [default_image]} />
-            <RemainPeriod startDate={data?.startDate || ""} endDate={data?.endDate || ""} />
+            <CurJoinPeople profileImageList={data?.currentMemberImageList || [default_image]} />
+            <RemainPeriod startDate={data?.startDate || ""} period={data?.period || 1} />
           </div>
 
           <p className=" font-regular text-md text-myGray ">모의투자가 진행중인 그룹입니다.</p>
           <button
             onClick={() => {
-              navigate(`/invest/${simulationSeq}`);
+              navigate(`/invest/${simulationSeq}`, {
+                state: {
+                  seedMoney: data?.seedMoney,
+                  startDate: data?.startDate,
+                  period: data?.period,
+                  title: data?.title,
+                },
+              });
               closeModal();
             }}
             className=" main-dark-btn"
