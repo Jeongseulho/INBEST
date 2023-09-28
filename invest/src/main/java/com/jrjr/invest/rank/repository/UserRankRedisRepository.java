@@ -1,5 +1,7 @@
 package com.jrjr.invest.rank.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -8,6 +10,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StopWatch;
 
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
@@ -20,7 +23,7 @@ public class UserRankRedisRepository {
 
 	private final HashOperations<String, String, RedisUserDTO> userHash; // key: USER_HASH_KEY
 	private final HashOperations<String, String, RedisTierRankDTO> tierRankHash; // key: TIER_RANK_HASH_KEY
-	private final ZSetOperations<String, RedisUserDTO> userZSet; // key: USER_SORT_KEY
+	private final ZSetOperations<String, String> userZSet; // key: USER_SORT_KEY
 
 	static final String USER_HASH_KEY = "user";
 	static final String TIER_RANK_HASH_KEY = "tier_rank";
@@ -28,9 +31,10 @@ public class UserRankRedisRepository {
 
 	@Autowired
 	public UserRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
-		RedisTemplate<String, RedisTierRankDTO> tierRankRedisTemplate) {
+		RedisTemplate<String, RedisTierRankDTO> tierRankRedisTemplate,
+		RedisTemplate<String, String> stringRedisTemplate) {
 		this.userHash = userRedisTemplate.opsForHash();
-		this.userZSet = userRedisTemplate.opsForZSet();
+		this.userZSet = stringRedisTemplate.opsForZSet();
 		this.tierRankHash = tierRankRedisTemplate.opsForHash();
 	}
 
@@ -56,23 +60,29 @@ public class UserRankRedisRepository {
 	}
 
 	/*
-		전체 개인 랭킹 정보 불러오기 (userZSetOperations)
+		userZSet 불러오기
 	 */
-	public Set<RedisUserDTO> getUserRankingInfoSet(long start, long end) {
+	public Set<String> getUserRankingInfoSet(Long start, Long end) {
 		return userZSet.reverseRange(USER_SORT_KEY, start, end);
+	}
+
+	/*
+		전체 개인 랭킹 정보 불러오기
+	 */
+	public List<RedisUserDTO> getUserRankingInfoList(Long start, Long end) {
+		List<RedisUserDTO> redisUserDtos = new ArrayList<>();
+		Set<String> userRankingInfoSet = this.getUserRankingInfoSet(start, end);
+		for (String userSeq : userRankingInfoSet) {
+			redisUserDtos.add(this.getUserInfo(Long.parseLong(userSeq)));
+		}
+		return redisUserDtos;
 	}
 
 	/*
 		내 개인 랭킹 정보 불러오기
 	 */
-	public RedisUserDTO getUserRankingInfo(Long seq) {
-		Set<RedisUserDTO> userDtoSet = this.getUserRankingInfoSet(0, -1);
-		for (RedisUserDTO redisUserDto : userDtoSet) {
-			if (redisUserDto.getSeq().equals(seq)) {
-				return redisUserDto;
-			}
-		}
-		return null;
+	public RedisUserDTO getUserRankingInfo(Long userSeq) {
+		return this.getUserInfo(userSeq);
 	}
 
 	/*
@@ -82,6 +92,7 @@ public class UserRankRedisRepository {
 		redisUserDto.setTier(0);
 		redisUserDto.setRate(0);
 		userHash.put(USER_HASH_KEY, String.valueOf(redisUserDto.getSeq()), redisUserDto);
+		userZSet.add(USER_SORT_KEY, String.valueOf(redisUserDto.getSeq()), 0);
 	}
 
 	/*
@@ -107,56 +118,53 @@ public class UserRankRedisRepository {
 	 */
 	public void deleteUserInfo(Long seq) {
 		userHash.delete(USER_HASH_KEY, String.valueOf(seq));
+		userZSet.remove(USER_SORT_KEY, String.valueOf(seq));
 	}
 
+	/*
+		회원 티어 및 수익률 정보 업데이트
+	 */
 	public void updateUserTierAndRateInfo(Long seq, Integer tier, Integer rate) {
 		RedisUserDTO redisUserDto = this.getUserInfo(seq);
 		log.info("변경 전 회원 정보: {}", redisUserDto.toString());
-
 		redisUserDto.setTier(tier);
 		redisUserDto.setRate(rate);
 
 		userHash.put(USER_HASH_KEY, String.valueOf(seq), redisUserDto);
+		userZSet.add(USER_SORT_KEY, String.valueOf(seq), tier);
 		log.info("변경 후 회원 정보: {}", redisUserDto);
-	}
-
-	public void removeAllFromSortedUserSet() {
-		userZSet.removeRange(USER_SORT_KEY, 0, -1);
 	}
 
 	/*
 		개인 랭킹 산정
 	 */
 	public void updateUserRankingList() {
-		// user_sort set 에 user hash table 정보 저장 (기존 정보 초기화 후 저장)
-		Map<String, RedisUserDTO> userDtoMap = this.getUserInfoMap();
-		this.removeAllFromSortedUserSet();
-		for (RedisUserDTO redisUserDto : userDtoMap.values()) {
-			userZSet.add(USER_SORT_KEY, redisUserDto, redisUserDto.getTier());
-		}
-
-		// 랭킹 구하기
 		int rank = 0;
 		int index = 0;
 		int previousTier = Integer.MAX_VALUE;
 
-		Set<RedisUserDTO> userDtoSet = this.getUserRankingInfoSet(0, -1);
-		for (RedisUserDTO redisUserDto : userDtoSet) {
+		Set<String> userRankingInfoSet = this.getUserRankingInfoSet(0L, -1L);
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		for (String userSeq : userRankingInfoSet) {
 			index++;
-			Integer tier = redisUserDto.getTier();
+			int tier = userZSet.score(USER_SORT_KEY, userSeq).intValue();
 
 			if (tier != previousTier) {
 				rank = index;
 			}
 			previousTier = tier;
 
-			// 기존 정보 삭제 후 추가
-			userZSet.remove(USER_SORT_KEY, redisUserDto);
+			RedisUserDTO redisUserDto = this.getUserInfo(Long.parseLong(userSeq));
 			redisUserDto.setPreviousRank(redisUserDto.getCurrentRank());
 			redisUserDto.setCurrentRank(rank);
-			userZSet.add(USER_SORT_KEY, redisUserDto, redisUserDto.getTier());
 			userHash.put(USER_HASH_KEY, String.valueOf(redisUserDto.getSeq()), redisUserDto);
 		}
+
+		stopWatch.stop();
+		log.info("랭킹 재산정 소요 시간: {} milliseconds", stopWatch.getTotalTimeMillis());
 	}
 
 	/*
