@@ -32,7 +32,7 @@ public class UpdateController {
 
 	@Operation(summary = "회원 티어 및 수익률 정보 업데이트")
 	@Parameters(value = {
-		@Parameter(required = true, name = "seq", description = "회원 pk")
+		@Parameter(required = true, name = "userSeq", description = "회원 pk")
 	})
 	@GetMapping("/users/tier-rate/{userSeq}")
 	ResponseEntity<Map<String, Object>> updateUserTierAndRateInfo(
