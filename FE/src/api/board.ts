@@ -14,9 +14,19 @@ export const createBoard = async (userSeq: number, context: string, title: strin
   return data;
 };
 
-export const getBoardList = async (pageNo: number): Promise<GetBoardList> => {
-  const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10 } });
-  return data;
+export const getBoardList = async (pageNo: number, order: number): Promise<GetBoardList> => {
+  let responseData;
+  if (order === 0) {
+    const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10 } });
+    responseData = data;
+  } else if (order === 1) {
+    const { data } = await apiWithAuth.get("most-likes", { params: { pageNo, pageSize: 10, period: 100 } });
+    responseData = data;
+  } else {
+    const { data } = await apiWithAuth.get("most-views", { params: { pageNo, pageSize: 10, period: 100 } });
+    responseData = data;
+  }
+  return responseData;
 };
 export const getBoardDetail = async (seq: string): Promise<GetBoardDetail> => {
   const { data } = await apiWithAuth.get(`/${seq}`);
