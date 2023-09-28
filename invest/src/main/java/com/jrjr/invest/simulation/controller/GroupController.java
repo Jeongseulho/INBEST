@@ -17,6 +17,7 @@ import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.GroupDTO;
 import com.jrjr.invest.simulation.dto.GroupUserDTO;
 import com.jrjr.invest.simulation.dto.SimulationSeqDTO;
+import com.jrjr.invest.simulation.dto.StatusDTO;
 import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.service.GroupService;
 
@@ -62,6 +63,28 @@ public class GroupController {
 
 		log.info("===== 유저 목록 검색 끝 ===== ");
 		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
+
+	@GetMapping("/status")
+	ResponseEntity<?> searchStatus() throws UnsupportedEncodingException {
+		log.info("===== 모의투자 상태 검색 시작 =====");
+
+		StatusDTO statusDTO = StatusDTO.builder().build();
+
+		statusDTO.setTotalUserNum(groupService.getTotalUserNum());
+		statusDTO.setTotalUserNumFluctuation(groupService.getTotalUserNumFluctuation());
+		statusDTO.setCurrentUserNum(groupService.getCurrentUserNum());
+		statusDTO.setCurrentUserNumFluctuation(groupService.getCurrentUserNumFluctuation());
+		statusDTO.setInprogressUserNum(groupService.getInprogressUserNum());
+		statusDTO.setInprogressUserNumFluctuation(groupService.getTotalUserNumFluctuation());
+		statusDTO.setInprogressGroupNum(groupService.getInprogressGroupNum());
+		statusDTO.setInprogressGroupNumFluctuation(groupService.getInprogressGroupNumFluctuation());
+		statusDTO.setFinishedGroupNum(groupService.getFinishedGroupNum());
+		statusDTO.setFinishedGroupNumFluctuation(groupService.getFinishedGroupNumFluctuation());
+		statusDTO.setRevenueRateFluctuation(groupService.getRevenueRateFluctuation());
+
+		log.info("===== 모의투자 상태 검색 끝 ===== ");
+		return new ResponseEntity<>(statusDTO, HttpStatus.OK);
 	}
 	@Operation(summary = "유저가 참가한 그룹 목록")
 	@Parameters(value = {
