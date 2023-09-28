@@ -22,7 +22,5 @@ public class RedisTierRankDTO {
 
 	private Integer gold;
 
-	private Integer platinum;
-
 	private Integer diamond;
 }
