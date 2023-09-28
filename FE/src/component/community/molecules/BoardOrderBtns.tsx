@@ -6,7 +6,7 @@ const BoardOrderBtns = () => {
   return (
     <div className="flex justify-between min-w-[16rem]">
       {orderList.map((item, idx) => (
-        <Link to={`?order=${idx}`}>
+        <Link to={`?order=${idx}`} key={idx}>
           <button
             className={`${
               idx === nowOrder ? "bg-primary text-white" : "bg-white "

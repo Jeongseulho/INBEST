@@ -1,10 +1,13 @@
 import { Outlet } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
+import CommunityTop10 from "../organisms/CommunityTop10";
 const Community = () => {
   return (
     <>
       <div className="flex">
-        <div className="w-96"></div>
+        <div className="w-[40rem] flex justify-center">
+          <CommunityTop10 />
+        </div>
         <div className="w-full">
           <div className="w-5/6">
             <header className="border-b-2 border-black h-16 flex justify-between items-center">

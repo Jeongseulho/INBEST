@@ -28,6 +28,11 @@ export const getBoardList = async (pageNo: number, order: number): Promise<GetBo
   }
   return responseData;
 };
+export const getBoardTop10 = async (): Promise<GetBoardList> => {
+  const { data } = await apiWithAuth.get("most-likes", { params: { pageNo: 1, pageSize: 10, period: 3 } });
+  return data;
+};
+
 export const getBoardDetail = async (seq: string): Promise<GetBoardDetail> => {
   const { data } = await apiWithAuth.get(`/${seq}`);
   return data;
