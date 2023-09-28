@@ -29,7 +29,13 @@ const BoardDetailContent = () => {
         <div className="text-2xl ms-3 mt-5">{board?.title}</div>
         {userInfo?.seq === board?.writer.seq && (
           <div className="text-2xl me-3 mt-5">
-            <BoardMenubar board={board!} cocomment={null} comment={null} onDelete={onDeleteBoard} />
+            <BoardMenubar
+              onDeleteComment={null}
+              board={board!}
+              cocomment={null}
+              comment={null}
+              onDelete={onDeleteBoard}
+            />
           </div>
         )}
       </header>
@@ -59,16 +65,16 @@ const BoardDetailContent = () => {
           <div className="absolute bottom-5 flex mt-10">
             <div className="flex items-center text-lg">
               <div className="flex items-center hover:cursor-pointer" onClick={onLike}>
-                {board?.loginUserLike && (
+                {board?.loginLike && (
                   <div className="text-blue-400">
                     <BiSolidLike />
                   </div>
                 )}
-                {!board?.loginUserLike && <BiLike />}
+                {!board?.loginLike && <BiLike />}
                 <span className="ms-1 me-3">{board?.likes}</span>
               </div>
               <BiCommentDetail />
-              <span className="ms-1">{board?.commentList.length}</span>
+              <span className="ms-1">{board?.commentCount}</span>
             </div>
           </div>
         </div>
@@ -95,12 +101,15 @@ const BoardDetailContent = () => {
         )}
       </div>
       <div>
-        {board?.commentList.map((comment) => (
+        {board?.commentList.map((comment, idx) => (
           <BoardComment
+            key={idx}
             comment={comment}
             cocommentText={cocommentText}
             setCocommentText={setCocommentText}
             onPostCocomment={onPostCocomment}
+            board={board}
+            userSeq={userInfo?.seq}
           />
         ))}
       </div>

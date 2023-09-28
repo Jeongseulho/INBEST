@@ -11,7 +11,8 @@ export interface Board {
   writer: Writer;
   createdDate: string;
   lastModifiedDate: string;
-  loginUserLike: boolean;
+  loginLike: boolean;
+  commentCount: number;
 }
 export interface Writer {
   seq: number;
@@ -48,6 +49,7 @@ export interface Comment {
   seq: string;
   userSeq: number;
   writer: Writer;
+  loginLike: boolean;
 }
 
 export interface Cocomment extends Omit<Comment, "cocommentList"> {}

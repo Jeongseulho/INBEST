@@ -8,7 +8,7 @@ export const useBoardList = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useQuery(["getBoardList", page], () => getBoardList(page), {
     refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
+
     refetchOnMount: true,
   });
   console.log(data);
@@ -19,5 +19,5 @@ export const useBoardList = () => {
     navigate("/");
   }
 
-  return { data, isLoading, boards };
+  return { isLoading, boards };
 };

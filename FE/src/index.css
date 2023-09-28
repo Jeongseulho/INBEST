@@ -221,5 +221,8 @@ body{
 
 
 .animate__animated.animate__fadeIn {
-  --animate-duration: 0.5s;
+  --animate-duration: 0.2s;
+}
+.disabledLinkClassName {
+  @apply border-2 border-black
 }

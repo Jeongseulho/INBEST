@@ -1,4 +1,4 @@
-import { RefObject, useState } from "react";
+import { useState } from "react";
 import { useEffect, useRef } from "react";
 
 export const useBoardMenubar = () => {
@@ -7,6 +7,7 @@ export const useBoardMenubar = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleOutsideClose = (e: { target: any }) => {
       // useRef current에 담긴 엘리먼트 바깥을 클릭 시 드롭메뉴 닫힘
       if (showMenu && !menuRef.current!.contains(e.target)) setShowMenu(false);

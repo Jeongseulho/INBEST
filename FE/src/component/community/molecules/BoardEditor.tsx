@@ -28,7 +28,16 @@ const BoardEditor = ({ title }: { title: string }) => {
     <>
       <QuillEditor quillRef={quillRef} htmlContent={htmlContent} setHtmlContent={setHtmlContent} />
       <div className="justify-end flex my-5">
-        <button onClick={onSubmit}>작성하기</button>
+        {boardSeq && (
+          <button className="jongRyul-primary w-20 h-10" onClick={() => onSubmit("update")}>
+            수정하기
+          </button>
+        )}
+        {!boardSeq && (
+          <button className="jongRyul-primary w-20 h-10" onClick={() => onSubmit("create")}>
+            작성하기
+          </button>
+        )}
       </div>
     </>
   );
