@@ -96,7 +96,7 @@ public class RankController {
 	@Operation(summary = "전체 개인 랭킹 정보 불러오기", description = "start ~ end 범위의 개인 랭킹 정보 불러오기")
 	@Parameters(value = {
 		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
-		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수")
+		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수 (-1: 전체 랭킹 정보)")
 	})
 	@GetMapping("/users")
 	ResponseEntity<Map<String, Object>> getUserRankingInfo(@RequestParam Long start,
@@ -104,7 +104,7 @@ public class RankController {
 		log.info("========== 개인 랭킹: 전체 랭킹 정보 불러오기 시작 ==========");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		Set<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfo(start, end);
+		Set<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfo(start - 1, end - 1);
 
 		log.info("========== 개인 랭킹: 전체 랭킹 정보 불러오기 완료 ==========");
 		resultMap.put("success", true);
@@ -114,7 +114,7 @@ public class RankController {
 
 	@Operation(summary = "내 개인 랭킹 정보 불러오기")
 	@Parameters(value = {
-		@Parameter(required = true, name = "seq", description = "회원 pk")
+		@Parameter(required = true, name = "userSeq", description = "회원 pk")
 	})
 	@GetMapping("/users/{userSeq}")
 	ResponseEntity<Map<String, Object>> getUserRankingInfo(@PathVariable(value = "userSeq") Long userSeq) {
@@ -147,7 +147,7 @@ public class RankController {
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk"),
 		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
-		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수")
+		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수 (-1: 전체 랭킹 정보)")
 	})
 	@GetMapping("/simulation/{simulationSeq}")
 	ResponseEntity<Map<String, Object>> getSimulationUserRankingInfo(
@@ -157,7 +157,7 @@ public class RankController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
-			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, start, end);
+			= simulationRankService.getSimulationUserRankingInfo(simulationSeq, start - 1, end - 1);
 
 		log.info("========== 시뮬레이션 {}번 랭킹: 전체 참가자 랭킹 정보 불러오기 완료 ==========", simulationSeq);
 		resultMap.put("success", true);

@@ -138,6 +138,7 @@ public class SimulationRankRedisRepository {
 		for (String userSeq : simulationUserDtoMap.keySet()) {
 			// 참가자 정보 가져오기
 			RedisSimulationUserDTO simulationUserDto = this.getSimulationUserInfo(simulationSeq, userSeq);
+			log.info("참가자 정보: {}", simulationUserDto.toString());
 
 			// (1) 게임을 떠났다면
 			if (simulationUserDto.getIsExited()) {
@@ -169,22 +170,24 @@ public class SimulationRankRedisRepository {
 				String stockMarketPrice = this.getStockMarketPrice(redisStockUserDto.getType(),
 					redisStockUserDto.getStockCode()); // 주식 시가 정보
 				long totalStockPrice = amount * Long.parseLong(stockMarketPrice); // 보유 중인 주식 가격
+
 				// 참가자가 보유 중인 주식 정보 추가
 				TopStockDTO topStockDto = TopStockDTO.builder()
 					.stockName(redisStockUserDto.getName())
 					.stockMarketPrice(stockMarketPrice)
 					.totalStockPrice(totalStockPrice)
 					.build();
-				log.info(topStockDto.toString());
+				log.info("보유 주식 정보: {}", topStockDto.toString());
 				stockInfoList.add(topStockDto);
 				totalMoney += totalStockPrice; // 총 자산 합산
 			}
+			log.info("--------------------");
 			log.info("총 자산: {}", totalMoney);
 
 			// 2. 수익률 계산하기
 			long seedMoney = simulationUserDto.getSeedMoney();
 			Integer rate = Math.round((float)(totalMoney - seedMoney) / seedMoney * 100);
-			log.info("수익률: {}", rate);
+			log.info("수익률: {}%", rate);
 
 			// 3. 보유 중인 주식 정보 정렬하기 (기준: 보유 중인 주식 가격)
 			stockInfoList.sort((o1, o2) -> o2.getTotalStockPrice().compareTo(o1.getTotalStockPrice()));
@@ -193,14 +196,16 @@ public class SimulationRankRedisRepository {
 			for (TopStockDTO topStockDto : stockInfoList) {
 				log.info(topStockDto.toString());
 			}
+			log.info("--------------------");
 
 			List<TopStockDTO> top3StockInfoList = new ArrayList<>();
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < stockInfoList.size() && i < 3; i++) {
 				top3StockInfoList.add(stockInfoList.get(i));
 			}
 
 			RedisSimulationUserRankingDTO simulationUserRankingDto
 				= RedisSimulationUserRankingDTO.builder()
+				.simulationSeq(simulationSeq)
 				.userSeq(Long.parseLong(userSeq))
 				.totalMoney(totalMoney)
 				.rate(rate)
@@ -216,6 +221,7 @@ public class SimulationRankRedisRepository {
 		int index = 0;
 		long previousTotalMoney = Integer.MAX_VALUE;
 
+		// 시뮬레이션 별 전체 참가자 랭킹 정보 불러오기
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingSet
 			= this.getSimulationUserRankingInfoSet(simulationSeq, 0, -1);
 
