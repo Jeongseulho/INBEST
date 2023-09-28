@@ -1,6 +1,6 @@
 package com.jrjr.invest.rank.service;
 
-import java.util.Set;
+import java.util.List;
 
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
@@ -19,7 +19,7 @@ public interface UserRankService {
 
 	void updateUserRankingInfo(); // 개인 랭킹 산정
 
-	Set<RedisUserDTO> getUserRankingInfo(long start, long end); // 전체 개인 랭킹 정보 불러오기
+	List<RedisUserDTO> getUserRankingInfo(Long start, Long end); // 전체 개인 랭킹 정보 불러오기
 
 	RedisUserDTO getUserRankingInfo(Long seq); // 내 개인 랭킹 정보 불러오기
 
