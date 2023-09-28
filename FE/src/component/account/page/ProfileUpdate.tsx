@@ -52,9 +52,7 @@ const ProfileUpdate = ({
     reset,
     formState: { errors },
   } = useForm<SignupFormValue>();
-  useEffect(() => {
-    console.log(imgInfo);
-  }, [imgInfo]);
+  useEffect(() => {}, [imgInfo]);
   return (
     <>
       <Modal
@@ -128,7 +126,6 @@ const ProfileUpdate = ({
               </div>
               <input
                 onChange={(e) => {
-                  console.log(e.target.files);
                   if (!e.target.files || e.target.files.length === 0 || !e.target) {
                     setIsChanged(false);
                     return;

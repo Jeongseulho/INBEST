@@ -14,6 +14,8 @@ import { getUserInfo } from "../../api/account";
 import { GetUserInfo } from "../../type/Accounts";
 import PasswordUpdate from "../account/page/PasswordUpdate";
 import bell from "../../asset/image/bell.png";
+import login from "../../asset/image/login.png";
+import HeaderAlarmItem from "./HeaderAlarmItem";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -26,29 +28,34 @@ const Header = () => {
   const userInfo = userStore((state) => state.userInfo);
   const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
   return (
-    <header className="w-full h-[8vh] flex justify-between items-center bg-gray-50  bg-opacity-90">
+    <header className="w-full h-[8vh] flex justify-evenly items-center bg-gray-50  bg-opacity-90">
       <Link to="/">
-        <img className="h-[8vh] ms-24 " src={temp_logo} />
+        <img className="h-[8vh] " src={temp_logo} />
       </Link>
-      <div className="grid grid-flow-col gap-24 me-20">
-        <Link to="/invest" className=" text-center text-xl">
+      <div className="flex items-center justify-center gap-16">
+        <Link to="/invest" className=" text-center text-md">
           모의 투자
         </Link>
-        <a className=" text-center text-xl">랭킹</a>
-        <Link to={"/community"} className=" text-center text-xl">
+        <a className=" text-center text-md">랭킹</a>
+        <Link to={"/community"} className=" text-center text-md">
           게시판
         </Link>
-        <a className=" text-center text-xl">금융 상품 추천</a>
-        <a className=" text-center text-xl">금융 사전</a>
-        <a className=" text-center text-xl">관리자 페이지</a>
+        <a className=" text-center text-md">금융 상품 추천</a>
+        <a className=" text-center text-md">금융 사전</a>
+        <a className=" text-center text-md">관리자 페이지</a>
       </div>
-      <div className="me-20 flex items-center justify-center">
-        {!accessToken && (
-          <Link to="/login" className=" text-center text-xl">
-            로그인
+      {!accessToken && (
+        <>
+          <Link to="/login">
+            <div className=" flex items-center justify-center gap-2">
+              <img src={login} width={40} alt="" />
+              <p className=" font-bold text-xl">로그인</p>
+            </div>
           </Link>
-        )}
-        {accessToken && (
+        </>
+      )}
+      {accessToken && (
+        <div className=" flex items-center justify-between">
           <Menu as="div" className="relative inline-block text-left me-10">
             <div style={{ width: "64px", height: "64px" }} className="flex justify-center items-center">
               <Menu.Button
@@ -90,28 +97,25 @@ const Header = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={async () => {
+                          try {
+                            const res = await getUserInfo(userInfo!.seq);
+                            setMyInfo(res.UserInfo);
+                            console.log(myInfo);
+                            setShowModal(true);
+                            console.log(res);
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          " px-4 py-2 flex items-center"
+                          " px-4 py-2 flex items-center cursor-pointer"
                         )}
                       >
                         <BsPencilSquare />
                         <span className="ms-3">
-                          <button
-                            onClick={async () => {
-                              try {
-                                const res = await getUserInfo(userInfo!.seq);
-                                setMyInfo(res.UserInfo);
-                                console.log(myInfo);
-                                setShowModal(true);
-                                console.log(res);
-                              } catch (err) {
-                                console.log(err);
-                              }
-                            }}
-                          >
-                            회원정보수정
-                          </button>
+                          <button>회원정보수정</button>
                         </span>
                       </div>
                     )}
@@ -119,20 +123,17 @@ const Header = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={() => {
+                          setShowPasswordModal(() => true);
+                        }}
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          " px-4 py-2 flex items-center"
+                          " px-4 py-2 flex items-center cursor-pointer"
                         )}
                       >
                         <RiLockPasswordLine />
                         <span className="ms-3">
-                          <button
-                            onClick={() => {
-                              setShowPasswordModal(() => true);
-                            }}
-                          >
-                            비밀번호 변경
-                          </button>
+                          <button>비밀번호 변경</button>
                         </span>
                       </div>
                     )}
@@ -140,27 +141,23 @@ const Header = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <div
+                        onClick={async () => {
+                          try {
+                            await logout();
+                            setAccessToken(null);
+                            setRefreshToken(null);
+                            setUserInfo(null);
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          "px-4 py-2 flex items-center text-red-500 hover:cursor-pointer z-30"
+                          "px-4 py-2 flex items-center text-red-500 hover:cursor-pointer z-30 cursor-pointer"
                         )}
                       >
                         <FiLogOut />
-                        <span
-                          className="ms-3"
-                          onClick={async () => {
-                            try {
-                              await logout();
-                              setAccessToken(null);
-                              setRefreshToken(null);
-                              setUserInfo(null);
-                            } catch (err) {
-                              console.log(err);
-                            }
-                          }}
-                        >
-                          로그아웃
-                        </span>
+                        <span className="ms-3">로그아웃</span>
                       </div>
                     )}
                   </Menu.Item>
@@ -168,9 +165,27 @@ const Header = () => {
               </Menu.Items>
             </Transition>
           </Menu>
-        )}
-        <img src={bell} width={40} />
-      </div>
+          <Menu as="div" className="relative inline-block text-left me-10">
+            <Menu.Button as="img" src={bell} className="cursor-pointer" width={45} />
+
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className=" z-20 absolute -left-6  mt-4 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="py-1">
+                  <HeaderAlarmItem />
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
+        </div>
+      )}
       <ProfileUpdate myInfo={myInfo} showModal={showModal} setShowModal={setShowModal} />
       <PasswordUpdate showModal={showPasswordModal} setShowModal={setShowPasswordModal} />
     </header>

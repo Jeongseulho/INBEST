@@ -23,11 +23,20 @@ export const useBoardEditor = (title: string) => {
     if (description.trim() === "") {
       return toast.error("내용을 입력해 주세요.");
     }
+<<<<<<< FE/src/component/community/molecules/useBoardEditor.tsx
     if (postType === "create") {
       try {
         await createBoard(userInfo!.seq, description, title);
         alert("게시물이 등록되었습니다.");
         queryClient.invalidateQueries("getBoardList");
+=======
+    try {
+      await createBoard(userInfo!.seq, description, title);
+      alert("게시물이 등록되었습니다.");
+      queryClient.invalidateQueries({
+        queryKey: ["getBoardList"],
+      });
+>>>>>>> FE/src/component/community/molecules/useBoardEditor.tsx
 
         navigate("/community");
       } catch (err) {

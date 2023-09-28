@@ -14,8 +14,13 @@ export const useBoardItem = () => {
 
   const onLike = async (boardSeq: string) => {
     try {
+<<<<<<< FE/src/component/community/atoms/useBoardItem.tsx
       await likeBoard(boardSeq);
       queryClient.invalidateQueries("getBoardList");
+=======
+      await likeBoard(boardSeq, userInfo!.seq);
+      queryClient.invalidateQueries({ queryKey: ["getBoardList"] });
+>>>>>>> FE/src/component/community/atoms/useBoardItem.tsx
     } catch (err) {
       console.log(err);
     }

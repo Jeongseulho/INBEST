@@ -7,10 +7,10 @@ interface Props {
   dispatch: React.Dispatch<{ type: "TITLE"; payload: string }>;
   title: string;
   groupSetting: GroupSetting;
-  createGroupMutation: UseMutateFunction<ApiSuccessMessage, unknown, GroupSetting, unknown>;
+  mutate: UseMutateFunction<ApiSuccessMessage, unknown, GroupSetting, unknown>;
 }
 
-const SettingTitle = ({ resetStepAndGroupSetting, dispatch, title, createGroupMutation, groupSetting }: Props) => {
+const SettingTitle = ({ resetStepAndGroupSetting, dispatch, title, mutate, groupSetting }: Props) => {
   const { closeModal } = modalStore();
   return (
     <div className=" relative w-full h-full">
@@ -41,7 +41,7 @@ const SettingTitle = ({ resetStepAndGroupSetting, dispatch, title, createGroupMu
         >
           취소
         </button>
-        <button onClick={() => createGroupMutation(groupSetting)} className=" me-10 ms-5 main-dark-btn">
+        <button onClick={() => mutate(groupSetting)} className=" me-10 ms-5 main-dark-btn">
           모의 투자 그룹 생성
         </button>
       </div>

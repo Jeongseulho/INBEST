@@ -14,7 +14,7 @@ export const useSettingInvite = () => {
       return searchUser(searchUserNickname);
     },
     {
-      enabled: searchUserNickname.length >= 1,
+      enabled: searchUserNickname.length >= 2,
     }
   );
 

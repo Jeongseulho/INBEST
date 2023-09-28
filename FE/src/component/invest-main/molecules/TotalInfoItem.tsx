@@ -2,17 +2,18 @@ import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 import { formatComma } from "../../../util/formatComma";
 interface Props {
   title: string;
-  number: number;
-  fluctuation: number;
+  number: number | undefined;
+  fluctuation: number | undefined;
+  scale: string;
 }
 
-const TotalInfoItem = ({ title, number, fluctuation }: Props) => {
+const TotalInfoItem = ({ title, number, fluctuation, scale }: Props) => {
   return (
     <div className=" flex flex-col">
       <p className=" text-myGray">{title}</p>
       <div className=" flex items-center gap-2">
-        <p className=" font-bold text-3xl">{formatComma(number)}</p>
-        {fluctuation >= 0 ? (
+        <p className=" font-bold text-3xl">{number && formatComma(number) + scale}</p>
+        {fluctuation !== undefined && fluctuation >= 0 ? (
           <div className=" flex items-center">
             <AiOutlineArrowUp
               style={{

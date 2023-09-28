@@ -41,11 +41,14 @@ const InvestingDetail = ({ companyCode, setCompanyCode }: Props) => {
           stiffness: 100,
           damping: 20,
         }}
-        className="absolute top-0 right-0 w-3/5 h-screen bg-gray-100 z-50"
+        className="absolute top-0 right-0 w-3/5 h-[116vh] bg-gray-100 z-50 p-4"
       >
-        <Summary companyCode={companyCode} />
-        <FinancialAndNews companyCode={companyCode} />
-        <StockChart companyCode={companyCode} />
+        <h3 className=" border-b-2 border-gray-600 border-opacity-50 pb-2 ">{companyCode}</h3>
+        <div className=" p-4">
+          <Summary companyCode={companyCode} />
+          <FinancialAndNews companyCode={companyCode} />
+          <StockChart companyCode={companyCode} />
+        </div>
       </motion.div>
     </>
   );

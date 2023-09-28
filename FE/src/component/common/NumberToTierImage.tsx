@@ -1,14 +1,14 @@
 import bronze from "../../asset/image/bronze.png";
 import silver from "../../asset/image/silver.png";
 import gold from "../../asset/image/gold.png";
-import platinum from "../../asset/image/platinum.png";
 import diamond from "../../asset/image/diamond.png";
 
 interface Props {
-  tier: number;
+  tier: number | undefined;
 }
 
 const NumberToTierImage = ({ tier }: Props) => {
+  if (tier === undefined) return <></>;
   return (
     <img
       src={
@@ -18,8 +18,6 @@ const NumberToTierImage = ({ tier }: Props) => {
           ? silver
           : tier >= 200 && tier < 300
           ? gold
-          : tier >= 300 && tier < 400
-          ? platinum
           : diamond
       }
     />

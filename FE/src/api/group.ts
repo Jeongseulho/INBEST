@@ -8,7 +8,7 @@ import {
   InProgressGroupDetail,
   JoinableGroupList,
   JoinableGroupDetail,
-  InvestingStatusList,
+  InvestingStatus,
 } from "../type/Group";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 // import { apiInstance } from ".";
@@ -17,13 +17,21 @@ import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 const apiWithAuth = instanceWithAuth("invest-service/group");
 // const api = apiInstance("invest-service/group");
 
-export const getInvestingStatus = async (): Promise<InvestingStatusList> => {
+export const getInvestingStatus = async (): Promise<InvestingStatus> => {
   const { data } = await apiWithAuth.get("/status");
   return data;
 };
 
 export const createGroup = async (groupSetting: GroupSetting): Promise<ApiSuccessMessage> => {
-  const { data } = await apiWithAuth.post("/", groupSetting);
+  const { userInfo } = userStore.getState();
+  const invitedUserSeqList = groupSetting.invitedUsers.map((user) => user.seq);
+  invitedUserSeqList.push(userInfo!.seq);
+  const { invitedUsers, ...rest } = groupSetting;
+  console.log(invitedUsers);
+  const { data } = await apiWithAuth.post("", {
+    ...rest,
+    userSeqList: invitedUserSeqList,
+  });
   return data;
 };
 
@@ -44,7 +52,7 @@ export const getWaitingGroupDetail = async (simulationSeq: number): Promise<Wait
 };
 
 export const getInProgressGroupDetail = async (simulationSeq: number): Promise<InProgressGroupDetail> => {
-  const { data } = await apiWithAuth.get("/details", { params: { simulationSeq, progressState: "inprogress" } });
+  const { data } = await apiWithAuth.get("/details", { params: { simulationSeq, progressState: "inProgress" } });
   return data;
 };
 

@@ -3,12 +3,16 @@ import group from "../../../asset/image/group.png";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import modalStore from "../../../store/modalStore";
 import GroupSkeleton from "../molecules/GroupSkeleton";
-import { useQuery } from "react-query";
-import { getMyGroupList } from "../../../api/group";
+import { MyGroupList } from "../../../type/Group";
 
-const MyGroupList = () => {
+interface Props {
+  data: MyGroupList | undefined;
+  isLoading: boolean;
+}
+
+const MyGroupList = ({ data, isLoading }: Props) => {
   const { openModal } = modalStore();
-  const { data, isLoading } = useQuery("myGroupList", getMyGroupList);
+
   return (
     <div className="w-4/5 flex flex-col text-center px-4 shadow-component">
       <div className=" flex items-center gap-4">

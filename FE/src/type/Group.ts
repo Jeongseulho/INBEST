@@ -1,21 +1,21 @@
-export type InvestingStatusType =
-  | "totalUserNum"
-  | "currentUserNum"
-  | "InprogressUserNum"
-  | "InprogressGroupNum"
-  | "finishedGroupNum"
-  | "revenueRateFluctuation";
-
-export type InvestingStatusList = {
-  type: InvestingStatusType;
-  value: number;
-  fluctuation: number;
-}[];
-
+export interface InvestingStatus {
+  totalUserNum: number;
+  totalUserNumFluctuation: number;
+  currentUserNum: number;
+  currentUserNumFluctuation: number;
+  inprogressUserNum: number;
+  inprogressUserNumFluctuation: number;
+  finishedGroupNum: number;
+  finishedGroupNumFluctuation: number;
+  inprogressGroupNum: number;
+  inprogressGroupNumFluctuation: number;
+  revenueRate: number;
+  revenueRateFluctuation: number;
+}
 export interface SearchUser {
-  profile: string;
+  profileImgSearchName: string;
   nickname: string;
-  userSeq: number;
+  seq: number;
 }
 export type SearchUserList = SearchUser[];
 
@@ -36,7 +36,7 @@ export interface WaitingGroupDetail {
   seedMoney: number;
   period: number;
   averageTier: number;
-  currentMemberImage: string[];
+  currentMemberImageList: string[];
   ownerSeq: number;
 }
 
@@ -46,9 +46,9 @@ export interface InProgressGroupDetail {
   averageTier: number;
   rankInGroup: number;
   rankInGroupFluctuation: number;
-  currentMemberImage: string[];
+  currentMemberImageList: string[];
   startDate: string;
-  endDate: string;
+  period: number;
 }
 
 export interface JoinableGroup {

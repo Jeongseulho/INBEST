@@ -3,6 +3,6 @@ interface Props {
 }
 
 const Summary = ({ companyCode }: Props) => {
-  return <div>{companyCode}</div>;
+  return <div className=" shadow-component">{companyCode}</div>;
 };
 export default Summary;

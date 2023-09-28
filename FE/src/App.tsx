@@ -44,7 +44,6 @@ function App() {
                 <Route path="create" element={<CommunityCreate />} />
                 <Route path="detail" element={<CommunityDetail />} />
               </Route>
-              <Route path="/invest/:groupCode" element={<Investing />} />
               <Route path="/invest/:simulationSeq" element={<Investing />} />
               <Route path="/community" element={<Community />}></Route>
             </Routes>
