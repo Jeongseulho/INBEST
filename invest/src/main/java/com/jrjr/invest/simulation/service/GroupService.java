@@ -1,8 +1,14 @@
 package com.jrjr.invest.simulation.service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.swing.text.Document;
+
+import org.springframework.cglib.core.Local;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -12,6 +18,7 @@ import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.GroupDTO;
 import com.jrjr.invest.simulation.dto.InProgressGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.JoinableGroupDetailsDTO;
+import com.jrjr.invest.simulation.dto.LoginHistoryDTO;
 import com.jrjr.invest.simulation.dto.MyInProgressGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.MyWaitingGroupDetailsDTO;
 import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
@@ -20,6 +27,7 @@ import com.jrjr.invest.simulation.dto.WaitingGroupDetailsDTO;
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.entity.SimulationUser;
 import com.jrjr.invest.simulation.entity.User;
+import com.jrjr.invest.simulation.repository.LoginHistoryRepository;
 import com.jrjr.invest.simulation.repository.SimulationRepository;
 import com.jrjr.invest.simulation.repository.SimulationUserRepository;
 import com.jrjr.invest.simulation.repository.UserRepository;
@@ -37,6 +45,7 @@ public class GroupService {
 	private final SimulationRepository simulationRepository;
 	private final SimulationUserRepository simulationUserRepository;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
+	private final LoginHistoryRepository loginHistoryRepository;
 
 	public List<UserDTO> searchUsers(String keyword) {
 		log.info("[그룹 생성 시, 초대를 위한 유저 목록 검색]");
@@ -458,5 +467,82 @@ public class GroupService {
 		if(simulation.getMemberNum() == 0){
 			simulationRepository.delete(simulation);
 		}
+	}
+	//전체 유저 개수
+	public Integer getTotalUserNum(){
+		return (int)userRepository.count();
+	}
+	//오늘 회원가입한 사람잧기
+	public Integer getTotalUserNumFluctuation(){
+		return userRepository.countByCreatedDateAfter(LocalDateTime.of(LocalDateTime.now().toLocalDate(),
+			LocalTime.of(0,0,0))).intValue();
+	}
+	//오늘 로그인한 유저 찾기
+	public Integer getCurrentUserNum (){
+		LocalDateTime todayStart = LocalDateTime.of(
+			LocalDateTime.now().toLocalDate(),LocalTime.of(0,0,0));
+
+		Long currentUserNum = loginHistoryRepository.countTodayLoginHistory(todayStart);
+		return currentUserNum.intValue();
+	}
+
+	//5분전 로그인한 유저 개수
+	public Integer getCurrentUserNumFluctuation  (){
+		LocalDateTime beforeFiveMinutes = LocalDateTime.now().minusMinutes(5);
+
+		Long userNum = loginHistoryRepository.countTodayLoginHistory(beforeFiveMinutes);
+
+		return userNum.intValue();
+	}
+
+	//현재 모의투자 시작 이후 진행중 인원 수
+	public Integer getInprogressUserNum(){
+		Long inProgressUserNum = simulationUserRepository.countAllStartUser().orElse(0L);
+
+		return inProgressUserNum.intValue();
+	}
+	//오늘 시작한 그룹들의 인원 수의 합
+	public Integer getTodayInprogressUserNum(){
+		LocalDateTime today = LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.of(0,0,0));
+		Long todayInProgressUserNum = simulationUserRepository.countAllTodayStartUser(today).orElse(0L);
+
+		return todayInProgressUserNum.intValue();
+	}
+	//현재 모의투자 진행중 그룹 수
+	public Integer getInprogressGroupNum(){
+		// LocalDateTime today = LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.of(0,0,0));
+		Long inProgressGroupNum = simulationUserRepository.countAllStartSimulation().orElse(0L);
+
+		return inProgressGroupNum.intValue();
+	}
+	//오늘 시작한 그룹의 수
+	public Integer getInprogressGroupNumFluctuation (){
+		LocalDateTime today = LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.of(0,0,0));
+		Long inProgressGroupNum = simulationUserRepository.countAllTodayStartSimulation(today).orElse(0L);
+
+		return inProgressGroupNum.intValue();
+	}
+	//이때까지 누적하여 종료된 모의투자 수
+	public Integer getFinishedGroupNum (){
+		Long finishedGroupNum = simulationUserRepository.countAllFinishedSimulation().orElse(0L);
+
+		return finishedGroupNum.intValue();
+	}
+	//어제 종료된 모의투자 수
+	public Integer getFinishedGroupNumFluctuation (){
+		LocalDateTime yesterday = LocalDateTime.of(LocalDateTime.now().minusDays(1).toLocalDate(),
+			LocalTime.of(0,0,0));
+		LocalDateTime today = LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.of(0,0,0));
+
+		Long finishedGroupNum = simulationUserRepository.countAllTodayFinishedSimulation(yesterday,today).orElse(0L);
+
+		return finishedGroupNum.intValue();
+	}
+	//종료된 모든 그룹의 수익률을 계산하여 수익률 변화 %
+	public Integer getRevenueRateFluctuation  (){
+
+		Double averageRate = simulationRepository.getAverageRevenuRate().orElse(0D);
+
+		return averageRate.intValue();
 	}
 }

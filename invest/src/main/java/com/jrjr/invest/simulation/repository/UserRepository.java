@@ -1,5 +1,6 @@
 package com.jrjr.invest.simulation.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,5 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findByNicknameContains(String keyword);
 
 	User findBySeq(Long seq);
+
+	Long countByCreatedDateAfter(LocalDateTime localDateTime);
 }
 

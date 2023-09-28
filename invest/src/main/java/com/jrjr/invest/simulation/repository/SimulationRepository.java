@@ -1,6 +1,7 @@
 package com.jrjr.invest.simulation.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface SimulationRepository extends JpaRepository<Simulation, Long> {
 	@Query("select s from Simulation s where s.startDate is null and s.finishedDate is null and s.seq not in (select su.simulation.seq from SimulationUser su where su.user.seq = :userSeq) ")
 	List<Simulation> findJoinableGroup(Long userSeq);
 	List<Simulation> findByFinishedDateIsNotNullOrderByRevenuRateDesc();
+	@Query("select avg (revenuRate) from Simulation where revenuRate is not null and finishedDate is not null")
+	Optional<Double> getAverageRevenuRate();
 }
