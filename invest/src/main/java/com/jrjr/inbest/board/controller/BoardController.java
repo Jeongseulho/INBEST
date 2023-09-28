@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,6 @@ import com.jrjr.inbest.board.dto.UserDTO;
 import com.jrjr.inbest.board.service.BoardService;
 import com.jrjr.inbest.board.service.CommentService;
 import com.jrjr.inbest.board.service.UserService;
-import com.jrjr.inbest.global.jwt.JwtProvider;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,11 +37,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/boards")
 @Tag(name = "자유게시판(게시물, 댓글, 좋아요)", description = "자유게시판 API")
-// @CrossOrigin(origins = {"http://localhost:5173", "http://j9d110.p.ssafy.io"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://j9d110.p.ssafy.io"})
 public class BoardController {
 	private final BoardService boardService;
 	private final CommentService commentService;
-	private final JwtProvider jwtProvider;
 	private final UserService userService;
 
 	@Operation(summary = "게시판 개수", description = "검색한 게시물 결과의 전체 개수를 long으로 보내줌. 이때 검색어가 없는 경우는 전체 게시물을 줌")
