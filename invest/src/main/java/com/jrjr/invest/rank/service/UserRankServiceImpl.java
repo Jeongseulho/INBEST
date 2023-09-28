@@ -118,8 +118,8 @@ public class UserRankServiceImpl implements UserRankService {
 		전체 개인 랭킹 정보 불러오기
 	 */
 	@Override
-	public Set<RedisUserDTO> getUserRankingInfo(long start, long end) {
-		return userRankRedisRepository.getUserRankingInfoSet(start, end);
+	public List<RedisUserDTO> getUserRankingInfo(Long start, Long end) {
+		return userRankRedisRepository.getUserRankingInfoList(start, end);
 	}
 
 	/*
