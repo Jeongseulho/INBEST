@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/boards")
 @Tag(name = "자유게시판(게시물, 댓글, 좋아요)", description = "자유게시판 API")
-@CrossOrigin(origins = {"http://localhost:5173", "http://j9d110.p.ssafy.io"})
+// @CrossOrigin(origins = {"http://localhost:5173", "http://j9d110.p.ssafy.io"})
 public class BoardController {
 	private final BoardService boardService;
 	private final CommentService commentService;
