@@ -24,23 +24,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimulationRankRedisRepository {
 
-	private final HashOperations<String, String, RedisUserDTO> userHash;
-	private final HashOperations<String, String, RedisSimulationUserDTO> simulationUserHash;
-	private final HashOperations<String, String, RedisStockDTO> stockHash;
-	private final HashOperations<String, String, RedisStockUserDTO> stockUserHash;
-	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet;
+	private final HashOperations<String, String, RedisUserDTO> userHash; // key: USER_HASH_KEY
+	private final HashOperations<String, String, RedisSimulationUserDTO> simulationUserHash; // key: simulation_simulationSeq
+	private final HashOperations<String, String, RedisStockDTO> stockHash; // key: STOCK_HASH_KEY
+	private final HashOperations<String, String, RedisStockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
+	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet; // key: simulation_simulationSeq_sort
 
 	static final String USER_HASH_KEY = "user";
 
 	static final String STOCK_HASH_KEY = "stock";
-
-	/*
-		userHash 의 key: USER_HASH_KEY
-		simulationUserHash 의 key: simulation_simulationSeq
-		stockHash 의 key: STOCK_HASH_KEY
-		stockUserHash 의 key: simulation_simulationSeq_user_userSeq
-		simulationUserRankingZSet 의 key: simulation_simulationSeq_sort
-	 */
 
 	@Autowired
 	public SimulationRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
@@ -101,7 +93,7 @@ public class SimulationRankRedisRepository {
 	}
 
 	/*
-		시뮬레이션 별 전체 랭킹 정보 가져오기 
+		시뮬레이션 별 전체 참가자 랭킹 정보 불러오기
 	 */
 	public Set<RedisSimulationUserRankingDTO> getSimulationUserRankingInfoSet(Long simulationSeq, long start,
 		long end) {
@@ -110,7 +102,7 @@ public class SimulationRankRedisRepository {
 	}
 
 	/*
-		시뮬레이션 별 참가자 랭킹 정보 가져오기
+		시뮬레이션 별 내 랭킹 정보 불러오기
 	 */
 	public RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq) {
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
@@ -134,9 +126,9 @@ public class SimulationRankRedisRepository {
 	}
 
 	/*
-		시뮬레이션 별 랭킹 정보 산정
+		시뮬레이션 별 참가자 랭킹 정보 산정
 	 */
-	public void updateSimulationUserRankingList(Long simulationSeq) {
+	public void updateSimulationUserRankingInfo(Long simulationSeq) {
 		// simulation_seq_sort 기존 랭킹 정보 초기화
 		this.deleteSimulationUserRankingInfo(simulationSeq);
 		String simulationUserRankingKey = "simulation_" + simulationSeq + "_sort";
@@ -276,7 +268,7 @@ public class SimulationRankRedisRepository {
 	}
 
 	/*
-		시뮬레이션 별 평균 티어 점수 산정
+		시뮬레이션의 평균 티어 정보 가져오기
 	 */
 	public Integer getSimulationAvgTierInfo(Long simulationSeq) {
 		Map<String, RedisSimulationUserDTO> simulationUserDtoMap = this.getSimulationUserInfoMap(simulationSeq);

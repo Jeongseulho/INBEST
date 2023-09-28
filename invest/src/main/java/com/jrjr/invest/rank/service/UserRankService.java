@@ -7,27 +7,23 @@ import com.jrjr.invest.rank.dto.RedisUserDTO;
 
 public interface UserRankService {
 
-	void insertUserInfo(RedisUserDTO redisUserDto);
+	void insertUserInfo(RedisUserDTO redisUserDto); // 회원 정보 추가
 
-	void updateUserProfileInfo(RedisUserDTO redisUserDto);
+	void updateUserProfileInfo(RedisUserDTO redisUserDto); // 회원 프로필 정보 수정
 
-	void deleteUserInfo(Long seq);
+	void deleteUserInfo(Long seq); // 회원 정보 삭제
 
-	void updateUserTierAndRateInfo(Long seq);
+	void updateUserTierAndRateInfo(Long seq); // 회원 티어 및 수익률 정보 업데이트
 
-	void updateAllUserTierAndRateInfo();
+	void updateAllUserTierAndRateInfo(); // 전체 회원 티어 및 수익률 정보 업데이트
 
-	void updateUserRankingInfo();
+	void updateUserRankingInfo(); // 개인 랭킹 산정
 
-	Set<RedisUserDTO> getUserRankingInfo(long start, long end);
+	Set<RedisUserDTO> getUserRankingInfo(long start, long end); // 전체 개인 랭킹 정보 불러오기
 
-	RedisUserDTO getMyUserRankingInfo(Long seq);
+	RedisUserDTO getUserRankingInfo(Long seq); // 내 개인 랭킹 정보 불러오기
 
-	void updateTierRankInfo();
+	void updateTierDistributionChartInfo(); // 티어 분포 산정
 
-	RedisTierRankDTO getTierRankInfo();
-
-	void printUserInfoList();
-
-	void printSortedUserInfoList(long start, long end);
+	RedisTierRankDTO getTierDistributionChartInfo(); // 티어 분포도 정보 불러오기
 }

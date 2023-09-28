@@ -35,21 +35,33 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 	private final TradingRepository tradingRepository;
 	private final FinancialdataCompanyRepository financialdataCompanyRepository;
 
+	/*
+		시뮬레이션 별 참가자 랭킹 정보 산정
+	 */
 	@Override
-	public void updateSimulationUserRanking(Long simulationSeq) {
-		simulationRankRedisRepository.updateSimulationUserRankingList(simulationSeq);
+	public void updateSimulationUserRankingInfo(Long simulationSeq) {
+		simulationRankRedisRepository.updateSimulationUserRankingInfo(simulationSeq);
 	}
 
+	/*
+		시뮬레이션 별 전체 참가자 랭킹 정보 불러오기
+	 */
 	@Override
 	public Set<RedisSimulationUserRankingDTO> getSimulationUserRankingInfo(Long simulationSeq, Long start, Long end) {
 		return simulationRankRedisRepository.getSimulationUserRankingInfoSet(simulationSeq, start, end);
 	}
 
+	/*
+		시뮬레이션 별 내 랭킹 정보 불러오기
+	 */
 	@Override
 	public RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq) {
 		return simulationRankRedisRepository.getSimulationUserRankingInfo(simulationSeq, userSeq);
 	}
 
+	/*
+		전체 시뮬레이션 랭킹 정보 불러오기 (종료된 시뮬레이션)
+	 */
 	@Override
 	public List<SimulationRankingDTO> getSimulationRankingInfo() {
 		List<Simulation> simulationList = simulationRepository.findByFinishedDateIsNotNullOrderByRevenuRateDesc();
@@ -232,6 +244,9 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		return topStockDto;
 	}
 
+	/*
+		시뮬레이션의 평균 티어 정보 가져오기
+	 */
 	@Override
 	public Integer getSimulationAvgTierInfo(Long simulationSeq) {
 		return simulationRankRedisRepository.getSimulationAvgTierInfo(simulationSeq);
