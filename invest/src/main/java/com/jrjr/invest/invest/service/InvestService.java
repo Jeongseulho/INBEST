@@ -78,9 +78,9 @@ public class InvestService {
 			}
 
 			//redis에 엑세스토큰 저장(연산 시간을 고려하여 20초 빼기)
-			hanTuAccessTokenRedisTemplate.expire("APIaccessToken",accessToken.getExpires_in()-20, TimeUnit.SECONDS);
 			hashOperations = hanTuAccessTokenRedisTemplate.opsForHash();
 			hashOperations.put("APIaccessToken","HanTu",accessToken);
+			hanTuAccessTokenRedisTemplate.expire("APIaccessToken",accessToken.getExpires_in()-20, TimeUnit.SECONDS);
 		}
 
 		return accessToken;
