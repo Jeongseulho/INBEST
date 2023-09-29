@@ -31,14 +31,4 @@ public class MessageService {
         log.info("invest message sent: {}", messageDTO.toString());
         rabbitTemplate.convertAndSend("realtime_direct", "invest", messageDTO);
     }
-
-    /**
-     * Queue에서 메시지를 구독
-     *
-     * @param messageDTO 구독한 메시지를 담고 있는 MessageDto 객체
-     */
-    @RabbitListener(queues = "invest-queue")
-    public void receiveMessage(MessageDTO messageDTO) {
-        log.info("invest Received message: {}", messageDTO.toString());
-    }
 }
