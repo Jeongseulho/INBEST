@@ -44,13 +44,13 @@ const InvestingDetail = ({ companyCode, setCompanyCode }: Props) => {
           stiffness: 100,
           damping: 20,
         }}
-        className="absolute top-0 right-0 w-3/5 min-h-[121vh] bg-gray-100 z-50 p-4"
+        className="absolute top-0 right-0 w-3/5 min-h-[120vh] bg-gray-100 z-50 p-4"
       >
         <div className=" border-b-2 border-gray-600 border-opacity-50 flex justify-between items-end">
           <h3>{companyCode}</h3>
           <div className=" flex h-full w-1/2 justify-center gap-10">
             <button
-              className={`border-b-4 hover:text-mainMoreDark ${
+              className={`border-b-4 hover:text-mainMoreDark transition-colors duration-300 ${
                 companyDetailTab === "summary" ? " text-mainMoreDark border-main " : " text-gray-500 border-opacity-0"
               }`}
               onClick={() => setCompanyDetailTab("summary")}
@@ -58,7 +58,7 @@ const InvestingDetail = ({ companyCode, setCompanyCode }: Props) => {
               분석 요약
             </button>
             <button
-              className={`border-b-4 hover:text-mainMoreDark ${
+              className={`border-b-4 hover:text-mainMoreDark transition-colors duration-300  ${
                 companyDetailTab === "news" ? "text-mainMoreDark border-main" : "text-gray-500 border-opacity-0 "
               }`}
               onClick={() => setCompanyDetailTab("news")}
@@ -66,7 +66,7 @@ const InvestingDetail = ({ companyCode, setCompanyCode }: Props) => {
               재무제표 / 뉴스
             </button>
             <button
-              className={`border-b-4 hover:text-mainMoreDark ${
+              className={`border-b-4 hover:text-mainMoreDark transition-colors duration-300  ${
                 companyDetailTab === "chart" ? "text-mainMoreDark border-main" : "text-gray-500 border-opacity-0 "
               }`}
               onClick={() => setCompanyDetailTab("chart")}
@@ -74,7 +74,7 @@ const InvestingDetail = ({ companyCode, setCompanyCode }: Props) => {
               시세 차트
             </button>
             <button
-              className={`border-b-4 hover:text-mainMoreDark ${
+              className={`border-b-4 hover:text-mainMoreDark transition-colors duration-300  ${
                 companyDetailTab === "trade" ? "text-mainMoreDark border-main" : "text-gray-500 border-opacity-0 "
               }`}
               onClick={() => setCompanyDetailTab("trade")}

@@ -12,8 +12,6 @@ const BuyStatus = ({ maxAmount, amount, price }: Props) => {
   useEffect(() => {
     setPercent((amount / maxAmount) * 10);
   }, [amount, maxAmount]);
-  console.log(percent);
-  console.log(maxAmount);
   return (
     <div className=" flex gap-1">
       <div className=" w-1/2 bg-lightRed bg-opacity-30 text-right rounded-sm flex items-center justify-start gap-1">

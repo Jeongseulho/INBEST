@@ -10,7 +10,7 @@ interface Props {
 const SellStatus = ({ maxAmount, amount, price }: Props) => {
   const [percent, setPercent] = useState(0);
   useEffect(() => {
-    setPercent((amount / maxAmount) * 10);
+    setPercent((amount / maxAmount) * 25);
   }, [amount, maxAmount]);
 
   return (
