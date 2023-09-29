@@ -17,12 +17,9 @@ const CommunityTop10 = () => {
         <p className=" ms-2">인기글</p>
       </div>
       {boardList?.map((board, idx) => (
-        <Link to={`detail?seq=${board.seq}`}>
-          <div className="flex justify-center items-center" key={idx}>
-            <div
-              className="w-[90%] justify-between flex h-10 border border-opacity-30 rounded-lg my-1 shadow-sm"
-              key={idx}
-            >
+        <Link to={`detail?seq=${board.seq}`} key={idx}>
+          <div className="flex justify-center items-center">
+            <div className="w-[90%] justify-between flex h-10 border border-opacity-30 rounded-lg my-1 shadow-sm">
               <div className="flex justify-center items-center">
                 {idx <= 2 && (
                   <img src={(idx === 0 && gold) || (idx === 1 && silver) || (idx === 2 && bronze) || ""}></img>
@@ -35,7 +32,7 @@ const CommunityTop10 = () => {
               <div className="flex justify-center items-center me-3">
                 {" "}
                 <div className="text-main me-1">
-                  <BiSolidLike />
+                  <BiSolidLike key={idx} />
                 </div>
                 <p className="text-sm text-mainMoreDark">{board.likes}</p>
               </div>

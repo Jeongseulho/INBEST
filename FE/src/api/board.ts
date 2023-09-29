@@ -14,15 +14,27 @@ export const createBoard = async (userSeq: number, context: string, title: strin
   return data;
 };
 
-export const getBoardList = async (pageNo: number, order: number): Promise<GetBoardList> => {
+export const getBoardList = async (pageNo: number, order: number, keyword: string | null): Promise<GetBoardList> => {
   let responseData;
   if (order === 0) {
-    const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10 } });
-    responseData = data;
+    if (keyword) {
+      const check_kor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; // 한글인지 식별해주기 위한 정규표현식
+      let lastKeyword;
+      if (keyword.match(check_kor)) {
+        lastKeyword = encodeURI(keyword); // 한글 인코딩
+      } else {
+        lastKeyword = keyword;
+      }
+      const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10, keyword: lastKeyword } });
+      responseData = data;
+    } else {
+      const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10 } });
+      responseData = data;
+    }
   } else if (order === 1) {
     const { data } = await apiWithAuth.get("most-likes", { params: { pageNo, pageSize: 10, period: 100 } });
     responseData = data;
-  } else {
+  } else if (order === 2) {
     const { data } = await apiWithAuth.get("most-views", { params: { pageNo, pageSize: 10, period: 100 } });
     responseData = data;
   }
@@ -98,7 +110,7 @@ export const putCocomment = async (
   context: string,
   cocomentSeq: string
 ): Promise<Comment> => {
-  const { data } = await apiWithAuth.put(`/${boardSeq}/comments/${commentSeq}/cocoments/${cocomentSeq}`, { context });
+  const { data } = await apiWithAuth.put(`/${boardSeq}/comments/${commentSeq}/cocomments/${cocomentSeq}`, { context });
   return data;
 };
 
