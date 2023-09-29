@@ -3,6 +3,8 @@ package com.jrjr.invest.simulation.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.jrjr.invest.simulation.dto.*;
+import com.jrjr.invest.simulation.service.MessageService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
-import com.jrjr.invest.simulation.dto.GroupDTO;
-import com.jrjr.invest.simulation.dto.GroupUserDTO;
-import com.jrjr.invest.simulation.dto.SimulationSeqDTO;
-import com.jrjr.invest.simulation.dto.StatusDTO;
-import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.service.GroupService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +29,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GroupController {
 	private final GroupService groupService;
+	private final MessageService messageService;
+
+	@PostMapping("/sendMessage")
+	ResponseEntity<?> sendMessage(@RequestBody MessageDTO messageDTO) {
+		log.info("========== 메시지 송신 ==========");
+		log.info(messageDTO.toString());
+		messageService.sendMessage(messageDTO);
+
+		return ResponseEntity.ok().build();
+	}
 	// 그룹 생성
 	@Operation(summary = "모의 투자방 생성")
 	@PostMapping()
