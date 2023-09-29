@@ -2,104 +2,116 @@ package com.jrjr.invest.global.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.jrjr.invest.invest.service.Receiver;
-
 @Configuration
-@EnableRabbit
 public class RabbitMqConfig {
-	static final String CHAT_QUEUE_NAME = "chat.queue";
-	static final String CHAT_EXCHANGE_NAME = "chat.exchange";
-	static final String ROUTING_KEY = "room.*";
 
 	@Value("${spring.rabbitmq.host}")
-	private String host;
+	private String rabbitmqHost;
 
 	@Value("${spring.rabbitmq.port}")
-	private Integer port;
+	private int rabbitmqPort;
 
 	@Value("${spring.rabbitmq.username}")
-	private String username;
+	private String rabbitmqUsername;
 
 	@Value("${spring.rabbitmq.password}")
-	private String password;
+	private String rabbitmqPassword;
+
+	// Exchange 이름
+	private static final String EXCHANGE_NAME = "realtime_direct";
+
+	// Queue 이름
+	private static final String INVEST_QUEUE_NAME = "invest-queue";
+	private static final String TRADING_QUEUE_NAME = "trading-queue";
+	private static final String CHAT_QUEUE_NAME = "chat-queue";
+
+	// 라우팅 키
+	private static final String INVEST_ROUTING_KEY = "invest";
+	private static final String TRADING_ROUTING_KEY = "trading";
+	private static final String CHAT_ROUTING_KEY = "chat";
 
 	@Bean
-	Queue queue() {
-		return new Queue(CHAT_QUEUE_NAME, false);
-	} // durable : RabbitMQ 서버가 재시작될 때 지속성
-
-	@Bean
-	TopicExchange exchange() {
-		return new TopicExchange(CHAT_EXCHANGE_NAME);
+	public DirectExchange directExchange() {
+		return new DirectExchange(EXCHANGE_NAME);
 	}
 
 	@Bean
-	Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder
-				.bind(queue)
-				.to(exchange)
-				.with(ROUTING_KEY);
+	public Queue investQueue() {
+		return new Queue(INVEST_QUEUE_NAME);
 	}
 
 	@Bean
-	public RabbitTemplate rabbitTemplate() {
-		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory());
-		rabbitTemplate.setMessageConverter(jsonMessageConverter());
-		rabbitTemplate.setRoutingKey(ROUTING_KEY);
+	public Queue tradingQueue() {
+		return new Queue(TRADING_QUEUE_NAME);
+	}
+
+	@Bean
+	public Queue chatQueue() {
+		return new Queue(CHAT_QUEUE_NAME);
+	}
+
+	@Bean
+	public Binding investBinding(DirectExchange directExchange, Queue investQueue) {
+		return BindingBuilder.bind(investQueue).to(directExchange).with(INVEST_ROUTING_KEY);
+	}
+
+	@Bean
+	public Binding tradingBinding(DirectExchange directExchange, Queue tradingQueue) {
+		return BindingBuilder.bind(tradingQueue).to(directExchange).with(TRADING_ROUTING_KEY);
+	}
+
+	@Bean
+	public Binding chatBinding(DirectExchange directExchange, Queue chatQueue) {
+		return BindingBuilder.bind(chatQueue).to(directExchange).with(CHAT_ROUTING_KEY);
+	}
+
+	/**
+	 * RabbitMQ 연결을 위한 ConnectionFactory 빈을 생성하여 반환
+	 *
+	 * @return ConnectionFactory 객체
+	 */
+	@Bean
+	public ConnectionFactory connectionFactory() {
+		CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+		connectionFactory.setHost(rabbitmqHost);
+		connectionFactory.setPort(rabbitmqPort);
+		connectionFactory.setUsername(rabbitmqUsername);
+		connectionFactory.setPassword(rabbitmqPassword);
+		return connectionFactory;
+	}
+
+	/**
+	 * RabbitTemplate을 생성하여 반환
+	 *
+	 * @param connectionFactory RabbitMQ와의 연결을 위한 ConnectionFactory 객체
+	 * @return RabbitTemplate 객체
+	 */
+	@Bean
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+		// JSON 형식의 메시지를 직렬화하고 역직렬할 수 있도록 설정
+		rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter());
 		return rabbitTemplate;
 	}
 
+	/**
+	 * Jackson 라이브러리를 사용하여 메시지를 JSON 형식으로 변환하는 MessageConverter 빈을 생성
+	 *
+	 * @return MessageConverter 객체
+	 */
 	@Bean
-	public Jackson2JsonMessageConverter jsonMessageConverter(){
+	public MessageConverter jackson2JsonMessageConverter() {
 		return new Jackson2JsonMessageConverter();
 	}
-
-	@Bean
-	public ConnectionFactory connectionFactory() {
-		CachingConnectionFactory factory = new CachingConnectionFactory();
-		factory.setHost(host);
-		factory.setPort(port);
-		factory.setUsername(username);
-		factory.setPassword(password);
-		return factory;
-	}
-
-	@Bean
-	public SimpleMessageListenerContainer container() {
-		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-		container.setConnectionFactory(connectionFactory());
-		container.setQueueNames(CHAT_QUEUE_NAME);
-		// container.setMessageListener(null);
-		return container;
-	}
-
-	// @Bean
-	// SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-	// 	MessageListenerAdapter listenerAdapter) {
-	// 	SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-	// 	container.setConnectionFactory(connectionFactory);
-	// 	container.setQueueNames(CHAT_QUEUE_NAME);
-	// 	container.setMessageListener(listenerAdapter);
-	// 	return container;
-	// }
-
-
-	@Bean
-	MessageListenerAdapter listenerAdapter(Receiver receiver) {
-		return new MessageListenerAdapter(receiver, "receiveMessage");
-	}
-
 }

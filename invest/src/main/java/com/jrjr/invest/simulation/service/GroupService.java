@@ -8,22 +8,15 @@ import java.util.Map;
 
 import javax.swing.text.Document;
 
+import com.jrjr.invest.global.config.RabbitMqConfig;
+import com.jrjr.invest.simulation.dto.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jrjr.invest.rank.service.SimulationRankService;
-import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
-import com.jrjr.invest.simulation.dto.GroupDTO;
-import com.jrjr.invest.simulation.dto.InProgressGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.JoinableGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.LoginHistoryDTO;
-import com.jrjr.invest.simulation.dto.MyInProgressGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.MyWaitingGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
-import com.jrjr.invest.simulation.dto.UserDTO;
-import com.jrjr.invest.simulation.dto.WaitingGroupDetailsDTO;
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.entity.SimulationUser;
 import com.jrjr.invest.simulation.entity.User;
@@ -46,6 +39,7 @@ public class GroupService {
 	private final SimulationUserRepository simulationUserRepository;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
 	private final LoginHistoryRepository loginHistoryRepository;
+	private final RabbitTemplate rabbitTemplate;
 
 	public List<UserDTO> searchUsers(String keyword) {
 		log.info("[그룹 생성 시, 초대를 위한 유저 목록 검색]");
@@ -86,7 +80,16 @@ public class GroupService {
 		simulation = simulationRepository.findBySeq(simulation.getSeq());
 		//모의 투자에 방장을 가입시키기
 		joinGroup(simulation.getSeq(),owner.getSeq());
-		
+
+		// 모의 투자에 유저 초대하기
+		for (Long userSeq : groupDTO.getUserSeqList()) {
+
+			if (userSeq == owner.getSeq()) {
+				continue;
+			}
+
+			inviteUser(simulation.getSeq(), owner.getNickname(), userSeq);
+		}
 		// simulation = simulationRepository.findBySeq(simulation.getSeq());
 		// SimulationUser 저장
 		// if (groupDTO.getUserSeqList() == null) {
@@ -133,6 +136,13 @@ public class GroupService {
 		// 				.build());
 		// }
 
+	}
+	// 친구 초대 알림 보내기
+	private void inviteUser(Long simulationSeq, String ownerNickname, Long userSeq) {
+		String simulationTitle = simulationRepository.findBySeq(simulationSeq).getTitle();
+		String message = ownerNickname + "님이 " + simulationTitle + "에 초대하셨습니다.";
+		MessageDTO messageDTO = MessageDTO.builder().content(message).title("title").build();
+		rabbitTemplate.convertAndSend("realtime_direct", "invest", messageDTO);
 	}
 
 	// redis Key 생성
