@@ -123,7 +123,7 @@ const GeneralLogin = () => {
                 })}
               />
               <button
-                className={`${isConfirmEmail ? "disable-btn" : "primary-btn"} w-24 h-10 m-2`}
+                className={`${isConfirmEmail ? "jongRyul-gray" : "jongRyul-primary"} w-24 h-10 m-2`}
                 type="button"
                 disabled={isConfirmEmail}
                 onClick={async () => {
@@ -195,8 +195,8 @@ const GeneralLogin = () => {
                 {...register("nickname", {
                   required: "닉네임은 필수 입력 사항입니다.",
                   pattern: {
-                    value: /^[a-zA-Z0-9가-힣ぁ-んァ-ンー]*$/,
-                    message: "특수문자는 사용할 수 없습니다.",
+                    value: /^[a-zA-Z0-9가-힣ぁ-んァ-ンー]{1,10}$/,
+                    message: "닉네임은 특수문자를 제외한 1~10자만 입력가능합니다.",
                   },
                 })}
                 onKeyPress={(e) => {

@@ -1,9 +1,7 @@
 import { getBoardDetail } from "../../../api/board";
 import { likeBoard } from "../../../api/board";
 import { useQueryClient } from "react-query";
-import userStore from "../../../store/userStore";
 export const useBoardItem = () => {
-  const { userInfo } = userStore();
   const queryClient = useQueryClient();
   const onDetailPage = async (seq: string) => {
     try {
@@ -16,8 +14,8 @@ export const useBoardItem = () => {
 
   const onLike = async (boardSeq: string) => {
     try {
-      await likeBoard(boardSeq, userInfo!.seq);
-      queryClient.invalidateQueries({ queryKey: ["getBoardList"] });
+      await likeBoard(boardSeq);
+      queryClient.invalidateQueries("getBoardList");
     } catch (err) {
       console.log(err);
     }

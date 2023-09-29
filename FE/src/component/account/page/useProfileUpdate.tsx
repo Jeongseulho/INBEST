@@ -32,8 +32,8 @@ export const useProfileUpdate = () => {
       toast.error("닉네임을 입력해 주세요.");
       return;
     }
-    if (!/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]*$/.test(nickname)) {
-      toast.error("특수문자는 사용할 수 없습니다.");
+    if (!/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]{1,10}$/.test(nickname)) {
+      toast.error("닉네임은 특수문자를 제외한 1~10자만 입력가능합니다.");
       return;
     }
     try {
@@ -111,6 +111,7 @@ export const useProfileUpdate = () => {
       setUserInfo({ ...userInfo!, profileImgSearchName: res.UserInfo.profileImgSearchName });
       console.log(res);
     } catch (err) {
+      toast.error("프로필 변경에 실패했습니다");
       console.log(err);
     }
   };

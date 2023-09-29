@@ -1,7 +1,17 @@
+import { useEffect } from "react";
 import BoardEditor from "../molecules/BoardEditor";
 import { useCommunityCreate } from "./useCommunityCreate";
+import { useSearchParams } from "react-router-dom";
+
 const CommunityCreate = () => {
   const { title, setTitle } = useCommunityCreate();
+  const [searchParams] = useSearchParams();
+  const paramTitle = searchParams.get("title");
+  useEffect(() => {
+    if (paramTitle) {
+      setTitle(paramTitle);
+    }
+  }, [paramTitle]);
   return (
     <>
       <input

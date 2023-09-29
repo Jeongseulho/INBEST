@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { getBoardDetail, likeBoard, postCocomment, postComment, deleteBoard } from "../../../api/board";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
@@ -12,9 +12,9 @@ export const useBoardDetailContent = () => {
   const seq = searchParams.get("seq") ? searchParams.get("seq") : "";
   const { data, isLoading, isError, error, refetch } = useQuery(["getBoardDetail", seq], () => getBoardDetail(seq!));
   const board = data?.board;
-  const loginUserLike = data?.loginUserLike;
   const [showCommentCreate, setShowCommentCreate] = useState(false);
   const navigator = useNavigate();
+  const queryClient = useQueryClient();
   console.log(data);
   const onPostComment = async () => {
     if (commentText.trim() === "") {
@@ -48,7 +48,7 @@ export const useBoardDetailContent = () => {
 
   const onLike = async () => {
     try {
-      await likeBoard(board!.seq, userInfo!.seq);
+      await likeBoard(board!.seq);
       refetch();
     } catch (err) {
       console.log(err);
@@ -59,6 +59,8 @@ export const useBoardDetailContent = () => {
     try {
       await deleteBoard(boardSeq);
       alert("삭제되었습니다.");
+      queryClient.invalidateQueries("getBoardList");
+
       navigator(-1);
     } catch (err) {
       toast.error("삭제에 실패했습니다.");
@@ -66,7 +68,6 @@ export const useBoardDetailContent = () => {
   };
   return {
     board,
-    loginUserLike,
     isLoading,
     isError,
     error,
