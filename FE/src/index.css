@@ -226,6 +226,7 @@ body{
 
 .apexcharts-tooltip {
    padding: 10px !important;
+}
 
 .disabledLinkClassName {
   @apply border-2 border-black
