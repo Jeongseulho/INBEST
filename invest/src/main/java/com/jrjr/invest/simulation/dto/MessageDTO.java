@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class MessageDTO {
     private String title;
     private String content;

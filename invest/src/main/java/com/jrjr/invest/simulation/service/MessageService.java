@@ -37,7 +37,7 @@ public class MessageService {
      *
      * @param messageDTO 구독한 메시지를 담고 있는 MessageDto 객체
      */
-    @RabbitListener(queues = "invest_queue")
+    @RabbitListener(queues = "invest-queue")
     public void receiveMessage(MessageDTO messageDTO) {
         log.info("invest Received message: {}", messageDTO.toString());
     }
