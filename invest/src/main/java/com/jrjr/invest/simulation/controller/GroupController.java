@@ -148,7 +148,7 @@ public class GroupController {
 	}
 	@Operation(summary = "그룹 참여하기")
 	// 그룹 참여하기
-	@PostMapping("/start")
+	@PostMapping("/join")
 	ResponseEntity<?> joinGroup(@RequestBody GroupUserDTO groupUserDTO) throws Exception {
 		log.info("===== 그룹 참여하기 시작  ===== ");
 		log.info("입력 파라미터 "+groupUserDTO);
@@ -159,19 +159,7 @@ public class GroupController {
 		return ResponseEntity.ok().build();
 	}
 	// 그룹 나가기 | 방장 나가기
-	// 그룹 참여하기
-	// @PostMapping("/exit")
-	// ResponseEntity<?> exitGroup(@RequestBody GroupUserDTO groupUserDTO) throws Exception {
-	// 	log.info("===== 그룹 나가기 시작  ===== ");
-	// 	log.info("입력 파라미터 "+groupUserDTO);
-	//
-	// 	groupService.joinGroup(groupUserDTO.getSimulationSeq(), groupUserDTO.getUserSeq());
-	//
-	// 	log.info("===== 그룹 나가기 끝  ===== ");
-	// 	return ResponseEntity.ok().build();
-	// }
-	// 모의 투자 시작
-	@Operation(summary = "그룹 시작하기")
+	@Operation(summary = "그룹 나가기")
 	@Parameters(value = {
 		@Parameter(description = "로그인한 유저 pk(실제 사용 시 자동으로 엑세스 토큰에서 가져오므로 안넣어도 괜찮음)"
 			,name="loginSeq",required = true),
@@ -183,7 +171,7 @@ public class GroupController {
 		log.info("===== 그룹 나가기 시작  ===== ");
 		log.info("입력 파라미터: "+groupUserDTO);
 		log.info("로그인 유저: "+loginSeq);
-	
+
 		//비로그인 처리
 		if(loginSeq.equals("")){
 			throw new Exception("로그인하지 않은 유저입니다.");
@@ -194,6 +182,29 @@ public class GroupController {
 		groupService.leaveGroup(groupUserDTO.getSimulationSeq(),groupUserDTO.getUserSeq());
 
 		log.info("===== 그룹 나가기 끝  ===== ");
+		return ResponseEntity.ok().build();
+	}
+	// 모의 투자 시작
+	@Operation(summary = "그룹 시작하기")
+	@Parameters(value = {
+		@Parameter(description = "로그인한 유저 pk(실제 사용 시 자동으로 엑세스 토큰에서 가져오므로 안넣어도 괜찮음)"
+			,name="loginSeq",required = true),
+	})
+	@PostMapping("/start")
+	ResponseEntity<?> exitGroup(@RequestBody SimulationSeqDTO simulationSeqDTO,
+		@RequestParam(required = false, defaultValue = "",name="loginSeq") String loginSeq
+	) throws Exception {
+		log.info("===== 그룹 시작하기 시작  ===== ");
+		log.info("방 seq :  "+simulationSeqDTO);
+
+		//비로그인 처리
+		if(loginSeq.equals("")){
+			throw new Exception("로그인하지 않은 유저입니다.");
+		}
+
+		groupService.startSimulation(simulationSeqDTO.getSimulationSeq(),Long.valueOf(loginSeq));
+
+		log.info("===== 그룹 시작하기 끝  ===== ");
 		return ResponseEntity.ok().build();
 	}
 }
