@@ -3,6 +3,7 @@ import BoardItem from "../atoms/BoardItem";
 import BoardPagenation from "../atoms/BoardPagenation";
 const BoardList = () => {
   const { boards, isLoading } = useBoardList();
+  console.log(isLoading);
   return (
     // TODO: 스켈레톤 로딩
     <>
