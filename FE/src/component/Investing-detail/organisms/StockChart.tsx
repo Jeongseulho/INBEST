@@ -7,16 +7,15 @@ import candle from "../../../asset/image/candle.png";
 
 interface Props {
   companyCode: string;
-  companyDetailTab: string;
 }
 
-const StockChart = ({ companyCode, companyDetailTab }: Props) => {
+const StockChart = ({ companyCode }: Props) => {
   const [chartPeriod, setChartPeriod] = useState(30);
   const { data } = useQuery(
     ["stockChart", companyCode, chartPeriod],
     () => getKorStockChart(companyCode, chartPeriod),
     {
-      enabled: companyDetailTab === "summary",
+      retry: 3,
     }
   );
   return (

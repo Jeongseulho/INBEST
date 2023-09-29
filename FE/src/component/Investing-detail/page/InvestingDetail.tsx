@@ -86,8 +86,8 @@ const InvestingDetail = ({ companyCode, setCompanyCode }: Props) => {
         <div className=" p-4">
           {companyDetailTab === "summary" && <Summary companyCode={companyCode} />}
           {companyDetailTab === "news" && <FinancialAndNews companyCode={companyCode} />}
-          {companyDetailTab === "chart" && <StockChart companyCode={companyCode} companyDetailTab={companyDetailTab} />}
-          {companyDetailTab === "trade" && <Trade />}
+          {companyDetailTab === "chart" && <StockChart companyCode={companyCode} />}
+          {companyDetailTab === "trade" && <Trade companyCode={companyCode} />}
         </div>
       </motion.div>
     </>
