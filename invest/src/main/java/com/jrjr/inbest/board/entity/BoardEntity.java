@@ -70,8 +70,10 @@ public class BoardEntity extends BaseEntity implements Serializable {
 
 		List<BoardImgDTO> boardImgDTOList = new ArrayList<>();
 
-		for (BoardImgEntity boardImgEntity : imgList) {
-			boardImgDTOList.add(boardImgEntity.toBoardImgDTO());
+		if(imgList !=null){
+			for (BoardImgEntity boardImgEntity : imgList) {
+				boardImgDTOList.add(boardImgEntity.toBoardImgDTO());
+			}
 		}
 
 		boardDTO.setImgList(boardImgDTOList);
