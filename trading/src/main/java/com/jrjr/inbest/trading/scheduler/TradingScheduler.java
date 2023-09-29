@@ -1,5 +1,6 @@
 package com.jrjr.inbest.trading.scheduler;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,8 +39,13 @@ public class TradingScheduler {
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
 
+	@Scheduled(cron = "0/10 * * * * ?")
+	public void logTime() throws  Exception{
+		log.info("현재 시간 : "+ LocalDateTime.now());
+	}
+
 	// @Scheduled(cron = "0/10 * * * * *")
-	@Scheduled(cron = "* * * * *")
+	@Scheduled(cron = "0 * 9-20 * * ?")
 	public void myScheduledTask() throws Exception {
 		// 여기에 수행할 작업을 넣습니다.
 		log.info("========== 주식 매매 시작 ==========");
