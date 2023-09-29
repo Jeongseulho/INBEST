@@ -8,7 +8,7 @@ const ChatIcon = () => {
   //  </div>
 
   return (
-    <div className=" fixed right-10 bottom-10">
+    <div className=" fixed right-10 bottom-10 z-20">
       <Popover className="relative">
         <>
           <Popover.Button

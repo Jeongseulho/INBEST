@@ -3,39 +3,39 @@ export function formatNumberToWon(value: number): string {
   return `₩${formatter.format(value)}`;
 }
 
+export function formatNumberToKoreanWon(value: number): string {
+  const formatter = new Intl.NumberFormat("ko-KR");
+  return `${formatter.format(value)}원`;
+}
+
 export function formatNumberToDollar(value: number): string {
   const formatter = new Intl.NumberFormat("en-US");
   return `$${formatter.format(value)}`;
 }
 
-export function formatKoreanNumber(num: number): string {
-  const units = [
-    { unit: "억", value: 100000000 },
-    { unit: "천", value: 10000000 },
-    { unit: "백", value: 1000000 },
-    { unit: "십", value: 100000 },
-    { unit: "만", value: 10000 },
-  ];
+function numberFormat(x: number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
-  // 만원 이하의 금액을 버림
-  const truncated = Math.floor(num / 10000) * 10000;
+export function formatKoreanNumber(number: number) {
+  const unitWords = ["", "만", "억", "조", "경"];
+  const splitUnit = 10000;
+  const splitCount = unitWords.length;
+  const resultArray = [];
+  let resultString = "";
 
-  let result = "";
-  let remaining = truncated;
-
-  for (const { unit, value } of units) {
-    const count = Math.floor(remaining / value);
-    if (count) {
-      result += `${count}${unit}`;
+  for (let i = 0; i < splitCount; i++) {
+    let unitResult = (number % Math.pow(splitUnit, i + 1)) / Math.pow(splitUnit, i);
+    unitResult = Math.floor(unitResult);
+    if (unitResult > 0) {
+      resultArray[i] = unitResult;
     }
-    remaining %= value;
   }
 
-  if (result) {
-    result = result.trim() + "원";
-  } else {
-    result = "0원";
+  for (let i = 0; i < resultArray.length; i++) {
+    if (!resultArray[i]) continue;
+    resultString = String(numberFormat(resultArray[i])) + unitWords[i] + resultString;
   }
 
-  return result;
+  return resultString + "원";
 }
