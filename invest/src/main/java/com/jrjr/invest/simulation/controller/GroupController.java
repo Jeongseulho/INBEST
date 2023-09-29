@@ -148,7 +148,7 @@ public class GroupController {
 	}
 	@Operation(summary = "그룹 참여하기")
 	// 그룹 참여하기
-	@PostMapping("/join")
+	@PostMapping("/start")
 	ResponseEntity<?> joinGroup(@RequestBody GroupUserDTO groupUserDTO) throws Exception {
 		log.info("===== 그룹 참여하기 시작  ===== ");
 		log.info("입력 파라미터 "+groupUserDTO);
