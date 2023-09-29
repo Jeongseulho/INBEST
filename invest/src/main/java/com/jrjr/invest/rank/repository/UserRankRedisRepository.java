@@ -32,9 +32,9 @@ public class UserRankRedisRepository {
 	@Autowired
 	public UserRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
 		RedisTemplate<String, RedisTierRankDTO> tierRankRedisTemplate,
-		RedisTemplate<String, String> stringRedisTemplate) {
+		RedisTemplate<String, String> stringStringRedisTemplate) {
 		this.userHash = userRedisTemplate.opsForHash();
-		this.userZSet = stringRedisTemplate.opsForZSet();
+		this.userZSet = stringStringRedisTemplate.opsForZSet();
 		this.tierRankHash = tierRankRedisTemplate.opsForHash();
 	}
 
