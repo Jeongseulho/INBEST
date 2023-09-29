@@ -123,7 +123,7 @@ const GeneralLogin = () => {
                 })}
               />
               <button
-                className={`${isConfirmEmail ? "disable-btn" : "primary-btn"} w-24 h-10 m-2`}
+                className={`${isConfirmEmail ? "jongRyul-gray" : "jongRyul-primary"} w-24 h-10 m-2`}
                 type="button"
                 disabled={isConfirmEmail}
                 onClick={async () => {
