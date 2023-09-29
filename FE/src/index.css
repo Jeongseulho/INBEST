@@ -223,3 +223,7 @@ body{
 .animate__animated.animate__fadeIn {
   --animate-duration: 0.5s;
 }
+
+.apexcharts-tooltip {
+   padding: 10px !important;
+}
