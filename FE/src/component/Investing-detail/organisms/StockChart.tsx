@@ -19,6 +19,7 @@ const StockChart = ({ companyCode }: Props) => {
       retry: 3,
     }
   );
+
   return (
     <div className=" flex flex-col gap-4">
       <div className=" flex items-center gap-2 ">
@@ -62,7 +63,7 @@ const StockChart = ({ companyCode }: Props) => {
           <img src={spinner} className="mt-20 mx-auto" />
         ) : (
           <>
-            {Object.keys(data.output2[0]).length === 0 ? (
+            {data === undefined || Object.keys(data.output2[0]).length === 0 ? (
               <div>데이터가 없습니다.</div>
             ) : (
               <div>
@@ -71,7 +72,9 @@ const StockChart = ({ companyCode }: Props) => {
                   series={[
                     {
                       data: data.output2
-                        .reverse()
+                        .sort((a: { stck_bsop_date: string }, b: { stck_bsop_date: string }) => {
+                          return Number(a.stck_bsop_date) - Number(b.stck_bsop_date);
+                        })
                         .map(
                           (item: {
                             stck_bsop_date: string;
@@ -164,8 +167,8 @@ const StockChart = ({ companyCode }: Props) => {
                     plotOptions: {
                       candlestick: {
                         colors: {
-                          upward: "#3C90EB",
-                          downward: "#df4646",
+                          downward: "#3C90EB",
+                          upward: "#df4646",
                         },
                       },
                     },
