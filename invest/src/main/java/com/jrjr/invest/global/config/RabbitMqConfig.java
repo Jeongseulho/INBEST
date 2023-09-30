@@ -1,5 +1,9 @@
 package com.jrjr.invest.global.config;
 
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -33,13 +37,9 @@ public class RabbitMqConfig {
 
 	// Queue 이름
 	private static final String INVEST_QUEUE_NAME = "invest-queue";
-	private static final String TRADING_QUEUE_NAME = "trading-queue";
-	private static final String CHAT_QUEUE_NAME = "chat-queue";
 
 	// 라우팅 키
 	private static final String INVEST_ROUTING_KEY = "invest";
-	private static final String TRADING_ROUTING_KEY = "trading";
-	private static final String CHAT_ROUTING_KEY = "chat";
 
 	@Bean
 	public DirectExchange directExchange() {
@@ -52,29 +52,10 @@ public class RabbitMqConfig {
 	}
 
 	@Bean
-	public Queue tradingQueue() {
-		return new Queue(TRADING_QUEUE_NAME);
-	}
-
-	@Bean
-	public Queue chatQueue() {
-		return new Queue(CHAT_QUEUE_NAME);
-	}
-
-	@Bean
 	public Binding investBinding(DirectExchange directExchange, Queue investQueue) {
 		return BindingBuilder.bind(investQueue).to(directExchange).with(INVEST_ROUTING_KEY);
 	}
 
-	@Bean
-	public Binding tradingBinding(DirectExchange directExchange, Queue tradingQueue) {
-		return BindingBuilder.bind(tradingQueue).to(directExchange).with(TRADING_ROUTING_KEY);
-	}
-
-	@Bean
-	public Binding chatBinding(DirectExchange directExchange, Queue chatQueue) {
-		return BindingBuilder.bind(chatQueue).to(directExchange).with(CHAT_ROUTING_KEY);
-	}
 
 	/**
 	 * RabbitMQ 연결을 위한 ConnectionFactory 빈을 생성하여 반환
@@ -112,6 +93,15 @@ public class RabbitMqConfig {
 	 */
 	@Bean
 	public MessageConverter jackson2JsonMessageConverter() {
-		return new Jackson2JsonMessageConverter();
+		//LocalDateTime serializable 을 위해
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
+		objectMapper.registerModule(dateTimeModule());
+		return new Jackson2JsonMessageConverter(objectMapper);
+	}
+
+	@Bean
+	public  com.fasterxml.jackson.databind.Module dateTimeModule() {
+		return new JavaTimeModule();
 	}
 }

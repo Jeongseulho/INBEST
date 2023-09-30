@@ -1,4 +1,4 @@
-package com.jrjr.invest.simulation.dto;
+package com.jrjr.invest.simulation.dto.group;
 
 import java.util.List;
 
@@ -19,17 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 @ToString
 @Getter
 @Setter
-public class MyWaitingGroupDetailsDTO {
+public class WaitingGroupDetailsDTO {
 	@Schema(description = "시작 소지금")
 	private Long seedMoney;
-	@Schema(description = "진행 시간")
+	@Schema(description = "모의 투자 기간")
 	private Integer period;
-	@Schema(description = "평균 랭크")
+	@Schema(description = "평균 티어")
 	private Integer averageTier;
-	@Schema(description = "현재 참가자 프사 목록")
+	@Schema(description = "현재 참가자 이미지 목록")
 	private List<String> currentMemberImageList;
 	@Schema(description = "방장 pk")
 	private Long ownerSeq;
-	@Schema(description = "방 제목")
+	@Schema(description = "투자방 이름")
 	private String title;
 }

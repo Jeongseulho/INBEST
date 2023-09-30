@@ -1,4 +1,4 @@
-package com.jrjr.invest.simulation.dto;
+package com.jrjr.invest.simulation.dto.group;
 
 import java.util.List;
 

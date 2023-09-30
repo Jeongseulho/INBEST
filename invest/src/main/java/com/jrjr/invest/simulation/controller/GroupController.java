@@ -4,8 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.jrjr.invest.simulation.dto.*;
+import com.jrjr.invest.simulation.dto.group.CreatedGroupDTO;
+import com.jrjr.invest.simulation.dto.group.GroupDTO;
+import com.jrjr.invest.simulation.dto.group.GroupUserDTO;
+import com.jrjr.invest.simulation.dto.notification.MessageDTO;
 import com.jrjr.invest.simulation.service.MessageService;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

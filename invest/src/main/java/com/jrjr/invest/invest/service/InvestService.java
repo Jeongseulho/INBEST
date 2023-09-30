@@ -1,9 +1,5 @@
 package com.jrjr.invest.invest.service;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,25 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.jrjr.invest.invest.dto.RequestHanTuAccessTokenDTO;
 import com.jrjr.invest.invest.dto.ResponseHanTuAccessTokenDTO;
-import com.jrjr.invest.rank.service.SimulationRankService;
-import com.jrjr.invest.simulation.dto.CreatedGroupDTO;
-import com.jrjr.invest.simulation.dto.GroupDTO;
-import com.jrjr.invest.simulation.dto.InProgressGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.JoinableGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.MyInProgressGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.MyWaitingGroupDetailsDTO;
-import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
-import com.jrjr.invest.simulation.dto.UserDTO;
-import com.jrjr.invest.simulation.dto.WaitingGroupDetailsDTO;
-import com.jrjr.invest.simulation.entity.Simulation;
-import com.jrjr.invest.simulation.entity.SimulationUser;
-import com.jrjr.invest.simulation.entity.User;
-import com.jrjr.invest.simulation.repository.LoginHistoryRepository;
-import com.jrjr.invest.simulation.repository.SimulationRepository;
-import com.jrjr.invest.simulation.repository.SimulationUserRepository;
-import com.jrjr.invest.simulation.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
