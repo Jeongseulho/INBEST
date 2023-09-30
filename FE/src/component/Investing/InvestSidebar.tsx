@@ -117,7 +117,7 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
               active={activeTab === INVESTING_TAB.CRYPTO}
               onClick={() => setActiveTab(INVESTING_TAB.CRYPTO)}
             >
-              가상 자산
+              가상 화폐
             </MenuItem>
           </SubMenu>
           <MenuItem

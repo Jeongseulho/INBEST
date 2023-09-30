@@ -30,3 +30,20 @@ export type CompanySearchList = {
   company_stock_code: string;
   company_stock_type: CompanyStockType;
 }[];
+
+export interface StockSummaryInfo {
+  name: string;
+  fluctuation_rate: number;
+  fluctuation_state: 0 | 1;
+}
+
+export interface ExchangeRate {
+  currency_pair: string;
+  exchange_rate_change: number;
+  exchange_rate_change_state: 0 | 1;
+}
+
+export interface FearIndex {
+  name: string;
+  fear_index: number;
+}

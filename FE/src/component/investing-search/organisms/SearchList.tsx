@@ -2,14 +2,15 @@ import SearchItem from "../molecules/SearchItem";
 import search from "../../../asset/image/search.png";
 import { CompanySearchList } from "../../../type/InvestingStockInfo";
 import spinner from "../../../asset/image/spinner.svg";
+import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 
 interface Props {
   searchList: CompanySearchList;
   isLoading: boolean;
-  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
+  setCompanyInfo: React.Dispatch<React.SetStateAction<CompanyInfo>>;
 }
 
-const SearchList = ({ searchList, setCompanyCode, isLoading }: Props) => {
+const SearchList = ({ searchList, setCompanyInfo, isLoading }: Props) => {
   return (
     <div className=" shadow-component flex flex-col p-6 w-[50%]">
       <div className=" mb-4 flex items-center gap-2">
@@ -34,7 +35,7 @@ const SearchList = ({ searchList, setCompanyCode, isLoading }: Props) => {
                 name={item.company_name}
                 code={item.company_stock_code}
                 type={item.company_stock_type}
-                setCompanyCode={setCompanyCode}
+                setCompanyInfo={setCompanyInfo}
               />
             ))}
           </>

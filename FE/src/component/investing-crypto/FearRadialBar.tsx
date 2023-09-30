@@ -8,7 +8,7 @@ const FearRadialBar = ({ percentage }: Props) => {
   const { rotation, displayedPercentage } = useFearRadialBar(percentage);
 
   return (
-    <div className=" relative shadow-component p-4">
+    <div className=" relative shadow-component p-4 h-[185px]">
       <h4 className=" mb-4">공포, 탐욕 지수</h4>
       <div
         className="absolute bg-black w-3 h-3 rounded-full z-10"
@@ -45,7 +45,17 @@ const FearRadialBar = ({ percentage }: Props) => {
       </svg>
       <div className="  absolute left-1/2 -translate-x-1/2 bottom-7 flex flex-col items-center">
         <p className=" text-xl font-medium">{displayedPercentage}</p>
-        <p className=" text-md font-medium text-myGray">중간</p>
+        <p className=" text-md font-medium text-myGray">
+          {percentage >= 0 && percentage < 20
+            ? "매우 낮음"
+            : percentage >= 20 && percentage < 40
+            ? "낮음"
+            : percentage >= 40 && percentage < 60
+            ? "보통"
+            : percentage >= 60 && percentage < 80
+            ? "높음"
+            : "매우 높음"}
+        </p>
       </div>
     </div>
   );

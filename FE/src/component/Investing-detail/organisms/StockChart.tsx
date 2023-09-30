@@ -5,16 +5,17 @@ import { formatNumberToKoreanWon } from "../../../util/formatMoney";
 import { useState } from "react";
 import candle from "../../../asset/image/candle.png";
 import spinner from "../../../asset/image/spinner.svg";
+import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 
 interface Props {
-  companyCode: string;
+  companyInfo: CompanyInfo;
 }
 
-const StockChart = ({ companyCode }: Props) => {
+const StockChart = ({ companyInfo }: Props) => {
   const [chartPeriod, setChartPeriod] = useState(30);
   const { data, isLoading } = useQuery(
-    ["stockChart", companyCode, chartPeriod],
-    () => getKorStockChart(companyCode, chartPeriod),
+    ["stockChart", companyInfo, chartPeriod],
+    () => getKorStockChart(companyInfo.code, chartPeriod),
     {
       retry: 3,
     }

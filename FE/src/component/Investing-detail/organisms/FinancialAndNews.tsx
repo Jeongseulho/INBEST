@@ -1,9 +1,10 @@
 import table from "../../../asset/image/table.png";
+import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 interface Props {
-  companyCode: string;
+  companyInfo: CompanyInfo;
 }
 
-const FinancialAndNews = ({ companyCode }: Props) => {
+const FinancialAndNews = ({ companyInfo }: Props) => {
   return (
     <div className=" flex flex-col gap-4">
       <div className=" flex items-center gap-2">
@@ -11,7 +12,7 @@ const FinancialAndNews = ({ companyCode }: Props) => {
         <h5>재무제표 / 뉴스</h5>
       </div>
       <div className=" flex h-[80vh] gap-4 justify-center">
-        <div className=" shadow-component ">{companyCode}재무 제표</div>
+        <div className=" shadow-component ">{companyInfo.name}재무 제표</div>
         <div className=" shadow-component ">뉴스</div>
       </div>
     </div>

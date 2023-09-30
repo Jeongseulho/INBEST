@@ -1,13 +1,22 @@
 import DomesticStockList from "./DomesticStockList";
-import DecreaseGraphIcon from "../common/DecreaseGraphIcon";
-import IncreaseGraphIcon from "../common/IncreaseGraphIcon";
-import { getKorSearchStockList, getKorMarketCapStockList, getKorIncreaseStockList } from "../../api/investingStockInfo";
+import GraphIconComponent from "../../component/common/GraphIconComponent";
+import {
+  getKorSearchStockList,
+  getKorMarketCapStockList,
+  getKorIncreaseStockList,
+  getKospi,
+  getKosdaq,
+  getKospi200,
+  getExchangeRate,
+  getKrx,
+} from "../../api/investingStockInfo";
 import { useQuery } from "react-query";
+import { CompanyInfo } from "../../type/InvestingCompanyDetail";
 interface Props {
-  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
+  setCompanyInfo: React.Dispatch<React.SetStateAction<CompanyInfo>>;
 }
 
-const InvestingDomestic = ({ setCompanyCode }: Props) => {
+const InvestingDomestic = ({ setCompanyInfo }: Props) => {
   const { data: searchStockList, isLoading: isLoadingSearchStockList } = useQuery(
     ["korSearchStockList"],
     getKorSearchStockList
@@ -20,31 +29,36 @@ const InvestingDomestic = ({ setCompanyCode }: Props) => {
     ["korIncreaseStockList"],
     getKorIncreaseStockList
   );
+  const { data: kospi } = useQuery(["kospi"], getKospi);
+  const { data: kosdaq } = useQuery(["kosdaq"], getKosdaq);
+  const { data: kospi200 } = useQuery(["kospi200"], getKospi200);
+  const { data: exchangeRate } = useQuery(["exchangeRate"], getExchangeRate);
+  const { data: krx } = useQuery(["krx"], getKrx);
 
   return (
     <div className=" flex flex-col items-center gap-4">
       <div className=" flex gap-4">
-        <DecreaseGraphIcon title="코스피" desc="코스피란?... 하강한다고 판단한 기준.." />
-        <IncreaseGraphIcon title="코스닥" desc="급하락 주식에 대한 설명입니다." />
-        <DecreaseGraphIcon title="코스피200" desc="급하락 주식에 대한 설명입니다." />
-        <DecreaseGraphIcon title="코스닥200" desc="급하락 주식에 대한 설명입니다." />
-        <IncreaseGraphIcon title="환율" desc="급하락 주식에 대한 설명입니다." />
+        <GraphIconComponent title="코스피" desc="코스피 설명" state={kospi?.fluctuation_state} />
+        <GraphIconComponent title="코스닥" desc="코스닥 설명" state={kosdaq?.fluctuation_state} />
+        <GraphIconComponent title="코스피200" desc="코스피200 설명" state={kospi200?.fluctuation_state} />
+        <GraphIconComponent title="KRX" desc="krx 설명" state={krx?.fluctuation_state} />
+        <GraphIconComponent title="환율" desc="환율 설명" state={exchangeRate?.exchange_rate_change_state} />
       </div>
       <div className=" flex gap-4 w-full">
         <DomesticStockList
-          setCompanyCode={setCompanyCode}
+          setCompanyInfo={setCompanyInfo}
           stockList={searchStockList}
           isLoading={isLoadingSearchStockList}
           title="많이 검색되는 주식"
         />
         <DomesticStockList
-          setCompanyCode={setCompanyCode}
+          setCompanyInfo={setCompanyInfo}
           stockList={marketCapStockList}
           isLoading={isLoadingMarketCapStockList}
           title="시가총액 높은 주식"
         />
         <DomesticStockList
-          setCompanyCode={setCompanyCode}
+          setCompanyInfo={setCompanyInfo}
           stockList={increaseStockList}
           isLoading={isLoadingIncreaseStockList}
           title="급상승 주식"

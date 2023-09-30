@@ -12,10 +12,14 @@ import InvestingLayout from "../common/InvestingLayout";
 import InvestingDetail from "../Investing-detail/page/InvestingDetail";
 import DetailPortal from "../common/DetailPortal";
 import { AnimatePresence } from "framer-motion";
+import { CompanyInfo } from "../../type/InvestingCompanyDetail";
 
 const Investing = () => {
   const [activeTab, setActiveTab] = useState(INVESTING_TAB.INFO);
-  const [companyCode, setCompanyCode] = useState("");
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo>({
+    code: "",
+    name: "",
+  });
 
   return (
     <div className=" flex max-w-[100vw] ">
@@ -23,15 +27,17 @@ const Investing = () => {
       <InvestingLayout>
         {activeTab === INVESTING_TAB.INFO && <InvestingInfo />}
         {activeTab === INVESTING_TAB.MY_INFO && <InvestingMyInfo />}
-        {activeTab === INVESTING_TAB.SEARCH && <InvestingSearch setCompanyCode={setCompanyCode} />}
-        {activeTab === INVESTING_TAB.DOMESTIC && <InvestingDomestic setCompanyCode={setCompanyCode} />}
-        {activeTab === INVESTING_TAB.ABROAD && <InvestingAbroad setCompanyCode={setCompanyCode} />}
-        {activeTab === INVESTING_TAB.CRYPTO && <InvestingCrypto setCompanyCode={setCompanyCode} />}
+        {activeTab === INVESTING_TAB.SEARCH && <InvestingSearch setCompanyInfo={setCompanyInfo} />}
+        {activeTab === INVESTING_TAB.DOMESTIC && <InvestingDomestic setCompanyInfo={setCompanyInfo} />}
+        {activeTab === INVESTING_TAB.ABROAD && <InvestingAbroad setCompanyInfo={setCompanyInfo} />}
+        {activeTab === INVESTING_TAB.CRYPTO && <InvestingCrypto setCompanyInfo={setCompanyInfo} />}
         {activeTab === INVESTING_TAB.NEWS && <InvestingNews />}
 
         <DetailPortal>
           <AnimatePresence>
-            {companyCode && <InvestingDetail companyCode={companyCode} setCompanyCode={setCompanyCode} />}
+            {companyInfo.code !== "" && companyInfo.name !== "" && (
+              <InvestingDetail companyInfo={companyInfo} setCompanyInfo={setCompanyInfo} />
+            )}
           </AnimatePresence>
         </DetailPortal>
       </InvestingLayout>

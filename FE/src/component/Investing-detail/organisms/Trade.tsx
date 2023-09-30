@@ -7,16 +7,17 @@ import spinner from "../../../asset/image/spinner.svg";
 import { formatNumberToKoreanWon } from "../../../util/formatMoney";
 import IncreaseIcon from "../../common/IncreaseIcon";
 import { useState } from "react";
+import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 
 interface Props {
-  companyCode: string;
+  companyInfo: CompanyInfo;
 }
 
-const Trade = ({ companyCode }: Props) => {
+const Trade = ({ companyInfo }: Props) => {
   const { data, isLoading } = useQuery(
-    ["trade", companyCode],
+    ["trade", companyInfo],
     () => {
-      return getKorStockPrice(companyCode);
+      return getKorStockPrice(companyInfo.code);
     },
     {
       retry: 3,

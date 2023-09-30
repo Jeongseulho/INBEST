@@ -1,18 +1,24 @@
 import { truncateContent } from "../../../util/formatContent";
 import { COMPANY_TYPE } from "../../../constant/COMPANY_TYPE";
+import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 
 interface Props {
   name: string;
   code: string;
   type: number;
   index: number;
-  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
+  setCompanyInfo: React.Dispatch<React.SetStateAction<CompanyInfo>>;
 }
 
-const SearchItem = ({ name, code, type, index, setCompanyCode }: Props) => {
+const SearchItem = ({ name, code, type, index, setCompanyInfo }: Props) => {
   return (
     <div
-      onClick={() => setCompanyCode(code)}
+      onClick={() =>
+        setCompanyInfo({
+          name,
+          code,
+        })
+      }
       className=" flex justify-center gap-20 border-b-2 items-center py-2 cursor-pointer hover:bg-gray-400 hover:bg-opacity-20 transition-colors duration-300"
     >
       <p className=" w-2 text-center">{index}</p>
