@@ -3,6 +3,9 @@ package com.jrjr.invest.simulation.document;
 
 import com.jrjr.invest.simulation.dto.notification.NotificationDTO;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -10,12 +13,15 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "invititionNotification")
+@ToString
+@Getter
+@Setter
+@Document(collection = "notification")
 public class Notification {
 
     @Id
     @Field(targetType = FieldType.OBJECT_ID)
-    private String _id;
+    private String id;
     private Long simulationSeq;
     private Long userSeq;
     private String message;
@@ -60,7 +66,7 @@ public class Notification {
 
     public NotificationDTO toNotificationDTO() {
         return NotificationDTO.builder()
-                ._id(_id)
+                .id(id)
                 .simulationSeq(simulationSeq)
                 .userSeq(userSeq)
                 .message(message)

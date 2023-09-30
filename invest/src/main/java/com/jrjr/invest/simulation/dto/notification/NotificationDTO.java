@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class NotificationDTO {
-    private String _id;
+    private String id;
     private Long simulationSeq;
     private Long userSeq;
     private String message;
