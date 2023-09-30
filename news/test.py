@@ -1,11 +1,9 @@
-from bs4 import BeautifulSoup
-import requests
-import re
+import FinanceDataReader as fdr
 
-url = "https://finance.naver.com/sise/sise_index.naver?code=KOSPI"
-headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
+# 가상화폐 심볼 지정 (비트코인은 BTC/KRW)
+symbol = 'BTC/KRW'
 
-res = requests.get(url, headers=headers)
-soup = BeautifulSoup(res.text, 'lxml')
+crypto_data = fdr.DataReader(symbol, start='2023-01-01', end='2023-12-31')
 
-data = []
+# 데이터프레임의 열 이름 출력
+print(crypto_data.columns)

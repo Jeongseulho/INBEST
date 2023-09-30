@@ -7,6 +7,7 @@ from rest_framework.decorators import (api_view)
 import time
 import re
 from .models import Company
+import FinanceDataReader as fdr
 
 
 # 한국 최다검색 주식 목록
@@ -385,37 +386,281 @@ def cointop(request):
 
     return JsonResponse(crypto_data, safe=False)
 
-
-# 코스피
-@api_view(['GET'])
-def kospi(request):
-    url = "https://finance.naver.com/sise/sise_index.naver?code=KOSPI"
-    headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537."}
-    
-    res = requests.get(url, headers=headers)
-    soup = BeautifulSoup(res.text, 'lxml')
-    print(soup)
-    data = []
-    change_element = soup.find('td', class_='number_1')
-    # print(change_element)
-    change_text = change_element.text.strip()
-
-    numeric_change = float(change_text.replace('%', '').strip())
-
-    check = 1 if numeric_change >= 0 else 0
-
-    data_dict = {
-        'check': check,
-    }
-
-    data.append(data_dict)
-
-    time.sleep(1)
-    return JsonResponse(data, safe=False)
-
-
+# 기업검색 기능
 def search(request):
     query = request.GET.get('q', '')
     results = Company.objects.filter(company_name__icontains=query)
     data = list(results.values('company_name', 'company_stock_code', 'company_stock_type'))
     return JsonResponse(data, safe=False)
+
+# 코스피
+@api_view(['GET'])
+def kospi(request):
+
+    kospi = fdr.DataReader('KS11')
+
+    kospi['전일 종가'] = kospi['Close'].shift(1)
+    # 등락률 계산
+    kospi['등락률'] = ((kospi['Close'] - kospi['전일 종가']) / kospi['전일 종가']) * 100
+
+    latest_row = kospi.iloc[-1]
+    
+    kospi_data = {
+        'name': 'KOSPI',
+        'fluctuation_rate': latest_row['등락률'],
+        'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(kospi_data)
+
+# 코스닥
+@api_view(['GET'])
+def kosdaq(request):
+    kosdaq = fdr.DataReader('KQ11')
+
+    kosdaq['전일 종가'] = kosdaq['Close'].shift(1)
+    kosdaq['등락률'] = ((kosdaq['Close'] - kosdaq['전일 종가']) / kosdaq['전일 종가']) * 100
+
+    latest_row = kosdaq.iloc[-1]
+    
+    kosdaq_data = {
+        'name': 'KOSDAQ',
+        'fluctuation_rate': latest_row['등락률'],
+        'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(kosdaq_data)
+
+#환율
+@api_view(['GET'])
+def exchange_rate(request):
+
+    exchange_data = fdr.DataReader('USD/KRW')
+
+    # 가장 최근의 환율과 전일 환율
+    latest_exchange_rate = exchange_data['Close'].iloc[-1]
+    previous_day_exchange_rate = exchange_data['Close'].iloc[-2]
+
+    # 환율 증감률을 계산
+    exchange_rate_change = ((latest_exchange_rate - previous_day_exchange_rate) / previous_day_exchange_rate) * 100
+
+    exchange_rate_info = {
+        'currency_pair': 'USD/KRW',
+        'exchange_rate_change': exchange_rate_change,
+        'exchange_rate_change_state' : 1 if exchange_rate_change >= 0 else 0
+    }
+
+    return JsonResponse(exchange_rate_info)
+
+# 코스피200
+@api_view(['GET'])
+def kospi200(request):
+
+    kospi200 = fdr.DataReader('KS200')
+
+    kospi200['전일 종가'] = kospi200['Close'].shift(1)
+
+    # 등락률 계산
+    kospi200['등락률'] = ((kospi200['Close'] - kospi200['전일 종가']) / kospi200['전일 종가']) * 100
+
+    latest_row = kospi200.iloc[-1]
+    kospi200_data = {
+    'name': 'KOSPI 200',
+    'fluctuation_rate': latest_row['등락률'],
+    'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(kospi200_data)
+
+# 나스닥
+@api_view(['GET'])
+def nasdaq(request):
+
+    nasdaq = fdr.DataReader('IXIC')
+
+    nasdaq['전일 종가'] = nasdaq['Close'].shift(1)
+
+    # 등락률 계산
+    nasdaq['등락률'] = ((nasdaq['Close'] - nasdaq['전일 종가']) / nasdaq['전일 종가']) * 100
+
+    latest_row = nasdaq.iloc[-1]
+    nasdaq_data = {
+        'name': 'NASDAQ',
+        'fluctuation_rate': latest_row['등락률'],
+        'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(nasdaq_data)
+
+# 다우존스
+@api_view(['GET'])
+def dowjones(request):
+
+    dow_jones  = fdr.DataReader('DJI')
+
+    # 전일 종가 정보 추가
+    dow_jones['전일 종가'] = dow_jones['Close'].shift(1)
+
+    # 등락률 계산
+    dow_jones['등락률'] = ((dow_jones['Close'] - dow_jones['전일 종가']) / dow_jones['전일 종가']) * 100
+
+    # 가장 최근의 등락률과 등락 여부 판단
+    latest_row = dow_jones.iloc[-1]
+    dow_jones_data = {
+        'name': 'Dow Jones',
+        'fluctuation_rate': latest_row['등락률'],
+        'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(dow_jones_data)
+
+
+# S&P 500지수
+@api_view(['GET'])
+def sp500 (request):
+
+    # S&P 500 지수 정보 가져오기
+    sp500 = fdr.DataReader('US500')
+
+    # 전일 종가 정보 추가
+    sp500['전일 종가'] = sp500['Close'].shift(1)
+
+    # 등락률 계산
+    sp500['등락률'] = ((sp500['Close'] - sp500['전일 종가']) / sp500['전일 종가']) * 100
+
+    # 가장 최근의 등락률과 등락 여부 판단
+    latest_row = sp500.iloc[-1]
+    sp500_data = {
+        'name': 'S&P 500',
+        'fluctuation_rate': latest_row['등락률'],
+        'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(sp500_data)
+
+# S&P 500 VIX
+@api_view(['GET'])
+def vix(request):
+
+    VIX = fdr.DataReader('VIX')
+
+    # 전일 종가 정보 추가
+    VIX['전일 종가'] = VIX['Close'].shift(1)
+
+    # 등락률 계산
+    VIX['등락률'] = ((VIX['Close'] - VIX['전일 종가']) / VIX['전일 종가']) * 100
+
+    # 가장 최근의 등락률과 등락 여부 판단
+    latest_row = VIX.iloc[-1]
+    VIX_data = {
+        'name': 'VIX',
+        'fluctuation_rate': latest_row['등락률'],
+        'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(VIX_data)
+
+
+# KRX 100
+@api_view(['GET'])
+def krx(request):
+
+    KRX = fdr.DataReader('KS11')
+
+    # 전일 종가 정보 추가
+    KRX['전일 종가'] = KRX['Close'].shift(5)
+
+    # 등락률 계산
+    KRX['등락률'] = ((KRX['Close'] - KRX['전일 종가']) / KRX['전일 종가']) * 100
+
+    # 가장 최근의 등락률과 등락 여부 판단
+    latest_row = KRX.iloc[-1]
+    KRX_data = {
+        'name': 'KRX',
+        'fluctuation_rate': latest_row['등락률'],
+        'fluctuation_state': 1 if latest_row['등락률'] >= 0 else 0,
+    }
+
+    return JsonResponse(KRX_data)
+
+# 코인 거래량
+@api_view(['GET'])
+def crypto_volume(request):
+
+    symbol = 'BTC/KRW'
+
+    # 가상화폐의 거래량 데이터 가져오기
+    crypto_data = fdr.DataReader(symbol, start='2023-01-01', end='2023-12-31')
+
+    # 거래량 증감률 계산
+    crypto_data['Volume_change'] = crypto_data['Volume'].pct_change() * 100
+
+    # 어제와 오늘의 거래량 증감률 차이 계산
+    crypto_data['Volume_change_diff'] = crypto_data['Volume_change'].diff()
+
+    # 오늘 거래량 증감률 차이 출력
+    today_volume_change_diff = crypto_data['Volume_change_diff'].iloc[-1]
+
+
+    cryptocurrency_volume_data = {
+        'name': 'cryptocurrency_volume',
+        'fluctuation_rate': today_volume_change_diff,
+        'fluctuation_state': 1 if today_volume_change_diff >= 0 else 0,
+    }
+
+    return JsonResponse(cryptocurrency_volume_data)
+
+# 공포지수
+@api_view(['GET'])
+def fear_index(request):
+    symbol = 'BTC/KRW'
+
+    # 가상화폐의 시가총액 데이터 가져오기 (데이터 소스를 지정하지 않습니다)
+    crypto_data = fdr.DataReader(symbol, start='2023-01-01', end='2023-12-31')
+
+    # 종가 데이터와 거래량 데이터를 사용하여 시가총액 증감률 계산
+    crypto_data['MarketCap_change'] = (crypto_data['Close'] * crypto_data['Volume']).pct_change() * 100
+
+    # 어제와 오늘의 시가총액 증감률 차이 계산
+    crypto_data['MarketCap_change_diff'] = crypto_data['MarketCap_change'].diff()
+
+    # 최소 및 최대값 구하기
+    min_change = crypto_data['MarketCap_change_diff'].min()
+    max_change = crypto_data['MarketCap_change_diff'].max()
+
+    crypto_data['Scaled_MarketCap_change'] = ((crypto_data['MarketCap_change_diff'] - min_change) / (max_change - min_change)) * 100
+
+    # 오늘 시가총액 증감률 차이를 스케일링된 값으로 가져옴
+    today_scaled_marketcap_change_diff = crypto_data['Scaled_MarketCap_change'].iloc[-1]
+
+    today_marketcap_change_diff_data = {
+        'name': 'cryptocurrency_market_cap',
+        'fear_index': int(today_scaled_marketcap_change_diff),
+    }
+
+    return JsonResponse(today_marketcap_change_diff_data)
+
+# 가상화폐 시가총액
+@api_view(['GET'])
+def bitcoin(request):
+    symbol = 'BTC/KRW'
+
+    # 가상화폐의 종가 데이터 가져오기 (데이터 소스를 지정하지 않습니다)
+    crypto_data = fdr.DataReader(symbol, start='2023-01-01', end='2023-12-31')
+
+    # 어제와 오늘의 종가 차이 계산
+    crypto_data['Close_change'] = crypto_data['Close'].diff()
+
+    # 어제 종가 대비 오늘 종가 증감률 계산
+    crypto_data['Close_change_rate'] = (crypto_data['Close_change'] / crypto_data['Close'].shift(1)) * 100
+
+    # 오늘 종가 증감률 출력
+    today_close_change_rate = crypto_data['Close_change_rate'].iloc[-1]
+
+    today_close_change_rate_data = {
+        'name': 'bitcoin_close_price_rate',
+        'fluctuation_rate': today_close_change_rate,
+        'fluctuation_state': 1 if today_close_change_rate >= 0 else 0,
+    }
+
+    return JsonResponse(today_close_change_rate_data)
