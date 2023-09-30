@@ -112,6 +112,10 @@ body{
   height: 10px;
 }
 
+#triangle{
+  clip-path: polygon(100% 0, 0 0, 50% 100%);
+}
+
 .shadow-component {
   @apply shadow-md bg-white rounded-2xl;
 }
