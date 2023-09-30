@@ -6,6 +6,7 @@ import { useState } from "react";
 import candle from "../../../asset/image/candle.png";
 import spinner from "../../../asset/image/spinner.svg";
 import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
+import help from "../../../asset/image/help.png";
 
 interface Props {
   companyInfo: CompanyInfo;
@@ -28,38 +29,45 @@ const StockChart = ({ companyInfo }: Props) => {
         <h5>주식 시세 캔들 차트</h5>
       </div>
       <div className=" shadow-component p-4 min-w-[800px] min-h-[600px]">
-        <div className=" flex gap-2">
-          <button
-            className={` ${
-              chartPeriod === 30 && "bg-lightPrimary bg-opacity-40"
-            } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
-            onClick={() => {
-              setChartPeriod(30);
-            }}
-          >
-            <p>최근 1달</p>
-          </button>
-          <button
-            className={` ${
-              chartPeriod === 60 && "bg-lightPrimary bg-opacity-40"
-            } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
-            onClick={() => {
-              setChartPeriod(60);
-            }}
-          >
-            <p>최근 2달</p>
-          </button>
-          <button
-            className={` ${
-              chartPeriod === 90 && "bg-lightPrimary bg-opacity-40"
-            } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
-            onClick={() => {
-              setChartPeriod(90);
-            }}
-          >
-            <p>최근 3달</p>
-          </button>
+        <div className=" flex items-center justify-between">
+          <div className=" flex gap-2">
+            <button
+              className={` ${
+                chartPeriod === 30 && "bg-lightPrimary bg-opacity-40"
+              } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
+              onClick={() => {
+                setChartPeriod(30);
+              }}
+            >
+              <p>최근 1달</p>
+            </button>
+            <button
+              className={` ${
+                chartPeriod === 60 && "bg-lightPrimary bg-opacity-40"
+              } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
+              onClick={() => {
+                setChartPeriod(60);
+              }}
+            >
+              <p>최근 2달</p>
+            </button>
+            <button
+              className={` ${
+                chartPeriod === 90 && "bg-lightPrimary bg-opacity-40"
+              } px-4 min-w-[5rem] rounded-full border-2 border-gray-300 py-1`}
+              onClick={() => {
+                setChartPeriod(90);
+              }}
+            >
+              <p>최근 3달</p>
+            </button>
+          </div>
+          <p className=" text-gray-600 hover:text-mainMoreDark transition-colors duration-300 me-10 cursor-pointer">
+            <img src={help} width={40} className=" mx-auto" />
+            캔들 차트는 어떻게 보나요?
+          </p>
         </div>
+
         {isLoading ? (
           <img src={spinner} className="mt-20 mx-auto" />
         ) : (

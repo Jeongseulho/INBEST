@@ -70,7 +70,13 @@ const Trade = ({ companyInfo }: Props) => {
                 매수 주문하기
               </div>
             </div>
-            {curTab === "sell" ? (
+            {isLoading ? (
+              <>
+                <img src={spinner} className=" mx-auto" />
+              </>
+            ) : data === undefined || Object.keys(data.output1).length === 0 ? (
+              <div>데이터가 없습니다.</div>
+            ) : curTab === "sell" ? (
               <SellOrderTab expectedPrice={data.output2.antc_cnpr} />
             ) : (
               <BuyOrderTab expectedPrice={data.output2.antc_cnpr} />

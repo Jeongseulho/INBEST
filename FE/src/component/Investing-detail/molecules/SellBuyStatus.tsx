@@ -1,6 +1,6 @@
 import SellStatus from "../atoms/SellStatus";
 import BuyStatus from "../atoms/BuyStatus";
-
+import { AiFillQuestionCircle } from "react-icons/ai";
 interface Props {
   data: {
     output1: {
@@ -37,8 +37,24 @@ const SellBuyStatus = ({ data, sellMaxAmount, buyMaxAmount }: Props) => {
         <h6>매도 현황</h6>
         <div className=" flex flex-col gap-1 mt-5">
           <div className=" flex">
-            <p className=" w-1/2 text-myGray text-center">매도 잔량</p>
-            <p className=" w-1/2 text-myGray text-center">매도 가격</p>
+            <div className=" w-1/2 flex items-center justify-center gap-2">
+              <p className=" text-myGray text-center">매도 잔량</p>
+              <div className="group relative">
+                <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
+                <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-12 left-1/2 transform -translate-x-1/2 w-44">
+                  주식을 팔기 위해 남아있는 주식의 수량입니다.
+                </span>
+              </div>
+            </div>
+            <div className=" w-1/2 flex items-center justify-center gap-2">
+              <p className=" text-myGray text-center">매도 가격</p>
+              <div className="group relative">
+                <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
+                <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-7 left-1/2 transform -translate-x-1/2 w-40">
+                  1주당 판매 가격입니다.
+                </span>
+              </div>
+            </div>
           </div>
           <SellStatus amount={data.output1.askp_rsqn5} price={data.output1.askp5} maxAmount={sellMaxAmount} />
           <SellStatus amount={data.output1.askp_rsqn4} price={data.output1.askp4} maxAmount={sellMaxAmount} />
@@ -52,8 +68,24 @@ const SellBuyStatus = ({ data, sellMaxAmount, buyMaxAmount }: Props) => {
         <h6>매수 현황</h6>
         <div className=" flex flex-col gap-1 mt-5">
           <div className=" flex">
-            <p className=" w-1/2 text-myGray text-center">매수 잔량</p>
-            <p className=" w-1/2 text-myGray text-center">매수 가격</p>
+            <div className=" w-1/2 flex items-center justify-center gap-2">
+              <p className=" text-myGray text-center">매수 잔량</p>
+              <div className="group relative">
+                <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
+                <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-12 left-1/2 transform -translate-x-1/2 w-44">
+                  주식을 사기 위해 남아있는 주식의 수량입니다.
+                </span>
+              </div>
+            </div>
+            <div className=" w-1/2 flex items-center justify-center gap-2">
+              <p className=" text-myGray text-center">매수 가격</p>
+              <div className="group relative">
+                <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
+                <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-7 left-1/2 transform -translate-x-1/2 w-40">
+                  1주당 구매 가격입니다.
+                </span>
+              </div>
+            </div>
           </div>
           <BuyStatus amount={data.output1.bidp_rsqn1} price={data.output1.bidp1} maxAmount={buyMaxAmount} />
           <BuyStatus amount={data.output1.bidp_rsqn2} price={data.output1.bidp2} maxAmount={buyMaxAmount} />
