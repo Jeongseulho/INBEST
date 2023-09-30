@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,10 @@ import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.service.TradingService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +37,14 @@ public class TradingController {
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
 	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
 	@PostMapping("")
-	public ResponseEntity<Map<String, Object>> addTrading(@ModelAttribute TradingDTO tradingDto){
+	@Operation(summary = "거래 생성")
+	@io.swagger.v3.oas.annotations.parameters.RequestBody(
+		description = "거래 정보 DTO",
+		content = @Content(
+			schema = @Schema(implementation = TradingDTO.class)
+		)
+	)
+	public ResponseEntity<Map<String, Object>> addTrading(@RequestBody TradingDTO tradingDto){
 		log.info("========== 주식 거래 등록 시작 ==========");
 
 		// tradingDto.setCreatedDate(LocalDateTime.now());
@@ -46,25 +58,25 @@ public class TradingController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@GetMapping("/group")
-	public void makeTestGroup(){
-		//거래로 인한 유저의 자산 보유량 변경
-		HashOperations<String, String, RedisSimulationUserDTO> simulationUserHashOperations = redisSimulationUserTemplate.opsForHash();
-		String simulationHashKey = "simulation_1";
-		RedisSimulationUserDTO redisSimulationUserDTO = RedisSimulationUserDTO.builder()
-				.userSeq(2L)
-					.simulationSeq(1L)
-						.currentMoney(100_000_000L)
-							.isExited(false)
-								.seedMoney(100_000_000L)
-									.build();
-
-		simulationUserHashOperations.put(simulationHashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),redisSimulationUserDTO);
-
-		//거래로 인한 주식 개수 변경
-		// String simulationUserHashKey = "simulation_"+1+"_user_"+2;
-		// String simulationUserKey = tradingDTO.getStockType()+"_"+tradingDTO.getStockCode();
-		// HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
-		// StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);
-	}
+	// @GetMapping("/group")
+	// public void makeTestGroup(){
+	// 	//거래로 인한 유저의 자산 보유량 변경
+	// 	HashOperations<String, String, RedisSimulationUserDTO> simulationUserHashOperations = redisSimulationUserTemplate.opsForHash();
+	// 	String simulationHashKey = "simulation_1";
+	// 	RedisSimulationUserDTO redisSimulationUserDTO = RedisSimulationUserDTO.builder()
+	// 			.userSeq(2L)
+	// 				.simulationSeq(1L)
+	// 					.currentMoney(100_000_000L)
+	// 						.isExited(false)
+	// 							.seedMoney(100_000_000L)
+	// 								.build();
+	//
+	// 	simulationUserHashOperations.put(simulationHashKey,String.valueOf(redisSimulationUserDTO.getUserSeq()),redisSimulationUserDTO);
+	//
+	// 	//거래로 인한 주식 개수 변경
+	// 	// String simulationUserHashKey = "simulation_"+1+"_user_"+2;
+	// 	// String simulationUserKey = tradingDTO.getStockType()+"_"+tradingDTO.getStockCode();
+	// 	// HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
+	// 	// StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);
+	// }
 }
