@@ -26,6 +26,7 @@ import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.UserRepository;
@@ -239,7 +240,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto getUserInfo(Long seq) {
+	public UserDto getProfileInfo(Long seq) {
 		log.info("UserServiceImpl - getUserInfo 실행: {}", seq);
 
 		Optional<User> userEntity = userRepository.findById(seq);
@@ -248,6 +249,11 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return userEntity.get().convertToUserDto(userEntity.get());
+	}
+
+	@Override
+	public UserDetailsDTO getUserDetailsInfo(Long userSeq) {
+		return null;
 	}
 
 	@Transactional
@@ -275,7 +281,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto updateUserInfo(Long userSeq, MultipartFile file, UserDto inputUserDto, Long tokenSeq) throws
+	public UserDto updateProfileInfo(Long userSeq, MultipartFile file, UserDto inputUserDto, Long tokenSeq) throws
 		IOException {
 		log.info("회원 정보: {}", inputUserDto);
 
