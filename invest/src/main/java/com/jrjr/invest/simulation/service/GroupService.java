@@ -20,6 +20,13 @@ import com.jrjr.invest.rank.service.SimulationRankService;
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.entity.SimulationUser;
 import com.jrjr.invest.simulation.entity.User;
+import com.jrjr.invest.simulation.repository.LoginHistoryRepository;
+import com.jrjr.invest.simulation.repository.SimulationRepository;
+import com.jrjr.invest.simulation.repository.SimulationUserRepository;
+import com.jrjr.invest.simulation.repository.UserRepository;
+import com.jrjr.invest.trading.constant.TradingType;
+import com.jrjr.invest.trading.dto.TradingDTO;
+import com.jrjr.invest.trading.service.TradingService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +39,7 @@ public class GroupService {
 	private final SimulationRankService simulationRankServiceImpl;
 	private final NotificationRepository notificationRepository;
 	private final UserRepository userRepository;
+	private final TradingService tradingService;
 	private final SimulationRepository simulationRepository;
 	private final SimulationUserRepository simulationUserRepository;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
@@ -79,14 +87,17 @@ public class GroupService {
 		joinGroup(simulation.getSeq(),owner.getSeq());
 
 		// 모의 투자에 유저 초대하기
-		for (Long userSeq : groupDTO.getUserSeqList()) {
+		if(groupDTO.getUserSeqList() != null){
+			for (Long userSeq : groupDTO.getUserSeqList()) {
 
-			if (userSeq == owner.getSeq()) {
-				continue;
+				if (userSeq == owner.getSeq()) {
+					continue;
+				}
+
+				inviteUser(simulation.getSeq(), owner.getNickname(), userSeq);
 			}
-
-			inviteUser(simulation.getSeq(), owner.getNickname(), userSeq);
 		}
+
 		// simulation = simulationRepository.findBySeq(simulation.getSeq());
 		// SimulationUser 저장
 		// if (groupDTO.getUserSeqList() == null) {
@@ -568,5 +579,76 @@ public class GroupService {
 		Double averageRate = simulationRepository.getAverageRevenuRate(before2days	).orElse(0D);
 
 		return averageRate.intValue();
+	}
+	//모든 자산 변화를 리턴함
+	public List<AssetDTO> getAssets(Long simulationSeq, Long userSeq) throws Exception {
+		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
+		//모의 투자방이 있는지 확인
+		if(simulation == null){
+			throw new Exception(simulationSeq+"번 모의투자방이 없습니다.");
+		}
+		User user = userRepository.findBySeq(userSeq);
+
+		//해당 유저가 있는지 확인
+		if(user == null){
+			throw new Exception(userSeq+"번 유저가 없습니다.");
+		}
+
+		SimulationUser simulationUser = simulationUserRepository.findBySimulationAndUser(simulation,user);
+
+		//해당 유저가 모의투자방에 참가하고 있는지 확인
+		if(user == null){
+			throw new Exception(userSeq+"번 유저는 "+simulationSeq+"번 모의투자방에 속해있지 않습니다.");
+		}
+
+		Long seedMoney = simulation.getSeedMoney();
+
+		List<AssetDTO> assetDTOList = new ArrayList<>();
+
+		//현재 금액을 시드머니로 초기화
+		Long currentMoney = seedMoney;
+
+		//시작금 넣기
+		assetDTOList.add(AssetDTO.builder()
+				.asset(currentMoney)
+				.createdTime(simulation.getStartDate())
+				.userSeq(userSeq)
+				.simulationSeq(simulationSeq)
+			.build());
+		
+		//매매 기록 가져오기
+		List<TradingDTO> tradingDTOList = tradingService.findAllSuccessTrading(userSeq,simulationSeq);
+		log.info("매매 기록");
+		log.info(tradingDTOList.toString());
+
+		if(tradingDTOList != null){
+			for(TradingDTO tradingDTO : tradingDTOList){
+				//매수인 경우
+				if(tradingDTO.getTradingType() == TradingType.BUY){
+					currentMoney = currentMoney - tradingDTO.getAmount()*tradingDTO.getPrice();
+				}
+				//매도인 경우
+				else if(tradingDTO.getTradingType() == TradingType.SELL){
+					currentMoney = currentMoney + tradingDTO.getAmount()*tradingDTO.getPrice();
+				}
+				else{
+					log.info("알 수 없는 결제 내역입니다.");
+					log.info(tradingDTO.toString());
+					throw new Exception("알 수 없는 결제 내역을 가지고 있습니다.");
+				}
+				//자산 정보 DTO를 생성
+				AssetDTO asset = AssetDTO.builder()
+					.asset(currentMoney)
+					//거래 채결일을 에셋 변화 일로 지정
+					.createdTime(tradingDTO.getLastModifiedDate())
+					.userSeq(userSeq)
+					.simulationSeq(simulationSeq)
+					.build();
+
+				assetDTOList.add(asset);
+			}
+		}
+		
+		return assetDTOList;
 	}
 }

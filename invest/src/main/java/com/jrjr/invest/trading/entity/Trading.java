@@ -1,6 +1,7 @@
 package com.jrjr.invest.trading.entity;
 
 import com.jrjr.invest.global.entity.BaseEntity;
+import com.jrjr.invest.trading.dto.TradingDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -58,5 +59,13 @@ public class Trading extends BaseEntity {
 		this.tradingType = tradingType;
 		this.conclusionType = conclusionType;
 		this.stockName = stockName;
+	}
+	public TradingDTO toTradingDto(){
+		return TradingDTO.builder().
+			seq(seq).userSeq(userSeq).nickname(nickname).
+			amount(amount).stockCode(stockCode).tradingType(tradingType).conclusionType(conclusionType).
+			stockName(stockName).createdDate(getCreatedDate()).lastModifiedDate(getLastModifiedDate())
+			.price(price).stockType(stockType).simulationSeq(simulationSeq)
+			.build();
 	}
 }
