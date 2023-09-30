@@ -11,7 +11,7 @@ url = "https://opendart.fss.or.kr/api/fnlttSinglAcntAll.json"
 api_key = "ac30ceeeb8ac94447e5e065876a5783d79e5b3ec"
 
 # 모든 Company 모델의 company_code를 가져옴
-company_codes = Company.objects.values_list('company_code', flat=True)[320:500]
+company_codes = Company.objects.values_list('company_code', flat=True)[2600:2700]
 print(company_codes)
 count = 1
 for company_code in company_codes:

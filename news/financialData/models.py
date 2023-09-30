@@ -2,7 +2,7 @@ from django.db import models
 
 class Company(models.Model):
     seq = models.AutoField(primary_key=True)
-    company_code = models.CharField(max_length=10)
+    company_code = models.CharField(max_length=10, unique=True)
     company_name = models.CharField(max_length=255)
     company_stock_code = models.CharField(max_length=10)
     company_real_industry_code = models.CharField(max_length=10, null=True)
@@ -78,3 +78,16 @@ class FinancialProduct(models.Model):
     etc_note = models.CharField(max_length=255, null=True)  # 기타 유의사항
     max_limit = models.BigIntegerField(null=True)  # 최고한도
     rsrv_type_nm = models.CharField(max_length=255, default=None, null=True) # 적금형태
+
+
+class CompanyIndicators(models.Model):
+    seq = models.AutoField(primary_key=True)
+    company_code_seq = models.IntegerField()
+    stability = models.IntegerField()
+    size = models.IntegerField()
+    growth = models.IntegerField()
+    profitability = models.IntegerField()
+    revenue_growth = models.FloatField()
+    debt_growth = models.FloatField()
+    operating_profit_growth = models.FloatField()
+    asset_growth = models.FloatField()
