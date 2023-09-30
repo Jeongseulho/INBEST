@@ -1,4 +1,4 @@
-package com.jrjr.realtime.invest.dto;
+package com.jrjr.realtime.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 public class NotificationDTO {
-    private String _id;
+    private String id;
     private Long simulationSeq;
     private Long userSeq;
     private String message;

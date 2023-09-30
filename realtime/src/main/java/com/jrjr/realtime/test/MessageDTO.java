@@ -1,4 +1,4 @@
-package com.jrjr.realtime.invest.dto;
+package com.jrjr.realtime.test;
 
 import lombok.*;
 

@@ -1,14 +1,15 @@
-package com.jrjr.realtime.client.controller;
+package com.jrjr.realtime.controller;
 
 
-import com.jrjr.realtime.invest.dto.NotificationDTO;
+import com.jrjr.realtime.dto.NotificationDTO;
+import com.jrjr.realtime.service.NotificationService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,15 +17,24 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class StompController {
 
-    private final RabbitTemplate rabbitTemplate;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+//    private final RabbitTemplate rabbitTemplate;
+//    private final SimpMessagingTemplate simpMessagingTemplate;
 
+    private final NotificationService notificationService;
 
+    @Operation(summary = "알림 수신 여부 확인")
     @MessageMapping("/notification.user.{userSeq}")
-    public void sendMessage(@DestinationVariable Long userSeq, @RequestBody NotificationDTO notificationDTO) {
-        log.info("[메시지 수신]");
+    public void checkNotificationReceive(@DestinationVariable Long userSeq, @RequestBody NotificationDTO notificationDTO) {
+        log.info("[알림 수신 여부 확인]");
         log.info("userSeq"+userSeq);
         log.info(notificationDTO.toString());
+        notificationService.updateReceivedNotification(notificationDTO.getId());
+    }
+
+    @Operation(summary = "알림 다시 보내기")
+    @SubscribeMapping("/notification/{userSeq}")
+    public void resendNotifications(@DestinationVariable Long userSeq) {
+        notificationService.resendNotifications(userSeq);
     }
 
 //    @PostMapping("/notification/user/{userSeq}")
