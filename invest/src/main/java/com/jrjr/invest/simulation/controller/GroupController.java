@@ -236,7 +236,10 @@ public class GroupController {
 	}
 	@Operation(summary = "유저의 최근 거래 내역")
 	@GetMapping("/{simulationSeq}/users/{userSeq}/trading-history")
-	@Parameter(name = "count",required = true,description = "찾으려고 하는 매매 기록의 개수")
+	@Parameters(value = {
+		@Parameter(name = "pageNo",required = true,description = "페이지 번호"),
+		@Parameter(name = "pageSize",required = true,description = "한번에 보여주는 데이터 개수")
+	})
 	ResponseEntity<?> findTradingHistory(
 		@PathVariable(name = "simulationSeq") Long simulationSeq,
 		@PathVariable(name = "userSeq") Long userSeq,
@@ -257,7 +260,10 @@ public class GroupController {
 
 	@Operation(summary = "유저의 보유 주식 목록(최근 매매 순)")
 	@GetMapping("/{simulationSeq}/users/{userSeq}/stocks")
-	@Parameter(name = "count",required = true,description = "찾으려고 하는 매매 기록의 개수")
+	@Parameters(value = {
+		@Parameter(name = "pageNo",required = true,description = "페이지 번호"),
+		@Parameter(name = "pageSize",required = true,description = "한번에 보여주는 데이터 개수")
+	})
 	ResponseEntity<?> findUserStocks(
 		@PathVariable(name = "simulationSeq") Long simulationSeq,
 		@PathVariable(name = "userSeq") Long userSeq,
