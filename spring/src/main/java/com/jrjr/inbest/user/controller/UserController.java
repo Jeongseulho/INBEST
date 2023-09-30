@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.service.UserService;
 
@@ -147,7 +148,7 @@ public class UserController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "회원 정보 조회")
+	@Operation(summary = "프로필 정보 조회 (seq, email, name, nickname, birth, gender, profileImgSearchName)")
 	@Parameters(value = {
 		@Parameter(required = true, name = "seq", description = "조회 할 회원 pk값")
 	})
@@ -157,13 +158,34 @@ public class UserController {
 		@ApiResponse(responseCode = "404", description = "조회 회원 정보 없음")
 	})
 	@GetMapping("/{seq}")
-	ResponseEntity<Map<String, Object>> getProfile(@PathVariable(value = "seq") Long seq) {
+	ResponseEntity<Map<String, Object>> getProfileInfo(@PathVariable(value = "seq") Long seq) {
 		log.info("UserController - getProfile 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		UserDto userInfo = userService.getUserInfo(seq);
+		UserDto userInfo = userService.getProfileInfo(seq);
 
 		resultMap.put("UserInfo", userInfo);
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "회원 정보 조회")
+	@Parameters(value = {
+		@Parameter(required = true, name = "seq", description = "조회 할 회원 pk값")
+	})
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200"),
+		@ApiResponse(responseCode = "404", description = "조회 회원 정보 없음")
+	})
+	@GetMapping("/{seq}/details")
+	ResponseEntity<Map<String, Object>> getUserDetailsInfo(@PathVariable(value = "seq") Long userSeq) {
+		log.info("========== 회원({}) 정보 조회 시작 ==========", userSeq);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		UserDetailsDTO userDetailsInfo = userService.getUserDetailsInfo(userSeq);
+
+		log.info("========== 회원({}) 정보 조회 완료 ==========", userSeq);
+		resultMap.put("UserDetailsInfo", userDetailsInfo);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -210,7 +232,7 @@ public class UserController {
 		log.info("회원 seq: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		UserDto userInfo = userService.updateUserInfo(seq, file, userDto, loginSeq);
+		UserDto userInfo = userService.updateProfileInfo(seq, file, userDto, loginSeq);
 		userService.updateUserRankingInfo(userInfo);
 
 		log.info("========== 프로필 정보 업데이트 완료 ==========");
