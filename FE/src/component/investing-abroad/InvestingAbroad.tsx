@@ -28,20 +28,40 @@ const InvestingAbroad = ({ setCompanyInfo }: Props) => {
     ["americaIncreaseStockList"],
     getAmericaIncreaseStockList
   );
-  const { data: nasdaq } = useQuery(["nasdaq"], getNasdaq);
-  const { data: dowJones } = useQuery(["dowJones"], getDowJones);
-  const { data: sp500 } = useQuery(["sp500"], getSP500);
-  const { data: vix } = useQuery(["vix"], getVix);
-  const { data: exchangeRate } = useQuery(["exchangeRate"], getExchangeRate);
+  const { data: nasdaq, isLoading: isLoadingNasdaq } = useQuery(["nasdaq"], getNasdaq);
+  const { data: dowJones, isLoading: isLoadingDowJones } = useQuery(["dowJones"], getDowJones);
+  const { data: sp500, isLoading: isLoadingSp500 } = useQuery(["sp500"], getSP500);
+  const { data: vix, isLoading: isLoadingVix } = useQuery(["vix"], getVix);
+  const { data: exchangeRate, isLoading: isLoadingExchangeRate } = useQuery(["exchangeRate"], getExchangeRate);
 
   return (
     <div className=" flex flex-col items-center gap-4">
       <div className=" flex gap-4">
-        <GraphIconComponent title="나스닥" desc="나스닥 설명" state={nasdaq?.fluctuation_state} />
-        <GraphIconComponent title="다우존스" desc="다우존스 설명" state={dowJones?.fluctuation_state} />
-        <GraphIconComponent title="S&P500" desc="S&P500 설명" state={sp500?.fluctuation_state} />
-        <GraphIconComponent title="VIX" desc="VIX 설명" state={vix?.fluctuation_state} />
-        <GraphIconComponent title="환율" desc="환율 설명" state={exchangeRate?.exchange_rate_change_state} />
+        <GraphIconComponent
+          title="나스닥"
+          desc="나스닥 설명"
+          state={nasdaq?.fluctuation_state}
+          isLoading={isLoadingNasdaq}
+        />
+        <GraphIconComponent
+          title="다우존스"
+          desc="다우존스 설명"
+          state={dowJones?.fluctuation_state}
+          isLoading={isLoadingDowJones}
+        />
+        <GraphIconComponent
+          title="S&P 500"
+          desc="S&P 500 설명"
+          state={sp500?.fluctuation_state}
+          isLoading={isLoadingSp500}
+        />
+        <GraphIconComponent title="VIX" desc="VIX 설명" state={vix?.fluctuation_state} isLoading={isLoadingVix} />
+        <GraphIconComponent
+          title="환율"
+          desc="환율 설명"
+          state={exchangeRate?.exchange_rate_change_state}
+          isLoading={isLoadingExchangeRate}
+        />
       </div>
       <div className=" flex gap-4 w-full">
         <AbroadStockList

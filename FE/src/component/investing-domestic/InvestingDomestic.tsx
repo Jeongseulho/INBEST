@@ -29,20 +29,40 @@ const InvestingDomestic = ({ setCompanyInfo }: Props) => {
     ["korIncreaseStockList"],
     getKorIncreaseStockList
   );
-  const { data: kospi } = useQuery(["kospi"], getKospi);
-  const { data: kosdaq } = useQuery(["kosdaq"], getKosdaq);
-  const { data: kospi200 } = useQuery(["kospi200"], getKospi200);
-  const { data: exchangeRate } = useQuery(["exchangeRate"], getExchangeRate);
-  const { data: krx } = useQuery(["krx"], getKrx);
+  const { data: kospi, isLoading: isLoadingKospi } = useQuery(["kospi"], getKospi);
+  const { data: kosdaq, isLoading: isLoadingKosdaq } = useQuery(["kosdaq"], getKosdaq);
+  const { data: kospi200, isLoading: isLoadingKospi200 } = useQuery(["kospi200"], getKospi200);
+  const { data: krx, isLoading: isLoadingKrx } = useQuery(["krx"], getKrx);
+  const { data: exchangeRate, isLoading: isLoadingExchangeRate } = useQuery(["exchangeRate"], getExchangeRate);
 
   return (
     <div className=" flex flex-col items-center gap-4">
       <div className=" flex gap-4">
-        <GraphIconComponent title="코스피" desc="코스피 설명" state={kospi?.fluctuation_state} />
-        <GraphIconComponent title="코스닥" desc="코스닥 설명" state={kosdaq?.fluctuation_state} />
-        <GraphIconComponent title="코스피200" desc="코스피200 설명" state={kospi200?.fluctuation_state} />
-        <GraphIconComponent title="KRX" desc="krx 설명" state={krx?.fluctuation_state} />
-        <GraphIconComponent title="환율" desc="환율 설명" state={exchangeRate?.exchange_rate_change_state} />
+        <GraphIconComponent
+          title="코스피"
+          desc="코스피 설명"
+          state={kospi?.fluctuation_state}
+          isLoading={isLoadingKospi}
+        />
+        <GraphIconComponent
+          title="코스닥"
+          desc="코스닥 설명"
+          state={kosdaq?.fluctuation_state}
+          isLoading={isLoadingKosdaq}
+        />
+        <GraphIconComponent
+          title="코스피200"
+          desc="코스피200 설명"
+          state={kospi200?.fluctuation_state}
+          isLoading={isLoadingKospi200}
+        />
+        <GraphIconComponent title="KRX" desc="KRX 설명" state={krx?.fluctuation_state} isLoading={isLoadingKrx} />
+        <GraphIconComponent
+          title="환율"
+          desc="환율 설명"
+          state={exchangeRate?.exchange_rate_change_state}
+          isLoading={isLoadingExchangeRate}
+        />
       </div>
       <div className=" flex gap-4 w-full">
         <DomesticStockList

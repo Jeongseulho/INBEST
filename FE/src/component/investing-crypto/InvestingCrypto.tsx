@@ -10,15 +10,29 @@ interface Props {
 
 const InvestingCrypto = ({ setCompanyInfo }: Props) => {
   const { data, isLoading } = useQuery(["coinStockList"], getCoinStockList);
-  const { data: cryptoVolume } = useQuery(["cryptoVolume"], getCryptoVolume);
-  const { data: cryptoMarketCap } = useQuery(["cryptoMarketCap"], getCryptoMarketCap);
+  const { data: cryptoVolume, isLoading: isLoadingCryptoVolume } = useQuery(["cryptoVolume"], getCryptoVolume);
+  const { data: cryptoMarketCap, isLoading: isLoadingCryptoMarketCap } = useQuery(
+    ["cryptoMarketCap"],
+    getCryptoMarketCap
+  );
   const { data: fearIndex } = useQuery(["fearIndex"], getFearIndex);
 
   return (
     <div className=" flex flex-col items-center gap-4">
       <div className=" flex gap-4 items-center">
-        <GraphIconComponent title="가상화폐 거래량" desc="거래량 설명" state={cryptoVolume?.fluctuation_state} />
-        <GraphIconComponent title="가상화폐 시가총액" desc="시가총액 설명" state={cryptoMarketCap?.fluctuation_state} />
+        <GraphIconComponent
+          title="가상화폐 거래량"
+          desc="거래량 설명"
+          state={cryptoVolume?.fluctuation_state}
+          isLoading={isLoadingCryptoVolume}
+        />
+        <GraphIconComponent
+          title="가상화폐 시가총액"
+          desc="시가총액 설명"
+          state={cryptoMarketCap?.fluctuation_state}
+          isLoading={isLoadingCryptoMarketCap}
+        />
+
         <FearRadialBar percentage={fearIndex?.fear_index || 0} />
       </div>
       <div className=" flex gap-4 w-full">
