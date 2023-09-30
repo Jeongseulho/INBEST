@@ -96,6 +96,7 @@ public class TradingService {
 		StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);
 		// stockUserDTO.setMarketPrice(tradingDTO.getPrice());
 		stockUserDTO.setAmount(stockUserDTO.getAmount()-tradingDTO.getAmount());
+		stockUserDTO.setLastModifiedDate(LocalDateTime.now());
 
 		//모두 매도하면 삭제
 		if(stockUserDTO.getAmount() == 0){
@@ -139,8 +140,6 @@ public class TradingService {
 		}else{
 			redisCrawlingOperations.put(crawlingHashKey,savedCrawling.getStockCode(),savedCrawling);
 		}
-
-
 	}
 	public void buyStock(TradingDTO tradingDTO) throws Exception{
 		//거래로 인한 유저의 자산 보유량 변경
@@ -186,6 +185,7 @@ public class TradingService {
 		//이미 가지고 있는 주식인 경우
 		else{
 			stockUserDTO.setAmount(stockUserDTO.getAmount()+tradingDTO.getAmount());
+			stockUserDTO.setLastModifiedDate(LocalDateTime.now());
 		}
 		stockUserHashOperations.put(simulationUserHashKey,simulationUserKey,stockUserDTO);
 	}

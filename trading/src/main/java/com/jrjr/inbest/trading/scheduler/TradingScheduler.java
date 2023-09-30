@@ -45,7 +45,8 @@ public class TradingScheduler {
 	}
 
 	// @Scheduled(cron = "0/10 * * * * *")
-	@Scheduled(cron = "0 * 9-20 * * ?")
+	// @Scheduled(cron = "0 * 9-20 * * ?")
+	@Scheduled(cron = "0 * * * * ?")
 	public void myScheduledTask() throws Exception {
 		// 여기에 수행할 작업을 넣습니다.
 		log.info("========== 주식 매매 시작 ==========");
