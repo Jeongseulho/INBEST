@@ -3,12 +3,14 @@ package com.jrjr.invest.simulation.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 import com.jrjr.invest.simulation.dto.*;
 import com.jrjr.invest.simulation.service.MessageService;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.invest.simulation.service.GroupService;
+import com.jrjr.invest.trading.dto.TradingDTO;
+import com.jrjr.invest.trading.service.TradingService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GroupController {
 	private final GroupService groupService;
 	private final MessageService messageService;
+	private final TradingService tradingService;
 
 	@PostMapping("/sendMessage")
 	ResponseEntity<?> sendMessage(@RequestBody MessageDTO messageDTO) {
@@ -212,5 +217,68 @@ public class GroupController {
 
 		log.info("===== 그룹 시작하기 끝  ===== ");
 		return ResponseEntity.ok().build();
+	}
+	@Operation(summary = "유저의 자산 보유 변화 탐색")
+	@GetMapping("/{simulationSeq}/users/{userSeq}/asset-change")
+	ResponseEntity<?> findAssetChange(
+		@PathVariable(name = "simulationSeq") Long simulationSeq,
+		@PathVariable(name = "userSeq") Long userSeq,
+		@RequestParam(required = false, defaultValue = "",name="loginSeq") String loginSeq
+	) throws Exception {
+		log.info("===== 유저의 자신 보유량 찾기 시작=====");
+		log.info("방 seq :  "+simulationSeq);
+		log.info("유저 seq :  "+userSeq);
+
+		List<AssetDTO> assetDTOList = groupService.getAssets(simulationSeq,userSeq);
+
+		log.info("===== 유저의 자신 보유량 찾기 끝 ===== ");
+		return new ResponseEntity<>(assetDTOList, HttpStatus.OK);
+	}
+	@Operation(summary = "유저의 최근 거래 내역")
+	@GetMapping("/{simulationSeq}/users/{userSeq}/trading-history")
+	@Parameters(value = {
+		@Parameter(name = "pageNo",required = true,description = "페이지 번호"),
+		@Parameter(name = "pageSize",required = true,description = "한번에 보여주는 데이터 개수")
+	})
+	ResponseEntity<?> findTradingHistory(
+		@PathVariable(name = "simulationSeq") Long simulationSeq,
+		@PathVariable(name = "userSeq") Long userSeq,
+		@RequestParam(required = true,name="pageNo") Integer pageNo,
+		@RequestParam(required = true,name="pageSize") Integer pageSize
+	) throws Exception {
+		log.info("===== 유저의 최근 거래 찾기 시작=====");
+		log.info("방 seq :  "+simulationSeq);
+		log.info("유저 seq :  "+userSeq);
+		log.info("페이지 사이즈 :  "+pageSize);
+		log.info("페이지 번호 :  "+pageNo);
+		
+		List<TradingDTO> tradingDTOList = tradingService.findAllSuccessTrading(userSeq,simulationSeq,pageNo,pageSize);
+
+		log.info("===== 유저의 최근 거래 찾기 끝=====");
+		return new ResponseEntity<>(tradingDTOList, HttpStatus.OK);
+	}
+
+	@Operation(summary = "유저의 보유 주식 목록(최근 매매 순)")
+	@GetMapping("/{simulationSeq}/users/{userSeq}/stocks")
+	@Parameters(value = {
+		@Parameter(name = "pageNo",required = true,description = "페이지 번호"),
+		@Parameter(name = "pageSize",required = true,description = "한번에 보여주는 데이터 개수")
+	})
+	ResponseEntity<?> findUserStocks(
+		@PathVariable(name = "simulationSeq") Long simulationSeq,
+		@PathVariable(name = "userSeq") Long userSeq,
+		@RequestParam(required = true,name="pageNo") Integer pageNo,
+		@RequestParam(required = true,name="pageSize") Integer pageSize
+	) throws Exception {
+		log.info("===== 유저의 보유 주식 찾기 시작=====");
+		log.info("방 seq :  "+simulationSeq);
+		log.info("유저 seq :  "+userSeq);
+		log.info("페이지 번호 :  "+pageNo);
+		log.info("페이지 크기 :  "+pageSize);
+
+		List<RedisStockUserDTO> stockList = tradingService.findAllUserStocks(userSeq,simulationSeq,pageNo,pageSize);
+
+		log.info("===== 유저의 보유 주식 찾기 끝=====");
+		return new ResponseEntity<>(stockList, HttpStatus.OK);
 	}
 }
