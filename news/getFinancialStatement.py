@@ -11,7 +11,7 @@ url = "https://opendart.fss.or.kr/api/fnlttSinglAcntAll.json"
 api_key = "ac30ceeeb8ac94447e5e065876a5783d79e5b3ec"
 
 # 모든 Company 모델의 company_code를 가져옴
-company_codes = Company.objects.values_list('company_code', flat=True)[2600:2700]
+company_codes = Company.objects.values_list('company_code', flat=True).order_by('seq')[2601:2650]
 print(company_codes)
 count = 1
 for company_code in company_codes:
@@ -78,7 +78,7 @@ for company_code in company_codes:
 
                 amount = float(amount_str)
 
-                if account_name == "유동자산" and not handled_current_assets:
+                if (account_name == "유동자산" or account_name =="Ⅰ. 유동자산") and not handled_current_assets:
                     financial_statement_dict["current_assets"] = amount
                     handled_current_assets = True
 
@@ -110,17 +110,21 @@ for company_code in company_codes:
                     financial_statement_dict['total_equity'] = amount    
                     handled_total_equity = True    
 
-                elif account_name == "수익(매출액)" and not handled_revenue:
+                elif (account_name == "수익(매출액)" or account_name == "매출채권" or account_name == "매출액" or account_name == "영업수익") and not handled_revenue:
                     financial_statement_dict["revenue"] = amount
                     handled_revenue = True  
 
-                elif account_name == "매출총이익" and not handled_gross_profit:
+                elif (account_name == "매출총이익" or account_name == "영업손익") and not handled_gross_profit:
                     financial_statement_dict["gross_profit"] = amount
                     handled_gross_profit = True  
 
-                elif account_name == "영업이익" and not handled_operating_profit:
-                    financial_statement_dict["operating_profit"] = amount
-                    handled_operating_profit = True 
+                elif (account_name == "영업이익" or account_name == "영업이익(손실)" or account_name == "영업손실" or account_name == "영업비용") and not handled_operating_profit:
+                    if account_name == "영업이익(손실)" or account_name == "영업손실":
+                        financial_statement_dict["operating_profit"] = -abs(amount)
+                        handled_operating_profit = True 
+                    else:
+                        financial_statement_dict["operating_profit"] = amount
+                        handled_operating_profit = True
 
                 elif account_name == "영업외수익" and not handled_non_operating_income:
                     financial_statement_dict["non_operating_income"] = amount
@@ -130,18 +134,25 @@ for company_code in company_codes:
                     financial_statement_dict["non_operating_expenses"] = amount
                     handled_non_operating_expenses = True
 
-                elif account_name == "법인세비용차감전순이익(손실)" and not handled_income_before_tax:
-                    financial_statement_dict["income_before_tax"] = amount
-                    handled_income_before_tax = True
+                elif (account_name == "법인세비용차감전순이익(손실)" or account_name == '법인세비용차감전순이익' or account_name == "법인세비용차감전이익" or account_name == "법인세비용차감전순손익") and not handled_income_before_tax:
+                    if account_name == "법인세비용차감전순이익(손실)":
+                        financial_statement_dict["income_before_tax"] = -abs(amount)
+                        handled_income_before_tax = True
+                    else:
+                        financial_statement_dict["income_before_tax"] = amount
+                        handled_income_before_tax = True
 
-
-                elif account_name == "법인세비용" and not handled_income_tax_expense:
-                    financial_statement_dict["income_tax_expense"] = amount
+                elif (account_name == "법인세비용" or account_name == "법인세납부(환급)" or account_name == "법인세비용(수익)") and not handled_income_tax_expense:
+                    financial_statement_dict["income_tax_expense"] = abs(amount)
                     handled_income_tax_expense = True
 
-                elif account_name == "당기순이익" and not handled_net_income:
-                    financial_statement_dict["net_income"] = amount
-                    handled_net_income = True
+                elif (account_name == "당기순이익" or account_name == "반기순이익" or account_name == "당기순이익(손실)" or account_name == "반기순이익(손실)" or account_name == "당기순손익") and not handled_net_income:
+                    if account_name == "당기순이익(손실)" or account_name == "반기순이익(손실)" or account_name == "당기순손익":
+                        financial_statement_dict["net_income"] = -abs(amount)
+                        handled_net_income = True
+                    else:
+                        financial_statement_dict["net_income"] = -amount
+                        handled_net_income = True
 
                 elif account_name == "총자산증가율" and not handled_total_asset_growth_rate:
                     financial_statement_dict["total_asset_growth_rate"] = amount
@@ -191,7 +202,7 @@ for company_code in company_codes:
                     financial_statement_dict["total_asset_turnover"] = amount
                     handled_total_asset_turnover = True
 
-                
+    
             # 'company_seq' 동일한 FinancialStatement 인스턴스 찾아서 생성 or 수정
             fs_instance, created = FinancialStatement.objects.update_or_create(
                 company_seq = financial_statement_dict["company_seq"],

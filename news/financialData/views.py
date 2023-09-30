@@ -589,7 +589,7 @@ def crypto_volume(request):
 
     symbol = 'BTC/KRW'
 
-    # 가상화폐의 거래량 데이터 가져오기
+    # 가상화폐의 거래량
     crypto_data = fdr.DataReader(symbol, start='2023-01-01', end='2023-12-31')
 
     # 거래량 증감률 계산
@@ -615,7 +615,7 @@ def crypto_volume(request):
 def fear_index(request):
     symbol = 'BTC/KRW'
 
-    # 가상화폐의 시가총액 데이터 가져오기 (데이터 소스를 지정하지 않습니다)
+    # 가상화폐의 시가총액
     crypto_data = fdr.DataReader(symbol, start='2023-01-01', end='2023-12-31')
 
     # 종가 데이터와 거래량 데이터를 사용하여 시가총액 증감률 계산
@@ -645,7 +645,7 @@ def fear_index(request):
 def bitcoin(request):
     symbol = 'BTC/KRW'
 
-    # 가상화폐의 종가 데이터 가져오기 (데이터 소스를 지정하지 않습니다)
+    # 가상화폐의 종가
     crypto_data = fdr.DataReader(symbol, start='2023-01-01', end='2023-12-31')
 
     # 어제와 오늘의 종가 차이 계산

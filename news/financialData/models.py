@@ -24,8 +24,6 @@ class FinancialStatement(models.Model):
     revenue = models.BigIntegerField(null=True, default=None)  # 매출액
     gross_profit = models.BigIntegerField(null=True, default=None)  # 매출총이익
     operating_profit = models.BigIntegerField(null=True, default=None)  # 영업이익
-    non_operating_income = models.BigIntegerField(null=True, default=None)  # 영업외수익
-    non_operating_expenses = models.BigIntegerField(null=True, default=None)  # 영업외비용
     income_before_tax = models.BigIntegerField(null=True, default=None)  # 법인세차감전이익
     income_tax_expense = models.BigIntegerField(null=True, default=None)  # 법인세비용
     net_income = models.BigIntegerField(null=True, default=None)  # 총당기순이익
@@ -37,11 +35,6 @@ class FinancialStatement(models.Model):
     roe = models.FloatField(null=True, default=None)  # ROE
     roic = models.FloatField(null=True, default=None)  # ROIC
     debt_to_equity_ratio = models.FloatField(null=True, default=None)  # 부채비율
-    interest_coverage_ratio = models.FloatField(null=True, default=None)  # 이자보상배수
-    debt_dependency = models.FloatField(null=True, default=None)  # 차입금의존도
-    accounts_receivable_turnover = models.FloatField(null=True, default=None)  # 매출채권회전율
-    inventory_turnover = models.FloatField(null=True, default=None)  # 재고자산회전율
-    total_asset_turnover = models.FloatField(null=True, default=None)  # 총자본회전율
 
 class FinancialStatement_2022(models.Model):
     seq = models.AutoField(primary_key=True)
