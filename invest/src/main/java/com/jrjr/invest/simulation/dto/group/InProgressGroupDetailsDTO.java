@@ -1,4 +1,4 @@
-package com.jrjr.invest.simulation.dto;
+package com.jrjr.invest.simulation.dto.group;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.text.Document;
-
-import com.jrjr.invest.global.config.RabbitMqConfig;
+import com.jrjr.invest.simulation.document.Notification;
 import com.jrjr.invest.simulation.dto.*;
+import com.jrjr.invest.simulation.dto.group.*;
+import com.jrjr.invest.simulation.dto.notification.MessageDTO;
+import com.jrjr.invest.simulation.dto.notification.NotificationDTO;
+import com.jrjr.invest.simulation.repository.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GroupService {
 	private final SimulationRankService simulationRankServiceImpl;
+	private final NotificationRepository notificationRepository;
 	private final UserRepository userRepository;
 	private final TradingService tradingService;
 	private final SimulationRepository simulationRepository;
@@ -144,12 +145,19 @@ public class GroupService {
 		// }
 
 	}
-	// 친구 초대 알림 보내기
+	// 초대 요청 알림 보내기
 	private void inviteUser(Long simulationSeq, String ownerNickname, Long userSeq) {
+		log.info("[초대 요청 알림 보내기]");
+
 		String simulationTitle = simulationRepository.findBySeq(simulationSeq).getTitle();
-		String message = ownerNickname + "님이 " + simulationTitle + "에 초대하셨습니다.";
-		MessageDTO messageDTO = MessageDTO.builder().content(message).title("title").build();
-		rabbitTemplate.convertAndSend("realtime_direct", "invest", messageDTO);
+		Notification notification = Notification.builder()
+						.simulationSeq(simulationSeq)
+						.userSeq(userSeq)
+						.build();
+		notification.setInvititionMessage(simulationTitle, ownerNickname);
+		notificationRepository.save(notification);
+
+		rabbitTemplate.convertAndSend("realtime_direct", "invest", notification.toNotificationDTO());
 	}
 
 	// redis Key 생성
