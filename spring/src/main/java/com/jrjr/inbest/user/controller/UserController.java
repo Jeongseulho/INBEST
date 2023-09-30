@@ -23,6 +23,8 @@ import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,13 +35,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "회원가입/마이페이지", description = "회원 API")
+@Tag(name = "회원 가입/마이페이지", description = "회원 API")
 public class UserController {
 
 	private final UserService userService;
 
-	@Operation(summary = "회원가입",
-		description = "필수 값: email, password, name, nickname 선택 값: birth, gender")
+	@Operation(summary = "회원 가입", description = "invest 회원 가입")
+	@Parameters(value = {
+		@Parameter(required = true, name = "email", description = "이메일(중복 불가능)"),
+		@Parameter(required = true, name = "password", description = "비밀번호"),
+		@Parameter(required = true, name = "name", description = "이름"),
+		@Parameter(required = true, name = "nickname", description = "닉네임(중복 불가능)"),
+		@Parameter(name = "birth", description = "생년월일(YYYY-MM-DD)"),
+		@Parameter(name = "gender", description = "성별(1: 남자, 2: 여자, 0: 미제공)")
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200")
 	})
@@ -58,6 +67,9 @@ public class UserController {
 	}
 
 	@Operation(summary = "이메일 존재 유무 확인")
+	@Parameters(value = {
+		@Parameter(required = true, name = "email", description = "이메일")
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "존재하는 이메일"),
 		@ApiResponse(responseCode = "404", description = "존재하지 않는 이메일")
@@ -74,6 +86,9 @@ public class UserController {
 	}
 
 	@Operation(summary = "닉네임 존재 유무 확인")
+	@Parameters(value = {
+		@Parameter(required = true, name = "nickname", description = "닉네임")
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "존재하는 닉네임"),
 		@ApiResponse(responseCode = "404", description = "존재하지 않는 닉네임")
@@ -90,6 +105,10 @@ public class UserController {
 	}
 
 	@Operation(summary = "비밀번호 변경", description = "필수 값: password")
+	@Parameters(value = {
+		@Parameter(required = true, name = "seq", description = "비밀번호를 변경 할 회원 pk값"),
+		@Parameter(required = true, name = "password", description = "비밀번호")
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200"),
 		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치")
@@ -108,6 +127,9 @@ public class UserController {
 	}
 
 	@Operation(summary = "회원 탈퇴")
+	@Parameters(value = {
+		@Parameter(required = true, name = "seq", description = "회원 탈퇴를 할 수정 할 회원 pk값")
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200"),
 		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치")
@@ -126,6 +148,9 @@ public class UserController {
 	}
 
 	@Operation(summary = "회원 정보 조회")
+	@Parameters(value = {
+		@Parameter(required = true, name = "seq", description = "조회 할 회원 pk값")
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
@@ -144,13 +169,16 @@ public class UserController {
 	}
 
 	@Operation(summary = "프로필 이미지: 기본 이미지로 변경")
+	@Parameters(value = {
+		@Parameter(required = true, name = "seq", description = "기본 이미지로 변경 할 회원 pk값")
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200"),
 		@ApiResponse(responseCode = "401", description = "회원 정보 없음, 토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치")
 	})
 	@PutMapping("/{seq}/img")
 	ResponseEntity<Map<String, Object>> updateProfileDefaultImg(@PathVariable(value = "seq") Long seq,
-		@RequestParam Long loginSeq) {
+		@RequestParam(required = false) Long loginSeq) {
 		log.info("UserController - updateProfileDefaultImg 실행: {}", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
@@ -161,7 +189,13 @@ public class UserController {
 	}
 
 	@Operation(summary = "프로필 정보 업데이트",
-		description = "필수 값: name, nickname 선택 값: birth, gender, MultipartFile")
+		description = "필수 값: nickname 선택 값: birth, gender, MultipartFile")
+	@Parameters(value = {
+		@Parameter(name = "file", description = "프로필 사진"),
+		@Parameter(name = "nickname", description = "닉네임"),
+		@Parameter(name = "birth", description = "생년월일(YYYY-MM-DD)"),
+		@Parameter(name = "gender", description = "성별(1: 남자, 2: 여자, 0: 미제공)"),
+	})
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200",
 			description = "반환: seq, email, name, nickname, birth, gender, profileImgSearchName"),
