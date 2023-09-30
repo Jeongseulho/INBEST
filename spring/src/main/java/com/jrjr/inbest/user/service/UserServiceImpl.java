@@ -25,10 +25,12 @@ import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
+import com.jrjr.inbest.simulation.repository.TierRepository;
 import com.jrjr.inbest.user.dto.JoinDto;
 import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
+import com.jrjr.inbest.user.repository.FriendRepository;
 import com.jrjr.inbest.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,8 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
+	private final FriendRepository friendRepository;
+	private final TierRepository tierRepository;
 	private final AmazonS3 amazonS3;
 
 	@Value(value = "${cloud.aws.s3.bucket}")
@@ -253,7 +257,65 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetailsDTO getUserDetailsInfo(Long userSeq) {
-		return null;
+
+		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 시작 ---");
+		Optional<User> userEntity = userRepository.findById(userSeq);
+		if (userEntity.isEmpty()) {
+			throw new NotFoundException("조회 회원 정보 없음");
+		}
+		log.info(userEntity.toString());
+		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 완료 ---");
+
+		log.info("--- 팔로잉, 팔로워 수 조회 시작 ---");
+		Optional<Integer> followingNum = friendRepository.getFollowingNum(userSeq);
+		Optional<Integer> followerNum = friendRepository.getFollowerNum(userSeq);
+		log.info("팔로잉 수: {}", followingNum.orElse(0));
+		log.info("팔로워 수: {}", followerNum.orElse(0));
+		log.info("--- 팔로잉, 팔로워 수 조회 완료 ---");
+
+		log.info("--- 티어 점수 조회 시작 ---");
+		Optional<Integer> totalTier = tierRepository.getTotalTier(userSeq);
+		// 티어 점수 총 합이 0보다 작다면, 0으로 설정
+		if (totalTier.isPresent()) {
+			log.info("티어 점수 총합이 0보다 작음: {}", totalTier.get());
+			if (totalTier.get() < 0) {
+				totalTier = Optional.of(0);
+			}
+		}
+		log.info("티어 점수: {}", totalTier.orElse(0));
+		log.info("--- 티어 점수 조회 완료 ---");
+
+		log.info("--- 자주 투자한 종목 조회 시작 ---");
+
+		log.info("--- 자주 투자한 종목 조회 완료 ---");
+
+		log.info("--- 날짜 별 티어 점수 조회 시작 ---");
+
+		log.info("--- 날짜 별 티어 점수 조회 완료 ---");
+
+		log.info("--- 시뮬레이션 전적 조회 시작 ---");
+
+		log.info("--- 시뮬레이션 전적 조회 완료 ---");
+
+		UserDetailsDTO userDetailsDto = UserDetailsDTO.builder()
+			// User table
+			.userSeq(userEntity.get().getSeq())
+			.email(userEntity.get().getEmail())
+			.nickname(userEntity.get().getNickname())
+			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
+			// friend table
+			.followingNum(followingNum.orElse(0))
+			.followerNum(followerNum.orElse(0))
+			// tier table
+			.tier(totalTier.orElse(0))
+			.tierByDates(null)
+			// simulation_user table
+			.industries(null)
+			.simulationRecords(null)
+			.build();
+		log.info(userDetailsDto.toString());
+
+		return userDetailsDto;
 	}
 
 	@Transactional
