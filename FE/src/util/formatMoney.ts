@@ -13,7 +13,7 @@ export function formatNumberToDollar(value: number): string {
   return `$${formatter.format(value)}`;
 }
 
-function numberFormat(x: number) {
+export function numberFormat(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
