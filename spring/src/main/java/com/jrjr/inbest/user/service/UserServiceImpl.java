@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,13 @@ import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
+import com.jrjr.inbest.simulation.repository.SimulationRepository;
 import com.jrjr.inbest.simulation.repository.TierRepository;
 import com.jrjr.inbest.trading.repository.TradingRepository;
 import com.jrjr.inbest.user.dto.IndustryDTO;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.ParticipantDTO;
+import com.jrjr.inbest.user.dto.SimulationRecordDTO;
 import com.jrjr.inbest.user.dto.TierByDateDTO;
 import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
@@ -51,6 +55,7 @@ public class UserServiceImpl implements UserService {
 	private final FriendRepository friendRepository;
 	private final TierRepository tierRepository;
 	private final TradingRepository tradingRepository;
+	private final SimulationRepository simulationRepository;
 	private final AmazonS3 amazonS3;
 
 	@Value(value = "${cloud.aws.s3.bucket}")
@@ -303,7 +308,22 @@ public class UserServiceImpl implements UserService {
 		log.info("--- 날짜 별 티어 점수 조회 완료 ---");
 
 		log.info("--- 시뮬레이션 전적 조회 시작 ---");
-
+		// 시뮬레이션 pk 값, 이름, 시작일, 종료일, 기간, 인원 수 및 내 랭킹, 수익률 조회
+		List<SimulationRecordDTO> simulationRecords = simulationRepository.getSimulationByUserSeq(userSeq);
+		for (SimulationRecordDTO simulationRecordDto : simulationRecords) {
+			log.info(simulationRecordDto.toString());
+			// 시뮬레이션에서 자주 투자한 산업군 3가지 구하기
+			List<String> topNIndustry
+				= tradingRepository.getTopNIndustry(simulationRecordDto.getSimulationSeq(), userSeq,
+				PageRequest.of(0, 3));
+			log.info(topNIndustry.toString());
+			simulationRecordDto.setIndustries(topNIndustry);
+			// 시뮬레이션 참가자들의 닉네임과 프로필 이미지 구하기
+			List<ParticipantDTO> participants
+				= userRepository.getParticipantsBySimulationSeq(simulationRecordDto.getSimulationSeq());
+			log.info(participants.toString());
+			simulationRecordDto.setParticipants(participants);
+		}
 		log.info("--- 시뮬레이션 전적 조회 완료 ---");
 
 		UserDetailsDTO userDetailsDto = UserDetailsDTO.builder()
@@ -320,7 +340,7 @@ public class UserServiceImpl implements UserService {
 			.tierByDates(tierByDates)
 			// simulation_user table
 			.industries(industries)
-			.simulationRecords(null)
+			.simulationRecords(simulationRecords)
 			.build();
 		log.info(userDetailsDto.toString());
 
