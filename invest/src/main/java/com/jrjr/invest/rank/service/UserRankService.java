@@ -9,6 +9,8 @@ public interface UserRankService {
 
 	void insertUserInfo(RedisUserDTO redisUserDto); // 회원 정보 추가
 
+	void insertAllUserInfo(); // 전체 회원 정보 초기화 후 추가
+
 	void updateUserProfileInfo(RedisUserDTO redisUserDto); // 회원 프로필 정보 수정
 
 	void deleteUserInfo(Long seq); // 회원 정보 삭제
