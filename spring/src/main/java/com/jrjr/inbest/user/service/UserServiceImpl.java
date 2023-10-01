@@ -3,6 +3,7 @@ package com.jrjr.inbest.user.service;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -26,6 +27,8 @@ import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.simulation.repository.TierRepository;
+import com.jrjr.inbest.trading.repository.TradingRepository;
+import com.jrjr.inbest.user.dto.IndustryDTO;
 import com.jrjr.inbest.user.dto.JoinDto;
 import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
@@ -46,6 +49,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final FriendRepository friendRepository;
 	private final TierRepository tierRepository;
+	private final TradingRepository tradingRepository;
 	private final AmazonS3 amazonS3;
 
 	@Value(value = "${cloud.aws.s3.bucket}")
@@ -286,7 +290,10 @@ public class UserServiceImpl implements UserService {
 		log.info("--- 티어 점수 조회 완료 ---");
 
 		log.info("--- 자주 투자한 종목 조회 시작 ---");
-
+		// 1. trading table 에서 모든 구매 거래 내역 확인 후 구매 가격 합산
+		// 2. financialdata_company 에서 stock_type 과 stock_code 를 이용해 산업군 이름 조회
+		List<IndustryDTO> industries = tradingRepository.calculatePurchaseAmountByIndustry(userSeq);
+		log.info(industries.toString());
 		log.info("--- 자주 투자한 종목 조회 완료 ---");
 
 		log.info("--- 날짜 별 티어 점수 조회 시작 ---");
@@ -310,7 +317,7 @@ public class UserServiceImpl implements UserService {
 			.tier(totalTier.orElse(0))
 			.tierByDates(null)
 			// simulation_user table
-			.industries(null)
+			.industries(industries)
 			.simulationRecords(null)
 			.build();
 		log.info(userDetailsDto.toString());
