@@ -29,4 +29,6 @@ public interface SimulationUserRepository extends JpaRepository<SimulationUser, 
 	Optional<Long> countAllFinishedSimulation();
 	@Query("select count( distinct su.simulation.seq) from SimulationUser su where su.simulation.finishedDate >= :yesterday and su.simulation.finishedDate < :today")
 	Optional<Long> countAllTodayFinishedSimulation(LocalDateTime yesterday,LocalDateTime today);
+
+	List<SimulationUser> findAllBySimulationOrderByCurrentMoneyDesc(Simulation simulation);
 }

@@ -393,6 +393,7 @@ public class GroupService {
 					.previousRank(1)
 					.currentRank(1)
 					.currentMoney(simulation.getSeedMoney())
+					.seedMoney(simulation.getSeedMoney())
 					.isExited(false)
 					.build();
 
