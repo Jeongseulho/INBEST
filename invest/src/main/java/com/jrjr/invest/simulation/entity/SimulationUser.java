@@ -1,5 +1,7 @@
 package com.jrjr.invest.simulation.entity;
 
+import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -49,7 +51,12 @@ public class SimulationUser {
 
 	@Column()
 	private Boolean isExited;
-
+	public void update(RedisSimulationUserDTO simulationUserDTO){
+		this.currentMoney = simulationUserDTO.getCurrentMoney();
+		this.currentRank = simulationUserDTO.getCurrentRank();
+		this.previousRank = simulationUserDTO.getPreviousRank();
+		this.isExited = simulationUserDTO.getIsExited();
+	}
 	@Override
 	public String toString() {
 		return "SimulationUser{" +

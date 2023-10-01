@@ -40,4 +40,8 @@ public class Rate extends BaseEntity {
 		this.simulationSeq = simulationSeq;
 		this.rate = rate;
 	}
+
+	public void update(Integer rate){
+		this.rate = rate;
+	}
 }

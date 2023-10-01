@@ -14,7 +14,6 @@ public class MessageService {
 
 //    @Value("${rabbitmq.exchange.name}")
 //    private String exchangeName;
-//
 //    @Value("${rabbitmq.routing.key}")
 //    private String routingKey;
 

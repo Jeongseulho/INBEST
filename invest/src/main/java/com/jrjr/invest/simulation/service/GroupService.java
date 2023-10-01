@@ -365,6 +365,8 @@ public class GroupService {
 		// 			.previousRank(null) // todo : 추후에 추가
 		// 			.build());
 
+		simulation = simulationRepository.findBySeq(simulationSeq);
+
 		//Simulation 맴버 수 업데이트
 		simulation.updateMemberNum();
 		simulationRepository.save(simulation);
@@ -402,6 +404,7 @@ public class GroupService {
 					.previousRank(1)
 					.currentRank(1)
 					.currentMoney(simulation.getSeedMoney())
+					.seedMoney(simulation.getSeedMoney())
 					.isExited(false)
 					.build();
 
