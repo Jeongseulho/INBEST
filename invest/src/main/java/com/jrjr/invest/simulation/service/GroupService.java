@@ -146,6 +146,7 @@ public class GroupService {
 
 	}
 	// 초대 요청 알림 보내기
+	@Transactional
 	private void inviteUser(Long simulationSeq, String ownerNickname, Long userSeq) {
 		log.info("[초대 요청 알림 보내기]");
 
