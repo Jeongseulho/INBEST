@@ -34,4 +34,10 @@ public class RedisUserDTO {
 	private Integer currentRank;
 
 	private Integer rate; // 종료된 simulation 의 평균 수익률 (수익률 합 / simulation 수)
+
+	public RedisUserDTO(Long seq, String nickname, String profileImgSearchName) {
+		this.seq = seq;
+		this.nickname = nickname;
+		this.profileImgSearchName = profileImgSearchName;
+	}
 }
