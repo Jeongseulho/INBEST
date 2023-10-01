@@ -19,6 +19,7 @@ import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.service.LoginService;
 import com.jrjr.inbest.login.service.OAuthLoginService;
 import com.jrjr.inbest.user.dto.UserDto;
+import com.jrjr.inbest.user.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController {
 
 	private final LoginService loginService;
+	private final UserService userService;
 	private final JwtProvider jwtProvider;
 	private final OAuthLoginService kakaoLoginServiceImpl, naverLoginServiceImpl;
 
@@ -57,6 +59,7 @@ public class LoginController {
 			case "naver" -> naverLoginServiceImpl.login(inputLoginDto.getAuthorizeCode());
 			default -> throw new AuthenticationFailedException("올바르지 않은 provider");
 		};
+		userService.insertUserRankingInfo(userDto);
 
 		// refreshToken 생성 후 cookie 저장
 		// CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));
