@@ -351,25 +351,15 @@ public class GroupService {
 
 		// db에 저장
 		simulationUserRepository.save(simulationUser);
+		Long count  = simulationUserRepository.countBySimulation(simulationSeq);
 
-		// redis에 저장
-		// redisSimulationUserDTORedisTemplate.opsForHash()
-		// 	.put(generateKey(simulation.getSeq()), String.valueOf(userSeq),
-		// 		RedisSimulationUserDTO.builder()
-		// 			.userSeq(user.getSeq())
-		// 			.simulationSeq(simulation.getSeq())
-		// 			.seedMoney(simulation.getSeedMoney())
-		// 			.currentMoney(simulation.getSeedMoney())
-		// 			.isExited(false)
-		// 			.currentRank(null) // todo : 추후에 추가
-		// 			.previousRank(null) // todo : 추후에 추가
-		// 			.build());
-
-		simulation = simulationRepository.findBySeq(simulationSeq);
+		simulation = simulationRepository.findBySeq(simulation.getSeq());
 
 		//Simulation 맴버 수 업데이트
-		simulation.updateMemberNum();
+		simulation.updateMemberNum(count);
 		simulationRepository.save(simulation);
+		simulation = simulationRepository.findBySeq(simulation.getSeq());
+		log.info(simulation.toString());
 	}
 	//시뮬레이션 시작 메소드
 	@Transactional
@@ -489,7 +479,10 @@ public class GroupService {
 		
 		//맴버 수 업데이트
 		simulation = simulationRepository.findBySeq(simulation.getSeq());
-		simulation.updateMemberNum();
+
+		Long count = simulationUserRepository.countBySimulation(simulation.getSeq());
+
+		simulation.updateMemberNum(count);
 		simulation = simulationRepository.save(simulation);
 		
 		//맴버수가 없는 경우 방 없애기
