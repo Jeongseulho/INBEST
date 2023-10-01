@@ -73,14 +73,22 @@ class FinancialProduct(models.Model):
     rsrv_type_nm = models.CharField(max_length=255, default=None, null=True) # 적금형태
 
 
-class CompanyIndicators(models.Model):
-    seq = models.AutoField(primary_key=True)
-    company_code_seq = models.IntegerField()
-    stability = models.IntegerField()
-    size = models.IntegerField()
-    growth = models.IntegerField()
-    profitability = models.IntegerField()
-    revenue_growth = models.FloatField()
-    debt_growth = models.FloatField()
-    operating_profit_growth = models.FloatField()
-    asset_growth = models.FloatField()
+# class CompanyIndicators(models.Model):
+#     seq = models.AutoField(primary_key=True)
+#     company_seq = models.ForeignKey('Company', on_delete=models.CASCADE, related_name='Company_indicators')
+#     stability = models.IntegerField(null=True, default=None)  # 안정성
+#     size = models.IntegerField(null=True, default=None)  # 규모형태
+#     growth = models.IntegerField(null=True, default=None)  # 성장성
+#     profitability = models.IntegerField(null=True, default=None)  # 수익성
+#     revenue_growth = models.FloatField(null=True, default=None)  # 매출액 자산 증가율
+#     operating_profit_growth = models.FloatField(null=True, default=None) # 순이익증가율
+
+# class CompanyIndicatorsScore(models.Model):
+#     seq = models.AutoField(primary_key=True)
+#     company_seq = models.ForeignKey('Company', on_delete=models.CASCADE, related_name='Company_indicators_score')
+#     stability = models.IntegerField(null=True, default=None)  # 안정성
+#     size = models.IntegerField(null=True, default=None)  # 규모형태
+#     growth = models.IntegerField(null=True, default=None)  # 성장성
+#     profitability = models.IntegerField(null=True, default=None)  # 수익성
+#     revenue_growth = models.FloatField(null=True, default=None)  # 매출액 자산 증가율
+#     operating_profit_growth = models.FloatField(null=True, default=None) # 순이익증가율

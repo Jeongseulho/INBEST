@@ -8,6 +8,7 @@ import time
 import re
 from .models import Company
 import FinanceDataReader as fdr
+from .models import FinancialStatement, FinancialStatement_2022, FinancialStatement_2021
 
 
 # 한국 최다검색 주식 목록
@@ -393,6 +394,15 @@ def search(request):
     data = list(results.values('company_name', 'company_stock_code', 'company_stock_type'))
     return JsonResponse(data, safe=False)
 
+# 재무제표
+def get_financial_statements(request, company_stock_code):
+    try:
+        # company_stock_code에 해당하는 회사의 재무제표 정보를 가져옵니다.
+        financial_statements = FinancialStatement.objects.filter(company_seq__company_stock_code=company_stock_code).values()
+        return JsonResponse(list(financial_statements), safe=False)  # 리스트 형태로 직렬화하고 safe=False 설정
+    except FinancialStatement.DoesNotExist:
+        return JsonResponse({'message': '해당 회사의 재무제표 정보를 찾을 수 없습니다.'}, status=404)
+
 # 코스피
 @api_view(['GET'])
 def kospi(request):
@@ -664,3 +674,61 @@ def bitcoin(request):
     }
 
     return JsonResponse(today_close_change_rate_data)
+
+# 매출액 3개년
+@api_view(['GET'])
+def company_revenue(request, company_stock_code):
+    try:
+        # company_stock_code에 해당하는 회사의 company_seq를 찾습니다.
+        company = Company.objects.get(company_stock_code=company_stock_code)
+        company_seq = company.seq
+
+        # 2023년도 재무제표에서 해당 company_seq에 해당하는 revenue를 가져옵니다.
+        revenue_2023 = FinancialStatement.objects.filter(company_seq=company_seq).values('revenue')[0]['revenue']
+
+        # 2022년도 재무제표에서 해당 company_seq에 해당하는 revenue를 가져옵니다.
+        revenue_2022 = FinancialStatement_2022.objects.filter(company_seq=company_seq).values('revenue')[0]['revenue']
+
+        # 2021년도 재무제표에서 해당 company_seq에 해당하는 revenue를 가져옵니다.
+        revenue_2021 = FinancialStatement_2021.objects.filter(company_seq=company_seq).values('revenue')[0]['revenue']
+
+        # JSON 응답을 생성합니다.
+        data = {
+            'revenue_2023': revenue_2023,
+            'revenue_2022': revenue_2022,
+            'revenue_2021': revenue_2021,
+        }
+
+        return JsonResponse(data)
+
+    except Company.DoesNotExist:
+        return JsonResponse({'message': '해당 회사 정보를 찾을 수 없습니다.'}, status=404)
+    
+# 당기순이익 3개년
+@api_view(['GET'])
+def company_net_income(request, company_stock_code):
+    try:
+        # company_stock_code에 해당하는 회사의 company_seq를 찾습니다.
+        company = Company.objects.get(company_stock_code=company_stock_code)
+        company_seq = company.seq
+
+        # 2023년도 재무제표에서 해당 company_seq에 해당하는 net_income을 가져옵니다.
+        net_income_2023 = FinancialStatement.objects.filter(company_seq=company_seq).values('net_income')[0]['net_income']
+
+        # 2022년도 재무제표에서 해당 company_seq에 해당하는 net_income을 가져옵니다.
+        net_income_2022 = FinancialStatement_2022.objects.filter(company_seq=company_seq).values('net_income')[0]['net_income']
+
+        # 2021년도 재무제표에서 해당 company_seq에 해당하는 net_income을 가져옵니다.
+        net_income_2021 = FinancialStatement_2021.objects.filter(company_seq=company_seq).values('net_income')[0]['net_income']
+
+        # JSON 응답을 생성합니다.
+        data = {
+            'net_income_2023': net_income_2023,
+            'net_income_2022': net_income_2022,
+            'net_income_2021': net_income_2021,
+        }
+
+        return JsonResponse(data)
+
+    except Company.DoesNotExist:
+        return JsonResponse({'message': '해당 회사 정보를 찾을 수 없습니다.'}, status=404)

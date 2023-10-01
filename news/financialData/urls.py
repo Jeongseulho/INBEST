@@ -23,4 +23,7 @@ urlpatterns = [
     path("crypto/", views.crypto_volume),
     path("fearindex/", views.fear_index),
     path("crypto-market-cap/", views.bitcoin),
+    path("financial-statements/<str:company_stock_code>/", views.get_financial_statements, name='get_financial_statements'),
+    path("company-revenue/<str:company_stock_code>/", views.company_revenue, name='company_revenue'),
+    path("company-net-income/<str:company_stock_code>/", views.company_net_income, name='company_net_income'),
 ]
