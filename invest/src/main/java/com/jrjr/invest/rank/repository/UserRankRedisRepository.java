@@ -39,6 +39,19 @@ public class UserRankRedisRepository {
 	}
 
 	/*
+		userHash 삭제
+	 */
+	public void deleteAllUserInfo() {
+		Set<String> allHashKeys = this.getAllHashKeys();
+		for (String userSeq : allHashKeys) {
+			userHash.delete(USER_HASH_KEY, userSeq);
+		}
+		log.info("userHash 초기화 완료");
+		userZSet.removeRange(USER_SORT_KEY, 0, -1);
+		log.info("userZSet 초기화 완료");
+	}
+
+	/*
 		내 회원 정보 불러오기
 	 */
 	public RedisUserDTO getUserInfo(Long seq) {
