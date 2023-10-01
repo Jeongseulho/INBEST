@@ -22,13 +22,24 @@ const InvestingCrypto = ({ setCompanyInfo }: Props) => {
       <div className=" flex gap-4 items-center">
         <GraphIconComponent
           title="가상화폐 거래량"
-          desc="거래량 설명"
+          width={250}
+          top={-50}
+          desc1="가상화폐 거래량의 변화를 나타냅니다."
+          desc2={`
+              현재 ${cryptoVolume?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.
+            `}
           state={cryptoVolume?.fluctuation_state}
           isLoading={isLoadingCryptoVolume}
         />
         <GraphIconComponent
           title="가상화폐 시가총액"
-          desc="시가총액 설명"
+          width={250}
+          top={-50}
+          desc1="가상화폐 시가총액의 변화를 나타냅니다."
+          desc2={`
+              
+              현재 ${cryptoMarketCap?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.
+            `}
           state={cryptoMarketCap?.fluctuation_state}
           isLoading={isLoadingCryptoMarketCap}
         />

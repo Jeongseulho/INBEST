@@ -10,7 +10,7 @@ import SettingInvite from "../molecules/SettingInvite";
 import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
 import SettingTitle from "../molecules/SettingTitle";
 import modalStore from "../../../store/modalStore";
-import Complete from "../molecules/Complete";
+import CompleteCreate from "../molecules/CompleteCreate";
 import complete from "../../../asset/image/complete.png";
 import { toast } from "react-toastify";
 import { createGroup } from "../../../api/group";
@@ -24,7 +24,7 @@ interface Props {
 
 const CreateModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Props) => {
   const { onNextStep, groupSetting, dispatch, step, resetStepAndGroupSetting } = useCreateModal();
-  const { modalType, closeModal } = modalStore();
+  const { modalType } = modalStore();
   const { mutateAsync } = useMutation((groupSetting: GroupSetting) => createGroup(groupSetting), {
     onMutate: async (groupSetting) => {
       if (groupSetting.title.trim().length < 1 && groupSetting.title.length > 9) {
@@ -67,17 +67,13 @@ const CreateModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Props) =>
       mutate={mutateAsync}
       groupSetting={groupSetting}
     />,
-    <Complete resetStepAndGroupSetting={resetStepAndGroupSetting} />,
+    <CompleteCreate resetStepAndGroupSetting={resetStepAndGroupSetting} />,
   ];
 
   return (
     <Modal
       isOpen={modalType === "createGroup"}
       ariaHideApp={false}
-      onRequestClose={() => {
-        closeModal();
-        resetStepAndGroupSetting();
-      }}
       closeTimeoutMS={300}
       style={{
         content: {

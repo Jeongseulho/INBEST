@@ -34,7 +34,7 @@ const InvestMain = () => {
       <InvestingTotalInfo />
       <CreateModal refetchMyGroupList={refetchMyGroupList} refetchJoinableGroupList={refetchJoinableGroupList} />
       <FilterModal />
-      <WaitingGroupModal />
+      <WaitingGroupModal refetchMyGroupList={refetchMyGroupList} refetchJoinableGroupList={refetchJoinableGroupList} />
       <InProgressGroupModal />
       <QuestionJoinModal refetchMyGroupList={refetchMyGroupList} refetchJoinableGroupList={refetchJoinableGroupList} />
       <MyGroupList data={myGroupList} isLoading={isLoadingMyGroupList} />

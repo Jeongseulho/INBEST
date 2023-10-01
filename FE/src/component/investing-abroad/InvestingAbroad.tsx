@@ -39,26 +39,58 @@ const InvestingAbroad = ({ setCompanyInfo }: Props) => {
       <div className=" flex gap-4">
         <GraphIconComponent
           title="나스닥"
-          desc="나스닥 설명"
+          width={460}
+          top={-70}
+          desc1="
+          미국의 장외 주식거래시장에 상장된 종목들을 종합적으로 표시한 수치입니다."
+          desc2="특히, 기술분야 및 IT 기업들이 많이 포함되어 있습니다."
+          desc3={`
+          현재 ${nasdaq?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.
+            `}
           state={nasdaq?.fluctuation_state}
           isLoading={isLoadingNasdaq}
         />
         <GraphIconComponent
           title="다우존스"
-          desc="다우존스 설명"
+          width={470}
+          top={-50}
+          desc1="미국 주식 시장에서 선별된 30개의 기업에 대해 종합적으로 표시한 수치입니다."
+          desc2={`
+          현재 ${dowJones?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.
+            
+          `}
           state={dowJones?.fluctuation_state}
           isLoading={isLoadingDowJones}
         />
         <GraphIconComponent
           title="S&P 500"
-          desc="S&P 500 설명"
+          width={480}
+          top={-50}
+          desc1="미국 주식 시장에서 선별된 500개의 기업에 대해 종합적으로 표시한 수치입니다."
+          desc2={`
+          
+          현재 ${sp500?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.
+            `}
           state={sp500?.fluctuation_state}
           isLoading={isLoadingSp500}
         />
-        <GraphIconComponent title="VIX" desc="VIX 설명" state={vix?.fluctuation_state} isLoading={isLoadingVix} />
+        <GraphIconComponent
+          width={420}
+          top={-50}
+          title="VIX"
+          desc1="주식 시장의 예상 변동성과 불안정성을 나타내는 수치입니다."
+          desc2="이 수치가 증가할수록 주식 시장의 변동성과 불안정성이 증가합니다."
+          state={vix?.fluctuation_state}
+          isLoading={isLoadingVix}
+        />
         <GraphIconComponent
           title="환율"
-          desc="환율 설명"
+          width={220}
+          top={-50}
+          desc1="달러와 원의 환율을 나타냅니다."
+          desc2={`
+          현재 ${exchangeRate?.exchange_rate_change.toFixed(2)}% 만큼 변화하였습니다.
+          `}
           state={exchangeRate?.exchange_rate_change_state}
           isLoading={isLoadingExchangeRate}
         />

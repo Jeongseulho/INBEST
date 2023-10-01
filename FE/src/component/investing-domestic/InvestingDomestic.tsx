@@ -40,26 +40,55 @@ const InvestingDomestic = ({ setCompanyInfo }: Props) => {
       <div className=" flex gap-4">
         <GraphIconComponent
           title="코스피"
-          desc="코스피 설명"
+          width={380}
+          top={-70}
+          desc1="증권 거래소에 상장된 종목들을 종합적으로 표시한 수치입니다."
+          desc2="주로 안정적인 대기업들이 이에 해당합니다."
+          desc3={`
+          현재 ${kospi?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.`}
           state={kospi?.fluctuation_state}
           isLoading={isLoadingKospi}
         />
         <GraphIconComponent
           title="코스닥"
-          desc="코스닥 설명"
+          width={380}
+          top={-70}
+          desc1="장외 거래소에 상장된 종목들을 종합적으로 표시한 수치입니다."
+          desc2="주로 중소, 벤처기업들이 이에 해당합니다."
+          desc3={`
+          현재 ${kosdaq?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.
+          `}
           state={kosdaq?.fluctuation_state}
           isLoading={isLoadingKosdaq}
         />
         <GraphIconComponent
           title="코스피200"
-          desc="코스피200 설명"
+          width={530}
+          top={-50}
+          desc1="코스피에 포함된 종목들 중에서 상위 200개의 기업에대해 종합적으로 표시한 수치입니다."
+          desc2={`
+          현재 ${kospi200?.fluctuation_rate.toFixed(2)}% 만큼변화하였습니다.`}
           state={kospi200?.fluctuation_state}
           isLoading={isLoadingKospi200}
         />
-        <GraphIconComponent title="KRX" desc="KRX 설명" state={krx?.fluctuation_state} isLoading={isLoadingKrx} />
+        <GraphIconComponent
+          title="KRX 100"
+          width={460}
+          top={-50}
+          desc1="한국 거래소에서 선별한 100개의 기업에 대해 종합적으로 표시한 수치입니다."
+          desc2={`
+          현재 ${krx?.fluctuation_rate.toFixed(2)}% 만큼 변화하였습니다.`}
+          state={krx?.fluctuation_state}
+          isLoading={isLoadingKrx}
+        />
         <GraphIconComponent
           title="환율"
-          desc="환율 설명"
+          width={220}
+          top={-50}
+          desc1="달러와 원의 환율을 나타냅니다."
+          desc2={`
+          현재 ${exchangeRate?.exchange_rate_change.toFixed(2)}% 만큼 변화하였습니다.
+          `}
           state={exchangeRate?.exchange_rate_change_state}
           isLoading={isLoadingExchangeRate}
         />

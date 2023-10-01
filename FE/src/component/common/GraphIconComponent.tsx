@@ -5,21 +5,32 @@ import Skeleton from "react-loading-skeleton";
 
 interface Props {
   title: string;
-  desc: string;
+  desc1: string;
+  desc2?: string;
+  desc3?: string;
   state: 0 | 1 | undefined;
   isLoading: boolean;
+  width: number;
+  top: number;
 }
 
-const GraphIconComponent = ({ title, desc, state, isLoading }: Props) => {
+const GraphIconComponent = ({ title, desc1, state, isLoading, desc2, desc3, width, top }: Props) => {
   return (
     <div className=" shadow-component p-4 flex flex-col items-center">
       <div className=" flex items-center gap-2">
         <h4>{title}</h4>
-        <div className="group relative">
+        <div className="group relative cursor-pointer">
           <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
-          <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-8 left-1/2 transform -translate-x-1/2 w-52">
-            {desc}
-          </span>
+          <div
+            style={{ width, top }}
+            className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute left-1/2 transform -translate-x-1/2 "
+          >
+            {desc1}
+            <br />
+            {desc2}
+            <br />
+            {desc3}
+          </div>
         </div>
       </div>
       {isLoading ? (

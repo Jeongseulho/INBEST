@@ -4,7 +4,7 @@ interface Props {
   resetStepAndGroupSetting: () => void;
 }
 
-const Complete = ({ resetStepAndGroupSetting }: Props) => {
+const CompleteCreate = ({ resetStepAndGroupSetting }: Props) => {
   const { closeModal } = modalStore();
   return (
     <div className="  w-full h-full flex flex-col items-center justify-between mt-5 ">
@@ -25,4 +25,4 @@ const Complete = ({ resetStepAndGroupSetting }: Props) => {
     </div>
   );
 };
-export default Complete;
+export default CompleteCreate;

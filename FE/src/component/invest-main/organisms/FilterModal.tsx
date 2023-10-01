@@ -9,12 +9,11 @@ import modalStore from "../../../store/modalStore";
 
 const FilterModal = () => {
   const { activeTab, setActiveTab, groupFilter, dispatch } = useFilterModal();
-  const { modalType, closeModal } = modalStore();
+  const { modalType } = modalStore();
   return (
     <Modal
       isOpen={modalType === "filter"}
       ariaHideApp={false}
-      onRequestClose={closeModal}
       closeTimeoutMS={300}
       style={{
         content: {

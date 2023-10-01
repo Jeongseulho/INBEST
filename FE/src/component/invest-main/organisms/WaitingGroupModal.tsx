@@ -13,11 +13,15 @@ import spinner from "../../../asset/image/spinner.svg";
 import { useMutation, useQueryClient } from "react-query";
 import { useState } from "react";
 import { exitGroup, startInvesting } from "../../../api/group";
-import { useNavigate } from "react-router-dom";
+import CompleteStart from "../molecules/CompleteStart";
+import CompleteExit from "../molecules/CompleteExit";
 
-const WaitingGroupModal = () => {
-  const navigate = useNavigate();
-  const { modalType, closeModal, simulationSeq } = modalStore();
+interface Props {
+  refetchMyGroupList: () => void;
+  refetchJoinableGroupList: () => void;
+}
+const WaitingGroupModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Props) => {
+  const { modalType, simulationSeq, closeModal } = modalStore();
   const { userInfo } = userStore();
   const { isLoading, data } = useQuery(
     ["detailWaitingGroup", simulationSeq],
@@ -29,33 +33,40 @@ const WaitingGroupModal = () => {
     }
   );
   const queryClient = useQueryClient();
-  const [isJoin, setIsJoin] = useState(true);
+  const [isExit, setIsExit] = useState(false);
+  const [isStart, setIsStart] = useState(false);
 
-  const { mutate } = useMutation((simulationSeq: number) => exitGroup(simulationSeq), {
+  const { mutate: exitMutate } = useMutation((simulationSeq: number) => exitGroup(simulationSeq), {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["myGroupList", "joinableGroupList"],
       });
-      setIsJoin(false);
+      setIsExit(true);
+      refetchJoinableGroupList();
+      refetchMyGroupList();
     },
   });
 
   const { mutate: startMutate } = useMutation((simulationSeq: number) => startInvesting(simulationSeq), {
     onSuccess: () => {
-      navigate(`/invest/${simulationSeq}`);
+      setIsStart(true);
+      refetchMyGroupList();
     },
   });
-
   return (
     <Modal
       isOpen={modalType === "waitingGroup"}
       ariaHideApp={false}
-      onRequestClose={closeModal}
+      onRequestClose={() => {
+        closeModal();
+        setIsExit(false);
+        setIsStart(false);
+      }}
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,
-          width: "400px",
-          height: isJoin ? "570px" : "350px",
+          width: isExit ? "470px" : isStart ? "440px" : "400px",
+          height: isExit ? "350px" : isStart ? "350px" : "570px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -65,13 +76,14 @@ const WaitingGroupModal = () => {
         overlay: OVERLAY_MODAL_STYLE,
       }}
     >
-      {isJoin ? (
+      {isLoading ? (
+        <img src={spinner} />
+      ) : (
         <>
-          {isLoading ? (
-            <img src={spinner} />
-          ) : (
+          {isStart === false && isExit === false && (
             <>
               <h3>그룹 이름 : {data?.title}</h3>
+
               <div className=" flex flex-col w-full gap-5">
                 <SeedMoneyTag seedMoney={data?.seedMoney} />
                 <Period period={data?.period} />
@@ -85,7 +97,6 @@ const WaitingGroupModal = () => {
                     <button
                       onClick={() => {
                         startMutate(simulationSeq);
-                        closeModal();
                       }}
                       className=" rounded-full text-white bg-purple-500 py-2 px-4 transition-colors duration-500 hover:text-purple-500 border-2 border-purple-500 hover:bg-opacity-10"
                     >
@@ -93,8 +104,7 @@ const WaitingGroupModal = () => {
                     </button>
                     <button
                       onClick={() => {
-                        mutate(simulationSeq);
-                        closeModal();
+                        exitMutate(simulationSeq);
                       }}
                       className=" bg-lightRed text-white hover:text-lightRed py-2 rounded-full px-4 transition-all duration-500 border-2 border-lightRed hover:bg-opacity-10"
                     >
@@ -105,27 +115,20 @@ const WaitingGroupModal = () => {
               ) : (
                 <>
                   <p className=" font-regular text-md text-myGray">방장이 모의투자를 시작할 때 까지 기다려주세요.</p>
-                  <button className=" bg-lightRed text-white hover:text-lightRed py-2 rounded-full px-4 transition-all duration-500 border-2 border-lightRed hover:bg-opacity-10">
+                  <button
+                    onClick={() => {
+                      exitMutate(simulationSeq);
+                    }}
+                    className=" bg-lightRed text-white hover:text-lightRed py-2 rounded-full px-4 transition-all duration-500 border-2 border-lightRed hover:bg-opacity-10"
+                  >
                     그룹 나가기
                   </button>
                 </>
               )}
             </>
           )}
-        </>
-      ) : (
-        <>
-          <div className="  w-full h-full flex flex-col items-center justify-between mt-5 ">
-            <h3 className=" text-center text-dark">
-              그룹에서 나왔어요,
-              <br />
-              더이상 내 그룹에서 확인할 수 없어요
-            </h3>
-
-            <button onClick={closeModal} className=" main-dark-btn">
-              확인
-            </button>
-          </div>
+          {isStart === true && <CompleteStart setIsStart={setIsStart} />}
+          {isExit === true && <CompleteExit setIsExit={setIsExit} />}
         </>
       )}
     </Modal>
