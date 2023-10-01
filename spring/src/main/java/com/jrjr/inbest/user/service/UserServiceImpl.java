@@ -30,6 +30,7 @@ import com.jrjr.inbest.simulation.repository.TierRepository;
 import com.jrjr.inbest.trading.repository.TradingRepository;
 import com.jrjr.inbest.user.dto.IndustryDTO;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.TierByDateDTO;
 import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
@@ -290,14 +291,15 @@ public class UserServiceImpl implements UserService {
 		log.info("--- 티어 점수 조회 완료 ---");
 
 		log.info("--- 자주 투자한 종목 조회 시작 ---");
-		// 1. trading table 에서 모든 구매 거래 내역 확인 후 구매 가격 합산
+		// 1. trading table 에서 모든 구매 거래 내역 조회 후 구매 가격 합산
 		// 2. financialdata_company 에서 stock_type 과 stock_code 를 이용해 산업군 이름 조회
 		List<IndustryDTO> industries = tradingRepository.calculatePurchaseAmountByIndustry(userSeq);
 		log.info(industries.toString());
 		log.info("--- 자주 투자한 종목 조회 완료 ---");
 
 		log.info("--- 날짜 별 티어 점수 조회 시작 ---");
-
+		List<TierByDateDTO> tierByDates = tierRepository.getTierByDate(userSeq);
+		log.info(tierByDates.toString());
 		log.info("--- 날짜 별 티어 점수 조회 완료 ---");
 
 		log.info("--- 시뮬레이션 전적 조회 시작 ---");
@@ -315,7 +317,7 @@ public class UserServiceImpl implements UserService {
 			.followerNum(followerNum.orElse(0))
 			// tier table
 			.tier(totalTier.orElse(0))
-			.tierByDates(null)
+			.tierByDates(tierByDates)
 			// simulation_user table
 			.industries(industries)
 			.simulationRecords(null)
