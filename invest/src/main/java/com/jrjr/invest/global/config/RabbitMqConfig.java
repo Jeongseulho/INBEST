@@ -32,30 +32,6 @@ public class RabbitMqConfig {
 	@Value("${spring.rabbitmq.password}")
 	private String rabbitmqPassword;
 
-	// Exchange 이름
-	private static final String EXCHANGE_NAME = "realtime_direct";
-
-	// Queue 이름
-	private static final String INVEST_QUEUE_NAME = "invest-queue";
-
-	// 라우팅 키
-	private static final String INVEST_ROUTING_KEY = "invest";
-
-	@Bean
-	public DirectExchange directExchange() {
-		return new DirectExchange(EXCHANGE_NAME);
-	}
-
-	@Bean
-	public Queue investQueue() {
-		return new Queue(INVEST_QUEUE_NAME);
-	}
-
-	@Bean
-	public Binding investBinding(DirectExchange directExchange, Queue investQueue) {
-		return BindingBuilder.bind(investQueue).to(directExchange).with(INVEST_ROUTING_KEY);
-	}
-
 
 	/**
 	 * RabbitMQ 연결을 위한 ConnectionFactory 빈을 생성하여 반환
