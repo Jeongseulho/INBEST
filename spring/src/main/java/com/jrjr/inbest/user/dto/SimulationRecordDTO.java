@@ -1,5 +1,7 @@
 package com.jrjr.inbest.user.dto;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +20,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class SimulationRecordDTO {
+
+	@Schema(description = "시뮬레이션 pk 값")
+	Long simulationSeq;
 
 	@Schema(description = "시뮬레이션 이름")
 	String title;
@@ -45,4 +50,17 @@ public class SimulationRecordDTO {
 
 	@Schema(description = "시뮬레이션에 참가한 참가자 정보")
 	List<ParticipantDTO> participants;
+
+	public SimulationRecordDTO(Long simulationSeq, String title, LocalDateTime startDate, LocalDateTime finishedDate,
+		Integer period,
+		Integer memberNum, Integer rank, Integer rate) {
+		this.simulationSeq = simulationSeq;
+		this.title = title;
+		this.startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		this.finishedDate = finishedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		this.period = period;
+		this.memberNum = memberNum;
+		this.rank = rank;
+		this.rate = rate;
+	}
 }
