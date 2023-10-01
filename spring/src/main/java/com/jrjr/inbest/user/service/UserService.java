@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 
 public interface UserService {
@@ -29,11 +30,13 @@ public interface UserService {
 
 	void deleteUserRankingInfo(Long seq);
 
-	UserDto getUserInfo(Long seq);
+	UserDto getProfileInfo(Long seq);
+
+	UserDetailsDTO getUserDetailsInfo(Long userSeq);
 
 	void updateDefaultImg(Long userSeq, Long tokenSeq);
 
-	UserDto updateUserInfo(Long userSeq, MultipartFile file, UserDto userDto, Long tokenSeq) throws IOException;
+	UserDto updateProfileInfo(Long userSeq, MultipartFile file, UserDto userDto, Long tokenSeq) throws IOException;
 
 	void updateUserRankingInfo(UserDto userDto);
 }

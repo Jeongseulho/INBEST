@@ -12,8 +12,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @OpenAPIDefinition(
 	info = @Info(
-		title = "inBest User-Service API 명세서",
-		description = "inBest User-Service API 명세서",
+		title = "inBest user-service API 명세서",
+		description = "inBest user-service API 명세서",
 		version = "v2"
 	)
 )

@@ -3,12 +3,14 @@ package com.jrjr.inbest.user.service;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +27,18 @@ import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
+import com.jrjr.inbest.simulation.repository.SimulationRepository;
+import com.jrjr.inbest.simulation.repository.TierRepository;
+import com.jrjr.inbest.trading.repository.TradingRepository;
+import com.jrjr.inbest.user.dto.IndustryDTO;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.ParticipantDTO;
+import com.jrjr.inbest.user.dto.SimulationRecordDTO;
+import com.jrjr.inbest.user.dto.TierByDateDTO;
+import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
+import com.jrjr.inbest.user.repository.FriendRepository;
 import com.jrjr.inbest.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +52,10 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
+	private final FriendRepository friendRepository;
+	private final TierRepository tierRepository;
+	private final TradingRepository tradingRepository;
+	private final SimulationRepository simulationRepository;
 	private final AmazonS3 amazonS3;
 
 	@Value(value = "${cloud.aws.s3.bucket}")
@@ -239,7 +254,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto getUserInfo(Long seq) {
+	public UserDto getProfileInfo(Long seq) {
 		log.info("UserServiceImpl - getUserInfo 실행: {}", seq);
 
 		Optional<User> userEntity = userRepository.findById(seq);
@@ -248,6 +263,88 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return userEntity.get().convertToUserDto(userEntity.get());
+	}
+
+	@Override
+	public UserDetailsDTO getUserDetailsInfo(Long userSeq) {
+
+		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 시작 ---");
+		Optional<User> userEntity = userRepository.findById(userSeq);
+		if (userEntity.isEmpty()) {
+			throw new NotFoundException("조회 회원 정보 없음");
+		}
+		log.info(userEntity.toString());
+		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 완료 ---");
+
+		log.info("--- 팔로잉, 팔로워 수 조회 시작 ---");
+		Optional<Integer> followingNum = friendRepository.getFollowingNum(userSeq);
+		Optional<Integer> followerNum = friendRepository.getFollowerNum(userSeq);
+		log.info("팔로잉 수: {}", followingNum.orElse(0));
+		log.info("팔로워 수: {}", followerNum.orElse(0));
+		log.info("--- 팔로잉, 팔로워 수 조회 완료 ---");
+
+		log.info("--- 티어 점수 조회 시작 ---");
+		Optional<Integer> totalTier = tierRepository.getTotalTier(userSeq);
+		// 티어 점수 총 합이 0보다 작다면, 0으로 설정
+		if (totalTier.isPresent()) {
+			log.info("티어 점수 총합이 0보다 작음: {}", totalTier.get());
+			if (totalTier.get() < 0) {
+				totalTier = Optional.of(0);
+			}
+		}
+		log.info("티어 점수: {}", totalTier.orElse(0));
+		log.info("--- 티어 점수 조회 완료 ---");
+
+		log.info("--- 자주 투자한 종목 조회 시작 ---");
+		// 1. trading table 에서 모든 구매 거래 내역 조회 후 구매 가격 합산
+		// 2. financialdata_company 에서 stock_type 과 stock_code 를 이용해 산업군 이름 조회
+		List<IndustryDTO> industries = tradingRepository.calculatePurchaseAmountByIndustry(userSeq);
+		log.info(industries.toString());
+		log.info("--- 자주 투자한 종목 조회 완료 ---");
+
+		log.info("--- 날짜 별 티어 점수 조회 시작 ---");
+		List<TierByDateDTO> tierByDates = tierRepository.getTierByDate(userSeq);
+		log.info(tierByDates.toString());
+		log.info("--- 날짜 별 티어 점수 조회 완료 ---");
+
+		log.info("--- 시뮬레이션 전적 조회 시작 ---");
+		// 시뮬레이션 pk 값, 이름, 시작일, 종료일, 기간, 인원 수 및 내 랭킹, 수익률 조회
+		List<SimulationRecordDTO> simulationRecords = simulationRepository.getSimulationByUserSeq(userSeq);
+		for (SimulationRecordDTO simulationRecordDto : simulationRecords) {
+			log.info(simulationRecordDto.toString());
+			// 시뮬레이션에서 자주 투자한 산업군 3가지 구하기
+			List<String> topNIndustry
+				= tradingRepository.getTopNIndustry(simulationRecordDto.getSimulationSeq(), userSeq,
+				PageRequest.of(0, 3));
+			log.info(topNIndustry.toString());
+			simulationRecordDto.setIndustries(topNIndustry);
+			// 시뮬레이션 참가자들의 닉네임과 프로필 이미지 구하기
+			List<ParticipantDTO> participants
+				= userRepository.getParticipantsBySimulationSeq(simulationRecordDto.getSimulationSeq());
+			log.info(participants.toString());
+			simulationRecordDto.setParticipants(participants);
+		}
+		log.info("--- 시뮬레이션 전적 조회 완료 ---");
+
+		UserDetailsDTO userDetailsDto = UserDetailsDTO.builder()
+			// User table
+			.userSeq(userEntity.get().getSeq())
+			.email(userEntity.get().getEmail())
+			.nickname(userEntity.get().getNickname())
+			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
+			// friend table
+			.followingNum(followingNum.orElse(0))
+			.followerNum(followerNum.orElse(0))
+			// tier table
+			.tier(totalTier.orElse(0))
+			.tierByDates(tierByDates)
+			// simulation_user table
+			.industries(industries)
+			.simulationRecords(simulationRecords)
+			.build();
+		log.info(userDetailsDto.toString());
+
+		return userDetailsDto;
 	}
 
 	@Transactional
@@ -275,7 +372,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto updateUserInfo(Long userSeq, MultipartFile file, UserDto inputUserDto, Long tokenSeq) throws
+	public UserDto updateProfileInfo(Long userSeq, MultipartFile file, UserDto inputUserDto, Long tokenSeq) throws
 		IOException {
 		log.info("회원 정보: {}", inputUserDto);
 
