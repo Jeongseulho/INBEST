@@ -20,7 +20,7 @@ public interface TierRepository extends JpaRepository<Tier, Long> {
 	@Query(
 		"SELECT NEW com.jrjr.inbest.user.dto.TierByDateDTO(t.createdDate, SUM(t.tier)) "
 			+ "FROM Tier t "
-			+ "WHERE t.userSeq = :userSeq "
+			+ "WHERE t.userSeq = :userSeq AND t.createdDate is not null "
 			+ "GROUP BY DATE_FORMAT(t.createdDate, '%Y-%m-%d')")
 	List<TierByDateDTO> getTierByDate(@Param("userSeq") Long userSeq);
 }
