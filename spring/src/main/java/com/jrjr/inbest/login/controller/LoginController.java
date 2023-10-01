@@ -59,7 +59,6 @@ public class LoginController {
 			case "naver" -> naverLoginServiceImpl.login(inputLoginDto.getAuthorizeCode());
 			default -> throw new AuthenticationFailedException("올바르지 않은 provider");
 		};
-		userService.insertUserRankingInfo(userDto);
 
 		// refreshToken 생성 후 cookie 저장
 		// CookieUtil.createCookie(response, "refreshToken", jwtProvider.generateRefreshToken(userDto.getEmail()));

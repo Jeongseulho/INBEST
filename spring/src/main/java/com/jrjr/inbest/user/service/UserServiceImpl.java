@@ -91,16 +91,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto join(UserDto userDto) {
-		log.info("UserServiceImpl - join 실행: {}", userDto.getProvider());
+	public UserDto join(UserDto inputUserDto) {
+		log.info("UserServiceImpl - join 실행: {}", inputUserDto.getProvider());
 		User user = userRepository.save(
 			User.builder()
-				.email(userDto.getEmail())
-				.name(userDto.getName())
-				.nickname(userDto.getEmail())
-				.birthyear(userDto.getBirthyear())
-				.birthday(userDto.getBirthday())
-				.gender(userDto.getGender())
+				.email(inputUserDto.getEmail())
+				.name(inputUserDto.getName())
+				.nickname(inputUserDto.getEmail())
+				.birthyear(inputUserDto.getBirthyear())
+				.birthday(inputUserDto.getBirthday())
+				.gender(inputUserDto.getGender())
 				.profileImgOriginalName("DefaultProfile.png")
 				.profileImgSearchName(profileUrl + "DefaultProfile.png")
 				.build()
@@ -108,20 +108,23 @@ public class UserServiceImpl implements UserService {
 
 		Login login = loginRepository.save(
 			Login.builder()
-				.email(userDto.getEmail())
+				.email(inputUserDto.getEmail())
 				.role(Role.ROLE_USER)
 				.userSeq(user.getSeq())
-				.provider(userDto.getProvider())
+				.provider(inputUserDto.getProvider())
 				.build()
 		);
 
-		return UserDto.builder()
+		UserDto userDto = UserDto.builder()
 			.email(user.getEmail())
 			.seq(user.getSeq())
 			.profileImgSearchName(user.getProfileImgSearchName())
 			.role(login.getRole())
 			.provider(login.getProvider())
 			.build();
+
+		this.insertUserRankingInfo(userDto);
+		return userDto;
 	}
 
 	@Transactional
@@ -162,11 +165,14 @@ public class UserServiceImpl implements UserService {
 				.build()
 		);
 
-		return UserDto.builder()
+		UserDto userDto = UserDto.builder()
 			.seq(user.getSeq())
 			.nickname(user.getNickname())
 			.profileImgSearchName(user.getProfileImgSearchName())
 			.build();
+
+		this.insertUserRankingInfo(userDto);
+		return userDto;
 	}
 
 	@Override

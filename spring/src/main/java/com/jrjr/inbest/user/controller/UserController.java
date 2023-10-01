@@ -60,7 +60,6 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		UserDto userDto = userService.join(joinDto);
-		userService.insertUserRankingInfo(userDto);
 
 		log.info("========== 회원 가입 완료 ==========");
 		resultMap.put("success", true);
