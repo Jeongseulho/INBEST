@@ -1,18 +1,18 @@
-package com.jrjr.realtime.service;
+package com.jrjr.realtime.controller;
 
 import com.jrjr.realtime.test.MessageDTO;
 import com.jrjr.realtime.dto.NotificationDTO;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 
 @Slf4j
-@AllArgsConstructor
-@Service
-public class RabbitService {
+@RequiredArgsConstructor
+@Controller
+public class RabbitController {
 
 //    @Value("${rabbitmq.exchange.name}")
 //    private String exchangeName;
@@ -33,7 +33,8 @@ public class RabbitService {
     @RabbitListener(queues = "invest-queue")
     public void receiveMessage(NotificationDTO notificationDTO) {
         log.info("invest Received message: {}", notificationDTO.toString());
-        messageTemplate.convertAndSend("/topic/notification/"+notificationDTO.getUserSeq(), notificationDTO);
+//        rabbitTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
+        messageTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
     }
 
 

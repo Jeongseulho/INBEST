@@ -1,6 +1,7 @@
 package com.jrjr.realtime.controller;
 
 
+import com.jrjr.realtime.document.Notification;
 import com.jrjr.realtime.dto.NotificationDTO;
 import com.jrjr.realtime.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,8 +10,11 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -18,12 +22,12 @@ import org.springframework.web.bind.annotation.*;
 public class StompController {
 
 //    private final RabbitTemplate rabbitTemplate;
-//    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     private final NotificationService notificationService;
 
     @Operation(summary = "알림 수신 여부 확인")
-    @MessageMapping("/notification.user.{userSeq}")
+    @MessageMapping("/notification.read.{userSeq}")
     public void checkNotificationReceive(@DestinationVariable Long userSeq, @RequestBody NotificationDTO notificationDTO) {
         log.info("[알림 수신 여부 확인]");
         log.info("userSeq"+userSeq);
@@ -32,9 +36,15 @@ public class StompController {
     }
 
     @Operation(summary = "알림 다시 보내기")
-    @SubscribeMapping("/notification/{userSeq}")
+    @MessageMapping("/notification.resend.{userSeq}")
     public void resendNotifications(@DestinationVariable Long userSeq) {
-        notificationService.resendNotifications(userSeq);
+        log.info("[알림 다시 보내기]");
+        List<Notification> notificationList = notificationService.getUnreadNotifications(userSeq);
+        for (Notification notification : notificationList) {
+            log.info("알다보");
+            messagingTemplate.convertAndSend("/topic/notification."+userSeq, notification.toNotificationDTO());
+//            Thread.sleep(100); // 1초 대기
+        }
     }
 
 //    @PostMapping("/notification/user/{userSeq}")

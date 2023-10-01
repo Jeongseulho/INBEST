@@ -1,6 +1,6 @@
 package com.jrjr.realtime.test;
 
-import com.jrjr.realtime.service.RabbitService;
+import com.jrjr.realtime.controller.RabbitController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class TestController {
 
-    private final RabbitService rabbitService;
+    private final RabbitController rabbitController;
 
     /**
      * Queue로 메시지를 발행
@@ -21,7 +21,7 @@ public class TestController {
      */
     @PostMapping("/send/message")
     public ResponseEntity<?> sendMessage(@RequestBody MessageDTO messageDTO) {
-        rabbitService.sendMessage(messageDTO);
+        rabbitController.sendMessage(messageDTO);
         return ResponseEntity.ok("Message sent to RabbitMQ!");
     }
 }
