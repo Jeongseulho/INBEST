@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.entity.SimulationUser;
-import com.jrjr.invest.simulation.entity.User;
+import com.jrjr.invest.user.entity.User;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;

@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
 import com.jrjr.invest.simulation.dto.SimulationDTO;
+import com.jrjr.invest.user.entity.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -84,15 +84,18 @@ public class Simulation {
 			.build();
 	}
 
-	public void start(){
+	public void start() {
 		this.startDate = LocalDateTime.now();
 	}
+
 	public void finish() {
 		this.finishedDate = LocalDateTime.now();
 	}
-	public void updateRate(Integer revenuRate){
+
+	public void updateRate(Integer revenuRate) {
 		this.revenuRate = revenuRate;
 	}
+
 	public String getProgressState() {
 		if (finishedDate != null) {
 			return "finished";

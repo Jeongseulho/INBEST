@@ -1,14 +1,12 @@
 package com.jrjr.invest.simulation.repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.jrjr.invest.simulation.entity.LoginHistory;
-import com.jrjr.invest.simulation.entity.Rate;
+import com.jrjr.invest.user.entity.LoginHistory;
 
 @Repository
 public interface LoginHistoryRepository extends JpaRepository<LoginHistory, Long> {

@@ -160,7 +160,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		log.info("===== topNProfitList 만들기 =====");
 		for (int i = 0; i < sortedStockInfoKeyList.size() && i < 3; i++) {
 			// stockInfoMap key: stockType_stockCode
-			st = new StringTokenizer(sortedStockInfoKeyList.get(i), "-");
+			st = new StringTokenizer(sortedStockInfoKeyList.get(i), "_");
 			String stockType = st.nextToken();
 			String stockCode = st.nextToken();
 
@@ -175,7 +175,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		log.info("===== topNLossList 만들기 =====");
 		for (int i = 0; i < sortedStockInfoKeyList.size() && i < 3; i++) {
 			// stockInfoMap key: stockType_stockCode
-			st = new StringTokenizer(sortedStockInfoKeyList.get(sortedStockInfoKeyList.size() - 1 - i), "-");
+			st = new StringTokenizer(sortedStockInfoKeyList.get(sortedStockInfoKeyList.size() - 1 - i), "_");
 			String stockType = st.nextToken();
 			String stockCode = st.nextToken();
 

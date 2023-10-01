@@ -1,8 +1,7 @@
-package com.jrjr.invest.simulation.entity;
+package com.jrjr.invest.user.entity;
 
 import com.jrjr.invest.global.entity.BaseEntity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +27,7 @@ public class LoginHistory extends BaseEntity {
 	private Long userSeq;
 
 	@Builder
-	public LoginHistory(Long userSeq){
+	public LoginHistory(Long userSeq) {
 		this.userSeq = userSeq;
 	}
 }

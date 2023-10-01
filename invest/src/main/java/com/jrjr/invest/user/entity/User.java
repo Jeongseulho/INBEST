@@ -1,13 +1,13 @@
-package com.jrjr.invest.simulation.entity;
+package com.jrjr.invest.user.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.jrjr.invest.global.entity.BaseEntity;
 import com.jrjr.invest.simulation.dto.UserDTO;
+import com.jrjr.invest.simulation.entity.SimulationUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +16,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
