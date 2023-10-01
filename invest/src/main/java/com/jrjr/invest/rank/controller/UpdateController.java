@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,19 @@ public class UpdateController {
 
 	private final UserRankService userRankService;
 	private final SimulationRankService simulationRankService;
+
+	@Operation(summary = "전체 회원 정보 삭제 및 추가 (Redis user hash table)")
+	@PostMapping("/users")
+	ResponseEntity<Map<String, Object>> insertAllUserInfo() {
+		log.info("========== 개인 랭킹: 전체 회원 정보 초기화 및 추가 추가 시작 ==========");
+		Map<String, Object> resultMap = new HashMap<>();
+
+		userRankService.insertAllUserInfo();
+
+		log.info("========== 개인 랭킹: 전체 회원 정보 초기화 및 추가 추가 완료 ==========");
+		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
 
 	@Operation(summary = "회원 티어 및 수익률 정보 업데이트")
 	@Parameters(value = {
