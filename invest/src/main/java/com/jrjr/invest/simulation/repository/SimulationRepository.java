@@ -18,4 +18,7 @@ public interface SimulationRepository extends JpaRepository<Simulation, Long> {
 	List<Simulation> findByFinishedDateIsNotNullOrderByRevenuRateDesc();
 	@Query("select avg (s.revenuRate) from Simulation s where s.revenuRate is not null and s.finishedDate is not null and s.finishedDate <= :date")
 	Optional<Double> getAverageRevenuRate(LocalDateTime date);
+	@Query(value = "select * from simulation s where now() > date_add(date_format(s.start_date , '%Y-%m-%d') ,interval s.period day)",nativeQuery = true)
+	List<Simulation> getFinishSimulation(LocalDateTime now);
+	List<Simulation> findByStartDateIsNotNullAndFinishedDateIsNull();
 }
