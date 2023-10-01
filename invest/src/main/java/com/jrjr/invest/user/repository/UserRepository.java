@@ -1,4 +1,4 @@
-package com.jrjr.invest.simulation.repository;
+package com.jrjr.invest.user.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.jrjr.invest.simulation.entity.User;
+import com.jrjr.invest.user.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
