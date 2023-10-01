@@ -43,11 +43,11 @@ public class GroupScheduler {
 	private final TierRepository tierRepository;
 	private final RateRepository rateRepository;
 
-	// @Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void logTime() throws  Exception{
 		log.info("현재 시간 : "+ LocalDateTime.now());
 	}
-	// @Scheduled(cron = "0/10 * * * * *")
+	@Scheduled(cron = "0/10 * * * * *")
 	//@Scheduled(cron = "0 0 18 * * *")
 	public void closeMarket() throws Exception {
 		// 여기에 수행할 작업을 넣습니다.

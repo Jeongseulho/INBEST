@@ -67,14 +67,8 @@ public class Simulation {
 		this.revenuRate = revenuRate;
 	}
 
-	public void updateMemberNum() {
-		if (simulationUserList == null) {
-			this.memberNum = 0;
-			this.simulationUserList = new ArrayList<>();
-		}
-		else{
-			this.memberNum = simulationUserList.size();
-		}
+	public void updateMemberNum(Long count) {
+		this.memberNum = count.intValue();
 	}
 
 	public SimulationDTO simulationDTO() {
