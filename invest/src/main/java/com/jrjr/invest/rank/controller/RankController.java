@@ -96,7 +96,7 @@ public class RankController {
 	@Operation(summary = "전체 개인 랭킹 정보 불러오기", description = "start ~ end 범위의 개인 랭킹 정보 불러오기")
 	@Parameters(value = {
 		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
-		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수 (-1: 전체 랭킹 정보)")
+		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수 (0: 전체 랭킹 정보)")
 	})
 	@GetMapping("/users")
 	ResponseEntity<Map<String, Object>> getUserRankingInfo(@RequestParam Long start,
@@ -147,7 +147,7 @@ public class RankController {
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk"),
 		@Parameter(required = true, name = "start", description = "조회 할 시작 등수"),
-		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수 (-1: 전체 랭킹 정보)")
+		@Parameter(required = true, name = "end", description = "조회 할 마지막 등수 (0: 전체 랭킹 정보)")
 	})
 	@GetMapping("/simulation/{simulationSeq}")
 	ResponseEntity<Map<String, Object>> getSimulationUserRankingInfo(
