@@ -46,7 +46,7 @@ public class TradingController {
 	)
 	public ResponseEntity<Map<String, Object>> addTrading(@RequestBody TradingDTO tradingDto){
 		log.info("========== 주식 거래 등록 시작 ==========");
-
+		log.info(tradingDto.toString());
 		// tradingDto.setCreatedDate(LocalDateTime.now());
 		tradingDto.setConclusionType(TradingResultType.READY);
 		tradingService.insertTrading(tradingDto);

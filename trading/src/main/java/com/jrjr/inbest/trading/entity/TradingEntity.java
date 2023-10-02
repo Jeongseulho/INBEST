@@ -32,6 +32,7 @@ public class TradingEntity extends BaseEntity {
 	private Integer tradingType;
 	private Integer conclusionType;
 	private String stockName;
+	private Integer stockType;
 
 	@Builder
 	public TradingEntity(Long userSeq,
@@ -42,7 +43,8 @@ public class TradingEntity extends BaseEntity {
 	 	Integer tradingType,
 		Integer conclusionType,
 		String stockName,
-		Long simulationSeq){
+		Long simulationSeq,
+		Integer stockType){
 		this.userSeq = userSeq;
 		this.amount = amount;
 		this.price = price;
@@ -52,6 +54,7 @@ public class TradingEntity extends BaseEntity {
 		this.conclusionType = conclusionType;
 		this.stockName = stockName;
 		this.simulationSeq = simulationSeq;
+		this.stockType = stockType;
 	}
 
 	public void setConclusionType(Integer conclusionType) {
@@ -62,7 +65,7 @@ public class TradingEntity extends BaseEntity {
 		return TradingDTO.builder().
 			seq(seq).userSeq(userSeq).nickname(nickname).
 			amount(amount).stockCode(stockCode).tradingType(tradingType).conclusionType(conclusionType).
-			stockName(stockName).
+			stockName(stockName).stockType(stockType).
 			build();
 	}
 }

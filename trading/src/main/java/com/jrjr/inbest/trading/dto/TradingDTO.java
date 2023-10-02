@@ -77,8 +77,8 @@ public class TradingDTO implements Serializable {
 			userSeq(this.userSeq).nickname(this.nickname).
 			amount(this.amount).stockCode(this.stockCode).
 			tradingType(this.tradingType).conclusionType(this.conclusionType).
-			price(price).stockName(stockName).simulationSeq(simulationSeq).
-			build();
+			price(price).stockName(stockName).simulationSeq(simulationSeq)
+			.stockType(stockType).build();
 	}
 	public RedisTradingEntity toRedisTradingEntity(){
 		// log.info(this.toString());
