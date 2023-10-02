@@ -2,6 +2,7 @@ package com.jrjr.inbest.user.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.SearchByNicknameDTO;
 import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.service.UserService;
@@ -59,7 +61,7 @@ public class UserController {
 		log.info("UserController - join 실행: {}", joinDto.getEmail());
 		Map<String, Object> resultMap = new HashMap<>();
 
-		UserDto userDto = userService.join(joinDto);
+		userService.join(joinDto);
 
 		log.info("========== 회원 가입 완료 ==========");
 		resultMap.put("success", true);
@@ -237,6 +239,23 @@ public class UserController {
 		log.info("========== 프로필 정보 업데이트 완료 ==========");
 		resultMap.put("UserInfo", userInfo);
 		resultMap.put("success", true);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "키워드가 포함된 닉네임 리스트 검색")
+	@Parameters(value = {
+		@Parameter(required = true, name = "keyword", description = "검색할 키워드")
+	})
+	@GetMapping("/nickname-list")
+	ResponseEntity<Map<String, Object>> getUserSearchListByKeyword(@RequestParam String keyword) {
+		log.info("========== '{}' 키워드가 포함된 닉네임 리스트 검색 시작 ==========", keyword);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		List<SearchByNicknameDTO> searchList = userService.getUserSearchListByKeyword(keyword);
+
+		log.info("========== '{}' 키워드가 포함된 닉네임 리스트 검색 완료 ==========", keyword);
+		resultMap.put("success", true);
+		resultMap.put("SearchList", searchList);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 }

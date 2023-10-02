@@ -33,6 +33,7 @@ import com.jrjr.inbest.trading.repository.TradingRepository;
 import com.jrjr.inbest.user.dto.IndustryDTO;
 import com.jrjr.inbest.user.dto.JoinDto;
 import com.jrjr.inbest.user.dto.ParticipantDTO;
+import com.jrjr.inbest.user.dto.SearchByNicknameDTO;
 import com.jrjr.inbest.user.dto.SimulationRecordDTO;
 import com.jrjr.inbest.user.dto.TierByDateDTO;
 import com.jrjr.inbest.user.dto.UserDetailsDTO;
@@ -455,5 +456,20 @@ public class UserServiceImpl implements UserService {
 			.retrieve()
 			.bodyToMono(JSONObject.class)
 			.block();
+	}
+
+	/*
+		키워드가 포함된 닉네임 리스트 검색
+	 */
+	@Override
+	public List<SearchByNicknameDTO> getUserSearchListByKeyword(String keyword) {
+		List<SearchByNicknameDTO> searchByNicknameDtos = userRepository.getUserSearchListByKeyword(keyword);
+		for (SearchByNicknameDTO searchByNicknameDto : searchByNicknameDtos) {
+			if (searchByNicknameDto.getTier() < 0) {
+				searchByNicknameDto.setTier(0L);
+			}
+			log.info(searchByNicknameDto.toString());
+		}
+		return searchByNicknameDtos;
 	}
 }
