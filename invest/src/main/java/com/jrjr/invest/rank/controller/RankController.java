@@ -216,6 +216,24 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "시뮬레이션 이름으로 시뮬레이션 랭킹 정보 검색하기")
+	@Parameters(value = {
+		@Parameter(required = true, name = "simulationSeq", description = "검색할 시뮬레이션 pk 값")
+	})
+	@GetMapping("/simulation/title")
+	ResponseEntity<Map<String, Object>> getUserRankingInfoByNickname(@RequestParam Long simulationSeq) {
+		log.info("========== 시뮬레이션 랭킹: {} 시뮬레이션 이름으로 랭킹 정보 검색하기 시작 ==========", simulationSeq);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		List<SimulationRankingDTO> simulationRankingInfo
+			= simulationRankService.getSimulationRankingInfoByTitle(simulationSeq);
+
+		log.info("========== 시뮬레이션 랭킹: {} 시뮬레이션 이름으로 랭킹 정보 검색하기 완료 ==========", simulationSeq);
+		resultMap.put("success", true);
+		resultMap.put("SimulationRankingInfo", simulationRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
 	@Operation(summary = "시뮬레이션 별 BEST PICK 정보 불러오기 (수익률, 손실율, 산업군)")
 	@Parameters(value = {
 		@Parameter(required = true, name = "simulationSeq", description = "시뮬레이션 pk")

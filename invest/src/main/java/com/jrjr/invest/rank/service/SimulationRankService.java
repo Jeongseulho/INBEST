@@ -19,6 +19,8 @@ public interface SimulationRankService {
 
 	List<SimulationRankingDTO> getSimulationRankingInfo(); // 전체 시뮬레이션 랭킹 정보 불러오기 (종료된 시뮬레이션)
 
+	List<SimulationRankingDTO> getSimulationRankingInfoByTitle(Long simulationSeq); // 시뮬레이션 이름으로 시뮬레이션 랭킹 정보 검색하기
+
 	// 시뮬레이션 별 BEST PICK 구하기 (수익률, 손실율, 산업군)
 	Map<String, List<Object>> getSimulationStockRankingInfo(Long simulationSeq);
 
