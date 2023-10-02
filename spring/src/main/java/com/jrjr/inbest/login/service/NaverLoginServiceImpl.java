@@ -46,7 +46,7 @@ public class NaverLoginServiceImpl implements OAuthLoginService {
 	@Transactional
 	@Override
 	public UserDto login(String authorizeCode) {
-		log.info("NaverLoginServiceImpl - login 실행");
+		log.info("네이버 로그인 인가코드: {}", authorizeCode);
 
 		// 인가 코드를 통해 accessToken 획득
 		String accessToken = this.getOAuthAccessToken(authorizeCode);

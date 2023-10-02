@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public UserDto login(LoginDto inputLoginDto) {
-		log.info("LoginServiceImpl - login 실행");
+		log.info(inputLoginDto.toString());
 
 		Optional<Login> loginEntity = loginRepository.findByEmail(inputLoginDto.getEmail());
 		Optional<User> userEntity = userRepository.findByEmail(inputLoginDto.getEmail());
@@ -68,8 +68,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public void logout(String email) {
-		log.info("LoginServiceImpl - logout 실행");
-
 		Optional<Login> loginEntity = loginRepository.findByEmail(email);
 		if (loginEntity.isEmpty()) {
 			throw new AuthenticationFailedException("회원 정보 없음");
@@ -79,5 +77,6 @@ public class LoginServiceImpl implements LoginService {
 		if (refreshTokenRepository.existsById(email)) {
 			refreshTokenRepository.deleteById(email);
 		}
+		log.info("Redis: refreshToken 삭제 완료");
 	}
 }

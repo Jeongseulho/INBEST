@@ -48,7 +48,7 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 	@Transactional
 	@Override
 	public UserDto login(String authorizeCode) {
-		log.info("KakaoLoginServiceImpl - login 실행");
+		log.info("카카오 로그인 인가코드: {}", authorizeCode);
 
 		// 인가 코드를 통해 accessToken 획득
 		String accessToken = this.getOAuthAccessToken(authorizeCode);
