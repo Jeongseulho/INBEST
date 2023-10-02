@@ -29,6 +29,7 @@ public class TradingService {
 	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
 	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
+	private final NotificationService notificationService;
 
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
@@ -86,6 +87,9 @@ public class TradingService {
 		// for(String key : entries.keySet()){
 		// 	System.out.println(((TradingDTO)entries.get(key)).toString());
 		// }
+
+		// 매매 신청 완료 알림 보내기
+		notificationService.sendApplyTradingMessage(tradingDTO);
 	}
 
 	public void sellStock(TradingDTO tradingDTO) throws Exception{
@@ -142,6 +146,9 @@ public class TradingService {
 		}else{
 			redisCrawlingOperations.put(crawlingHashKey,stockKey,savedCrawling);
 		}
+
+		// 매도 성공 알림 보내기
+		notificationService.sendTradingMessage(tradingDTO);
 	}
 	public void buyStock(TradingDTO tradingDTO) throws Exception{
 		//거래로 인한 유저의 자산 보유량 변경
@@ -190,5 +197,10 @@ public class TradingService {
 			stockUserDTO.setLastModifiedDate(LocalDateTime.now());
 		}
 		stockUserHashOperations.put(simulationUserHashKey,simulationUserKey,stockUserDTO);
+
+		// 매수 성공 알림 보내기
+		notificationService.sendTradingMessage(tradingDTO);
 	}
+
+
 }
