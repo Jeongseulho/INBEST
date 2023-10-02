@@ -14,27 +14,15 @@ const FilterSeedMoneyTab = ({ seedMoney, dispatch }: Props) => {
       <SeedMoneyFilterBar seedMoney={seedMoney} dispatch={dispatch} />
       <div className="flex mt-6 mb-2 gap-2">
         <SeedMoneyFilterTag
-          text="백만원 ~ 250만원"
+          text="백만원 ~ 500만원"
           seedMoney={seedMoney}
-          payload={[1000000, 2500000]}
+          payload={[1000000, 5000000]}
           dispatch={dispatch}
         />
         <SeedMoneyFilterTag
-          text="250만원 ~ 500만원"
+          text="500만원 ~ 천만원"
           seedMoney={seedMoney}
-          payload={[2500000, 5000000]}
-          dispatch={dispatch}
-        />
-        <SeedMoneyFilterTag
-          text="500만원 ~ 750만원"
-          seedMoney={seedMoney}
-          payload={[5000000, 7500000]}
-          dispatch={dispatch}
-        />
-        <SeedMoneyFilterTag
-          text="750만원 ~ 천만원"
-          seedMoney={seedMoney}
-          payload={[7500000, 10000000]}
+          payload={[5000000, 10000000]}
           dispatch={dispatch}
         />
       </div>

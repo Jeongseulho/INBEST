@@ -13,7 +13,8 @@ import { Period, SeedMoney } from "../../../type/GroupFilter";
 type Action =
   | { type: "PERIOD"; payload: Period }
   | { type: "SEED_MONEY"; payload: SeedMoney }
-  | { type: "MEAN_TIER"; payload: number[] };
+  | { type: "MEAN_TIER"; payload: number[] }
+  | { type: "RESET" };
 
 export const useFilterModal = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -32,6 +33,8 @@ export const useFilterModal = () => {
         return { ...groupFilter, seedMoney: action.payload };
       case "MEAN_TIER":
         return { ...groupFilter, meanTier: action.payload };
+      case "RESET":
+        return initGroupFilter;
       default:
         throw new Error("Unhandled group filter action");
     }
@@ -44,5 +47,6 @@ export const useFilterModal = () => {
     setActiveTab,
     groupFilter,
     dispatch,
+    initGroupFilter,
   };
 };

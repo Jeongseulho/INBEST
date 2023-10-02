@@ -25,14 +25,7 @@ const SeedMoneyFilterBar = ({ seedMoney, dispatch }: Props) => {
           allowCross={false}
           marks={{
             1000000: "백만원",
-            2000000: "이백만원",
-            3000000: "삼백만원",
-            4000000: "사백만원",
             5000000: "오백만원",
-            6000000: "육백만원",
-            7000000: "칠백만원",
-            8000000: "팔백만원",
-            9000000: "구백만원",
             10000000: "천만원",
           }}
           onChange={(payload: number[] | number) => {

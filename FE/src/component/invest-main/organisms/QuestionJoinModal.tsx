@@ -45,6 +45,7 @@ const QuestionJoinModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Pro
     <Modal
       isOpen={modalType === "questionJoin"}
       ariaHideApp={false}
+      onRequestClose={closeModal}
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,

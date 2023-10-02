@@ -22,7 +22,12 @@ const Ranking = () => {
       </div>
 
       {isLoadingInvestingAllUserRank ? (
-        <Skeleton height={136} />
+        <>
+          <Skeleton height={136} />
+          <Skeleton height={136} />
+          <Skeleton height={136} />
+          <Skeleton height={46} />
+        </>
       ) : (
         <>
           {investingAllUserRank &&
