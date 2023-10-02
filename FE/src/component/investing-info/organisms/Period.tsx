@@ -10,7 +10,7 @@ const Period = () => {
     location.state.period
   );
   return (
-    <div className=" shadow-component col-span-4 row-span-1 p-4 flex flex-col gap-7">
+    <div className=" shadow-component col-span-5 row-span-1 p-4 flex flex-col gap-7">
       <div className=" flex items-center gap-2">
         <img src={calendar} width={40} />
         <h5>남은 기간</h5>

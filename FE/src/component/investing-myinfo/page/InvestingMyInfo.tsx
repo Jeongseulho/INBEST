@@ -6,7 +6,7 @@ import RecentDealStock from "../organisms/RecentDealStock";
 
 const InvestingMyInfo = () => {
   return (
-    <div className=" grid grid-cols-6 grid-rows-6">
+    <div className=" grid grid-cols-6 grid-rows-6 gap-4">
       <MyAssets />
       <Compare />
       <MyRanking />

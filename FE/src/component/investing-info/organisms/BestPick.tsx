@@ -11,7 +11,7 @@ const BestPick = () => {
   const { data, isLoading } = useQuery(["bestPick", simulationSeq], () => getBestPick(simulationSeq));
   console.log("bestPick", data);
   return (
-    <div className=" shadow-component col-span-6 row-span-3 p-4">
+    <div className=" shadow-component col-span-9 row-span-3 p-4">
       <div className="  flex items-center gap-2">
         <img src={hot} width={40} />
         <h5>이 그룹의 HOT PICK</h5>

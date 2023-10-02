@@ -144,7 +144,7 @@ const StockChart = ({ companyInfo }: Props) => {
                       formatter: function (inputDateStr: string): string {
                         const inputDate = new Date(inputDateStr);
                         const day = inputDate.getDate();
-                        const formattedDate = `${inputDate.getMonth() + 1}.${day}`;
+                        const formattedDate = `${inputDate.getMonth() + 1}월 ${day}일`;
                         return formattedDate;
                       },
                     },

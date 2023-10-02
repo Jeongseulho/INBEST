@@ -27,7 +27,7 @@ const Ranker = ({ ranking, profileImg, nickname, money, percentage, stockInfoLis
         ranking === 1 ? "bg-[#FFD700]" : ranking === 2 ? "bg-[#C0C0C0]" : "bg-[#CD7F32]"
       }`}
     >
-      <div className=" flex flex-wrap gap-3">
+      <div className=" flex flex-col items-center gap-3">
         <div className=" flex items-center gap-1">
           <img
             src={`

@@ -5,7 +5,7 @@ import BestPick from "../organisms/BestPick";
 
 const InvestingInfo = () => {
   return (
-    <div className=" grid grid-cols-9 grid-rows-4 gap-4">
+    <div className=" grid grid-cols-12 grid-rows-4 gap-4">
       <Ranking />
       <Period />
       <SeedMoney />
