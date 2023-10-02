@@ -170,7 +170,7 @@ public class UserRankServiceImpl implements UserRankService {
 		log.info("조회 랭킹 범위: " + start + " ~ " + end);
 
 		// 해당 범위 랭킹 정보 검색
-		List<RedisUserDTO> userRankingInfoList = userRankRedisRepository.getUserRankingInfoList(start, end);
+		List<RedisUserDTO> userRankingInfoList = userRankRedisRepository.getUserRankingInfoList(start - 1, end - 1);
 		log.info(userRankingInfoList.toString());
 
 		return userRankingInfoList;
