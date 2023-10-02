@@ -129,6 +129,23 @@ public class RankController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
+	@Operation(summary = "닉네임으로 개인 랭킹 정보 검색하기")
+	@Parameters(value = {
+		@Parameter(required = true, name = "nickname", description = "검색할 닉네임")
+	})
+	@GetMapping("/users")
+	ResponseEntity<Map<String, Object>> getUserRankingInfoByNickname(@RequestParam String nickname) {
+		log.info("========== 개인 랭킹: {} 닉네임으로 랭킹 정보 검색하기 시작 ==========", nickname);
+		Map<String, Object> resultMap = new HashMap<>();
+
+		List<RedisUserDTO> userRankingInfo = userRankService.getUserRankingInfoByNickname(nickname);
+
+		log.info("========== 개인 랭킹: {} 닉네임으로 랭킹 정보 검색하기 완료 ==========", nickname);
+		resultMap.put("success", true);
+		resultMap.put("UserRankingInfo", userRankingInfo);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
 	@Operation(summary = "티어 분포도 정보 불러오기")
 	@GetMapping("/tiers")
 	ResponseEntity<Map<String, Object>> getTierDistributionChartInfo() {

@@ -25,6 +25,8 @@ public interface UserRankService {
 
 	RedisUserDTO getUserRankingInfo(Long seq); // 내 개인 랭킹 정보 불러오기
 
+	List<RedisUserDTO> getUserRankingInfoByNickname(String nickname); // 닉네임으로 개인 랭킹 정보 검색하기
+
 	void updateTierDistributionChartInfo(); // 티어 분포 산정
 
 	RedisTierRankDTO getTierDistributionChartInfo(); // 티어 분포도 정보 불러오기

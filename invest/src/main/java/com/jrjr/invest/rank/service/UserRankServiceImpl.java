@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.jrjr.invest.global.exception.NotFoundException;
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
 import com.jrjr.invest.rank.repository.UserRankRedisRepository;
@@ -93,7 +94,7 @@ public class UserRankServiceImpl implements UserRankService {
 		if (totalTier < 0) {
 			totalTier = 0;
 		}
-		
+
 		log.info("totalTier: " + totalTier);
 
 		// 평균 수익률 계산
@@ -141,6 +142,38 @@ public class UserRankServiceImpl implements UserRankService {
 	@Override
 	public RedisUserDTO getUserRankingInfo(Long seq) {
 		return userRankRedisRepository.getUserRankingInfo(seq);
+	}
+
+	/*
+		닉네임으로 개인 랭킹 정보 검색하기
+	 */
+	@Override
+	public List<RedisUserDTO> getUserRankingInfoByNickname(String nickname) {
+		// user table 에서 nickname 으로 userSeq 검색
+		Long userSeq = userRepository.findSeqByNickname(nickname);
+		if (userSeq == null) {
+			throw new NotFoundException(nickname + " 닉네임으로 검색된 회원 정보가 없음");
+		}
+		log.info(nickname + "의 userSeq: " + userSeq);
+
+		// redis user hash table 에서 userSeq 으로 검색 후 랭킹 정보 조회
+		RedisUserDTO userDto = userRankRedisRepository.getUserInfo(userSeq);
+		if (userDto == null) {
+			throw new NotFoundException(nickname + " 닉네임으로 검색된 회원 정보가 없음");
+		}
+		Integer currentRank = userDto.getCurrentRank();
+		log.info(nickname + "의 현재 랭킹: " + currentRank);
+
+		// +- 10 등 범위 산정
+		long start = currentRank > 10 ? currentRank - 10 : 1;
+		long end = currentRank + 10;
+		log.info("조회 랭킹 범위: " + start + " ~ " + end);
+
+		// 해당 범위 랭킹 정보 검색
+		List<RedisUserDTO> userRankingInfoList = userRankRedisRepository.getUserRankingInfoList(start, end);
+		log.info(userRankingInfoList.toString());
+
+		return userRankingInfoList;
 	}
 
 	/*
