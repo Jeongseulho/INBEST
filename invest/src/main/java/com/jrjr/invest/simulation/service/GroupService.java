@@ -406,6 +406,27 @@ public class GroupService {
 			simulationUserHashOperations.put(hashKey, String.valueOf(redisSimulationUserDTO.getUserSeq()),
 				redisSimulationUserDTO);
 		}
+
+		// 시뮬레이션 시작 알림 메세지 보내기
+		for (SimulationUser simulationUser : simulation.getSimulationUserList()) {
+			sendStartNotification(simulationSeq, simulationUser.getUser().getSeq());
+		}
+	}
+
+	// 시뮬레이션 시작 알림 메세지 보내기
+	@Transactional
+	private void sendStartNotification(Long simulationSeq, Long userSeq) {
+		log.info("[시뮬레이션 시작 알림 메세지 보내기]");
+
+		String simulationTitle = simulationRepository.findBySeq(simulationSeq).getTitle();
+		Notification notification = Notification.builder()
+				.simulationSeq(simulationSeq)
+				.userSeq(userSeq)
+				.build();
+		notification.setStartMessage(simulationTitle);
+		notificationRepository.save(notification);
+
+		rabbitTemplate.convertAndSend("realtime_direct", "invest", notification.toNotificationDTO());
 	}
 
 	//진행 중인 그룹 상세정보가져오기

@@ -205,7 +205,7 @@ public class GroupController {
 			,name="loginSeq",required = true),
 	})
 	@PostMapping("/start")
-	ResponseEntity<?> exitGroup(@RequestBody SimulationSeqDTO simulationSeqDTO,
+	ResponseEntity<?> startGroup(@RequestBody SimulationSeqDTO simulationSeqDTO,
 		@RequestParam(required = false, defaultValue = "",name="loginSeq") String loginSeq
 	) throws Exception {
 		log.info("===== 그룹 시작하기 시작  ===== ");
