@@ -36,19 +36,55 @@ indicators_data = CompanyIndicators.objects.all()
 # 각 데이터에 대해 작업을 수행합니다.
 for indicators in indicators_data:
     # CompanyIndicators 모델의 size 필드 값을 가져옵니다.
+    stability_values = CompanyIndicators.objects.filter(stability__isnull=False).values_list('stability', flat=True)
     size_values = CompanyIndicators.objects.filter(size__isnull=False).values_list('size', flat=True)
+    growth_values = CompanyIndicators.objects.filter(growth__isnull=False).values_list('growth', flat=True)
+    profitability_values = CompanyIndicators.objects.filter(profitability__isnull=False).values_list('profitability', flat=True)
+    revenue_growth_values = CompanyIndicators.objects.filter(revenue_growth__isnull=False).values_list('revenue_growth', flat=True)
+    operating_profit_growth_values = CompanyIndicators.objects.filter(operating_profit_growth__isnull=False).values_list('operating_profit_growth', flat=True)
     
     # 등수를 계산합니다.
     ranking_scores = calculate_ranking_score(size_values)
+    stability_ranking_scores = calculate_ranking_score(stability_values)
+    size_ranking_scores = calculate_ranking_score(size_values)
+    growth_ranking_scores = calculate_ranking_score(growth_values)
+    profitability_ranking_scores = calculate_ranking_score(profitability_values)
+    revenue_growth_ranking_scores = calculate_ranking_score(revenue_growth_values)
+    operating_profit_growth_ranking_scores = calculate_ranking_score(operating_profit_growth_values)
+
 
     # CompanyIndicatorsScore 모델에서 해당 company_seq에 해당하는 인스턴스를 가져옵니다.
     score, created = CompanyIndicatorsScore.objects.get_or_create(company_seq=indicators.company_seq)
 
     # size에 점수를 저장합니다.
     if indicators.size is not None and indicators.size != 0:
-        # indicators.size가 None이나 0이 아닌 경우에만 처리합니다.
         index = [i for i, v in enumerate(size_values) if v == indicators.size][0]
-        score.size = ranking_scores[index]
+        score.size = size_ranking_scores[index]
+
+    # stability에 점수를 저장합니다.
+    if indicators.stability is not None and indicators.stability != 0:
+        index = [i for i, v in enumerate(stability_values) if v == indicators.stability][0]
+        score.stability = stability_ranking_scores[index]
+
+    # growth에 점수를 저장합니다.
+    if indicators.growth is not None and indicators.growth != 0:
+        index = [i for i, v in enumerate(growth_values) if v == indicators.growth][0]
+        score.growth = growth_ranking_scores[index]
+
+    # profitability에 점수를 저장합니다.
+    if indicators.profitability is not None and indicators.profitability != 0:
+        index = [i for i, v in enumerate(profitability_values) if v == indicators.profitability][0]
+        score.profitability = profitability_ranking_scores[index]
+
+    # revenue_growth에 점수를 저장합니다.
+    if indicators.revenue_growth is not None and indicators.revenue_growth != 0:
+        index = [i for i, v in enumerate(revenue_growth_values) if v == indicators.revenue_growth][0]
+        score.revenue_growth = revenue_growth_ranking_scores[index]
+
+    # operating_profit_growth에 점수를 저장합니다.
+    if indicators.operating_profit_growth is not None and indicators.operating_profit_growth != 0:
+        index = [i for i, v in enumerate(operating_profit_growth_values) if v == indicators.operating_profit_growth][0]
+        score.operating_profit_growth = operating_profit_growth_ranking_scores[index]
 
     # 변경사항을 저장합니다.
     score.save()

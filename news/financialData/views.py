@@ -8,7 +8,7 @@ import time
 import re
 from .models import Company
 import FinanceDataReader as fdr
-from .models import FinancialStatement, FinancialStatement_2022, FinancialStatement_2021
+from .models import FinancialStatement, FinancialStatement_2022, FinancialStatement_2021, CompanyIndicatorsScore
 
 
 # 한국 최다검색 주식 목록
@@ -394,15 +394,6 @@ def search(request):
     data = list(results.values('company_name', 'company_stock_code', 'company_stock_type'))
     return JsonResponse(data, safe=False)
 
-# 재무제표
-def get_financial_statements(request, company_stock_code):
-    try:
-        # company_stock_code에 해당하는 회사의 재무제표 정보를 가져옵니다.
-        financial_statements = FinancialStatement.objects.filter(company_seq__company_stock_code=company_stock_code).values()
-        return JsonResponse(list(financial_statements), safe=False)  # 리스트 형태로 직렬화하고 safe=False 설정
-    except FinancialStatement.DoesNotExist:
-        return JsonResponse({'message': '해당 회사의 재무제표 정보를 찾을 수 없습니다.'}, status=404)
-
 # 코스피
 @api_view(['GET'])
 def kospi(request):
@@ -732,3 +723,28 @@ def company_net_income(request, company_stock_code):
 
     except Company.DoesNotExist:
         return JsonResponse({'message': '해당 회사 정보를 찾을 수 없습니다.'}, status=404)
+    
+# 재무제표
+def get_financial_statements(request, company_stock_code):
+    try:
+        # company_stock_code에 해당하는 회사의 재무제표 정보를 가져옵니다.
+        financial_statements = FinancialStatement.objects.filter(company_seq__company_stock_code=company_stock_code).values()
+        return JsonResponse(list(financial_statements), safe=False)  # 리스트 형태로 직렬화하고 safe=False 설정
+    except FinancialStatement.DoesNotExist:
+        return JsonResponse({'message': '해당 회사의 재무제표 정보를 찾을 수 없습니다.'}, status=404)
+    
+
+# 회사지표점수
+def get_company_indicators_score(request, company_stock_code):
+    try:
+        company = Company.objects.get(company_stock_code=company_stock_code)
+
+        indicators_score = CompanyIndicatorsScore.objects.filter(company_seq=company)
+
+        indicators_score_data = list(indicators_score.values())
+
+        return JsonResponse(indicators_score_data, safe=False)
+    except Company.DoesNotExist:
+        return JsonResponse({'message': '해당 회사 정보를 찾을 수 없습니다.'}, status=404)
+    except CompanyIndicatorsScore.DoesNotExist:
+        return JsonResponse({'message': '해당 회사의 지표 정보를 찾을 수 없습니다.'}, status=404)
