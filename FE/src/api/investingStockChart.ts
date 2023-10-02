@@ -34,3 +34,13 @@ export const getKorStockChart = async (companyCode: string, days: number) => {
   });
   return data;
 };
+
+export const getKorStockPrice = async (companyCode: string) => {
+  const { data } = await apiWithAuth.get("inquire-asking-price-exp-ccn", {
+    params: {
+      FID_COND_MRKT_DIV_CODE: "J",
+      FID_INPUT_ISCD: companyCode,
+    },
+  });
+  return data;
+};
