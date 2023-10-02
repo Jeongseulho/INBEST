@@ -36,7 +36,9 @@ const Header = () => {
         <Link to="/invest" className=" text-center text-md">
           모의 투자
         </Link>
-        <a className=" text-center text-md">랭킹</a>
+        <Link to={"ranking"} className=" text-center text-md">
+          랭킹
+        </Link>
         <Link to={"/community"} className=" text-center text-md">
           게시판
         </Link>
