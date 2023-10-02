@@ -13,6 +13,8 @@ import net.minidev.json.JSONObject;
 
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
 import com.jrjr.inbest.login.entity.Login;
+import com.jrjr.inbest.login.entity.LoginHistory;
+import com.jrjr.inbest.login.repository.LoginHistoryRepository;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
@@ -30,6 +32,7 @@ public class NaverLoginServiceImpl implements OAuthLoginService {
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
 	private final UserService userService;
+	private final LoginHistoryRepository loginHistoryRepository;
 
 	@Value("${spring.security.oauth2.client.registration.naver.client-id}")
 	private String clientId;
@@ -71,6 +74,12 @@ public class NaverLoginServiceImpl implements OAuthLoginService {
 		if (!loginEntity.get().getProvider().equals("naver")) {
 			throw new AuthenticationFailedException("가입 경로 불일치");
 		}
+
+		// 로그인 기록 남기기
+		loginHistoryRepository.save(
+			LoginHistory.builder()
+				.userSeq(userEntity.get().getSeq())
+				.build());
 
 		return UserDto.builder()
 			.email(userEntity.get().getEmail())
