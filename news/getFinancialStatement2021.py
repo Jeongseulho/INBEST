@@ -8,10 +8,10 @@ django.setup()
 from financialData.models import Company, FinancialStatement, FinancialStatement_2022, FinancialStatement_2021
 
 url = "https://opendart.fss.or.kr/api/fnlttSinglAcntAll.json"  
-api_key = "ac30ceeeb8ac94447e5e065876a5783d79e5b3ec"
+api_key = "36509c5feed29d3468703dc40d3a64536d7cf944"
 
 # 모든 Company 모델의 company_code를 가져옴
-company_codes = Company.objects.values_list('company_code', flat=True).order_by('seq')[2640:2641]
+company_codes = Company.objects.values_list('company_code', flat=True).order_by('seq')[1500:2000]
 print(company_codes)
 count = 1
 for company_code in company_codes:

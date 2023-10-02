@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from pymongo import MongoClient
 from bs4 import BeautifulSoup
-from .models import News
 import requests
 from rest_framework.decorators import (api_view)
 from textblob import TextBlob

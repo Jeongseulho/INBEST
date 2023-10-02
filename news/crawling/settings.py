@@ -91,10 +91,10 @@ WSGI_APPLICATION = 'crawling.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 's09p22d110',
-        'USER': 'S09P22D110',
-        'PASSWORD': 'M2hFMrhLIv',
-        'HOST': 'stg-yswa-kr-practice-db-master.mariadb.database.azure.com',
+        'NAME': 'jrjr',
+        'USER': 'jrjr',
+        'PASSWORD': 'wnfjdwnfjd',
+        'HOST': 'j9d110.p.ssafy.io',
         'PORT': '3306',
     }
 }
