@@ -133,7 +133,7 @@ public class RankController {
 	@Parameters(value = {
 		@Parameter(required = true, name = "nickname", description = "검색할 닉네임")
 	})
-	@GetMapping("/users")
+	@GetMapping("/users/nickname")
 	ResponseEntity<Map<String, Object>> getUserRankingInfoByNickname(@RequestParam String nickname) {
 		log.info("========== 개인 랭킹: {} 닉네임으로 랭킹 정보 검색하기 시작 ==========", nickname);
 		Map<String, Object> resultMap = new HashMap<>();
