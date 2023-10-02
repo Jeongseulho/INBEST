@@ -117,6 +117,11 @@ public class TradingService {
 		tradingEntity.setConclusionType(TradingResultType.SUCCESS);
 		tradingRepository.save(tradingEntity);
 
+		//tradingDTO 최신화
+		tradingDTO = tradingEntity.toTradingDto();
+		log.info("거래 최신화");
+		log.info(tradingDTO.toString());
+
 		//레디스의 거래 목록에서 제거
 		log.info("거래 목록 제거");
 		HashOperations<String, String, TradingDTO> tradingHashOperations = redisTradingTemplate.opsForHash();
@@ -167,6 +172,11 @@ public class TradingService {
 		TradingEntity tradingEntity = tradingRepository.findBySeq(tradingDTO.getSeq()).orElse(null);
 		tradingEntity.setConclusionType(TradingResultType.SUCCESS);
 		tradingRepository.save(tradingEntity);
+		
+		//tradingDTO 최신화
+		tradingDTO = tradingEntity.toTradingDto();
+		log.info("거래 최신화");
+		log.info(tradingDTO.toString());
 
 		//레디스의 거래 목록에서 제거
 		log.info("거래 목록에서 제거");
