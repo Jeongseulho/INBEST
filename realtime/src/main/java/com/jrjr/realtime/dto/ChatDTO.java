@@ -12,12 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 @AllArgsConstructor
-public class NotificationDTO {
-    private String id;
+public class ChatDTO {
+    private String type;
     private Long simulationSeq;
     private Long userSeq;
     private String message;
-    private Boolean isRead;
     private LocalDateTime dateTime;
-
 }

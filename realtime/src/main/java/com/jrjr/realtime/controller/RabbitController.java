@@ -1,5 +1,6 @@
 package com.jrjr.realtime.controller;
 
+import com.jrjr.realtime.dto.ChatDTO;
 import com.jrjr.realtime.test.MessageDTO;
 import com.jrjr.realtime.dto.NotificationDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,36 +15,29 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class RabbitController {
 
-//    @Value("${rabbitmq.exchange.name}")
-//    private String exchangeName;
-//
-//    @Value("${rabbitmq.routing.key}")
-//    private String routingKey;
-
-    private final RabbitTemplate rabbitTemplate;
+//    private final RabbitTemplate rabbitTemplate;
     private final SimpMessagingTemplate messageTemplate;
-
-
-    public void sendMessage(MessageDTO messageDTO) {
-        log.info("invest message sent: {}", messageDTO.toString());
-        rabbitTemplate.convertAndSend("realtime_direct", "invest", messageDTO);
-    }
 
 
     @RabbitListener(queues = "invest-queue")
     public void receiveInvestMessage(NotificationDTO notificationDTO) {
-        log.info("invest-queue Received message: {}", notificationDTO.toString());
+        log.info("Invest Service에서 온 메세지: {}", notificationDTO.toString());
 //        rabbitTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
-        messageTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
+        messageTemplate.convertAndSend("/topic/notification." + notificationDTO.getUserSeq(), notificationDTO);
     }
 
 
     @RabbitListener(queues = "trading-queue")
     public void receiveTradingMessage(NotificationDTO notificationDTO) {
-        log.info("trading-queue Received message: {}", notificationDTO.toString());
-//        rabbitTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
-        messageTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
+        log.info("Trading Service에서 온 메세지: {}", notificationDTO.toString());
+        messageTemplate.convertAndSend("/topic/notification." + notificationDTO.getUserSeq(), notificationDTO);
     }
 
+
+    @RabbitListener(queues = "chat-queue")
+    public void receiveChatMessage(ChatDTO chatDTO) {
+        log.info("Chat Service에서 온 메세지: {}", chatDTO.toString());
+        messageTemplate.convertAndSend("/topic/chat." + chatDTO.getSimulationSeq(), chatDTO);
+    }
 
 }

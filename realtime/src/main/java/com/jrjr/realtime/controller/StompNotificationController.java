@@ -12,7 +12,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @AllArgsConstructor
-public class StompController {
+public class StompNotificationController {
 
 //    private final RabbitTemplate rabbitTemplate;
     private final SimpMessagingTemplate messagingTemplate;

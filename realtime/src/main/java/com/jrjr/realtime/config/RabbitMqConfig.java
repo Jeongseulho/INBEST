@@ -38,11 +38,13 @@ public class RabbitMqConfig {
     private static final String INVEST_QUEUE_NAME = "invest-queue";
     private static final String TRADING_QUEUE_NAME = "trading-queue";
     private static final String CHAT_QUEUE_NAME = "chat-queue";
+    private static final String REALTIME_QUEUE_NAME = "realtime-queue";
 
     // 라우팅 키
     private static final String INVEST_ROUTING_KEY = "invest";
     private static final String TRADING_ROUTING_KEY = "trading";
     private static final String CHAT_ROUTING_KEY = "chat";
+    private static final String REALTIME_ROUTING_KEY = "realtime";
 
     @Bean
     public DirectExchange directExchange() {
@@ -65,6 +67,11 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public Queue realtimeQueue() {
+        return new Queue(REALTIME_QUEUE_NAME);
+    }
+
+    @Bean
     public Binding investBinding(DirectExchange directExchange, Queue investQueue) {
         return BindingBuilder.bind(investQueue).to(directExchange).with(INVEST_ROUTING_KEY);
     }
@@ -77,6 +84,11 @@ public class RabbitMqConfig {
     @Bean
     public Binding chatBinding(DirectExchange directExchange, Queue chatQueue) {
         return BindingBuilder.bind(chatQueue).to(directExchange).with(CHAT_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding realtimeBinding(DirectExchange directExchange, Queue realtimeQueue) {
+        return BindingBuilder.bind(realtimeQueue).to(directExchange).with(REALTIME_ROUTING_KEY);
     }
 
     /**
