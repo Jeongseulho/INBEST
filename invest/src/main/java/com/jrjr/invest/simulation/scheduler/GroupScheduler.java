@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import com.jrjr.invest.simulation.service.GroupService;
+import com.jrjr.invest.simulation.service.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -43,12 +45,13 @@ public class GroupScheduler {
 	private final UserRankService userRankServiceImpl;
 	private final TierRepository tierRepository;
 	private final RateRepository rateRepository;
+	private final NotificationService notificationService;
 
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void logTime() throws  Exception{
 		log.info("현재 시간 : "+ LocalDateTime.now());
 	}
-	// @Scheduled(cron = "0/10 * * * * *")
+//	 @Scheduled(cron = "0/10 * * * * *")
 	@Scheduled(cron = "0 0 18 * * *")
 	public void closeMarket() throws Exception {
 		// 여기에 수행할 작업을 넣습니다.
@@ -109,7 +112,7 @@ public class GroupScheduler {
 					log.info(userSeq+"유저는 "+inProgressSimulation.getSeq()+"번 방에 참가하고 있지 않습니다.");
 					continue;
 				}
-				//유저의 수익률, 이전 랭킹, 현재 랭킹을 마리아 DB에 저장
+				//유저의 현재 금액, 이전 랭킹, 현재 랭킹을 마리아 DB에 저장
 				simulationUser.update(redisSimulationUser);
 				simulationUserRepository.save(simulationUser);
 
@@ -175,9 +178,16 @@ public class GroupScheduler {
 					
 					//받는 경험치 갑소
 					exp--;
+
+
+					// 게임 종료 알림 메세지 보내기
+					log.info(simulationUser.getUser().getSeq()+"유저 게임 종료 알림 전송 시작");
+					notificationService.sendFinishNotification(inProgressSimulation.getSeq(), simulationUser.getUser().getSeq());
+					log.info(simulationUser.getUser().getSeq()+"유저 게임 종료 알림 전송 끝");
 				}
 				//저장한 정보를 토대로 전체 랭킹을 redis에 반영
 				userRankServiceImpl.updateUserRankingInfo();
+
 				log.info(inProgressSimulation.getSeq()+"번 모의투자방 종료 끝");
 			}
 			//db에 저장

@@ -51,6 +51,7 @@ public class GroupService {
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
 	private final LoginHistoryRepository loginHistoryRepository;
 	private final RabbitTemplate rabbitTemplate;
+	private final NotificationService notificationService;
 
 	public List<UserDTO> searchUsers(String keyword) {
 		log.info("[그룹 생성 시, 초대를 위한 유저 목록 검색]");
@@ -100,7 +101,7 @@ public class GroupService {
 					continue;
 				}
 
-				inviteUser(simulation.getSeq(), owner.getNickname(), userSeq);
+				notificationService.inviteUser(simulation.getSeq(), owner.getNickname(), userSeq);
 			}
 		}
 
@@ -147,22 +148,6 @@ public class GroupService {
 		// 				.build());
 		// }
 
-	}
-
-	// 초대 요청 알림 보내기
-	@Transactional
-	private void inviteUser(Long simulationSeq, String ownerNickname, Long userSeq) {
-		log.info("[초대 요청 알림 보내기]");
-
-		String simulationTitle = simulationRepository.findBySeq(simulationSeq).getTitle();
-		Notification notification = Notification.builder()
-			.simulationSeq(simulationSeq)
-			.userSeq(userSeq)
-			.build();
-		notification.setInvititionMessage(simulationTitle, ownerNickname);
-		notificationRepository.save(notification);
-
-		rabbitTemplate.convertAndSend("realtime_direct", "invest", notification.toNotificationDTO());
 	}
 
 	// redis Key 생성
@@ -409,25 +394,11 @@ public class GroupService {
 
 		// 시뮬레이션 시작 알림 메세지 보내기
 		for (SimulationUser simulationUser : simulation.getSimulationUserList()) {
-			sendStartNotification(simulationSeq, simulationUser.getUser().getSeq());
+			notificationService.sendStartNotification(simulationSeq, simulationUser.getUser().getSeq());
 		}
 	}
 
-	// 시뮬레이션 시작 알림 메세지 보내기
-	@Transactional
-	private void sendStartNotification(Long simulationSeq, Long userSeq) {
-		log.info("[시뮬레이션 시작 알림 메세지 보내기]");
 
-		String simulationTitle = simulationRepository.findBySeq(simulationSeq).getTitle();
-		Notification notification = Notification.builder()
-				.simulationSeq(simulationSeq)
-				.userSeq(userSeq)
-				.build();
-		notification.setStartMessage(simulationTitle);
-		notificationRepository.save(notification);
-
-		rabbitTemplate.convertAndSend("realtime_direct", "invest", notification.toNotificationDTO());
-	}
 
 	//진행 중인 그룹 상세정보가져오기
 	public InProgressGroupDetailsDTO getInProgressGroupDetails(Long simulationSeq) throws Exception {
