@@ -21,6 +21,8 @@ public interface SimulationRepository extends JpaRepository<Simulation, Long> {
 
 	List<Simulation> findByFinishedDateIsNotNullOrderByRevenuRateDesc();
 
+	Boolean existsBySeqAndFinishedDateIsNotNull(Long simulationSeq);
+
 	@Query("select avg (s.revenuRate) from Simulation s where s.revenuRate is not null and s.finishedDate is not null and s.finishedDate <= :date")
 	Optional<Double> getAverageRevenuRate(LocalDateTime date);
 
