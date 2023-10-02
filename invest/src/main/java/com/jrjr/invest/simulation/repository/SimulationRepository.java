@@ -33,6 +33,6 @@ public interface SimulationRepository extends JpaRepository<Simulation, Long> {
 
 	@Query("SELECT NEW com.jrjr.invest.simulation.dto.SearchByTitleDTO(s.seq, s.title, s.period, s.memberNum) "
 		+ "FROM Simulation s "
-		+ "WHERE s.title LIKE %:keyword%")
+		+ "WHERE s.finishedDate is not null AND s.title LIKE %:keyword%")
 	List<SearchByTitleDTO> getSimulationSearchListByKeyword(@Param("keyword") String keyword);
 }
