@@ -33,6 +33,7 @@ public class TradingScheduler {
 	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
 	private final StockCrawler koreaStockCrawler;
 	private final StockCrawler cryptoStockCrawler;
+	private final StockCrawler americaStockCrawler;
 	private final TradingService tradingService;
 	private final StockCrawler americaDollarCrawler;
 
@@ -60,6 +61,8 @@ public class TradingScheduler {
 
 			return;
 		}
+		
+		//todo: 매매 실패 알람 보내기
 	}
 	@Scheduled(cron = "0/10 * * * * *")
 	// @Scheduled(cron = "0 * 9-20 * * ?")
@@ -120,6 +123,8 @@ public class TradingScheduler {
 					return koreaStockCrawler.crawling(stockCode);
 				}else if(crawlingDTO.getStockType() == StockType.CRYPTO_MONEY){
 					return cryptoStockCrawler.crawling(stockCode);
+				}else if(crawlingDTO.getStockType() == StockType.GLOBAL){
+					return americaStockCrawler.crawling(stockCode);
 				}
 
 				return marketPrice;
