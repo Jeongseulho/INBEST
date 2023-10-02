@@ -1,10 +1,8 @@
 import Compare from "../organisms/Compare";
-import FavoriteStock from "../organisms/FavoriteStock";
 import MyAssets from "../organisms/MyAssets";
 import MyRanking from "../organisms/MyRanking";
 import MyStock from "../organisms/MyStock";
 import RecentDealStock from "../organisms/RecentDealStock";
-import RecentWatchStock from "../organisms/RecentWatchStock";
 
 const InvestingMyInfo = () => {
   return (
@@ -14,8 +12,6 @@ const InvestingMyInfo = () => {
       <MyRanking />
       <MyStock />
       <RecentDealStock />
-      <RecentWatchStock />
-      <FavoriteStock />
     </div>
   );
 };

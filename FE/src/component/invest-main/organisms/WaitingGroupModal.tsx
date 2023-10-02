@@ -15,6 +15,7 @@ import { useState } from "react";
 import { exitGroup, startInvesting } from "../../../api/group";
 import CompleteStart from "../molecules/CompleteStart";
 import CompleteExit from "../molecules/CompleteExit";
+import { toast } from "react-toastify";
 
 interface Props {
   refetchMyGroupList: () => void;
@@ -48,6 +49,13 @@ const WaitingGroupModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Pro
   });
 
   const { mutate: startMutate } = useMutation((simulationSeq: number) => startInvesting(simulationSeq), {
+    onMutate: () => {
+      if (data === undefined) return;
+      if (data.currentMemberImageList.length < 3) {
+        toast.error("최소 3명 이상의 인원이 필요합니다.");
+        throw new Error("최소 3명 이상의 인원이 필요합니다.");
+      }
+    },
     onSuccess: () => {
       setIsStart(true);
       refetchMyGroupList();

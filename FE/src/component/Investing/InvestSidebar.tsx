@@ -64,7 +64,7 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
 
   return (
     <div className=" bg-white">
-      <h3 className=" my-10 text-center font-regular text-dark">{location.state.title}</h3>
+      <h5 className=" my-10 text-center font-regular text-dark">{location.state.title}</h5>
       <Sidebar
         backgroundColor={theme.sidebar.backgroundColor}
         rootStyles={{
