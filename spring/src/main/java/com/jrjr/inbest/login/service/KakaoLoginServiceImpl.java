@@ -12,6 +12,8 @@ import net.minidev.json.JSONObject;
 
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
 import com.jrjr.inbest.login.entity.Login;
+import com.jrjr.inbest.login.entity.LoginHistory;
+import com.jrjr.inbest.login.repository.LoginHistoryRepository;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
@@ -29,6 +31,7 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
 	private final UserService userService;
+	private final LoginHistoryRepository loginHistoryRepository;
 
 	@Value("${spring.security.oauth2.client.registration.kakao.client-id}")
 	private String clientId;
@@ -45,7 +48,7 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 	@Transactional
 	@Override
 	public UserDto login(String authorizeCode) {
-		log.info("KakaoLoginServiceImpl - login 실행");
+		log.info("카카오 로그인 인가코드: {}", authorizeCode);
 
 		// 인가 코드를 통해 accessToken 획득
 		String accessToken = this.getOAuthAccessToken(authorizeCode);
@@ -73,6 +76,12 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 		if (!loginEntity.get().getProvider().equals("kakao")) {
 			throw new AuthenticationFailedException("가입 경로 불일치");
 		}
+
+		// 로그인 기록 남기기
+		loginHistoryRepository.save(
+			LoginHistory.builder()
+				.userSeq(userEntity.get().getSeq())
+				.build());
 
 		return UserDto.builder()
 			.email(userEntity.get().getEmail())

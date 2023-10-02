@@ -9,19 +9,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@ToString
 @Schema(description = "로그인 정보")
 public class LoginDto {
 
-	@Schema(description = "이메일", type = "String", example = "tbd05050@naver.com")
+	@Schema(description = "이메일", type = "String", example = "tbd1@naver.com")
 	private String email;
 
-	@Schema(description = "비밀번호", type = "String", example = "abc1234")
+	@Schema(description = "비밀번호", type = "String", example = "1234")
 	private String password;
 
 	@Schema(description = "소셜 로그인 인가 코드", type = "String", example = "authorizeCode")
