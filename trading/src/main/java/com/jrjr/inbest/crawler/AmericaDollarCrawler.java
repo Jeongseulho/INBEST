@@ -1,7 +1,7 @@
 package com.jrjr.inbest.crawler;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.dto.RedisStockDTO;
@@ -21,10 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class KoreaStockCrawler implements StockCrawler{
+public class AmericaDollarCrawler implements StockCrawler{
 	private final RedisTemplate<String, RedisStockDTO> redisStockTemplate;
 
-	@Value("${stock.url.market-price}")
+	@Value("${stock.url.dollar-price}")
 	public String url;
 
 	@Override
@@ -33,33 +32,30 @@ public class KoreaStockCrawler implements StockCrawler{
 		Document doc = null;
 
 		try {
-			log.info("Connect to "+url+stockCode);
-			//크롤링으로 시가와 기업 이름을 가져옴
-			doc = Jsoup.connect(url+stockCode).get();
+			log.info("Connect to "+url);
+			//크롤링으로 시가와 화폐이름을 가져옴
+			doc = Jsoup.connect(url).get();
 
-			Element name = doc.select(".ellip").first();
-			Element price = doc.select(".price").first();
+			String name ="";
+			String price = "";
+			
+			//모든 가상화폐 상위 10개 리스트 출력
+			Element dollarElement = doc.select(".instrument-price_instrument-price__2w9MW .text-2xl").first();
 
-			if(name == null || price == null){
-				log.info("매매를 할수 없는 종목입니다.");
-				return null;
-			}
+			//,를 파싱해서 달러 환율 가져오기
+			String dollarText = dollarElement.text();
+			dollarText = dollarText.replaceAll(",","");
+			Integer dollar = Double.valueOf(dollarText).intValue();
 
-			log.info(name.text()+" 현재 시가 : "+price.text());
-
-			//,표시를 파싱해서 숫자로 변경
-			String priceText = price.text();
-			priceText = priceText.replaceAll(",","");
-			marketPrice = Long.valueOf(priceText);
+			log.info("현재 달러 : "+dollar);
 
 			//시가를 Redis에 저장
 			RedisStockDTO stockDTO = RedisStockDTO.builder()
-				.name(name.text())
-				.stockCode(stockCode)
-				.marketPrice(marketPrice)
-				.stockType(StockType.KOREA)
+				.name("달러 환율")
+				.stockCode("USD/KRW")
+				.marketPrice((long)dollar)
+				.stockType(StockType.GLOBAL)
 				.build();
-				// .lastModifiedDate(LocalDateTime.now()).build();
 			HashOperations<String, String, RedisStockDTO> stockHashOperations = redisStockTemplate.opsForHash();
 			stockHashOperations.put("stock",stockDTO.getStockType()+"_"+stockCode,stockDTO);
 		} catch (IOException e) {

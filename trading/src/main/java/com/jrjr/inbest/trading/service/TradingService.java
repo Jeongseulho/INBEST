@@ -66,7 +66,8 @@ public class TradingService {
 
 		String crawlingHashKey = instanceId+"-crawling-task";
 		HashOperations<String,String,CrawlingDTO> redisCrawlingOperations = redisCrawlingTemplate.opsForHash();
-		CrawlingDTO savedCrawling = redisCrawlingOperations.get(crawlingHashKey,crawlingDTO.getStockCode());
+		String stockKey = crawlingDTO.getStockType()+"_"+crawlingDTO.getStockCode();
+		CrawlingDTO savedCrawling = redisCrawlingOperations.get(crawlingHashKey,stockKey);
 
 		//이미 존재하는 주식 크롤링작업이면 개수 증가
 		if(savedCrawling  == null) {
@@ -75,7 +76,7 @@ public class TradingService {
 			savedCrawling.setAmount(savedCrawling.getAmount() + crawlingDTO.getAmount());
 		}
 
-		redisCrawlingOperations.put(crawlingHashKey,crawlingDTO.getStockCode(),crawlingDTO);
+		redisCrawlingOperations.put(crawlingHashKey,stockKey,crawlingDTO);
 
 		// StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey,simulationUserKey);
 
@@ -131,14 +132,15 @@ public class TradingService {
 		//매매 작업 대기 열에 입력받은 크롤링해야하는 주식 정보 감소
 		String crawlingHashKey = instanceId+"-crawling-task";
 		HashOperations<String,String,CrawlingDTO> redisCrawlingOperations = redisCrawlingTemplate.opsForHash();
-		CrawlingDTO savedCrawling = redisCrawlingOperations.get(crawlingHashKey,tradingDTO.getStockCode());
+		String stockKey = tradingDTO.getStockType()+"_"+tradingDTO.getStockCode();
+		CrawlingDTO savedCrawling = redisCrawlingOperations.get(crawlingHashKey,stockKey);
 		savedCrawling.setAmount(savedCrawling.getAmount() - tradingDTO.getAmount());
 
 		//더이상 크롤링할 필요가 없다면 삭제
 		if(savedCrawling.getAmount()  == 0) {
-			redisCrawlingOperations.delete(crawlingHashKey,savedCrawling.getStockCode());
+			redisCrawlingOperations.delete(crawlingHashKey,stockKey);
 		}else{
-			redisCrawlingOperations.put(crawlingHashKey,savedCrawling.getStockCode(),savedCrawling);
+			redisCrawlingOperations.put(crawlingHashKey,stockKey,savedCrawling);
 		}
 	}
 	public void buyStock(TradingDTO tradingDTO) throws Exception{

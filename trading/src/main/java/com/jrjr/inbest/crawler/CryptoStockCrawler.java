@@ -75,7 +75,7 @@ public class CryptoStockCrawler implements StockCrawler{
 				.stockType(StockType.CRYPTO_MONEY)
 				.build();
 			HashOperations<String, String, RedisStockDTO> stockHashOperations = redisStockTemplate.opsForHash();
-			stockHashOperations.put("stock",stockCode,stockDTO);
+			stockHashOperations.put("stock",stockDTO.getStockType()+"_"+stockCode,stockDTO);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

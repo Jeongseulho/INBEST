@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import com.jrjr.inbest.crawler.Crawler;
 import com.jrjr.inbest.crawler.StockCrawler;
 import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
@@ -33,6 +34,7 @@ public class TradingScheduler {
 	private final StockCrawler koreaStockCrawler;
 	private final StockCrawler cryptoStockCrawler;
 	private final TradingService tradingService;
+	private final StockCrawler americaDollarCrawler;
 
 	@Value("${stock.url.market-price}")
 	public String url;
@@ -43,11 +45,26 @@ public class TradingScheduler {
 	public void logTime() throws  Exception{
 		log.info("현재 시간 : "+ LocalDateTime.now());
 	}
+	//마감시 실패 알람 보내고 거래 내역에서 삭제
+	@Scheduled(cron = "0 0 18 * * *")
+	public void closeMarket() throws  Exception{
+		log.info("마감 시간 : "+ LocalDateTime.now());
 
-	// @Scheduled(cron = "0/10 * * * * *")
+		String tradingHashKey = instanceId+"-trading-task";
+		HashOperations<String, String, TradingDTO> tradingHashOperations = redisTradingTemplate.opsForHash();
+
+		Map<String, TradingDTO> tradingDTOMap = tradingHashOperations.entries(tradingHashKey);
+
+		if(tradingDTOMap == null){
+			log.info("장 마감으로 인한 거래 제거 시작");
+
+			return;
+		}
+	}
+	@Scheduled(cron = "0/10 * * * * *")
 	// @Scheduled(cron = "0 * 9-20 * * ?")
-	@Scheduled(cron = "0 * * * * ?")
-	public void myScheduledTask() throws Exception {
+	// @Scheduled(cron = "0 * * * * ?")
+	public void trading() throws Exception {
 		// 여기에 수행할 작업을 넣습니다.
 		log.info("========== 주식 매매 시작 ==========");
 
@@ -69,25 +86,32 @@ public class TradingScheduler {
 		for(String key : tradingDTOMap.keySet()) {
 			TradingDTO tradingDTO = tradingDTOMap.get(key);
 			String stockCode = tradingDTO.getStockCode();
-			
+			Integer stockType = tradingDTO.getStockType();
+			String stockKey = stockType+"_"+stockCode;
 			//주식 코드 번호의 매매 리스트가 없으면 생성
-			if(tradingByCodeMap.get(stockCode) == null){
+			if(tradingByCodeMap.get(stockKey) == null){
 				List<TradingDTO> tradingList = new ArrayList<>();
-				tradingByCodeMap.put(stockCode,tradingList);
+				tradingByCodeMap.put(stockKey,tradingList);
 			}
 			//주식 코드별 매매 리스트에 추가
-			List<TradingDTO> tradingList = tradingByCodeMap.get(stockCode);
+			List<TradingDTO> tradingList = tradingByCodeMap.get(stockKey);
 			tradingList.add(tradingDTO);
-			tradingByCodeMap.put(stockCode,tradingList);
+			tradingByCodeMap.put(stockKey,tradingList);
 		}
 		log.info("주식 종목 By 거래");
 		log.info(tradingByCodeMap+" ");
 		log.info("크롤링 대상 목록");
 		log.info(crawlingDTOMap+" ");
+		
+		//환율 값 얻기
+		americaDollarCrawler.crawling("USD/KRW");
+
 		//종목코드 별 크롤링 후 매매 확인
 		for(String seq : crawlingDTOMap.keySet()){
 			CrawlingDTO crawlingDTO= crawlingDTOMap.get(seq);
 			String stockCode = crawlingDTO.getStockCode();
+			Integer stockType = crawlingDTO.getStockType();
+			String stockKey = stockType+"_"+stockCode;
 			//비동기로 크롤링 실행
 			CompletableFuture.supplyAsync(()->{
 				Long marketPrice = null;
@@ -100,7 +124,7 @@ public class TradingScheduler {
 
 				return marketPrice;
 			}).thenAccept((price)->{
-				List<TradingDTO> tradingList = tradingByCodeMap.get(stockCode);
+				List<TradingDTO> tradingList = tradingByCodeMap.get(stockKey);
 				if(price == null){
 					log.info(stockCode+"의 시가를 구할 수 없습니다.");
 					return ;
