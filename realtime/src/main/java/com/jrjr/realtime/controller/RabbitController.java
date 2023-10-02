@@ -31,8 +31,16 @@ public class RabbitController {
 
 
     @RabbitListener(queues = "invest-queue")
-    public void receiveMessage(NotificationDTO notificationDTO) {
-        log.info("invest Received message: {}", notificationDTO.toString());
+    public void receiveInvestMessage(NotificationDTO notificationDTO) {
+        log.info("invest-queue Received message: {}", notificationDTO.toString());
+//        rabbitTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
+        messageTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
+    }
+
+
+    @RabbitListener(queues = "trading-queue")
+    public void receiveTradingMessage(NotificationDTO notificationDTO) {
+        log.info("trading-queue Received message: {}", notificationDTO.toString());
 //        rabbitTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
         messageTemplate.convertAndSend("/topic/notification."+notificationDTO.getUserSeq(), notificationDTO);
     }

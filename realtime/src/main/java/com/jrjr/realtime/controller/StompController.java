@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class StompController {
 
     @Operation(summary = "알림 수신 여부 확인")
     @MessageMapping("/notification.read.{userSeq}")
-    public void checkNotificationReceive(@DestinationVariable Long userSeq, @RequestBody NotificationDTO notificationDTO) {
+    public void checkNotificationReceive(@DestinationVariable Long userSeq, @Payload NotificationDTO notificationDTO) {
         log.info("[알림 수신 여부 확인]");
         log.info("userSeq"+userSeq);
         log.info(notificationDTO.toString());
