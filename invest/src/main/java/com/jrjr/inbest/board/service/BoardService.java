@@ -333,7 +333,7 @@ public class BoardService {
 				log.info("작성자 : " + userDTO.toString());
 				boardDTO.setWriter(userDTO);
 			}
-			boardDTOList.add(boardEntity.toBoardDTO());
+			boardDTOList.add(boardDTO);
 		}
 
 		return boardDTOList;
