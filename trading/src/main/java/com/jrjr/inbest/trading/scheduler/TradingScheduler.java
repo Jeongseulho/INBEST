@@ -124,26 +124,44 @@ public class TradingScheduler {
 
 		//종목코드 별 크롤링 후 매매 확인
 		for(String seq : crawlingDTOMap.keySet()){
-			CrawlingDTO crawlingDTO= crawlingDTOMap.get(seq);
-			String stockCode = crawlingDTO.getStockCode();
-			Integer stockType = crawlingDTO.getStockType();
-			String stockKey = stockType+"_"+stockCode;
 			//비동기로 크롤링 실행
 			CompletableFuture.supplyAsync(()->{
+				CrawlingDTO crawlingDTO= crawlingDTOMap.get(seq);
+				String stockCode = crawlingDTO.getStockCode();
+				Integer stockType = crawlingDTO.getStockType();
+				String stockKey = stockType+"_"+stockCode;
 				Long marketPrice = null;
 
 				if(crawlingDTO.getStockType() == StockType.KOREA){
-					return koreaStockCrawler.crawling(stockCode);
+					marketPrice = koreaStockCrawler.crawling(stockCode);
 				}else if(crawlingDTO.getStockType() == StockType.CRYPTO_MONEY){
-					return cryptoStockCrawler.crawling(stockCode);
+					marketPrice = cryptoStockCrawler.crawling(stockCode);
 				}else if(crawlingDTO.getStockType() == StockType.GLOBAL){
-					return americaStockCrawler.crawling(stockCode);
+					marketPrice= americaStockCrawler.crawling(stockCode);
 				}
 
-				return marketPrice;
-			}).thenAccept((price)->{
+				Map<String,String> resultMap = new HashMap<>();
+				resultMap.put("stockKey",stockKey);
+				resultMap.put("marketPrice",String.valueOf(marketPrice));
+				resultMap.put("stockCode",stockCode);
+
+				return resultMap;
+			}).thenAccept((resultMap)->{
+				String stockKey = resultMap.get("stockKey");
+				String stockCode = resultMap.get("stockCode");
+				String priceStr = resultMap.get("marketPrice");
+
+
+				log.info("stock key : "+stockKey);
+				log.info("stockCode : "+stockCode);
+				log.info("priceStr : "+priceStr);
+
 				List<TradingDTO> tradingList = tradingByCodeMap.get(stockKey);
-				if(price == null){
+
+				log.info("확인해야 할 매매 목록 : ");
+				log.info(tradingList.toString());
+
+				if(priceStr == null){
 					log.info(stockCode+"의 시가를 구할 수 없습니다.");
 					return ;
 				}
@@ -151,6 +169,9 @@ public class TradingScheduler {
 					log.info(stockCode+"로 올라온 매매가 없습니다.");
 					return ;
 				}
+				//String 변수를 long형으로 변화
+				Long price = Long.valueOf(priceStr);
+				
 				for(int i=0;i<tradingList.size();i++){
 					TradingDTO tradingDTO = tradingList.get(i);
 					//매도

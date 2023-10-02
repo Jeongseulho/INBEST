@@ -70,7 +70,7 @@ public class AmericaStockCrawler implements StockCrawler{
 			marketPriceStr = marketPriceStr.substring(marketPriceStr.indexOf('>')+1).trim();
 			marketPriceStr = marketPriceStr.replaceAll(",","");
 			marketPrice = Double.valueOf(marketPriceStr).longValue();
-			log.info(marketPrice+" ");
+//			log.info(marketPrice+" ");
 
 			//달러 가져오기
 			HashOperations<String, String, RedisStockDTO> stockHashOperations = redisStockTemplate.opsForHash();
@@ -94,9 +94,10 @@ public class AmericaStockCrawler implements StockCrawler{
 
 			//기업 이름 파싱
 			nameStr = nameStr.substring(nameStr.indexOf('>')+1).trim();
+			nameStr = nameStr.substring(0,nameStr.indexOf(" ")).trim();
 			nameStr = nameStr.replaceAll(",","");
 			// log.info(nameStr+" ");
-
+			log.info(nameStr+" 현재 시가 : "+marketPrice);
 			//시가를 Redis에 저장
 			RedisStockDTO stockDTO = RedisStockDTO.builder()
 				.name(nameStr)
