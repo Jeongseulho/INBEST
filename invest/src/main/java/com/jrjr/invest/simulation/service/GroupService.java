@@ -11,9 +11,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jrjr.invest.rank.service.SimulationRankService;
-import com.jrjr.invest.simulation.document.Notification;
 import com.jrjr.invest.simulation.dto.AssetDTO;
 import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
+import com.jrjr.invest.simulation.dto.SearchByTitleDTO;
 import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.dto.group.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.group.GroupDTO;
@@ -398,8 +398,6 @@ public class GroupService {
 		}
 	}
 
-
-
 	//진행 중인 그룹 상세정보가져오기
 	public InProgressGroupDetailsDTO getInProgressGroupDetails(Long simulationSeq) throws Exception {
 		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
@@ -656,5 +654,12 @@ public class GroupService {
 		}
 
 		return assetDTOList;
+	}
+
+	/*
+		키워드가 포함된 닉네임 리스트 검색
+	 */
+	public List<SearchByTitleDTO> getSimulationSearchListByKeyword(String keyword) {
+		return simulationRepository.getSimulationSearchListByKeyword(keyword);
 	}
 }
