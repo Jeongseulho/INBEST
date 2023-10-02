@@ -95,7 +95,7 @@ public class AmericaStockCrawler implements StockCrawler{
 			//기업 이름 파싱
 			nameStr = nameStr.substring(nameStr.indexOf('>')+1).trim();
 			nameStr = nameStr.replaceAll(",","");
-			log.info(nameStr+" ");
+			// log.info(nameStr+" ");
 
 			//시가를 Redis에 저장
 			RedisStockDTO stockDTO = RedisStockDTO.builder()

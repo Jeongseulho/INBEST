@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.constant.TradingType;
 
+import com.jrjr.inbest.trading.entity.TradingEntity;
+import com.jrjr.inbest.trading.repository.TradingRepository;
 import com.jrjr.inbest.trading.service.TradingService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class TradingScheduler {
 	private final StockCrawler americaStockCrawler;
 	private final TradingService tradingService;
 	private final StockCrawler americaDollarCrawler;
+	private final TradingRepository tradingRepository;
 
 	@Value("${stock.url.market-price}")
 	public String url;
@@ -57,9 +60,19 @@ public class TradingScheduler {
 		Map<String, TradingDTO> tradingDTOMap = tradingHashOperations.entries(tradingHashKey);
 
 		if(tradingDTOMap == null){
-			log.info("장 마감으로 인한 거래 제거 시작");
-
+			log.info("남아있는 매매 신청이 없습니다.ㄴ");
 			return;
+		}
+
+		for(String tradingSeq : tradingDTOMap.keySet()){
+			TradingDTO tradingDTO = tradingDTOMap.get(tradingSeq);
+
+			TradingEntity failedTrading = tradingRepository.findBySeq(Long.valueOf(tradingSeq)).orElse(null);
+
+			if(failedTrading == null){
+				log.info(tradingSeq+"번의 매매 내역이 존재하지 않습니다.");
+				continue;
+			}
 		}
 		
 		//todo: 매매 실패 알람 보내기
