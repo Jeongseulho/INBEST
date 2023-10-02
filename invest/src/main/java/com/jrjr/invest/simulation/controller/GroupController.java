@@ -9,7 +9,6 @@ import com.jrjr.invest.simulation.dto.group.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.group.GroupDTO;
 import com.jrjr.invest.simulation.dto.group.GroupUserDTO;
 import com.jrjr.invest.simulation.dto.notification.MessageDTO;
-import com.jrjr.invest.simulation.service.MessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,17 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GroupController {
 	private final GroupService groupService;
-	private final MessageService messageService;
 	private final TradingService tradingService;
 
-	@PostMapping("/sendMessage")
-	ResponseEntity<?> sendMessage(@RequestBody MessageDTO messageDTO) {
-		log.info("========== 메시지 송신 ==========");
-		log.info(messageDTO.toString());
-		messageService.sendMessage(messageDTO);
-
-		return ResponseEntity.ok().build();
-	}
 	// 그룹 생성
 	@Operation(summary = "모의 투자방 생성")
 	@PostMapping()
