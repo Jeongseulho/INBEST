@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jrjr.inbest.crawler.LogoCrawler;
 import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
 import com.jrjr.inbest.trading.dto.StockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
@@ -36,6 +37,16 @@ public class TradingController {
 	private final TradingService tradingService;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
 	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
+	// private final LogoCrawler logoCrawler;
+	//
+	// @GetMapping("/logo")
+	// public void getLogo(){
+	// 	log.info("이미지 로고 크롤링 시작");
+	// 	logoCrawler.crawling("");
+	// 	log.info("이미지 로고 크롤링 끝");
+	// }
+
+
 	@PostMapping("")
 	@Operation(summary = "거래 생성")
 	@io.swagger.v3.oas.annotations.parameters.RequestBody(

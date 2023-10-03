@@ -111,6 +111,7 @@ public class TradingService {
 		}else{
 			throw new Exception("보유양보다 매도 양이 많습니다.");
 		}
+
 		//mariaDB에 거래 체결
 		log.info("MariaDB 거래 반영");
 		TradingEntity tradingEntity = tradingRepository.findBySeq(tradingDTO.getSeq()).orElse(null);

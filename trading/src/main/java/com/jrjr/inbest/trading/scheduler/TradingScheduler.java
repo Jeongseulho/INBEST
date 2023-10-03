@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 import com.jrjr.inbest.crawler.Crawler;
 import com.jrjr.inbest.crawler.StockCrawler;
 import com.jrjr.inbest.trading.constant.StockType;
+import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
@@ -45,12 +46,13 @@ public class TradingScheduler {
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
 
-	@Scheduled(cron = "0/10 * * * * ?")
+	// @Scheduled(cron = "0/10 * * * * ?")
 	public void logTime() throws  Exception{
 		log.info("현재 시간 : "+ LocalDateTime.now());
 	}
 	//마감시 실패 알람 보내고 거래 내역에서 삭제
 	@Scheduled(cron = "0 0 18 * * *")
+	// @Scheduled(cron = "0/10 * * * * ?")
 	public void closeMarket() throws  Exception{
 		log.info("마감 시간 : "+ LocalDateTime.now());
 
@@ -60,12 +62,14 @@ public class TradingScheduler {
 		Map<String, TradingDTO> tradingDTOMap = tradingHashOperations.entries(tradingHashKey);
 
 		if(tradingDTOMap == null){
-			log.info("남아있는 매매 신청이 없습니다.ㄴ");
+			log.info("남아있는 매매 신청이 없습니다.");
 			return;
 		}
 
 		for(String tradingSeq : tradingDTOMap.keySet()){
 			TradingDTO tradingDTO = tradingDTOMap.get(tradingSeq);
+			log.info("실패한 매매");
+			log.info(tradingDTO.toString());
 
 			TradingEntity failedTrading = tradingRepository.findBySeq(Long.valueOf(tradingSeq)).orElse(null);
 
@@ -73,11 +77,20 @@ public class TradingScheduler {
 				log.info(tradingSeq+"번의 매매 내역이 존재하지 않습니다.");
 				continue;
 			}
+
+			//실패 DB 처리
+			failedTrading.setConclusionType(TradingResultType.FAIL);
+			tradingRepository.save(failedTrading);
+			tradingHashOperations.delete(tradingHashKey,tradingSeq);
+			
+			//실패한 매매 최신화
+			tradingDTO = failedTrading.toTradingDto();
 		}
-		
 		//todo: 매매 실패 알람 보내기
+
+		log.info("====== 매매 실패 끝 ======");
 	}
-	@Scheduled(cron = "0/10 * * * * *")
+	// @Scheduled(cron = "0/10 * * * * *")
 	// @Scheduled(cron = "0 * 9-20 * * ?")
 	// @Scheduled(cron = "0 * * * * ?")
 	public void trading() throws Exception {
