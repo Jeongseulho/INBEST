@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StopWatch;
 
 import com.jrjr.invest.rank.dto.RedisSimulationUserRankingDTO;
 import com.jrjr.invest.rank.dto.RedisStockDTO;
@@ -129,6 +130,9 @@ public class SimulationRankRedisRepository {
 		시뮬레이션 별 참가자 랭킹 정보 산정
 	 */
 	public void updateSimulationUserRankingInfo(Long simulationSeq) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
 		// simulation_seq_sort 기존 랭킹 정보 초기화
 		this.deleteSimulationUserRankingInfo(simulationSeq);
 		String simulationUserRankingKey = "simulation_" + simulationSeq + "_sort";
@@ -271,6 +275,9 @@ public class SimulationRankRedisRepository {
 			simulationUserHash.put(simulationUserHashKey, String.valueOf(userSeq), simulationUserDto);
 			log.info(simulationUserDto.toString());
 		}
+
+		stopWatch.stop();
+		log.info("랭킹 재산정 소요 시간: {} milliseconds", stopWatch.getTotalTimeMillis());
 	}
 
 	/*
