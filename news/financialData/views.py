@@ -172,22 +172,17 @@ def usahigh(request):
     res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, 'lxml')
 
-    # Data storage list
     data_list = []
 
-    # Find the table with the class "table-stock"
     count = 0
     table = soup.find('table', class_='table-stock')
     if table:
-        # Extract table headers
         headers = [th.text.strip() for th in table.select('thead th')]
-
-        # Extract table rows
         rows = table.find_all('tr')
+
         for row in rows:
             cols = row.find_all('td')
-            if len(cols) >= 7:  # Data exists in this row
-                # Extract data from each column
+            if len(cols) >= 7: 
                 stock_name = cols[0].find('div', class_='stock-name').text.strip()
                 symbol = cols[0].find('div', class_='symbol').text.strip()
                 price = cols[1].find('div', class_='price').text.strip()
@@ -196,7 +191,6 @@ def usahigh(request):
                 trading_amount = cols[4].text.strip()
                 market_cap_usd = cols[5].text.strip()
 
-                # Create a dictionary with extracted data
                 data_dict = {
                     '종목명': stock_name,
                     '심볼': symbol,
@@ -225,22 +219,17 @@ def usastock(request):
     res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, 'lxml')
 
-    # Data storage list
     data_list = []
 
-    # Find the table with the class "table-stock"
     count = 0
     table = soup.find('table', class_='table-stock')
     if table:
-        # Extract table headers
         headers = [th.text.strip() for th in table.select('thead th')]
-
-        # Extract table rows
         rows = table.find_all('tr')
+
         for row in rows:
             cols = row.find_all('td')
-            if len(cols) >= 7:  # Data exists in this row
-                # Extract data from each column
+            if len(cols) >= 7:
                 stock_name = cols[0].find('div', class_='stock-name').text.strip()
                 symbol = cols[0].find('div', class_='symbol').text.strip()
                 price = cols[1].find('div', class_='price').text.strip()
@@ -249,7 +238,6 @@ def usastock(request):
                 trading_amount = cols[4].text.strip()
                 market_cap_usd = cols[5].text.strip()
 
-                # Create a dictionary with extracted data
                 data_dict = {
                     '종목명': stock_name,
                     '심볼': symbol,
@@ -277,22 +265,17 @@ def usatop(request):
     res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, 'lxml')
 
-    # Data storage list
     data_list = []
 
-    # Find the table with the class "table-stock"
     count = 0
     table = soup.find('table', class_='table-stock')
     if table:
-        # Extract table headers
         headers = [th.text.strip() for th in table.select('thead th')]
-
-        # Extract table rows
         rows = table.find_all('tr')
+
         for row in rows:
             cols = row.find_all('td')
-            if len(cols) >= 7:  # Data exists in this row
-                # Extract data from each column
+            if len(cols) >= 7: 
                 stock_name = cols[0].find('div', class_='stock-name').text.strip()
                 symbol = cols[0].find('div', class_='symbol').text.strip()
                 price = cols[1].find('div', class_='price').text.strip()
@@ -301,7 +284,6 @@ def usatop(request):
                 trading_amount = cols[4].text.strip()
                 market_cap_usd = cols[5].text.strip()
 
-                # Create a dictionary with extracted data
                 data_dict = {
                     '종목명': stock_name,
                     '심볼': symbol,
@@ -397,10 +379,7 @@ def search(request):
 # 기엄검색 기능 (주식코드를 기준으로)
 def get_company_data(request, company_stock_code):
     try:
-        # 주어진 company_stock_code로 Company 모델에서 데이터를 조회합니다.
         company = Company.objects.get(company_stock_code=company_stock_code)
-
-        # 조회한 데이터를 원하는 형식으로 가공합니다.
         company_data = {
             'company_code': company.company_code,
             'company_name': company.company_name,
@@ -411,7 +390,6 @@ def get_company_data(request, company_stock_code):
             'company_image_url': company.company_image_url,
         }
 
-        # 가공된 데이터를 JSON 형식으로 응답합니다.
         return JsonResponse(company_data)
     except Company.DoesNotExist:
         return JsonResponse({'message': '해당 회사 정보를 찾을 수 없습니다.'}, status=404)
@@ -692,20 +670,13 @@ def bitcoin(request):
 @api_view(['GET'])
 def company_revenue(request, company_stock_code):
     try:
-        # company_stock_code에 해당하는 회사의 company_seq를 찾습니다.
         company = Company.objects.get(company_stock_code=company_stock_code)
         company_seq = company.seq
 
-        # 2023년도 재무제표에서 해당 company_seq에 해당하는 revenue를 가져옵니다.
         revenue_2023 = FinancialStatement.objects.filter(company_seq=company_seq).values('revenue')[0]['revenue']
-
-        # 2022년도 재무제표에서 해당 company_seq에 해당하는 revenue를 가져옵니다.
         revenue_2022 = FinancialStatement_2022.objects.filter(company_seq=company_seq).values('revenue')[0]['revenue']
-
-        # 2021년도 재무제표에서 해당 company_seq에 해당하는 revenue를 가져옵니다.
         revenue_2021 = FinancialStatement_2021.objects.filter(company_seq=company_seq).values('revenue')[0]['revenue']
 
-        # JSON 응답을 생성합니다.
         data = {
             'revenue_2023': revenue_2023,
             'revenue_2022': revenue_2022,
@@ -721,20 +692,13 @@ def company_revenue(request, company_stock_code):
 @api_view(['GET'])
 def company_net_income(request, company_stock_code):
     try:
-        # company_stock_code에 해당하는 회사의 company_seq를 찾습니다.
         company = Company.objects.get(company_stock_code=company_stock_code)
         company_seq = company.seq
 
-        # 2023년도 재무제표에서 해당 company_seq에 해당하는 net_income을 가져옵니다.
         net_income_2023 = FinancialStatement.objects.filter(company_seq=company_seq).values('net_income')[0]['net_income']
-
-        # 2022년도 재무제표에서 해당 company_seq에 해당하는 net_income을 가져옵니다.
         net_income_2022 = FinancialStatement_2022.objects.filter(company_seq=company_seq).values('net_income')[0]['net_income']
-
-        # 2021년도 재무제표에서 해당 company_seq에 해당하는 net_income을 가져옵니다.
         net_income_2021 = FinancialStatement_2021.objects.filter(company_seq=company_seq).values('net_income')[0]['net_income']
 
-        # JSON 응답을 생성합니다.
         data = {
             'net_income_2023': net_income_2023,
             'net_income_2022': net_income_2022,
@@ -749,9 +713,8 @@ def company_net_income(request, company_stock_code):
 # 재무제표
 def get_financial_statements(request, company_stock_code):
     try:
-        # company_stock_code에 해당하는 회사의 재무제표 정보를 가져옵니다.
         financial_statements = FinancialStatement.objects.filter(company_seq__company_stock_code=company_stock_code).values()
-        return JsonResponse(list(financial_statements), safe=False)  # 리스트 형태로 직렬화하고 safe=False 설정
+        return JsonResponse(list(financial_statements), safe=False)
     except FinancialStatement.DoesNotExist:
         return JsonResponse({'message': '해당 회사의 재무제표 정보를 찾을 수 없습니다.'}, status=404)
 
