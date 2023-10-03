@@ -12,11 +12,13 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
 import com.jrjr.inbest.rank.dto.RedisSimulationUserRankingDTO;
-import com.jrjr.inbest.rank.dto.RedisStockDTO;
 import com.jrjr.inbest.rank.dto.RedisStockUserDTO;
 import com.jrjr.inbest.rank.dto.RedisUserDTO;
 import com.jrjr.inbest.rank.dto.TopStockDTO;
 import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
+import com.jrjr.inbest.trading.dto.RedisStockDTO;
+import com.jrjr.inbest.trading.dto.StockUserDTO;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Repository
@@ -26,7 +28,7 @@ public class SimulationRankRedisRepository {
 	private final HashOperations<String, String, RedisUserDTO> userHash; // key: USER_HASH_KEY
 	private final HashOperations<String, String, RedisSimulationUserDTO> simulationUserHash; // key: simulation_simulationSeq
 	private final HashOperations<String, String, RedisStockDTO> stockHash; // key: STOCK_HASH_KEY
-	private final HashOperations<String, String, RedisStockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
+	private final HashOperations<String, String, StockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
 	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet; // key: simulation_simulationSeq_sort
 
 	static final String USER_HASH_KEY = "user";
@@ -34,15 +36,11 @@ public class SimulationRankRedisRepository {
 	static final String STOCK_HASH_KEY = "stock";
 
 	@Autowired
-	public SimulationRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
-		RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate,
-		RedisTemplate<String, RedisStockDTO> stockRedisTemplate,
-		RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate,
-		RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate) {
+	public SimulationRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate, RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate, RedisTemplate<String, RedisStockDTO> stockRedisTemplate, RedisTemplate<String, StockUserDTO> redisStockUserTemplate, RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate) {
 		this.userHash = userRedisTemplate.opsForHash();
 		this.simulationUserHash = simulationUserRedisTemplate.opsForHash();
 		this.stockHash = stockRedisTemplate.opsForHash();
-		this.stockUserHash = stockUserRedisTemplate.opsForHash();
+		this.stockUserHash = redisStockUserTemplate.opsForHash();
 		this.simulationUserRankingZSet = simulationUserRankingRedisTemplate.opsForZSet();
 	}
 
@@ -72,7 +70,7 @@ public class SimulationRankRedisRepository {
 	/*
 		보유 주식 정보 가져오기
 	 */
-	public Map<String, RedisStockUserDTO> getStockUserInfoMap(Long simulationSeq, String userSeq) {
+	public Map<String, StockUserDTO> getStockUserInfoMap(Long simulationSeq, String userSeq) {
 		String stockUserHashKey = "simulation_" + simulationSeq + "_user_" + userSeq;
 		return stockUserHash.entries(stockUserHashKey);
 	}
@@ -88,7 +86,7 @@ public class SimulationRankRedisRepository {
 			return null;
 		}
 		log.info(redisStockDto.toString());
-		return redisStockDto.getMarketPrice();
+		return String.valueOf(redisStockDto.getMarketPrice());
 	}
 	//
 	// /*
@@ -162,9 +160,9 @@ public class SimulationRankRedisRepository {
 			List<TopStockDTO> stockInfoList = new ArrayList<>();
 			// 보유 주식 정보 가져오기
 			log.info("--- 보유 중인 주식 정보 가져오기 ---");
-			Map<String, RedisStockUserDTO> stockUserDtoMap = this.getStockUserInfoMap(simulationSeq, userSeq);
+			Map<String, StockUserDTO> stockUserDtoMap = this.getStockUserInfoMap(simulationSeq, userSeq);
 			for (String stockTypeCode : stockUserDtoMap.keySet()) {
-				RedisStockUserDTO redisStockUserDto = stockUserDtoMap.get(stockTypeCode);
+				StockUserDTO redisStockUserDto = stockUserDtoMap.get(stockTypeCode);
 				Long amount = redisStockUserDto.getAmount(); // 주식 보유량
 				String stockMarketPrice = this.getStockMarketPrice(redisStockUserDto.getType(),
 					redisStockUserDto.getStockCode()); // 주식 시가 정보
