@@ -92,3 +92,20 @@ class CompanyIndicatorsScore(models.Model):
     profitability = models.IntegerField(null=True, default=0)  # 수익성
     revenue_growth = models.IntegerField(null=True, default=0)  # 매출액 자산 증가율
     operating_profit_growth = models.IntegerField(null=True, default=0) # 순이익증가율
+
+
+class FinancialProductRank10(models.Model):
+    seq = models.BigAutoField(primary_key=True)
+    fin_prdt_nm = models.CharField(max_length=255, null=True)  # 금융 상품명
+    kor_co_nm = models.CharField(max_length=255, null=True)  # 금융 회사명
+    co_type_nm = models.CharField(max_length=255, null=True)  # 금융 유형
+    bank_type_nm = models.CharField(max_length=255, null=True)  # 금융권
+    intr_rate_type_nm = models.CharField(max_length=255, null=True)  # 금리유형
+    save_trm = models.BigIntegerField(null=True)  # 저축 기간
+    intr_rate = models.FloatField(null=True)  # 저축 금리
+    intr_rate2 = models.FloatField(null=True)  # 최대 저축 금리
+    fin_prdt_cd = models.CharField(max_length=255, null=True)  # 금융상품 코드
+    spcl_cnd = models.CharField(max_length=255, null=True)  # 우대조건
+    etc_note = models.CharField(max_length=255, null=True)  # 기타 유의사항
+    max_limit = models.BigIntegerField(null=True)  # 최고한도
+    rsrv_type_nm = models.CharField(max_length=255, default=None, null=True) # 적금형태

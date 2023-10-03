@@ -26,5 +26,10 @@ urlpatterns = [
     path("financial-statements/<str:company_stock_code>/", views.get_financial_statements, name='get_financial_statements'),
     path("company-revenue/<str:company_stock_code>/", views.company_revenue, name='company_revenue'),
     path("company-net-income/<str:company_stock_code>/", views.company_net_income, name='company_net_income'),
-    path("indicators-score/<str:company_stock_code>/", views.get_company_indicators_score, name='get_company_indicators_score'),
+    path("indicators-score/<str:company_stock_code>/", views.get_company_indicators_score, name='get_company_indicators_score'), 
+    path("deposit/", views.get_random_deposit),
+    path("deposit2/", views.get_random_deposit2),
+    path("saving/", views.get_random_saving),
+    path("saving2/", views.get_random_saving2),
+    path("fund/", views.get_random_fund),
 ]

@@ -8,7 +8,7 @@ import time
 import re
 from .models import Company
 import FinanceDataReader as fdr
-from .models import FinancialStatement, FinancialStatement_2022, FinancialStatement_2021, CompanyIndicatorsScore
+from .models import FinancialStatement, FinancialStatement_2022, FinancialStatement_2021, CompanyIndicatorsScore, FinancialProductRank10
 
 
 # 한국 최다검색 주식 목록
@@ -732,7 +732,7 @@ def get_financial_statements(request, company_stock_code):
         return JsonResponse(list(financial_statements), safe=False)  # 리스트 형태로 직렬화하고 safe=False 설정
     except FinancialStatement.DoesNotExist:
         return JsonResponse({'message': '해당 회사의 재무제표 정보를 찾을 수 없습니다.'}, status=404)
-    
+
 
 # 회사지표점수
 def get_company_indicators_score(request, company_stock_code):
@@ -748,3 +748,134 @@ def get_company_indicators_score(request, company_stock_code):
         return JsonResponse({'message': '해당 회사 정보를 찾을 수 없습니다.'}, status=404)
     except CompanyIndicatorsScore.DoesNotExist:
         return JsonResponse({'message': '해당 회사의 지표 정보를 찾을 수 없습니다.'}, status=404)
+    
+
+# 1금융권/예금 상품 추천
+@api_view(['GET'])
+def get_random_deposit(request):
+    random_product = FinancialProductRank10.objects.filter(
+        co_type_nm="예금",
+        bank_type_nm="1금융권"
+    ).order_by('?').first()  # '?'를 사용하여 랜덤 선택
+
+    if random_product:
+        serialized_data = {
+            'fin_prdt_nm': random_product.fin_prdt_nm,
+            'kor_co_nm': random_product.kor_co_nm,
+            'co_type_nm': random_product.co_type_nm,
+            'bank_type_nm': random_product.bank_type_nm,
+            'intr_rate_type_nm': random_product.intr_rate_type_nm,
+            'save_trm': random_product.save_trm,
+            'intr_rate2': random_product.intr_rate2,
+            'fin_prdt_cd': random_product.fin_prdt_cd,
+            'spcl_cnd': random_product.spcl_cnd,
+            'etc_note': random_product.etc_note,
+        }
+        return JsonResponse(serialized_data)
+    else:
+        return JsonResponse({'message': 'No matching records found'}, status=404)
+    
+
+# 2금융권/예금 상품 추천
+@api_view(['GET'])
+def get_random_deposit2(request):
+    random_product = FinancialProductRank10.objects.filter(
+        co_type_nm="예금",
+        bank_type_nm="2금융권"
+    ).order_by('?').first()  # '?'를 사용하여 랜덤 선택
+
+    if random_product:
+        serialized_data = {
+            'fin_prdt_nm': random_product.fin_prdt_nm,
+            'kor_co_nm': random_product.kor_co_nm,
+            'co_type_nm': random_product.co_type_nm,
+            'bank_type_nm': random_product.bank_type_nm,
+            'intr_rate_type_nm': random_product.intr_rate_type_nm,
+            'save_trm': random_product.save_trm,
+            'intr_rate2': random_product.intr_rate2,
+            'fin_prdt_cd': random_product.fin_prdt_cd,
+            'spcl_cnd': random_product.spcl_cnd,
+            'etc_note': random_product.etc_note,
+        }
+        return JsonResponse(serialized_data)
+    else:
+        return JsonResponse({'message': 'No matching records found'}, status=404)
+    
+# 1금융권/적금 상품 추천
+@api_view(['GET'])
+def get_random_saving(request):
+    random_product = FinancialProductRank10.objects.filter(
+        co_type_nm="적금",
+        bank_type_nm="1금융권"
+    ).order_by('?').first()  # '?'를 사용하여 랜덤 선택
+
+    if random_product:
+        serialized_data = {
+            'fin_prdt_nm': random_product.fin_prdt_nm,
+            'kor_co_nm': random_product.kor_co_nm,
+            'co_type_nm': random_product.co_type_nm,
+            'bank_type_nm': random_product.bank_type_nm,
+            'intr_rate_type_nm': random_product.intr_rate_type_nm,
+            'save_trm': random_product.save_trm,
+            'intr_rate2': random_product.intr_rate2,
+            'fin_prdt_cd': random_product.fin_prdt_cd,
+            'spcl_cnd': random_product.spcl_cnd,
+            'etc_note': random_product.etc_note,
+        }
+        return JsonResponse(serialized_data)
+    else:
+        return JsonResponse({'message': 'No matching records found'}, status=404)
+    
+
+# 2금융권/적금 상품 추천
+@api_view(['GET'])
+def get_random_saving2(request):
+    random_product = FinancialProductRank10.objects.filter(
+        co_type_nm="적금",
+        bank_type_nm="2금융권"
+    ).order_by('?').first()  # '?'를 사용하여 랜덤 선택
+
+    if random_product:
+        serialized_data = {
+            'fin_prdt_nm': random_product.fin_prdt_nm,
+            'kor_co_nm': random_product.kor_co_nm,
+            'co_type_nm': random_product.co_type_nm,
+            'bank_type_nm': random_product.bank_type_nm,
+            'intr_rate_type_nm': random_product.intr_rate_type_nm,
+            'save_trm': random_product.save_trm,
+            'intr_rate2': random_product.intr_rate2,
+            'fin_prdt_cd': random_product.fin_prdt_cd,
+            'spcl_cnd': random_product.spcl_cnd,
+            'etc_note': random_product.etc_note,
+        }
+        return JsonResponse(serialized_data)
+    else:
+        return JsonResponse({'message': 'No matching records found'}, status=404)
+    
+
+# 펀드 상품 추천
+@api_view(['GET'])
+def get_random_fund(request):
+    random_product = FinancialProductRank10.objects.filter(
+        co_type_nm="펀드",
+        bank_type_nm="펀드"
+    ).order_by('?').first()  # '?'를 사용하여 랜덤 선택
+
+    if random_product:
+        serialized_data = {
+            'fin_prdt_nm': random_product.fin_prdt_nm,
+            'kor_co_nm': random_product.kor_co_nm,
+            'co_type_nm': random_product.co_type_nm,
+            'bank_type_nm': random_product.bank_type_nm,
+            'intr_rate_type_nm': random_product.intr_rate_type_nm,
+            'save_trm': random_product.save_trm,
+            'intr_rate2': random_product.intr_rate2,
+            'fin_prdt_cd': random_product.fin_prdt_cd,
+            'spcl_cnd': random_product.spcl_cnd,
+            'etc_note': random_product.etc_note,
+        }
+        return JsonResponse(serialized_data)
+    else:
+        return JsonResponse({'message': 'No matching records found'}, status=404)
+
+
