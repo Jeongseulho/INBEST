@@ -391,8 +391,30 @@ def cointop(request):
 def search(request):
     query = request.GET.get('q', '')
     results = Company.objects.filter(company_name__icontains=query)
-    data = list(results.values('company_name', 'company_stock_code', 'company_stock_type'))
+    data = list(results.values('company_name', 'company_stock_code', 'company_stock_type', 'company_image_url'))
     return JsonResponse(data, safe=False)
+
+# 기엄검색 기능 (주식코드를 기준으로)
+def get_company_data(request, company_stock_code):
+    try:
+        # 주어진 company_stock_code로 Company 모델에서 데이터를 조회합니다.
+        company = Company.objects.get(company_stock_code=company_stock_code)
+
+        # 조회한 데이터를 원하는 형식으로 가공합니다.
+        company_data = {
+            'company_code': company.company_code,
+            'company_name': company.company_name,
+            'company_stock_code': company.company_stock_code,
+            'company_real_industry_code': company.company_real_industry_code,
+            'company_industry': company.company_industry,
+            'company_stock_type': company.company_stock_type,
+            'company_image_url': company.company_image_url,
+        }
+
+        # 가공된 데이터를 JSON 형식으로 응답합니다.
+        return JsonResponse(company_data)
+    except Company.DoesNotExist:
+        return JsonResponse({'message': '해당 회사 정보를 찾을 수 없습니다.'}, status=404)
 
 # 코스피
 @api_view(['GET'])

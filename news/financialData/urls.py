@@ -32,4 +32,5 @@ urlpatterns = [
     path("saving/", views.get_random_saving),
     path("saving2/", views.get_random_saving2),
     path("fund/", views.get_random_fund),
+    path('company/<str:company_stock_code>/', views.get_company_data, name='get_company_data'),
 ]
