@@ -10,8 +10,8 @@ const RemainPeriod = ({ startDate, period }: Props) => {
   const { formattedStartDate, formattedEndDate, proceed, remainDays } = calEndDateAndProceed(startDate, period);
   return (
     <div>
-      <div className=" flex items-end">
-        <p className=" font-regular me-2">모의 투자 진행도</p>
+      <div className=" flex items-center gap-2">
+        <p className=" font-medium text-gray-500 ">모의 투자 진행도</p>
         <img src={calendar} width={40} />
       </div>
       <p className=" font-bold text-xl">{remainDays}일 남았습니다.</p>

@@ -21,7 +21,6 @@ const InvestingSearch = ({ setCompanyInfo }: Props) => {
       enabled: searchCompanyKeyword.length > 0,
     }
   );
-  console.log(data);
   return (
     <div className=" flex gap-4">
       <SearchList searchList={data || []} setCompanyInfo={setCompanyInfo} isLoading={isLoading} />

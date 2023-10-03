@@ -15,7 +15,7 @@ const CompanyNews = ({ title, sentiment_analysis, imgUrl, linkUrl, time }: Props
       <img src={imgUrl} width={60} />
       <div className=" flex flex-col">
         <div className=" flex">
-          <p className=" text-sm">{truncateContent(title, 20)}</p>
+          <p className=" text-sm font-semiBold">{truncateContent(title, 20)}</p>
           {sentiment_analysis >= 50 ? (
             <div className=" bg-main px-1 rounded-full flex items-center bg-opacity-30 gap-1">
               <PiSmileyLight

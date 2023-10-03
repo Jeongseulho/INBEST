@@ -52,7 +52,7 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
               <></>
             ) : (
               financialStatements &&
-              Object.keys(financialStatements[0]).map((status) => {
+              Object.keys(financialStatements[0]).map((status, index) => {
                 if (
                   status === "seq" ||
                   status === "company_seq_id" ||
@@ -66,7 +66,7 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
                 )
                   return <></>;
                 return (
-                  <div className=" flex border-2 justify-between w-full">
+                  <div className=" flex border-2 justify-between w-full" key={index}>
                     <p className=" border-r-2 w-2/5 p-2">{keyToKoreanMap[status]}</p>
                     <p className=" p-2">
                       {numberFormat(financialStatements[0][status as keyof FinancialStatements[0]])}원
@@ -79,20 +79,21 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
         </div>
         <div className=" shadow-component flex flex-col gap-4 p-4">
           <h6>기업 관련 뉴스</h6>
-          <div className=" flex flex-col gap-8 ">
+          <div className=" flex flex-col gap-10 ">
             {isLoadingCompanyNews ? (
               <>
-                <Skeleton height={44} />
-                <Skeleton height={44} />
-                <Skeleton height={44} />
-                <Skeleton height={44} />
-                <Skeleton height={44} />
-                <Skeleton height={44} />
-                <Skeleton height={44} />
+                <Skeleton height={44} width={360} />
+                <Skeleton height={44} width={360} />
+                <Skeleton height={44} width={360} />
+                <Skeleton height={44} width={360} />
+                <Skeleton height={44} width={360} />
+                <Skeleton height={44} width={360} />
+                <Skeleton height={44} width={360} />
               </>
             ) : (
-              companyNews?.map((news) => (
+              companyNews?.map((news, index) => (
                 <CompanyNews
+                  key={index}
                   title={news.title}
                   sentiment_analysis={news.sentiment_analysis}
                   imgUrl={news.image_url}

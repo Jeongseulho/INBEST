@@ -2,14 +2,30 @@ import { formatNumberToKoreanWon } from "../../../util/formatMoney";
 import IncreaseIcon from "../../common/IncreaseIcon";
 import DecreaseIcon from "../../common/DecreaseIcon";
 import { useOrderTab } from "./useOrderTab";
+import { tradeStock } from "../../../api/investingTrade";
+import { useMutation } from "react-query";
+import { toast } from "react-toastify";
+import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
+import { useParams } from "react-router-dom";
 
 interface Props {
   expectedPrice: number;
+  companyInfo: CompanyInfo;
 }
-const BuyOrderTab = ({ expectedPrice }: Props) => {
+const BuyOrderTab = ({ expectedPrice, companyInfo }: Props) => {
+  const { simulationSeq } = useParams<{ simulationSeq: string }>();
   const { amount, price, onChangeAmount, onChangePrice } = useOrderTab(expectedPrice);
   const profitPercentage =
     expectedPrice === 0 ? 0 : Number((((price - expectedPrice) / expectedPrice) * 100).toFixed(2));
+
+  const { mutate } = useMutation(
+    () => tradeStock(simulationSeq, companyInfo.code, companyInfo.name, amount, price, 1, 0, 0),
+    {
+      onSuccess: () => {
+        toast.success("매수 주문이 완료되었습니다.");
+      },
+    }
+  );
 
   return (
     <div className=" flex items-center justify-around">
@@ -79,7 +95,9 @@ const BuyOrderTab = ({ expectedPrice }: Props) => {
           </div>
         </div>
         <p className=" text-sm">수수료(부가세 포함): 0.05%</p>
-        <button className=" light-red-btn">매수 주문하기</button>
+        <button className=" light-red-btn" onClick={() => mutate()}>
+          매수 주문하기
+        </button>
       </div>
     </div>
   );

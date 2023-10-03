@@ -36,7 +36,7 @@ const Trade = ({ companyInfo }: Props) => {
         </div>
 
         <div className=" flex h-[80vh] flex-col gap-4 justify-center">
-          <div className=" shadow-component p-4">
+          <div className=" shadow-component p-4 min-h-[350px]">
             <div className=" flex gap-10">
               {isLoading ? (
                 <img src={spinner} className=" mx-auto" />
@@ -47,7 +47,7 @@ const Trade = ({ companyInfo }: Props) => {
               )}
             </div>
           </div>
-          <div className=" shadow-component p-4 flex flex-col">
+          <div className=" shadow-component p-4 flex flex-col min-h-[230px]">
             <div className=" flex gap-1 items-center">
               <div
                 className={`hover:text-black cursor-pointer px-4 min-w-[2rem] rounded-full border-2 border-gray-300 py-1 text-center hover:bg-lightPrimary hover:bg-opacity-40 duration-500 transition-colors  ${
@@ -77,9 +77,9 @@ const Trade = ({ companyInfo }: Props) => {
             ) : data === undefined || Object.keys(data.output1).length === 0 ? (
               <div>데이터가 없습니다.</div>
             ) : curTab === "sell" ? (
-              <SellOrderTab expectedPrice={data.output2.antc_cnpr} />
+              <SellOrderTab expectedPrice={data.output2.antc_cnpr} companyInfo={companyInfo} />
             ) : (
-              <BuyOrderTab expectedPrice={data.output2.antc_cnpr} />
+              <BuyOrderTab expectedPrice={data.output2.antc_cnpr} companyInfo={companyInfo} />
             )}
           </div>
         </div>
