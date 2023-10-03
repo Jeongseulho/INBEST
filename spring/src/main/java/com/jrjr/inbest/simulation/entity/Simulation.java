@@ -35,37 +35,38 @@ public class Simulation {
 	@Column(nullable = false)
 	private String title;
 
-	private LocalDateTime startDate;
+	private Integer memberNum;
 
-	@Column(nullable = false)
-	private Integer period;
+	private Integer revenuRate;
 
 	@Column(nullable = false)
 	private Long seedMoney;
 
-	private Integer memberNum;
+	private LocalDateTime startDate;
+
+	private LocalDateTime finishedDate;
+
+	@Column(nullable = false)
+	private Integer period;
 
 	@ManyToOne
 	@JoinColumn(name = "owner_seq", nullable = false)
 	private User owner;
 
-	private LocalDateTime finishedDate;
-
-	private Integer revenuRate; // simulation 평균 수익률
-
 	@OneToMany(mappedBy = "simulation")
 	private List<SimulationUser> simulationUserList = new ArrayList<>();
 
 	@Builder
-	public Simulation(String title, Long seedMoney, LocalDateTime startDate, Integer period, Integer memberNum,
-		LocalDateTime finishedDate, User owner, List<SimulationUser> simulationUserList) {
+	public Simulation(String title, Integer memberNum, Integer revenuRate, Long seedMoney, LocalDateTime startDate,
+		LocalDateTime finishedDate, Integer period, User owner, List<SimulationUser> simulationUserList) {
 		this.title = title;
-		this.seedMoney = seedMoney;
 		this.memberNum = memberNum;
+		this.revenuRate = revenuRate;
+		this.seedMoney = seedMoney;
 		this.startDate = startDate;
+		this.finishedDate = finishedDate;
 		this.period = period;
 		this.owner = owner;
-		this.finishedDate = finishedDate;
 		this.simulationUserList = simulationUserList;
 	}
 }
