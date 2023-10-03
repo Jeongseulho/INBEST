@@ -28,7 +28,6 @@ const Compare = () => {
   ]);
   const isAllLoading = results.some((res) => res.isLoading);
   const data = results.map((res) => res.data);
-  console.log(results);
   //TODO: skeleton loading
   return (
     <div className=" shadow-component col-span-7 row-span-1 p-4 flex flex-col gap-4">

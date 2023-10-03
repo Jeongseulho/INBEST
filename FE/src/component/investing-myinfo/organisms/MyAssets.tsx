@@ -1,7 +1,6 @@
 import assets from "../../../asset/image/assets.png";
 import IncreaseIcon from "../../common/IncreaseIcon";
 import DecreaseIcon from "../../common/DecreaseIcon";
-
 import { formatNumberToWon } from "../../../util/formatMoney";
 import spinner from "../../../asset/image/spinner.svg";
 import Chart from "react-apexcharts";
