@@ -13,7 +13,9 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.jrjr.invest.rank.dto.RedisStockDTO;
 import com.jrjr.invest.rank.dto.RedisStockUserDTO;
+import com.jrjr.invest.simulation.dto.ResponseUserStockDTO;
 import com.jrjr.invest.trading.constant.TradingResultType;
 import com.jrjr.invest.trading.dto.TradingDTO;
 import com.jrjr.invest.trading.entity.Trading;
@@ -30,6 +32,7 @@ public class TradingService {
 	private final UserRepository userRepository;
 	private final TradingRepository tradingRepository;
 	private final RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate;
+	private final RedisTemplate<String, RedisStockDTO> stockRedisTemplate;
 
 	public List<TradingDTO> findAllSuccessTrading(Long userSeq, Long simulationSeq) {
 		List<Trading> tradingList = tradingRepository.findBySimulationSeqAndUserSeqAndConclusionTypeOrderByCreatedDateAsc(
@@ -61,7 +64,7 @@ public class TradingService {
 		return tradingDTOList;
 	}
 
-	public List<RedisStockUserDTO> findAllUserStocks(Long userSeq, Long simulationSeq, Integer pageNo,
+	public List<ResponseUserStockDTO> findAllUserStocks(Long userSeq, Long simulationSeq, Integer pageNo,
 		Integer pageSize) {
 		HashOperations<String, String, RedisStockUserDTO> hashOperations = stockUserRedisTemplate.opsForHash();
 		String key = "simulation_" + simulationSeq + "_user_" + userSeq;
@@ -84,10 +87,12 @@ public class TradingService {
 			stockPQ.add(stockMap.get(stockKey));
 		}
 
-		List<RedisStockUserDTO> pagedStocks = new ArrayList<>();
+		List<ResponseUserStockDTO> pagedStocks = new ArrayList<>();
 		int currentNo = 1;
 		int start = (pageNo - 1) * pageSize + 1;
 		int end = (pageNo - 1) * pageSize + pageSize;
+
+		HashOperations<String,String,RedisStockDTO> redisStockDTOHashOperations = stockRedisTemplate.opsForHash();
 
 		while (!stockPQ.isEmpty()) {
 			RedisStockUserDTO stock = stockPQ.poll();
@@ -102,7 +107,23 @@ public class TradingService {
 				break;
 			}
 
-			pagedStocks.add(stock);
+			ResponseUserStockDTO userStockDTO
+				= ResponseUserStockDTO.builder()
+				.amount(stock.getAmount())
+				.stockCode(stock.getStockCode())
+				.name(stock.getName())
+				.type(stock.getType())
+				.lastModifiedDate(stock.getLastModifiedDate())
+				.price(0L)
+				.build();
+
+			RedisStockDTO stockDTO = redisStockDTOHashOperations.get("stock",userStockDTO.getType()+"_"+userStockDTO.getStockCode());
+
+			if(stockDTO != null){
+				userStockDTO.setPrice(Long.valueOf(stockDTO.getMarketPrice()));
+			}
+
+			pagedStocks.add(userStockDTO);
 			currentNo++;
 		}
 
