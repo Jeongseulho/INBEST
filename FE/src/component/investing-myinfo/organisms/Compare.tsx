@@ -2,8 +2,10 @@ import compare from "../../../asset/image/compare.png";
 import Chart from "react-apexcharts";
 import { useQueries } from "react-query";
 import { getFund, getSaving, getSaving2, getDeposit, getDeposit2 } from "../../../api/investingCompany";
-
-const Compare = () => {
+interface Props {
+  myProfit: number;
+}
+const Compare = ({ myProfit }: Props) => {
   const results = useQueries([
     {
       queryKey: ["fund"],
@@ -45,7 +47,7 @@ const Compare = () => {
               series={[
                 {
                   name: "이자율",
-                  data: results.map((res) => res.data!.intr_rate2),
+                  data: [Number(myProfit.toFixed(2))].concat(results.map((res) => res.data!.intr_rate2)),
                 },
               ]}
               options={{
@@ -91,7 +93,7 @@ const Compare = () => {
                 },
 
                 xaxis: {
-                  categories: results.map((res) => res.data!.fin_prdt_nm),
+                  categories: ["내 모의투자 수익률"].concat(results.map((res) => res.data!.fin_prdt_nm)),
                   position: "bottom",
                 },
               }}

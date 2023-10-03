@@ -29,12 +29,20 @@ const MyAssets = ({ data, isLoading }: Props) => {
         <>
           {data && (
             <div className=" flex items-center justify-center">
-              <h5 className=" font-bold">{formatNumberToWon(data[0].asset)}</h5>
+              <h5 className=" font-bold">{formatNumberToWon(data[data.length - 1].asset)}</h5>
               {data.length >= 2 &&
-                (data[0].asset > data[1].asset ? (
-                  <IncreaseIcon number={((data[0].asset - data[1].asset) / data[1].asset) * 100} />
+                (data[data.length - 1].asset > data[data.length - 2].asset ? (
+                  <IncreaseIcon
+                    number={
+                      ((data[data.length - 1].asset - data[data.length - 2].asset) / data[data.length - 2].asset) * 100
+                    }
+                  />
                 ) : (
-                  <DecreaseIcon number={((data[1].asset - data[0].asset) / data[1].asset) * 100} />
+                  <DecreaseIcon
+                    number={
+                      ((data[data.length - 1].asset - data[data.length - 2].asset) / data[data.length - 2].asset) * 100
+                    }
+                  />
                 ))}
             </div>
           )}

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { instanceWithAuth } from "./interceptors";
 const apiWithAuth = instanceWithAuth("invest-service/invest/");
 
@@ -55,5 +56,10 @@ export const getAbroadStockChart = async (companyCode: string, daysType: number)
       MODP: 1,
     },
   });
+  return data;
+};
+
+export const getCryptoChart = async () => {
+  const { data } = await axios.get("https://api.bithumb.com/public/candlestick/BTC_KRW/24h");
   return data;
 };

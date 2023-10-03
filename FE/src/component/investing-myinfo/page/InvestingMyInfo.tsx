@@ -10,10 +10,13 @@ const InvestingMyInfo = () => {
   const { simulationSeq } = useParams();
 
   const { data, isLoading } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq));
+  const myProfit =
+    data && data.length >= 2 ? (data[data.length - 1].asset - data[0].asset) / data[data.length - 1].asset : 0;
+
   return (
     <div className=" grid grid-cols-12 grid-rows-none gap-4">
       <MyAssets data={data} isLoading={isLoading} />
-      <Compare />
+      <Compare myProfit={myProfit} />
       <MyStock />
       <RecentDealStock />
     </div>
