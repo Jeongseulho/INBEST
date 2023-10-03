@@ -12,8 +12,8 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StopWatch;
 
-import com.jrjr.invest.rank.dto.RedisTierRankDTO;
-import com.jrjr.invest.rank.dto.RedisUserDTO;
+import com.jrjr.inbest.rank.dto.RedisTierRankDTO;
+import com.jrjr.inbest.rank.dto.RedisUserDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
