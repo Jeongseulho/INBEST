@@ -4,7 +4,7 @@ import bronze_medal from "../../../asset/image/bronze_medal.png";
 import { formatNumberToWon } from "../../../util/formatMoney";
 import IncreaseIcon from "../../common/IncreaseIcon";
 import DecreaseIcon from "../../common/DecreaseIcon";
-import { formatNumberToKoreanWon } from "../../../util/formatMoney";
+import StockComponent from "../../common/StockComponent";
 
 interface Props {
   ranking: number;
@@ -46,11 +46,8 @@ const Ranker = ({ ranking, profileImg, nickname, money, percentage, stockInfoLis
       </div>
 
       <div className=" flex items-center gap-1">
-        {stockInfoList.map((stockInfo) => (
-          <div className=" bg-myGray bg-opacity-70 flex flex-col items-center p-2 rounded-md" key={stockInfo.stockName}>
-            <p className=" text-white">{stockInfo.stockName}</p>
-            <p className=" text-white">{formatNumberToKoreanWon(Number(stockInfo.stockMarketPrice))}</p>
-          </div>
+        {stockInfoList.map((stockInfo, index) => (
+          <StockComponent name={stockInfo.stockName} price={stockInfo.stockMarketPrice} key={index} />
         ))}
       </div>
     </div>

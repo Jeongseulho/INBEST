@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { getMyStockList } from "../../../api/investingMyInfo";
 import { useParams } from "react-router-dom";
+import StockComponent from "../../common/StockComponent";
 
 const MyStock = () => {
   const { simulationSeq } = useParams();
@@ -14,14 +15,8 @@ const MyStock = () => {
         {isLoading ? (
           <></>
         ) : (
-          data?.map((stockInfo) => (
-            <div
-              className=" bg-myGray bg-opacity-70 flex flex-col items-center p-2 rounded-md"
-              key={stockInfo.stockCode}
-            >
-              <p className=" text-white">{stockInfo.name}</p>
-              <p className=" text-white">{stockInfo.amount}주 보유중</p>
-            </div>
+          data?.map((stockInfo, index) => (
+            <StockComponent name={stockInfo.name} amount={stockInfo.amount} key={index} />
           ))
         )}
       </div>
