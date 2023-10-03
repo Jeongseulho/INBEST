@@ -20,7 +20,7 @@ const SellStatus = ({ maxAmount, amount, price }: Props) => {
           className={"h-full bg-blue-800 bg-opacity-30 transition-all duration-300 ease-in-out "}
           style={{ width: `${percent}%` }}
         ></div>
-        <p className=" text-gray-800 pr-1 ">{numberFormat(amount)}</p>
+        <p className=" text-gray-800 pr-1 ">{amount < 1 ? amount : numberFormat(amount)}</p>
       </div>
       <div className=" w-1/2 text-primary  bg-lightPrimary bg-opacity-30 text-right px-2 rounded-sm py-3">
         {formatNumberToKoreanWon(price)}

@@ -64,7 +64,7 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
 
   return (
     <div className=" bg-white">
-      <h3 className=" my-10 text-center font-regular text-dark">{location.state.title}</h3>
+      <h5 className=" my-10 text-center font-regular text-dark">{location.state.title}</h5>
       <Sidebar
         backgroundColor={theme.sidebar.backgroundColor}
         rootStyles={{
@@ -117,7 +117,7 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
               active={activeTab === INVESTING_TAB.CRYPTO}
               onClick={() => setActiveTab(INVESTING_TAB.CRYPTO)}
             >
-              가상 자산
+              가상 화폐
             </MenuItem>
           </SubMenu>
           <MenuItem

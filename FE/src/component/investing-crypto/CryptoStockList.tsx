@@ -4,12 +4,13 @@ import { CoinStockInfoList } from "../../type/InvestingStockInfo";
 import { fluctuationStringToNumber } from "../../util/formatStockInfo";
 import { truncateContent } from "../../util/formatContent";
 import Skeleton from "react-loading-skeleton";
+import { CompanyInfo } from "../../type/InvestingCompanyDetail";
 
 interface Props {
   title: string;
   isLoading: boolean;
   stockList: CoinStockInfoList | undefined;
-  setCompanyCode: React.Dispatch<React.SetStateAction<string>>;
+  setCompanyInfo: React.Dispatch<React.SetStateAction<CompanyInfo>>;
 }
 
 const CryptoStockList = ({ title, stockList, isLoading }: Props) => {

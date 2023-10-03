@@ -1,4 +1,5 @@
 import { useFearRadialBar } from "./useFearRadialBar";
+import { AiFillQuestionCircle } from "react-icons/ai";
 
 interface Props {
   percentage: number;
@@ -8,8 +9,18 @@ const FearRadialBar = ({ percentage }: Props) => {
   const { rotation, displayedPercentage } = useFearRadialBar(percentage);
 
   return (
-    <div className=" relative shadow-component p-4">
-      <h4 className=" mb-4">공포, 탐욕 지수</h4>
+    <div className=" relative shadow-component p-4 h-[185px]">
+      <div className=" flex items-center gap-2 mb-4">
+        <h4>공포, 탐욕지수</h4>
+        <div className="group relative cursor-pointer">
+          <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
+          <span className=" bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute -top-14 left-1/2 transform -translate-x-1/2 w-[580px]">
+            0에 가깝다면 투자자들이 공포를 느끼고 비이성적으로 과매도를 하고 있다는 것을 의미합니다.
+            <br />
+            100에 가깝다면 투자자들이 탐욕을 느끼고 비이성적으로 과매수를 하고 있다는 것을 의미합니다.
+          </span>
+        </div>
+      </div>
       <div
         className="absolute bg-black w-3 h-3 rounded-full z-10"
         style={{
@@ -45,7 +56,17 @@ const FearRadialBar = ({ percentage }: Props) => {
       </svg>
       <div className="  absolute left-1/2 -translate-x-1/2 bottom-7 flex flex-col items-center">
         <p className=" text-xl font-medium">{displayedPercentage}</p>
-        <p className=" text-md font-medium text-myGray">중간</p>
+        <p className=" text-md font-medium text-myGray">
+          {percentage >= 0 && percentage < 20
+            ? "매우 낮음"
+            : percentage >= 20 && percentage < 40
+            ? "낮음"
+            : percentage >= 40 && percentage < 60
+            ? "보통"
+            : percentage >= 60 && percentage < 80
+            ? "높음"
+            : "매우 높음"}
+        </p>
       </div>
     </div>
   );

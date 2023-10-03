@@ -8,6 +8,8 @@ import InProgressGroupModal from "../organisms/InProgressGroupModal";
 import QuestionJoinModal from "../organisms/QuestionJoinModal";
 import { useQuery } from "react-query";
 import { getMyGroupList, getJoinableGroupList } from "../../../api/group";
+import { useFilterModal } from "../organisms/useFilterModal";
+import { useState } from "react";
 
 const InvestMain = () => {
   const {
@@ -28,17 +30,25 @@ const InvestMain = () => {
     staleTime: 0,
     retry: 3,
   });
+  const { activeTab, setActiveTab, groupFilter, dispatch, initGroupFilter } = useFilterModal();
+  const [filter, setFilter] = useState(initGroupFilter);
 
   return (
     <div className=" flex flex-col items-center gap-10 w-9/12 mx-auto mt-10">
       <InvestingTotalInfo />
       <CreateModal refetchMyGroupList={refetchMyGroupList} refetchJoinableGroupList={refetchJoinableGroupList} />
-      <FilterModal />
-      <WaitingGroupModal />
+      <FilterModal
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        groupFilter={groupFilter}
+        dispatch={dispatch}
+        setFilter={setFilter}
+      />
+      <WaitingGroupModal refetchMyGroupList={refetchMyGroupList} refetchJoinableGroupList={refetchJoinableGroupList} />
       <InProgressGroupModal />
       <QuestionJoinModal refetchMyGroupList={refetchMyGroupList} refetchJoinableGroupList={refetchJoinableGroupList} />
       <MyGroupList data={myGroupList} isLoading={isLoadingMyGroupList} />
-      <GroupList data={joinableGroupList} isLoading={isLoadingJoinableGroupList} />
+      <GroupList filter={filter} data={joinableGroupList} isLoading={isLoadingJoinableGroupList} />
     </div>
   );
 };

@@ -4,13 +4,29 @@ import { LuSettings2 } from "react-icons/lu";
 import modalStore from "../../../store/modalStore";
 import GroupSkeleton from "../molecules/GroupSkeleton";
 import { JoinableGroupList } from "../../../type/Group";
+import { GroupFilter } from "../../../type/GroupFilter";
+
 interface Props {
   data: JoinableGroupList | undefined;
   isLoading: boolean;
+  filter: GroupFilter;
 }
 
-const GroupList = ({ data, isLoading }: Props) => {
+const GroupList = ({ data, isLoading, filter }: Props) => {
   const { openModal } = modalStore();
+
+  const filteredData = data?.filter((group) => {
+    const { period, seedMoney, meanTier } = filter;
+    const { period: groupPeriod, seedMoney: groupSeedMoney, averageTier } = group;
+    // console.log("data", groupPeriod, groupSeedMoney, averageTier);
+    // console.log("filter", period, seedMoney, meanTier);
+
+    const isPeriodValid = groupPeriod >= period[0] && groupPeriod <= period[1];
+    const isSeedMoneyValid = groupSeedMoney >= seedMoney[0] && groupSeedMoney <= seedMoney[1];
+    const isMeanTierValid = averageTier >= meanTier[0] * 100 && averageTier <= meanTier[1] * 100;
+
+    return isPeriodValid && isSeedMoneyValid && isMeanTierValid;
+  });
 
   return (
     <div className="w-4/5 flex flex-col text-center px-4 shadow-component">
@@ -58,7 +74,7 @@ const GroupList = ({ data, isLoading }: Props) => {
         </div>
       ) : (
         <div className=" flex flex-col gap-4 pb-8">
-          {data?.map((group, index) => (
+          {filteredData?.map((group, index) => (
             <Group
               key={group.simulationSeq}
               index={index}

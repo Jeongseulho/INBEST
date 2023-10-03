@@ -22,7 +22,7 @@ import GroupRanking from "./component/ranking/organisms/GroupRanking";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: 2,
       staleTime: 1000 * 60,
       refetchOnWindowFocus: false,
     },

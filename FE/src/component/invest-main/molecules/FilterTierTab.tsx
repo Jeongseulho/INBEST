@@ -12,10 +12,10 @@ const FilterTierTab = ({ meanTier, dispatch }: Props) => {
       <p className=" text-xl mb-2">시드머니 필터링</p>
       <TierFilterBar meanTier={meanTier} dispatch={dispatch} />
       <div className="flex mt-6 mb-2 gap-2">
-        <TierFilterTag text="브론즈 ~ 실버" meanTier={meanTier} payload={[1, 2]} dispatch={dispatch} />
-        <TierFilterTag text="실버 ~ 골드" meanTier={meanTier} payload={[2, 3]} dispatch={dispatch} />
-        <TierFilterTag text="골드 ~ 플래티넘" meanTier={meanTier} payload={[3, 4]} dispatch={dispatch} />
-        <TierFilterTag text="플래티넘 ~ 다이아" meanTier={meanTier} payload={[4, 5]} dispatch={dispatch} />
+        <TierFilterTag text="100 포인트 이하" meanTier={meanTier} payload={[0, 100]} dispatch={dispatch} />
+        <TierFilterTag text="100 ~ 200 포인트" meanTier={meanTier} payload={[100, 200]} dispatch={dispatch} />
+        <TierFilterTag text="200 ~ 300 포인트" meanTier={meanTier} payload={[200, 300]} dispatch={dispatch} />
+        <TierFilterTag text="300 포인트 이상" meanTier={meanTier} payload={[300, 400]} dispatch={dispatch} />
       </div>
     </div>
   );

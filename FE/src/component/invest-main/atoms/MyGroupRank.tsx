@@ -7,8 +7,8 @@ interface Props {
 const MyGroupRank = ({ rankInGroup, rankInGroupFluctuation }: Props) => {
   return (
     <div>
-      <div className=" flex items-end">
-        <p className=" font-regular me-2">나의 순위</p>
+      <div className=" flex items-center gap-2">
+        <p className=" font-medium text-gray-500">나의 순위</p>
         <img src={crown} width={40} />
       </div>
       <div className=" flex items-center">
