@@ -1,7 +1,23 @@
 import { Menu } from "@headlessui/react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
+import stompStore from "../../store/stompStore";
+import { Alarm } from "../../type/Alarm";
+import userStore from "../../store/userStore";
+interface Props {
+  title: string;
+  content: string;
+  setAlarmList: React.Dispatch<React.SetStateAction<Alarm[]>>;
+  id: string;
+}
+const HeaderAlarmItem = ({ title, content, setAlarmList, id }: Props) => {
+  const { client } = stompStore();
+  const { userInfo } = userStore();
 
-const HeaderAlarmItem = () => {
+  const onReadAlarm = () => {
+    client?.publish({ destination: `/app/notification.read.${userInfo?.seq}` });
+    setAlarmList((prev) => prev.filter((alarm) => alarm.id !== id));
+  };
+
   return (
     <Menu.Item>
       <div className=" flex flex-col px-4 py-2">
