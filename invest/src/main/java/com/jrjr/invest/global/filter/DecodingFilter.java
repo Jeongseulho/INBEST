@@ -22,7 +22,7 @@ public class DecodingFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
-
+		log.info("---------- DecodingFilter 시작 ----------");
 		HttpServletRequest httpRequest = (HttpServletRequest)request;
 		Map<String, String[]> decodedParameters = new HashMap<>();
 
@@ -37,8 +37,8 @@ public class DecodingFilter implements Filter {
 
 		log.info("디코딩된 파라미터 ");
 
-		for(String key : decodedParameters.keySet()){
-			log.info(key+" : "+ Arrays.toString(decodedParameters.get(key)));
+		for (String key : decodedParameters.keySet()) {
+			log.info(key + " : " + Arrays.toString(decodedParameters.get(key)));
 		}
 
 		HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
@@ -59,6 +59,7 @@ public class DecodingFilter implements Filter {
 			}
 		};
 
+		log.info("---------- DecodingFilter 종료 ----------");
 		chain.doFilter(wrapper, response);
 	}
 
