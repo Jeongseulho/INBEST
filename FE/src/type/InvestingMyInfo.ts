@@ -20,6 +20,7 @@ export type RecentlyDeal = {
   stockName: string;
   simulationType: null;
   conclusionType: number;
+  logoUrl: string;
 }[];
 
 export type MyStockList = {
@@ -29,6 +30,7 @@ export type MyStockList = {
   amount: number;
   lastModifiedDate: string;
   price: number;
+  logoUrl: string;
 }[];
 
 export type MyInvestingRanking = {

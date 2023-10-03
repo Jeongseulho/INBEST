@@ -13,7 +13,7 @@ const MyAssets = () => {
   const { simulationSeq } = useParams();
   const { data, isLoading } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq));
   return (
-    <div className=" shadow-component col-span-5 row-span-2 p-4 flex flex-col gap-4">
+    <div className=" shadow-component col-span-5 row-span-2 p-4 flex flex-col gap-10">
       <div className="  flex items-center gap-2">
         <img src={assets} width={40} />
         <h5>내 자산 변화</h5>

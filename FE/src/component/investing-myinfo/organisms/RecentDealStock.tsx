@@ -2,6 +2,8 @@ import { useQuery } from "react-query";
 import { getRecentlyDeal } from "../../../api/investingMyInfo";
 import { useParams } from "react-router-dom";
 import { formatDate } from "../../../util/formatDateSign";
+import deal from "../../../asset/image/deal.png";
+import { truncateContent } from "../../../util/formatContent";
 
 const RecentDealStock = () => {
   const { simulationSeq } = useParams();
@@ -10,6 +12,7 @@ const RecentDealStock = () => {
   return (
     <div className=" shadow-component col-span-full p-4 flex flex-col gap-4">
       <div className="  flex items-center gap-2">
+        <img src={deal} width={40} />
         <h5>최근 거래 내역</h5>
       </div>
       <div className=" flex items-center gap-2">
@@ -24,7 +27,10 @@ const RecentDealStock = () => {
               key={stockInfo.stockCode}
             >
               <div className=" flex items-center justify-between w-full">
-                <p className=" text-black font-semiBold">{stockInfo.stockName}</p>
+                <div className=" flex items-center gap-1">
+                  <img src={stockInfo.logoUrl} width={40} />
+                  <p className=" text-black font-semiBold">{truncateContent(stockInfo.stockName, 7)}</p>
+                </div>
                 {stockInfo.tradingType === 0 ? (
                   <p className=" text-primary">판매</p>
                 ) : (

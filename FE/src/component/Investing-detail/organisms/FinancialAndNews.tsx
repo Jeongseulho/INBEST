@@ -6,6 +6,7 @@ import CompanyNews from "../atoms/CompanyNews";
 import { getFinancialStatements } from "../../../api/investingCompany";
 import { FinancialStatements } from "../../../type/CompanyInfo";
 import { numberFormat } from "../../../util/formatMoney";
+import Skeleton from "react-loading-skeleton";
 interface Props {
   companyInfo: CompanyInfo;
 }
@@ -44,7 +45,7 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
         <h5>재무제표 / 뉴스</h5>
       </div>
       <div className=" flex gap-4 justify-center">
-        <div className=" shadow-component flex flex-col gap-2 p-4 w-1/2">
+        <div className=" shadow-component flex flex-col gap-4 p-4 w-1/2">
           <h6>재무 제표</h6>
           <div className=" flex flex-col w-full">
             {isLoadingFinancialStatements ? (
@@ -76,11 +77,19 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
             )}
           </div>
         </div>
-        <div className=" shadow-component flex flex-col gap-2 p-4">
+        <div className=" shadow-component flex flex-col gap-4 p-4">
           <h6>기업 관련 뉴스</h6>
-          <div className=" flex flex-col gap-5 ">
+          <div className=" flex flex-col gap-8 ">
             {isLoadingCompanyNews ? (
-              <></>
+              <>
+                <Skeleton height={44} />
+                <Skeleton height={44} />
+                <Skeleton height={44} />
+                <Skeleton height={44} />
+                <Skeleton height={44} />
+                <Skeleton height={44} />
+                <Skeleton height={44} />
+              </>
             ) : (
               companyNews?.map((news) => (
                 <CompanyNews
