@@ -269,7 +269,7 @@ public class GroupController {
 		log.info("페이지 번호 :  "+pageNo);
 		log.info("페이지 크기 :  "+pageSize);
 
-		List<RedisStockUserDTO> stockList = tradingService.findAllUserStocks(userSeq,simulationSeq,pageNo,pageSize);
+		List<ResponseUserStockDTO> stockList = tradingService.findAllUserStocks(userSeq,simulationSeq,pageNo,pageSize);
 
 		log.info("===== 유저의 보유 주식 찾기 끝=====");
 		return new ResponseEntity<>(stockList, HttpStatus.OK);
