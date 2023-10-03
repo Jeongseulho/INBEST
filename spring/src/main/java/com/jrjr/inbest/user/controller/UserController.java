@@ -78,11 +78,13 @@ public class UserController {
 	})
 	@GetMapping("/inquiry-email")
 	ResponseEntity<Map<String, Object>> checkEmailExists(@RequestParam String email) {
+		log.info("========== {}, 중복 이메일 확인 시작 ==========", email);
 		log.info("UserController - checkEmailExists 실행: {}", email);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userService.checkEmailExists(email);
 
+		log.info("========== {}, 중복 이메일 확인 완료 ==========", email);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -97,11 +99,12 @@ public class UserController {
 	})
 	@GetMapping("/inquiry-nickname")
 	ResponseEntity<Map<String, Object>> checkNicknameExists(@RequestParam String nickname) {
-		log.info("UserController - checkNicknameExists 실행: {}", nickname);
+		log.info("========== {}, 중복 닉네임 확인 시작 ==========", nickname);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userService.checkNicknameExists(nickname);
 
+		log.info("========== {}, 중복 닉네임 확인 완료 ==========", nickname);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -119,11 +122,12 @@ public class UserController {
 	ResponseEntity<Map<String, Object>> updatePassword(@PathVariable(value = "seq") Long seq,
 		@RequestBody Map<String, String> passwordMap,
 		@RequestParam Long loginSeq) {
-		log.info("UserController - updatePassword 실행: {}", seq);
+		log.info("========== {}, 비밀번호 변경 시작 ==========", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userService.updatePassword(seq, loginSeq, passwordMap.get("password"));
 
+		log.info("========== {}, 비밀번호 변경 완료 ==========", seq);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -139,12 +143,13 @@ public class UserController {
 	@DeleteMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> withdraw(@PathVariable(value = "seq") Long seq,
 		@RequestParam Long loginSeq) {
-		log.info("UserController - withdraw 실행: {}", seq);
+		log.info("========== {}, 회원 탈퇴 시작 ==========", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userService.withdraw(seq, loginSeq);
 		userService.deleteUserRankingInfo(seq);
 
+		log.info("========== {}, 회원 탈퇴 완료 ==========", seq);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -160,17 +165,18 @@ public class UserController {
 	})
 	@GetMapping("/{seq}")
 	ResponseEntity<Map<String, Object>> getProfileInfo(@PathVariable(value = "seq") Long seq) {
-		log.info("UserController - getProfile 실행: {}", seq);
+		log.info("========== {}, 프로필 정보 조회 시작 ==========", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		UserDto userInfo = userService.getProfileInfo(seq);
 
+		log.info("========== {}, 프로필 정보 조회 완료 ==========", seq);
 		resultMap.put("UserInfo", userInfo);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
 
-	@Operation(summary = "회원 정보 조회")
+	@Operation(summary = "회원 상세 정보 조회")
 	@Parameters(value = {
 		@Parameter(required = true, name = "seq", description = "조회 할 회원 pk값")
 	})
@@ -180,12 +186,12 @@ public class UserController {
 	})
 	@GetMapping("/{seq}/details")
 	ResponseEntity<Map<String, Object>> getUserDetailsInfo(@PathVariable(value = "seq") Long userSeq) {
-		log.info("========== 회원({}) 정보 조회 시작 ==========", userSeq);
+		log.info("========== {}, 회원 상세 정보 조회 시작 ==========", userSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		UserDetailsDTO userDetailsInfo = userService.getUserDetailsInfo(userSeq);
 
-		log.info("========== 회원({}) 정보 조회 완료 ==========", userSeq);
+		log.info("========== {}, 회원 상세 정보 조회 완료 ==========", userSeq);
 		resultMap.put("UserDetailsInfo", userDetailsInfo);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
@@ -202,11 +208,12 @@ public class UserController {
 	@PutMapping("/{seq}/img")
 	ResponseEntity<Map<String, Object>> updateProfileDefaultImg(@PathVariable(value = "seq") Long seq,
 		@RequestParam(required = false) Long loginSeq) {
-		log.info("UserController - updateProfileDefaultImg 실행: {}", seq);
+		log.info("========== {}, 프로필 이미지: 기본 이미지로 변경 시작 ==========", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		userService.updateDefaultImg(seq, loginSeq);
 
+		log.info("========== {}, 프로필 이미지: 기본 이미지로 변경 완료 ==========", seq);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
@@ -229,14 +236,13 @@ public class UserController {
 		@RequestParam(value = "file", required = false) MultipartFile file,
 		@ModelAttribute UserDto userDto,
 		@RequestParam Long loginSeq) throws IOException {
-		log.info("========== 프로필 정보 업데이트 시작 ==========");
-		log.info("회원 seq: {}", seq);
+		log.info("========== {}, 프로필 정보 업데이트 시작 ==========", seq);
 		Map<String, Object> resultMap = new HashMap<>();
 
 		UserDto userInfo = userService.updateProfileInfo(seq, file, userDto, loginSeq);
 		userService.updateUserRankingInfo(userInfo);
 
-		log.info("========== 프로필 정보 업데이트 완료 ==========");
+		log.info("========== {}, 프로필 정보 업데이트 완료 ==========", seq);
 		resultMap.put("UserInfo", userInfo);
 		resultMap.put("success", true);
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
