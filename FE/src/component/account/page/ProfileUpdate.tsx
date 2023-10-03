@@ -282,7 +282,8 @@ const ProfileUpdate = ({
             <div className="text-center mt-20">
               <button
                 className="jongRyul-gray w-24 h-12 me-3"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   onReset();
                   setShowModal(false);
                   setError("nickname", {

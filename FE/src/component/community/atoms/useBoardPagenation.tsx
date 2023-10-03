@@ -10,6 +10,7 @@ export const useBoardPagenation = () => {
   const { data } = useQuery(["getBoardCount", keyword], () => getBoardCount(keyword), {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
+    retry: 5,
   });
 
   console.log(navigate.name);

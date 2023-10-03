@@ -18,14 +18,7 @@ export const getBoardList = async (pageNo: number, order: number, keyword: strin
   let responseData;
   if (order === 0) {
     if (keyword) {
-      const check_kor = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/; // 한글인지 식별해주기 위한 정규표현식
-      let lastKeyword;
-      if (keyword.match(check_kor)) {
-        lastKeyword = encodeURI(keyword); // 한글 인코딩
-      } else {
-        lastKeyword = keyword;
-      }
-      const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10, keyword: lastKeyword } });
+      const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10, keyword } });
       responseData = data;
     } else {
       const { data } = await apiWithAuth.get("", { params: { pageNo, pageSize: 10 } });
