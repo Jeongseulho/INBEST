@@ -108,7 +108,7 @@ const InvestingDetail = ({ companyInfo, setCompanyInfo }: Props) => {
           {isDomestic && companyDetailTab === "chart" && <StockChart companyInfo={companyInfo} />}
           {isDomestic && companyDetailTab === "trade" && <Trade companyInfo={companyInfo} />}
           {isAbroad && companyDetailTab === "chart" && <AbroadChart companyInfo={companyInfo} />}
-          {isAbroad && companyDetailTab === "trade" && <AbroadTrade />}
+          {isAbroad && companyDetailTab === "trade" && <AbroadTrade companyInfo={companyInfo} />}
           {isCrypto && companyDetailTab === "chart" && <CryptoChart companyInfo={companyInfo} />}
           {isCrypto && companyDetailTab === "trade" && <CryptoTrade />}
         </div>

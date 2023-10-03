@@ -59,6 +59,15 @@ export const getAbroadStockChart = async (companyCode: string, daysType: number)
   return data;
 };
 
+export const getAbroadStockPrice = async (companyCode: string) => {
+  const { data } = await apiWithAuth.get("inquire-asking-oversea-price-exp-ccn", {
+    params: {
+      stockCode: companyCode,
+    },
+  });
+  return data;
+};
+
 export const getCryptoChart = async () => {
   const { data } = await axios.get("https://api.bithumb.com/public/candlestick/BTC_KRW/24h");
   return data;

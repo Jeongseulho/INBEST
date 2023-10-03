@@ -13,8 +13,9 @@ import { useQuery } from "react-query";
 interface Props {
   expectedPrice: number;
   companyInfo: CompanyInfo;
+  stockType: 0 | 1 | 2;
 }
-const BuyOrderTab = ({ expectedPrice, companyInfo }: Props) => {
+const BuyOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
   const { simulationSeq } = useParams<{ simulationSeq: string }>();
   const { data: myAsset } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq), {});
   const { amount, price, onChangeAmount, onChangePrice } = useOrderTab(expectedPrice);
@@ -22,7 +23,7 @@ const BuyOrderTab = ({ expectedPrice, companyInfo }: Props) => {
     expectedPrice === 0 ? 0 : Number((((price - expectedPrice) / expectedPrice) * 100).toFixed(2));
 
   const { mutate } = useMutation(
-    () => tradeStock(simulationSeq, companyInfo.code, companyInfo.name, amount, price, 1, 0, 0),
+    () => tradeStock(simulationSeq, companyInfo.code, companyInfo.name, amount, price, 1, stockType, 0),
     {
       onMutate: () => {
         if (myAsset && myAsset[0].asset < amount * price) {

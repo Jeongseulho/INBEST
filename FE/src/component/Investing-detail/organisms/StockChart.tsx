@@ -17,7 +17,7 @@ const StockChart = ({ companyInfo }: Props) => {
   const [chartPeriod, setChartPeriod] = useState(30);
   const [tutorialStep, setTutorialStep] = useState(-1);
   const { data, isLoading } = useQuery(
-    ["stockChart", companyInfo, chartPeriod],
+    ["korStockChart", companyInfo, chartPeriod],
     () => getKorStockChart(companyInfo.code, chartPeriod),
     {
       retry: 3,

@@ -15,7 +15,7 @@ interface Props {
 
 const Trade = ({ companyInfo }: Props) => {
   const { data, isLoading } = useQuery(
-    ["trade", companyInfo],
+    ["korTrade", companyInfo],
     () => {
       return getKorStockPrice(companyInfo.code);
     },
@@ -77,9 +77,9 @@ const Trade = ({ companyInfo }: Props) => {
             ) : data === undefined || Object.keys(data.output1).length === 0 ? (
               <div>데이터가 없습니다.</div>
             ) : curTab === "sell" ? (
-              <SellOrderTab expectedPrice={data.output2.antc_cnpr} companyInfo={companyInfo} />
+              <SellOrderTab expectedPrice={data.output2.antc_cnpr} companyInfo={companyInfo} stockType={0} />
             ) : (
-              <BuyOrderTab expectedPrice={data.output2.antc_cnpr} companyInfo={companyInfo} />
+              <BuyOrderTab expectedPrice={data.output2.antc_cnpr} companyInfo={companyInfo} stockType={0} />
             )}
           </div>
         </div>

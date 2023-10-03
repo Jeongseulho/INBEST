@@ -56,18 +56,22 @@ export const getRecentlyDeal = async (simulationSeq: string | undefined): Promis
 
 export const getHeldStockNum = async (
   simulationSeq: string | undefined,
-  stockCode: string
-): Promise<{ success: "false"; message: "보유하지 않는 주식입니다." } | HeldStockInfo> => {
+  stockCode: string,
+  stockType: 0 | 1 | 2
+): Promise<HeldStockInfo | null> => {
   if (!simulationSeq) {
     throw new Error("simulationSeq is undefined");
   }
 
   const { userInfo } = userStore.getState();
-
-  const { data } = await apiWithAuth.get(`group/${simulationSeq}/users/${userInfo?.seq}/stocks/${stockCode}`, {
-    params: {
-      stockType: 0,
-    },
-  });
-  return data;
+  try {
+    const { data } = await apiWithAuth.get(`group/${simulationSeq}/users/${userInfo?.seq}/stocks/${stockCode}`, {
+      params: {
+        stockType,
+      },
+    });
+    return data;
+  } catch (error) {
+    return null;
+  }
 };
