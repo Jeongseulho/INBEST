@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 import com.jrjr.invest.simulation.service.GroupService;
 import com.jrjr.invest.simulation.service.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +42,7 @@ public class GroupScheduler {
 	private final UserRepository userRepository;
 	private final SimulationUserRepository simulationUserRepository;
 	private final RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate;
+	private final RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate;
 	private final SimulationRankRedisRepository simulationRankRedisRepository;
 	private final UserRankService userRankServiceImpl;
 	private final TierRepository tierRepository;
@@ -173,20 +175,26 @@ public class GroupScheduler {
 				
 					tierRepository.save(tier);
 
-					//저장한 정보를 토대로 개인 랰킹을 redis에 반영
+					//저장한 정보를 토대로 개인 랭킹을 redis에 반영
 					userRankServiceImpl.updateUserTierAndRateInfo(simulationUser.getUser().getSeq());
 					
 					//받는 경험치 갑소
 					exp--;
-
+					
+					//유저의 보유 주식 삭제
+					String userStockKey = "simulation_"+inProgressSimulation.getSeq()+"_user_"+simulationUser.getUser().getSeq();
+					stockUserRedisTemplate.delete(userStockKey);
 
 					// 게임 종료 알림 메세지 보내기
 					log.info(simulationUser.getUser().getSeq()+"유저 게임 종료 알림 전송 시작");
 					notificationService.sendFinishNotification(inProgressSimulation.getSeq(), simulationUser.getUser().getSeq());
 					log.info(simulationUser.getUser().getSeq()+"유저 게임 종료 알림 전송 끝");
 				}
+				
 				//저장한 정보를 토대로 전체 랭킹을 redis에 반영
 				userRankServiceImpl.updateUserRankingInfo();
+				//시뮬 방 제거
+				simulationUserRedisTemplate.delete(key);
 
 				log.info(inProgressSimulation.getSeq()+"번 모의투자방 종료 끝");
 			}
