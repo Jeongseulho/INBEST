@@ -65,7 +65,7 @@ public class TradingEntity extends BaseEntity {
 		return TradingDTO.builder().
 			seq(seq).userSeq(userSeq).nickname(nickname).
 			amount(amount).stockCode(stockCode).tradingType(tradingType).conclusionType(conclusionType).
-			stockName(stockName).stockType(stockType).price(price).
-			build();
+			stockName(stockName).stockType(stockType).price(price).simulationSeq(simulationSeq)
+				.build();
 	}
 }
