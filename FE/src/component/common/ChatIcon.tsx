@@ -1,6 +1,6 @@
-import chat from "../../asset/image/chat.png";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { PiWechatLogoLight } from "react-icons/pi";
 
 const ChatIcon = () => {
   //  <div className=" cursor-pointer fixed right-10 bottom-10 hover:scale-110 transition-transform duration-300">
@@ -12,10 +12,17 @@ const ChatIcon = () => {
       <Popover className="relative">
         <>
           <Popover.Button
-            as="img"
-            src={chat}
-            className="cursor-pointer w-[80px] hover:scale-110 transition-transform duration-300"
-          ></Popover.Button>
+            id="chat-icon"
+            as="div"
+            className=" w-[80px] h-[80px] rounded-3xl flex items-center justify-center"
+          >
+            <PiWechatLogoLight
+              className="w-[50px] h-[50px]"
+              style={{
+                color: "#35493a",
+              }}
+            />
+          </Popover.Button>
           <Transition
             as={Fragment}
             enter="transition ease-out duration-200"
