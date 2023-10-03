@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 import com.jrjr.invest.simulation.dto.AssetDTO;
+import com.jrjr.invest.simulation.dto.ResponseUserStockDTO;
 import com.jrjr.invest.simulation.dto.SearchByTitleDTO;
 import com.jrjr.invest.simulation.dto.SimulationSeqDTO;
 import com.jrjr.invest.simulation.dto.StatusDTO;
