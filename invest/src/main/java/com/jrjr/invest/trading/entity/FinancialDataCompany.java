@@ -34,4 +34,6 @@ public class FinancialDataCompany {
 	private String companyRealIndustryCode;
 
 	private String companyIndustry;
+
+	private String imgUrl;
 }
