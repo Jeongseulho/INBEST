@@ -31,7 +31,7 @@ public class USATradingPriceSocket {
 		sendMessage();
 	}
 
-	@Scheduled(cron = "0 0/5 * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void sendMessage() throws ExecutionException, InterruptedException, IOException {
 		if(session == null){
 			StandardWebSocketClient client = new StandardWebSocketClient();
