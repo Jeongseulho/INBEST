@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 import org.springframework.stereotype.Service;
 
+import com.jrjr.invest.global.exception.NotFoundException;
 import com.jrjr.invest.rank.dto.RedisSimulationUserRankingDTO;
 import com.jrjr.invest.rank.dto.SimulationRankingDTO;
 import com.jrjr.invest.rank.dto.TopIndustryDTO;
@@ -17,9 +18,9 @@ import com.jrjr.invest.rank.dto.TopStockDTO;
 import com.jrjr.invest.rank.repository.SimulationRankRedisRepository;
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.repository.SimulationRepository;
-import com.jrjr.invest.trading.entity.FinancialdataCompany;
+import com.jrjr.invest.trading.entity.FinancialDataCompany;
 import com.jrjr.invest.trading.entity.Trading;
-import com.jrjr.invest.trading.repository.FinancialdataCompanyRepository;
+import com.jrjr.invest.trading.repository.FinancialDataCompanyRepository;
 import com.jrjr.invest.trading.repository.TradingRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 	private final SimulationRankRedisRepository simulationRankRedisRepository;
 	private final SimulationRepository simulationRepository;
 	private final TradingRepository tradingRepository;
-	private final FinancialdataCompanyRepository financialdataCompanyRepository;
+	private final FinancialDataCompanyRepository financialDataCompanyRepository;
 
 	/*
 		시뮬레이션 별 참가자 랭킹 정보 산정
@@ -98,11 +99,71 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 	}
 
 	/*
-		시뮬레이션 별 BEST PICK 구하기
-		(1) 시뮬레이션에서 가장 높은 수익을 낸 주식 3가지
-		(2) 시뮬레이션에서 가장 높은 손실을 낸 주식 3가지
-		(3) 시뮬레이션에서 가장 인기가 많은 산업군 3가지
+		시뮬레이션 이름으로 시뮬레이션 랭킹 정보 검색하기
 	 */
+	@Override
+	public List<SimulationRankingDTO> getSimulationRankingInfoByTitle(Long simulationSeq) {
+		// simulation table 에서 simulationSeq 로 종료된 시뮬레이션이 있는지 확인
+		if (!simulationRepository.existsBySeqAndFinishedDateIsNotNull(simulationSeq)) {
+			throw new NotFoundException(simulationSeq + " 시뮬레이션 이름으로 검색된 시뮬레이션 정보가 없음");
+		}
+
+		List<Simulation> simulationList = simulationRepository.findByFinishedDateIsNotNullOrderByRevenuRateDesc();
+		List<SimulationRankingDTO> simulationRankingList = new ArrayList<>();
+
+		// 랭킹 구하기
+		int rank = 0;
+		int index = 0;
+		int previousRevenuRate = Integer.MAX_VALUE;
+		int findRank = 0;
+
+		for (Simulation simulation : simulationList) {
+			index++;
+			Integer revenuRate = simulation.getRevenuRate();
+
+			if (revenuRate != previousRevenuRate) {
+				rank = index;
+			}
+			previousRevenuRate = revenuRate;
+
+			// 검색한 시뮬레이션의 등수 찾기
+			if (simulation.getSeq().equals(simulationSeq)) {
+				findRank = rank;
+				log.info("검색한 시뮬레이션의 랭킹: {}", rank);
+			}
+
+			SimulationRankingDTO simulationRankingDto
+				= SimulationRankingDTO.builder()
+				.simulationSeq(simulation.getSeq())
+				.title(simulation.getTitle())
+				.currentRank(rank)
+				.period(simulation.getPeriod())
+				.memberNum(simulation.getMemberNum())
+				.revenuRate(simulation.getRevenuRate())
+				.build();
+
+			log.info(simulationRankingDto.toString());
+			simulationRankingList.add(simulationRankingDto);
+		}
+
+		// +- 10 등 범위 산정
+		int start = findRank > 10 ? findRank - 10 : 1;
+		int end = Math.min(findRank + 10, simulationRankingList.size());
+		log.info("조회 랭킹 범위: " + start + " ~ " + end);
+
+		// 해당 범위 랭킹 정보 복사
+		List<SimulationRankingDTO> resultSimulationRankingList = simulationRankingList.subList(start - 1, end);
+		log.info(resultSimulationRankingList.toString());
+
+		return resultSimulationRankingList;
+	}
+
+	/*
+			시뮬레이션 별 BEST PICK 구하기
+			(1) 시뮬레이션에서 가장 높은 수익을 낸 주식 3가지
+			(2) 시뮬레이션에서 가장 높은 손실을 낸 주식 3가지
+			(3) 시뮬레이션에서 가장 인기가 많은 산업군 3가지
+		 */
 	@Override
 	public Map<String, List<Object>> getSimulationStockRankingInfo(Long simulationSeq) {
 		List<Trading> tradingInfoList
@@ -127,8 +188,8 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 			stockInfoMap.put(stockInfoKey, totalAmount);
 
 			// companyIndustryInfoMap 에 산업군 별 주식 거래량을 저장
-			FinancialdataCompany financialdataCompany
-				= financialdataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
+			FinancialDataCompany financialdataCompany
+				= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
 
 			log.info("CompanyIndustry : {}", financialdataCompany.getCompanyIndustry());
 			log.info("Amount: {}", trading.getAmount());
@@ -228,8 +289,8 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		log.info("totalAmount: {}", totalAmount);
 
 		// 주식 이름 가져오기
-		FinancialdataCompany financialdataCompany
-			= financialdataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
+		FinancialDataCompany financialdataCompany
+			= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
 		log.info(financialdataCompany.toString());
 
 		// 주식 현재 시가 가져오기
