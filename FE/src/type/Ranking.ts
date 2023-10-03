@@ -11,3 +11,15 @@ export interface GetTotalRankRes {
   success: string;
   UserRankingInfo: TotalRanking[];
 }
+
+export interface TierRankInfo {
+  bronze: number;
+  silver: number;
+  gold: number;
+  diamond: number;
+}
+
+export interface GetTierRankInfo {
+  success: boolean;
+  TierRankInfo: TierRankInfo;
+}

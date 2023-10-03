@@ -26,6 +26,5 @@ export const useBoardList = () => {
   useEffect(() => {
     queryClient.invalidateQueries("getBoardList");
   }, [page, order, keyword]);
-  // useEffect(() => {});
   return { isLoading, boards };
 };

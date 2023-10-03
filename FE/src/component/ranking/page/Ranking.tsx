@@ -7,7 +7,9 @@ const Ranking = () => {
   return (
     <div className="flex">
       <RankingSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <Outlet />
+      <div className="flex justify-center w-full">
+        <Outlet />
+      </div>
     </div>
   );
 };
