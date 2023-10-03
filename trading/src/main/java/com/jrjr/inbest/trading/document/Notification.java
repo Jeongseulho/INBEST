@@ -36,16 +36,8 @@ public class Notification {
         this.dateTime = LocalDateTime.now();
     }
 
-    public void setInvititionMessage(String simulationTitle, String ownerNickname) {
-        this.message = ownerNickname + "님이 "  + simulationTitle + "에 초대하셨습니다.";
-    }
-
-    public void setStartMessage(String simulationTitle) {
-        this.message = simulationTitle + "에서 모의 투자가 시작되었습니다.";
-    }
-
-    public void setFinishMessage(String simulationTitle) {
-        this.message = simulationTitle + "에서 모의 투자가 종료되었습니다.";
+    public void setApplyFailMessage() {
+        this.message = "현재 장이 열려있지 않습니다!";
     }
 
     public void setApplyTradingMessage(String simulationTitle, TradingDTO tradingDTO) {
@@ -55,10 +47,16 @@ public class Notification {
     }
 
     public void setTradingMessage(String simulationTitle, TradingDTO tradingDTO) {
+
+        // 매매 타입
         String tradingType = tradingDTO.getTradingType() == 0 ? "매도" : "매수";
+        // 성공 여부
         String conclusionType = tradingDTO.getConclusionType() == 1 ? "성공" : tradingDTO.getConclusionType() == 2 ? "실패" : "미체결";
-        this.message = "진행중인 " +simulationTitle+ " 모의 투자에서 " + tradingDTO.getStockName() + " " + tradingDTO.getAmount() + "주를 "
-            + tradingDTO.getPrice() + "원(KRW)에 " + tradingType + " " + conclusionType  + "하였습니다.";
+        // 가상화페인 경우
+        String amountType = tradingDTO.getStockType() == 2 ? "개" : "주";
+
+        this.message = "진행중인 " + simulationTitle+ " 모의 투자에서 " + tradingDTO.getStockName() + " " + tradingDTO.getAmount()
+                + amountType + "를 " + tradingDTO.getPrice() + "원(KRW)에 " + tradingType + " " + conclusionType  + "하였습니다.";
     }
 
     public NotificationDTO toNotificationDTO() {

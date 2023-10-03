@@ -1,9 +1,11 @@
 package com.jrjr.inbest.trading.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Map;
 
 import com.jrjr.inbest.rank.service.SimulationRankService;
+import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +40,22 @@ public class TradingService {
 
 	public void insertTrading(TradingDTO tradingDTO){
 		log.info(tradingDTO.toString());
+
+		LocalTime currentTime = LocalTime.now();
+
+		//한국 주식 장이 닫혀 있을 경우
+		if (tradingDTO.getStockType() == StockType.KOREA) {
+			if (currentTime.isAfter(LocalTime.of(18, 0)) && currentTime.isBefore(LocalTime.of(8, 59))) {
+				notificationService.sendApplyFailMessage(tradingDTO);
+			}
+		}
+		//미국 주식 장이 닫혀 있을 경우
+		if (tradingDTO.getStockType() == StockType.GLOBAL) {
+			if (currentTime.isAfter(LocalTime.of(6, 0)) && currentTime.isAfter(LocalTime.of(23, 29))) {
+				notificationService.sendApplyFailMessage(tradingDTO);
+			}
+		}
+
 
 		//매매 정보를 DB에 저장
 		tradingDTO.setCreatedDate(LocalDateTime.now());
@@ -92,7 +110,7 @@ public class TradingService {
 
 
 		// 매매 신청 완료 알림 보내기
-		notificationService.sendApplyTradingMessage(tradingDTO);
+		notificationService.sendApplySuccessMessage(tradingDTO);
 	}
 
 	public void sellStock(TradingDTO tradingDTO) throws Exception{

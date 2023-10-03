@@ -12,6 +12,7 @@ import com.jrjr.inbest.crawler.StockCrawler;
 import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
+import com.jrjr.inbest.trading.service.NotificationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -40,6 +41,7 @@ public class TradingScheduler {
 	private final TradingService tradingService;
 	private final StockCrawler americaDollarCrawler;
 	private final TradingRepository tradingRepository;
+	private final NotificationService notificationService;
 
 	@Value("${stock.url.market-price}")
 	public String url;
@@ -85,8 +87,11 @@ public class TradingScheduler {
 			
 			//실패한 매매 최신화
 			tradingDTO = failedTrading.toTradingDto();
+
+			// 매매 실패 알람 보내기
+			notificationService.sendApplyFailMessage(tradingDTO);
 		}
-		//todo: 매매 실패 알람 보내기
+
 
 		log.info("====== 매매 실패 끝 ======");
 	}

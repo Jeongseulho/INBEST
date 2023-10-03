@@ -61,7 +61,7 @@ public class TradingDTO implements Serializable {
 	@Schema(required = true, description = "매매 방법(0: 매도, 1:매수)")
 	private Integer tradingType;
 	@NotNull
-	@Schema(required = true, description = "주식 종류 (0: 국내, 1,:해외(불가능함),2:가상자산 )")
+	@Schema(required = true, description = "주식 종류 (0: 국내, 1,:해외,2:가상자산 )")
 	private Integer stockType;
 	@NotNull
 	@Schema(required = true, description = "주식 이름")

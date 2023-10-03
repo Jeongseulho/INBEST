@@ -19,9 +19,24 @@ public class NotificationService {
     private final TradingRepository tradingRepository;
     private final NotificationRepository notificationRepository;
 
+    // 매매 신청 실패 알림 보내기
+    @Transactional
+    public void sendApplyFailMessage(TradingDTO tradingDTO) {
+        log.info("[매매 신청 실패 알림 보내기]");
+
+        Notification notification = Notification.builder()
+                .simulationSeq(tradingDTO.getSimulationSeq())
+                .userSeq(tradingDTO.getUserSeq())
+                .build();
+        notification.setApplyFailMessage();
+        notificationRepository.save(notification);
+
+        rabbitTemplate.convertAndSend("realtime_direct", "trading", notification.toNotificationDTO());
+    }
+
     // 매매 신청 완료 알림 보내기
     @Transactional
-    public void sendApplyTradingMessage(TradingDTO tradingDTO) {
+    public void sendApplySuccessMessage(TradingDTO tradingDTO) {
         log.info("[매매 신청 완료 알림 보내기]");
 
         String simulationTitle = tradingRepository.getSimulationTitle(tradingDTO.getSeq());
