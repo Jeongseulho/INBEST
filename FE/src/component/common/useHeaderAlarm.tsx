@@ -3,12 +3,12 @@ import userStore from "../../store/userStore";
 import { Client } from "@stomp/stompjs";
 
 export const useHeaderAlarm = () => {
-  const { accessToken } = userStore();
+  const { accessToken, userInfo } = userStore();
 
   useEffect(() => {
     if (accessToken) {
       const client = new Client({
-        brokerURL: `${import.meta.env.VITE_APP_STOMP_BASE_URL}notification-service/ws`,
+        brokerURL: import.meta.env.VITE_APP_STOMP_BASE_URL,
 
         connectHeaders: {
           Authorization: `Bearer ${accessToken}`,
@@ -18,6 +18,9 @@ export const useHeaderAlarm = () => {
         },
         onConnect: () => {
           console.log("Connected to WebSocket");
+          client.subscribe(`/topic/notification.${userInfo?.seq}`, (message) => {
+            console.log(message);
+          });
         },
         onDisconnect: () => {
           console.log("Disconnected from WebSocket");
