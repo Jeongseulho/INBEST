@@ -1,10 +1,10 @@
 import { TotalRanking } from "../../../type/Ranking";
 import NumberToTierImage from "../../common/NumberToTierImage";
 import { tierToString } from "../../../util/tierToString";
-const RankerItem = ({ ranker }: { ranker: TotalRanking }) => {
+const RankerItem = ({ ranker, nickname }: { ranker: TotalRanking; nickname?: string }) => {
   return (
     <>
-      <tr className="bg-white h-20 border-b ">
+      <tr className={`h-20 border-b ${nickname === ranker.nickname ? "bg-slate-300" : " bg-white "}`}>
         <td className="text-center">{ranker.currentRank}</td>
         <td>
           <div className="flex items-center">

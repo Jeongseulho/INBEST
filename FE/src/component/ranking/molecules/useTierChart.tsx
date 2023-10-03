@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { getTiersCount } from "../../../api/ranking";
 import { useEffect, useState } from "react";
-import { useRankingPageNation } from "./useRankingPageNation";
+
 export const useTierChart = () => {
   const { data } = useQuery(["TierCount"], () => getTiersCount(), { retry: 3 });
   const bronze = data?.TierRankInfo.bronze ?? 0;
@@ -18,7 +18,5 @@ export const useTierChart = () => {
     setPages(Math.ceil(totalUser / 20));
   }, [totalUser]);
 
-  console.log(perList);
-  console.log(data);
   return { perList, pages };
 };

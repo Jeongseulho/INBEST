@@ -2,7 +2,8 @@ import { Sidebar, Menu, MenuItem, MenuItemStyles, menuClasses } from "react-pro-
 import { TbDeviceDesktopAnalytics } from "react-icons/tb";
 import { BsFilePerson } from "react-icons/bs";
 
-import { INVESTING_TAB } from "../../../constant/INVESTING_TAB";
+import { RANKING_TAB } from "../../../constant/RANKING_TAB";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   activeTab: number;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const RankingSidebar = ({ activeTab, setActiveTab }: Props) => {
+  const navigate = useNavigate();
   const theme = {
     sidebar: {
       backgroundColor: "#ffffff",
@@ -70,15 +72,21 @@ const RankingSidebar = ({ activeTab, setActiveTab }: Props) => {
         <Menu menuItemStyles={menuItemStyles}>
           <MenuItem
             icon={<BsFilePerson />}
-            active={activeTab === INVESTING_TAB.INFO}
-            onClick={() => setActiveTab(INVESTING_TAB.INFO)}
+            active={activeTab === RANKING_TAB.PERSONAL_RANKING}
+            onClick={() => {
+              setActiveTab(RANKING_TAB.PERSONAL_RANKING);
+              navigate("/ranking");
+            }}
           >
             개별 랭킹
           </MenuItem>
           <MenuItem
             icon={<TbDeviceDesktopAnalytics />}
-            active={activeTab === INVESTING_TAB.MY_INFO}
-            onClick={() => setActiveTab(INVESTING_TAB.MY_INFO)}
+            active={activeTab === RANKING_TAB.GROUP_RANKING}
+            onClick={() => {
+              setActiveTab(RANKING_TAB.GROUP_RANKING);
+              navigate("/ranking/group");
+            }}
           >
             그룹 랭킹
           </MenuItem>
