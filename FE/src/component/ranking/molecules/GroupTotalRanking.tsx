@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { SimulationRankingInfo } from "../../../type/Ranking";
 import GroupItem from "../atoms/GroupItem";
 import GroupSearchInput from "../atoms/GroupSearchInput";

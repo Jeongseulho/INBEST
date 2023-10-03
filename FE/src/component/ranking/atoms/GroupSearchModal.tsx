@@ -2,7 +2,6 @@ import Modal from "react-modal";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
 import { useQuery } from "react-query";
 import { getGroupSearchTitle } from "../../../api/ranking";
-import { useGroupRanking } from "../organisms/useGroupRanking";
 import { useNavigate } from "react-router-dom";
 const GroupSearchModal = ({
   setSearchSeq,
