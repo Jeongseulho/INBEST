@@ -64,7 +64,7 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
                   status === "roic" ||
                   status === "debt_to_equity_ratio"
                 )
-                  return <></>;
+                  return;
                 return (
                   <div className=" flex border-2 justify-between w-full" key={index}>
                     <p className=" border-r-2 w-2/5 p-2">{keyToKoreanMap[status]}</p>

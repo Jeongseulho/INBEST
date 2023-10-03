@@ -68,7 +68,12 @@ export const getAbroadStockPrice = async (companyCode: string) => {
   return data;
 };
 
-export const getCryptoChart = async () => {
-  const { data } = await axios.get("https://api.bithumb.com/public/candlestick/BTC_KRW/24h");
+export const getCryptoChart = async (companyCode: string, timeType: string) => {
+  const { data } = await axios.get(`https://api.bithumb.com/public/candlestick/${companyCode}_KRW/${timeType}`);
+  return data;
+};
+
+export const getCryptoPrice = async (companyCode: string) => {
+  const { data } = await axios.get(`https://api.bithumb.com/public/orderbook/${companyCode}_KRW`);
   return data;
 };

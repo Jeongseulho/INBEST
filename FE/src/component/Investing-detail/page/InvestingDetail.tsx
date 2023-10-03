@@ -110,7 +110,7 @@ const InvestingDetail = ({ companyInfo, setCompanyInfo }: Props) => {
           {isAbroad && companyDetailTab === "chart" && <AbroadChart companyInfo={companyInfo} />}
           {isAbroad && companyDetailTab === "trade" && <AbroadTrade companyInfo={companyInfo} />}
           {isCrypto && companyDetailTab === "chart" && <CryptoChart companyInfo={companyInfo} />}
-          {isCrypto && companyDetailTab === "trade" && <CryptoTrade />}
+          {isCrypto && companyDetailTab === "trade" && <CryptoTrade companyInfo={companyInfo} />}
         </div>
       </motion.div>
     </>
