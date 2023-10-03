@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "financialdata_company")
+@Table(name = "financial_data_company")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class FinancialdataCompany {
+public class FinancialDataCompany {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
