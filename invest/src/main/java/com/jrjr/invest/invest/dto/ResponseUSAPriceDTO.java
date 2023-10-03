@@ -1,0 +1,230 @@
+package com.jrjr.invest.invest.dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
+public class ResponseUSAPriceDTO {
+	@Schema(description = "실시간종목코드(라고는 하는데 이것저것 섞여있는 값이라 종목 코드는 symb를 사용하는 것이 좋음)")
+	private String rsym;
+
+	@Schema(description = "종목코드")
+	private String symb;
+
+	@Schema(description = "소숫점자리수")
+	private String zdiv;
+
+	@Schema(description = "현지일자")
+	private String xymd;
+
+	@Schema(description = "현지시간")
+	private String xhms;
+
+	@Schema(description = "한국일자")
+	private String kymd;
+
+	@Schema(description = "한국시간")
+	private String khms;
+
+	@Schema(description = "매수총잔량")
+	private String bvol;
+
+	@Schema(description = "매도총잔량")
+	private String avol;
+
+	@Schema(description = "매수총잔량대비")
+	private String bdvl;
+
+	@Schema(description = "매도총잔량대비")
+	private String advl;
+
+	@Schema(description = "매수호가1")
+	private String pbid1;
+
+	@Schema(description = "매도호가1")
+	private String pask1;
+
+	@Schema(description = "매수잔량1")
+	private String vbid1;
+
+	@Schema(description = "매도잔량1")
+	private String vask1;
+
+	@Schema(description = "매수잔량대비1")
+	private String dbid1;
+
+	@Schema(description = "매도잔량대비1")
+	private String dask1;
+
+	@Schema(description = "매수호가2")
+	private String pbid2;
+
+	@Schema(description = "매도호가2")
+	private String pask2;
+
+	@Schema(description = "매수잔량2")
+	private String vbid2;
+
+	@Schema(description = "매도잔량2")
+	private String vask2;
+
+	@Schema(description = "매수잔량대비2")
+	private String dbid2;
+
+	@Schema(description = "매도잔량대비2")
+	private String dask2;
+
+	@Schema(description = "매수호가3")
+	private String pbid3;
+
+	@Schema(description = "매도호가3")
+	private String pask3;
+
+	@Schema(description = "매수잔량3")
+	private String vbid3;
+
+	@Schema(description = "매도잔량3")
+	private String vask3;
+
+	@Schema(description = "매수잔량대비3")
+	private String dbid3;
+
+	@Schema(description = "매도잔량대비3")
+	private String dask3;
+
+
+	@Schema(description = "매수호가4")
+	private String pbid4;
+
+	@Schema(description = "매도호가4")
+	private String pask4;
+
+	@Schema(description = "매수잔량4")
+	private String vbid4;
+
+	@Schema(description = "매도잔량4")
+	private String vask4;
+
+	@Schema(description = "매수잔량대비4")
+	private String dbid4;
+
+	@Schema(description = "매도잔량대비4")
+	private String dask4;
+
+	@Schema(description = "매수호가5")
+	private String pbid5;
+
+	@Schema(description = "매도호가5")
+	private String pask5;
+
+	@Schema(description = "매수잔량5")
+	private String vbid5;
+
+	@Schema(description = "매도잔량5")
+	private String vask5;
+
+	@Schema(description = "매수잔량대비5")
+	private String dbid5;
+
+	@Schema(description = "매도잔량대비5")
+	private String dask5;
+	//
+	// @Schema(description = "매수호가6")
+	// private String pbid6;
+	//
+	// @Schema(description = "매도호가6")
+	// private String pask6;
+	//
+	// @Schema(description = "매수잔량6")
+	// private String vbid6;
+	//
+	// @Schema(description = "매도잔량6")
+	// private String vask6;
+	//
+	// @Schema(description = "매수잔량대비6")
+	// private String dbid6;
+	//
+	// @Schema(description = "매도잔량대비6")
+	// private String dask6;
+	//
+	// @Schema(description = "매수호가7")
+	// private String pbid7;
+	//
+	// @Schema(description = "매도호가7")
+	// private String pask7;
+	//
+	// @Schema(description = "매수잔량7")
+	// private String vbid7;
+	//
+	// @Schema(description = "매도잔량7")
+	// private String vask7;
+	//
+	// @Schema(description = "매수잔량대비7")
+	// private String dbid7;
+	//
+	// @Schema(description = "매도잔량대비7")
+	// private String dask7;
+	//
+	// @Schema(description = "매수호가8")
+	// private String pbid8;
+	//
+	// @Schema(description = "매도호가8")
+	// private String pask8;
+	//
+	// @Schema(description = "매수잔량8")
+	// private String vbid8;
+	//
+	// @Schema(description = "매도잔량8")
+	// private String vask8;
+	//
+	// @Schema(description = "매수잔량대비8")
+	// private String dbid8;
+	//
+	// @Schema(description = "매도잔량대비8")
+	// private String dask8;
+	//
+	// @Schema(description = "매수호가9")
+	// private String pbid9;
+	//
+	// @Schema(description = "매도호가9")
+	// private String pask9;
+	//
+	// @Schema(description = "매수잔량9")
+	// private String vbid9;
+	//
+	// @Schema(description = "매도잔량9")
+	// private String vask9;
+	//
+	// @Schema(description = "매수잔량대비9")
+	// private String dbid9;
+	//
+	// @Schema(description = "매도잔량대비9")
+	// private String dask9;
+	//
+	//
+	// @Schema(description = "매수호가10")
+	// private String pbid10;
+	//
+	// @Schema(description = "매도호가10")
+	// private String pask10;
+	//
+	// @Schema(description = "매수잔량10")
+	// private String vbid10;
+	//
+	// @Schema(description = "매도잔량10")
+	// private String vask10;
+	//
+	// @Schema(description = "매수잔량대비10")
+	// private String dbid10;
+	//
+	// @Schema(description = "매도잔량대비10")
+	// private String dask10;
+}

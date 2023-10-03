@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.bson.json.JsonObject;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.w3c.dom.Text;
 
 import com.jrjr.invest.invest.dto.RequestHanTuAccessTokenDTO;
 import com.jrjr.invest.invest.dto.ResponseHanTuAccessTokenDTO;
+import com.jrjr.invest.invest.dto.ResponseUSAPriceDTO;
 import com.jrjr.invest.invest.service.InvestService;
+import com.jrjr.invest.trading.entity.FinancialDataCompany;
+import com.jrjr.invest.trading.repository.FinancialDataCompanyRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,12 +50,13 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class InvestController {
 	private final InvestService investService;
+	private final RedisTemplate<String,ResponseUSAPriceDTO> usaPriceDTORedisTemplate;
 
 	@Value("${token.hantu.appkey}")
 	String appkey;
 	@Value("${token.hantu.appsecret}")
 	String appsecret;
-	String approvalkey = "b45e080c-f5bb-4a26-9ee6-fc59320b8224";
+
 
 	@Operation(summary = "국내주식 기간별 시세 검색")
 	@Parameters(value = {
@@ -206,86 +216,22 @@ public class InvestController {
 
 	@Operation(summary = "해외주식 현재가 호가/예상체결")
 	@Parameters(value = {
+		@Parameter(description = "주식 코드(모두 대문자여야함)",name = "stockCode")
 	})
 	@GetMapping("/inquire-asking-oversea-price-exp-ccn")
 	public ResponseEntity<?> getAskingOverseaPriceExpCcn(
 		@RequestParam(name = "stockCode")String stockCode) throws Exception {
 
-		log.info("웹 소켓 접속키");
-		log.info(approvalkey);
+		HashOperations<String,String,ResponseUSAPriceDTO> hashOperations
+		= usaPriceDTORedisTemplate.opsForHash();
 
-		//소켓을 연결하는 설정 
-		OkHttpClient client = new OkHttpClient.Builder()
-			.readTimeout(0, TimeUnit.MILLISECONDS)	//제한 시간 없애기
-			.build();
-		
-		//requestBody 생성
-		RequestBody requestBody = new FormBody.Builder()
-			.add("tr_id","HDFSASP0")
-			.add("tr_key","DNAS"+stockCode)
-			.build();
+		ResponseUSAPriceDTO responseUSAPriceDTO = hashOperations.get("USAPrice",stockCode);
 
-		//요청 url 생성
-		Request request = new Request.Builder()
-			.url("ws://ops.koreainvestment.com:21000")
-			.build();
-
-		final String[] responseData = {""};
-
-		final boolean[] connect = {true};
-
-		WebSocketListener listener = new WebSocketListener() {
-			@Override
-			public void onOpen(WebSocket webSocket, Response response) {
-				System.out.println("Connected to server");
-				webSocket.send("Hello, server!");
-			}
-
-			@Override
-			public void onMessage(WebSocket webSocket, String text) {
-				System.out.println("Received: " + text);
-				responseData[0] = text;
-				if(responseData[0].contains("^")){
-					webSocket.close(200,"Closing after receiving message");
-					connect[0] =false;
-				}
-			}
-
-			@Override
-			public void onClosed(WebSocket webSocket, int code, String reason) {
-				System.out.println("Closed: " + reason);
-			}
-
-			@Override
-			public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-				System.out.println("Error: " + t.getMessage());
-			}
-		};
-
-		WebSocket ws = client.newWebSocket(request, listener);
-		String sendData = String.format(
-			"{\"header\""
-				+ ":{\"approval_key\":\"%s\",\"custtype\":\"%s\",\"tr_type\":\"%s\",\"content-type\":\"utf-8\"}," +
-			"\"body\""
-				+ ":{\"input\":{\"tr_id\":\"%s\",\"tr_key\":\"%s\"}"
-				+ "}"
-			+ "}",
-			approvalkey, "P", "1", "HDFSASP0","DNASAAPL"
-		);
-		log.info(sendData);
-		log.info(Arrays.toString(responseData));
-
-
-
-		ws.send(sendData);
-		// log.info(response.toJSONString());
-
-		while(connect[0]){
-
+		if(responseUSAPriceDTO == null){
+			throw new Exception(stockCode+"는 등록되지 않은 주식입니다.");
 		}
 
-		log.info(Arrays.toString(responseData));
 
-		return new ResponseEntity<>("",HttpStatus.OK);
+		return new ResponseEntity<>(responseUSAPriceDTO,HttpStatus.OK);
 	}
 }
