@@ -44,3 +44,16 @@ export const getKorStockPrice = async (companyCode: string) => {
   });
   return data;
 };
+
+export const getAbroadStockChart = async (companyCode: string, daysType: number) => {
+  const { data } = await apiWithAuth.get("inquire-daily-itemchartoverseaprice", {
+    params: {
+      EXCD: "NAS",
+      SYMB: companyCode,
+      GUBN: daysType,
+      BYMD: "",
+      MODP: 1,
+    },
+  });
+  return data;
+};

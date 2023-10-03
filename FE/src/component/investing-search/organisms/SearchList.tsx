@@ -19,7 +19,7 @@ const SearchList = ({ searchList, setCompanyInfo, isLoading }: Props) => {
       </div>
       <div className=" flex justify-center gap-20 border-y-2 items-center">
         <p className=" w-2 font-medium text-center">#</p>
-        <p className=" w-28 font-medium text-center">종목 명</p>
+        <p className=" w-36 font-medium text-center">종목 명</p>
         <p className=" w-28 font-medium text-center">종목 코드</p>
         <p className=" w-16 font-medium text-center">분류</p>
       </div>

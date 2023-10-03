@@ -19,6 +19,8 @@ const Investing = () => {
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo>({
     code: "",
     name: "",
+    type: 0,
+    logo: "",
   });
 
   return (
