@@ -223,3 +223,11 @@ body{
 .animate__animated.animate__fadeIn {
   --animate-duration: 0.5s;
 }
+
+#chat-icon {
+  transition: all 400ms ease 0s;
+  animation:400ms cubic-bezier(0.36, 0, 0, 1) 0s 1 normal none running animate__fadeIn;
+  background: linear-gradient(rgb(160, 188, 11) 0%, rgb(131, 188, 11) 100%);
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.1) 0px 4px 6px, rgba(0, 0, 0, 0.15) 0px 8px 30px;
+  cursor: pointer;
+}
