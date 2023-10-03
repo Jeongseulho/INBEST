@@ -24,7 +24,7 @@ const MyAssets = () => {
             height: 285,
           }}
         >
-          <img src={spinner} width={120} className=" mx-auto" />
+          <img src={spinner} width={120} className=" mx-auto mt-32" />
         </div>
       ) : (
         <>
