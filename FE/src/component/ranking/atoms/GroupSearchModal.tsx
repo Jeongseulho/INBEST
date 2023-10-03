@@ -2,18 +2,22 @@ import Modal from "react-modal";
 import { CONTENT_MODAL_STYLE, OVERLAY_MODAL_STYLE } from "../../../constant/MODAL_STYLE";
 import { useQuery } from "react-query";
 import { getGroupSearchTitle } from "../../../api/ranking";
-
+import { useGroupRanking } from "../organisms/useGroupRanking";
+import { useNavigate } from "react-router-dom";
 const GroupSearchModal = ({
+  setSearchSeq,
   showModal,
   setShowModal,
   inputText,
 }: {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearchSeq: React.Dispatch<React.SetStateAction<number>>;
   inputText: string;
 }) => {
   const { data } = useQuery(["GetGroupSearchTitle", inputText], () => getGroupSearchTitle(inputText));
   const searchList = data?.SearchList;
+  const navigate = useNavigate();
   return (
     <>
       <Modal
@@ -43,17 +47,21 @@ const GroupSearchModal = ({
               </tr>
             </thead>
             {searchList?.map((group, idx) => (
-              <tr
-                key={idx}
-                className="border-b-2 h-10 hover:bg-gray-300 hover:cursor-pointer"
-                onClick={() => {
-                  setShowModal(false);
-                }}
-              >
-                <td className="line-clamp-1 overflow-hidden text-ellipsis h-10 flex items-center">{group.title}</td>
-                <td className="text-center">{group.memberNum}명</td>
-                <td className="text-center">{group.period}일</td>
-              </tr>
+              <tbody>
+                <tr
+                  key={idx}
+                  className="border-b-2 h-10 hover:bg-gray-300 hover:cursor-pointer"
+                  onClick={() => {
+                    setShowModal(false);
+                    navigate(`/ranking/group/${group.simulationSeq}`);
+                    setSearchSeq(group.simulationSeq);
+                  }}
+                >
+                  <td className="line-clamp-1 overflow-hidden text-ellipsis h-10 flex items-center">{group.title}</td>
+                  <td className="text-center">{group.memberNum}명</td>
+                  <td className="text-center">{group.period}일</td>
+                </tr>
+              </tbody>
             ))}
           </table>
         </div>

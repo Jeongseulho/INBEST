@@ -23,6 +23,7 @@ const RankerItem = ({ ranker, nickname }: { ranker: TotalRanking; nickname?: str
         </td>
         <td className="text-center">{ranker.tier % 100}P</td>
         <td className={`text-center font-semiBold ${ranker.rate >= 0 ? "text-red-500" : "text-blue-500"}`}>
+          {ranker.rate >= 0 ? "+" : ""}
           {ranker.rate}%
         </td>
       </tr>

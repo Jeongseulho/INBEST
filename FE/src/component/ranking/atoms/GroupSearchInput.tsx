@@ -1,7 +1,7 @@
 import { BsSearch } from "react-icons/bs";
 import GroupSearchModal from "./GroupSearchModal";
 import { useGroupSearchInput } from "./useGroupSearchInput";
-const GroupSearchInput = () => {
+const GroupSearchInput = ({ setSearchSeq }: { setSearchSeq: React.Dispatch<React.SetStateAction<number>> }) => {
   const { inputText, setInputText, showModal, setShowModal } = useGroupSearchInput();
   return (
     <>
@@ -29,7 +29,12 @@ const GroupSearchInput = () => {
           }}
         />
       </div>
-      <GroupSearchModal showModal={showModal} setShowModal={setShowModal} inputText={inputText} />
+      <GroupSearchModal
+        showModal={showModal}
+        setSearchSeq={setSearchSeq}
+        setShowModal={setShowModal}
+        inputText={inputText}
+      />
     </>
   );
 };

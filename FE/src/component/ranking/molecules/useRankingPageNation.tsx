@@ -11,6 +11,7 @@ export const useRankingPageNation = () => {
     const currentUrl = new URL(location.search, window.location.origin);
     currentUrl.searchParams.set("page", String(e.selected + 1));
     navigate(currentUrl.search);
+    window.scrollTo(0, 500);
   };
 
   return { totalUser, handlePageClick, setTotalUser };

@@ -29,7 +29,7 @@ export const getGroupSearchTitle = async (keyword: string): Promise<GetSearchGro
   const { data } = await apiWithAuth.get("group/title-list", { params: { keyword } });
   return data;
 };
-export const getGroupSearchSeq = async (simulationSeq: number): Promise<GetSearchGroupTitle> => {
+export const getGroupSearchSeq = async (simulationSeq: number): Promise<GetGrouplist> => {
   const { data } = await apiWithAuth.get("rank/simulation/title", { params: { simulationSeq } });
   return data;
 };

@@ -2,9 +2,10 @@ import ReactApexChart from "react-apexcharts";
 import { useTierChart } from "./useTierChart";
 
 const TierChart = () => {
-  const { perList } = useTierChart();
+  const { perList, isError } = useTierChart();
   return (
     <div className="mt-5 border rounded-lg bg-white shadow-sm py-2">
+      {isError && <div>에러가 발생했습니다!</div>}
       {perList && (
         <ReactApexChart
           height={300}

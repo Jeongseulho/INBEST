@@ -3,7 +3,8 @@ import { getTiersCount } from "../../../api/ranking";
 import { useEffect, useState } from "react";
 
 export const useTierChart = () => {
-  const { data } = useQuery(["TierCount"], () => getTiersCount(), { retry: 3 });
+  const { data, isError } = useQuery(["TierCount"], () => getTiersCount(), { retry: 3 });
+  console.log(data);
   const bronze = data?.TierRankInfo.bronze ?? 0;
   const silver = data?.TierRankInfo.silver ?? 0;
   const gold = data?.TierRankInfo.gold ?? 0;
@@ -18,5 +19,5 @@ export const useTierChart = () => {
     setPages(Math.ceil(totalUser / 20));
   }, [totalUser]);
 
-  return { perList, pages };
+  return { perList, isError, pages };
 };

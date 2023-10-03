@@ -51,6 +51,7 @@ function App() {
               <Route path="ranking" element={<Ranking />}>
                 <Route index element={<PersonalRanking />} />
                 <Route path="group" element={<GroupRanking />} />
+                <Route path="group/:seq" element={<GroupRanking />} />
                 <Route path="search/:nickname" element={<PersonalRankingSearch />} />
               </Route>
             </Routes>
