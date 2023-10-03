@@ -18,6 +18,8 @@ import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
 import com.jrjr.invest.rank.dto.TopStockDTO;
 import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
+import com.jrjr.invest.trading.entity.FinancialDataCompany;
+import com.jrjr.invest.trading.repository.FinancialDataCompanyRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,7 @@ public class SimulationRankRedisRepository {
 	private final HashOperations<String, String, RedisStockDTO> stockHash; // key: STOCK_HASH_KEY
 	private final HashOperations<String, String, RedisStockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
 	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet; // key: simulation_simulationSeq_sort
+	private FinancialDataCompanyRepository financialDataCompanyRepository;
 
 	static final String USER_HASH_KEY = "user";
 
@@ -40,12 +43,15 @@ public class SimulationRankRedisRepository {
 		RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate,
 		RedisTemplate<String, RedisStockDTO> stockRedisTemplate,
 		RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate,
-		RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate) {
+		RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate,
+		FinancialDataCompanyRepository financialDataCompanyRepository
+	) {
 		this.userHash = userRedisTemplate.opsForHash();
 		this.simulationUserHash = simulationUserRedisTemplate.opsForHash();
 		this.stockHash = stockRedisTemplate.opsForHash();
 		this.stockUserHash = stockUserRedisTemplate.opsForHash();
 		this.simulationUserRankingZSet = simulationUserRankingRedisTemplate.opsForZSet();
+		this.financialDataCompanyRepository = financialDataCompanyRepository;
 	}
 
 	/*
@@ -175,12 +181,18 @@ public class SimulationRankRedisRepository {
 					redisStockUserDto.getStockCode()); // 주식 시가 정보
 				long totalStockPrice = amount * Long.parseLong(stockMarketPrice); // 보유 중인 주식 가격
 
+				FinancialDataCompany financialDataCompanyEntity
+					= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(
+					String.valueOf(redisStockUserDto.getType()), redisStockUserDto.getStockCode());
+
 				// 참가자가 보유 중인 주식 정보 추가
 				TopStockDTO topStockDto = TopStockDTO.builder()
 					.stockName(redisStockUserDto.getName())
 					.stockMarketPrice(stockMarketPrice)
 					.totalStockPrice(totalStockPrice)
+					.stockImgSearchName(financialDataCompanyEntity.getImgUrl())
 					.build();
+
 				log.info("보유 주식 정보: {}", topStockDto.toString());
 				stockInfoList.add(topStockDto);
 				totalMoney += totalStockPrice; // 총 자산 합산
