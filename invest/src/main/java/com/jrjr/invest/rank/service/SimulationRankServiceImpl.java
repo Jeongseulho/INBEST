@@ -18,9 +18,9 @@ import com.jrjr.invest.rank.dto.TopStockDTO;
 import com.jrjr.invest.rank.repository.SimulationRankRedisRepository;
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.repository.SimulationRepository;
-import com.jrjr.invest.trading.entity.FinancialdataCompany;
+import com.jrjr.invest.trading.entity.FinancialDataCompany;
 import com.jrjr.invest.trading.entity.Trading;
-import com.jrjr.invest.trading.repository.FinancialdataCompanyRepository;
+import com.jrjr.invest.trading.repository.FinancialDataCompanyRepository;
 import com.jrjr.invest.trading.repository.TradingRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 	private final SimulationRankRedisRepository simulationRankRedisRepository;
 	private final SimulationRepository simulationRepository;
 	private final TradingRepository tradingRepository;
-	private final FinancialdataCompanyRepository financialdataCompanyRepository;
+	private final FinancialDataCompanyRepository financialDataCompanyRepository;
 
 	/*
 		시뮬레이션 별 참가자 랭킹 정보 산정
@@ -188,8 +188,8 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 			stockInfoMap.put(stockInfoKey, totalAmount);
 
 			// companyIndustryInfoMap 에 산업군 별 주식 거래량을 저장
-			FinancialdataCompany financialdataCompany
-				= financialdataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
+			FinancialDataCompany financialdataCompany
+				= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
 
 			log.info("CompanyIndustry : {}", financialdataCompany.getCompanyIndustry());
 			log.info("Amount: {}", trading.getAmount());
@@ -289,8 +289,8 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		log.info("totalAmount: {}", totalAmount);
 
 		// 주식 이름 가져오기
-		FinancialdataCompany financialdataCompany
-			= financialdataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
+		FinancialDataCompany financialdataCompany
+			= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
 		log.info(financialdataCompany.toString());
 
 		// 주식 현재 시가 가져오기
