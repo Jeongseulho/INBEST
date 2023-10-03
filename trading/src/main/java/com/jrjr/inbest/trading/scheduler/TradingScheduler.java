@@ -46,7 +46,7 @@ public class TradingScheduler {
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
 
-	// @Scheduled(cron = "0/10 * * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void logTime() throws  Exception{
 		log.info("현재 시간 : "+ LocalDateTime.now());
 	}
@@ -91,7 +91,7 @@ public class TradingScheduler {
 		log.info("====== 매매 실패 끝 ======");
 	}
 	// @Scheduled(cron = "0/10 * * * * *")
-	// @Scheduled(cron = "0 * 9-20 * * ?")
+	@Scheduled(cron = "0 * 9-18 * * ?")
 	// @Scheduled(cron = "0 * * * * ?")
 	public void trading() throws Exception {
 		// 여기에 수행할 작업을 넣습니다.

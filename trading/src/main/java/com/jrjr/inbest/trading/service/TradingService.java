@@ -3,6 +3,7 @@ package com.jrjr.inbest.trading.service;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import com.jrjr.inbest.rank.service.SimulationRankService;
 import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ public class TradingService {
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
 	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
 	private final NotificationService notificationService;
+	private final SimulationRankService simulationRankService;
 
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
@@ -87,6 +89,7 @@ public class TradingService {
 		// for(String key : entries.keySet()){
 		// 	System.out.println(((TradingDTO)entries.get(key)).toString());
 		// }
+
 
 		// 매매 신청 완료 알림 보내기
 		notificationService.sendApplyTradingMessage(tradingDTO);
@@ -153,6 +156,9 @@ public class TradingService {
 			redisCrawlingOperations.put(crawlingHashKey,stockKey,savedCrawling);
 		}
 
+
+		//랭킹 변화
+		simulationRankService.updateSimulationUserRankingInfo(tradingDTO.getSimulationSeq());
 		// 매도 성공 알림 보내기
 		notificationService.sendTradingMessage(tradingDTO);
 	}
@@ -208,7 +214,8 @@ public class TradingService {
 			stockUserDTO.setLastModifiedDate(LocalDateTime.now());
 		}
 		stockUserHashOperations.put(simulationUserHashKey,simulationUserKey,stockUserDTO);
-
+		//랭킹 변화
+		simulationRankService.updateSimulationUserRankingInfo(tradingDTO.getSimulationSeq());
 		// 매수 성공 알림 보내기
 		notificationService.sendTradingMessage(tradingDTO);
 	}
