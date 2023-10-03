@@ -231,3 +231,106 @@ body{
 .disabledLinkClassName {
   @apply border-2 border-black
 }
+
+.accordion {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.accordion__item + .accordion__item {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.accordion__button {
+  background-color: white;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.123);
+
+  /* border-radius: 10px; */
+}
+
+.accordion_selected_button {
+  @apply bg-gray-200;
+
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.123);
+
+  /* border-radius: 10px; */
+}
+.accordion_top_button {
+  background-color: white;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.123);
+
+  @apply rounded-t-lg
+}
+.accordion_down_button {
+  background-color: white;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.123);
+  
+  @apply rounded-b-lg
+  /* border-radius: 10px; */
+}
+.accordion__panel{
+  background-color: rgb(239, 255, 236);
+
+}
+.accordion__button:hover {
+  background-color: #ddd;
+}
+
+.accordion__button:before {
+  display: inline-block;
+  content: '';
+  height: 10px;
+  width: 10px;
+  margin-right: 12px;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.accordion__button[aria-expanded='true']::before,
+.accordion__button[aria-selected='true']::before {
+  transform: rotate(45deg);
+}
+
+[hidden] {
+  display: none;
+}
+
+.accordion__panel {
+  padding: 20px;
+  animation: fadein 0.35s ease-in;
+}
+
+/* -------------------------------------------------- */
+/* ---------------- Animation part ------------------ */
+/* -------------------------------------------------- */
+
+@keyframes fadein {
+  0% {
+      opacity: 0;
+  }
+
+  100% {
+      opacity: 1;
+  }
+}

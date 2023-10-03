@@ -45,8 +45,8 @@ const GroupSearchModal = ({
                 <th className="text-center">기간</th>
               </tr>
             </thead>
-            {searchList?.map((group, idx) => (
-              <tbody>
+            <tbody>
+              {searchList?.map((group, idx) => (
                 <tr
                   key={idx}
                   className="border-b-2 h-10 hover:bg-gray-300 hover:cursor-pointer"
@@ -60,8 +60,8 @@ const GroupSearchModal = ({
                   <td className="text-center">{group.memberNum}명</td>
                   <td className="text-center">{group.period}일</td>
                 </tr>
-              </tbody>
-            ))}
+              ))}
+            </tbody>
           </table>
         </div>
         <div className="flex justify-center mt-3">

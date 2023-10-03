@@ -43,7 +43,9 @@ const Header = () => {
           게시판
         </Link>
         <a className=" text-center text-md">금융 상품 추천</a>
-        <a className=" text-center text-md">금융 사전</a>
+        <Link to={"financial-dictionary"}>
+          <a className=" text-center text-md">금융 사전</a>
+        </Link>
         <a className=" text-center text-md">관리자 페이지</a>
       </div>
       {!accessToken && (

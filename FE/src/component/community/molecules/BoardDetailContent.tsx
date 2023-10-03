@@ -8,6 +8,7 @@ import BoardCommentCreate from "../atoms/BoardCommentCreate";
 import BoardComment from "../atoms/BoardComment";
 import userStore from "../../../store/userStore";
 import BoardMenubar from "../atoms/BoardMenubar";
+import { getKorTime } from "../../../util/formatDateSign";
 const BoardDetailContent = () => {
   const {
     board,
@@ -45,7 +46,7 @@ const BoardDetailContent = () => {
             <span className="text-green-700 me-1">
               <MdDateRange />
             </span>
-            {board?.createdDate.slice(0, 10)}
+            {board && getKorTime(board?.createdDate).slice(0, 10)}
           </div>
           <div className="flex items-center">
             <span className="text-green-700 me-1">
