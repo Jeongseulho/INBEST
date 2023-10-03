@@ -35,107 +35,107 @@ public class ResponseUSAPriceDTO {
 	private String khms;
 
 	@Schema(description = "매수총잔량")
-	private String bvol;
+	private Integer bvol;
 
 	@Schema(description = "매도총잔량")
-	private String avol;
+	private Integer avol;
 
 	@Schema(description = "매수총잔량대비")
-	private String bdvl;
+	private Integer bdvl;
 
 	@Schema(description = "매도총잔량대비")
-	private String advl;
+	private Integer advl;
 
 	@Schema(description = "매수호가1")
-	private String pbid1;
+	private Integer pbid1;
 
 	@Schema(description = "매도호가1")
-	private String pask1;
+	private Integer pask1;
 
 	@Schema(description = "매수잔량1")
-	private String vbid1;
+	private Integer vbid1;
 
 	@Schema(description = "매도잔량1")
-	private String vask1;
+	private Integer vask1;
 
 	@Schema(description = "매수잔량대비1")
-	private String dbid1;
+	private Integer dbid1;
 
 	@Schema(description = "매도잔량대비1")
-	private String dask1;
+	private Integer dask1;
 
 	@Schema(description = "매수호가2")
-	private String pbid2;
+	private Integer pbid2;
 
 	@Schema(description = "매도호가2")
-	private String pask2;
+	private Integer pask2;
 
 	@Schema(description = "매수잔량2")
-	private String vbid2;
+	private Integer vbid2;
 
 	@Schema(description = "매도잔량2")
-	private String vask2;
+	private Integer vask2;
 
 	@Schema(description = "매수잔량대비2")
-	private String dbid2;
+	private Integer dbid2;
 
 	@Schema(description = "매도잔량대비2")
-	private String dask2;
+	private Integer dask2;
 
 	@Schema(description = "매수호가3")
-	private String pbid3;
+	private Integer pbid3;
 
 	@Schema(description = "매도호가3")
-	private String pask3;
+	private Integer pask3;
 
 	@Schema(description = "매수잔량3")
-	private String vbid3;
+	private Integer vbid3;
 
 	@Schema(description = "매도잔량3")
-	private String vask3;
+	private Integer vask3;
 
 	@Schema(description = "매수잔량대비3")
-	private String dbid3;
+	private Integer dbid3;
 
 	@Schema(description = "매도잔량대비3")
-	private String dask3;
+	private Integer dask3;
 
 
 	@Schema(description = "매수호가4")
-	private String pbid4;
+	private Integer pbid4;
 
 	@Schema(description = "매도호가4")
-	private String pask4;
+	private Integer pask4;
 
 	@Schema(description = "매수잔량4")
-	private String vbid4;
+	private Integer vbid4;
 
 	@Schema(description = "매도잔량4")
-	private String vask4;
+	private Integer vask4;
 
 	@Schema(description = "매수잔량대비4")
-	private String dbid4;
+	private Integer dbid4;
 
 	@Schema(description = "매도잔량대비4")
-	private String dask4;
+	private Integer dask4;
 
 	@Schema(description = "매수호가5")
-	private String pbid5;
+	private Integer pbid5;
 
 	@Schema(description = "매도호가5")
-	private String pask5;
+	private Integer pask5;
 
 	@Schema(description = "매수잔량5")
-	private String vbid5;
+	private Integer vbid5;
 
 	@Schema(description = "매도잔량5")
-	private String vask5;
+	private Integer vask5;
 
 	@Schema(description = "매수잔량대비5")
-	private String dbid5;
+	private Integer dbid5;
 
 	@Schema(description = "매도잔량대비5")
-	private String dask5;
+	private Integer dask5;
 	//
 	// @Schema(description = "매수호가6")
 	// private String pbid6;
