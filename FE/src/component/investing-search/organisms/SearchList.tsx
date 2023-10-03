@@ -12,7 +12,7 @@ interface Props {
 
 const SearchList = ({ searchList, setCompanyInfo, isLoading }: Props) => {
   return (
-    <div className=" shadow-component flex flex-col p-6 w-[50%]">
+    <div className=" shadow-component flex flex-col p-6 w-[60%]">
       <div className=" mb-4 flex items-center gap-2">
         <img src={search} width={30} />
         <h3>검색 결과</h3>

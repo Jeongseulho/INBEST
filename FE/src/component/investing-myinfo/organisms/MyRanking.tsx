@@ -11,7 +11,7 @@ const MyRanking = () => {
   const { simulationSeq } = useParams();
   const { data, isLoading } = useQuery(["myRanking", simulationSeq], () => getMyInvestingRanking(simulationSeq));
   return (
-    <div className=" shadow-component col-span-2 row-span-1 p-4 flex flex-col gap-4">
+    <div className=" shadow-component col-span-7 row-span-1 p-4 flex flex-col gap-4">
       <div className="  flex items-center gap-2">
         <img src={crown} width={40} />
         <h5>내 순위</h5>

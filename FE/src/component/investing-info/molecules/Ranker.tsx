@@ -16,7 +16,7 @@ interface Props {
     stockName: string;
     stockMarketPrice: string;
     totalStockPrice: number;
-    stockImgSearchName: null;
+    stockImgSearchName: string;
   }[];
 }
 

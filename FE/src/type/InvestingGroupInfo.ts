@@ -13,7 +13,7 @@ export interface BestPick {
         stockName: string;
         stockMarketPrice: string;
         totalStockPrice: number;
-        stockImgSearchName: null;
+        stockImgSearchName: string;
       }[],
     ];
     topNProfitList: [
@@ -21,7 +21,7 @@ export interface BestPick {
         stockName: string;
         stockMarketPrice: string;
         totalStockPrice: number;
-        stockImgSearchName: null;
+        stockImgSearchName: string;
       }[],
     ];
   };
@@ -44,7 +44,7 @@ export interface InvestingAllUserRank {
         stockName: string;
         stockMarketPrice: string;
         totalStockPrice: number;
-        stockImgSearchName: null;
+        stockImgSearchName: string;
       },
     ];
   }[];

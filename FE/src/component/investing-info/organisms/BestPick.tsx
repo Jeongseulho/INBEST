@@ -9,7 +9,6 @@ import TopProfitStock from "../molecules/TopProfitStock";
 const BestPick = () => {
   const { simulationSeq } = useParams<{ simulationSeq: string }>();
   const { data, isLoading } = useQuery(["bestPick", simulationSeq], () => getBestPick(simulationSeq));
-  console.log("bestPick", data);
   return (
     <div className=" shadow-component col-span-8 row-span-3 p-4">
       <div className="  flex items-center gap-2">
@@ -19,14 +18,22 @@ const BestPick = () => {
       {isLoading ? (
         <></>
       ) : (
-        <div className=" flex flex-col mt-5 gap-4">
-          <div className=" flex items-center">
+        <div className=" flex flex-col gap-10">
+          <div className=" flex flex-col gap-4 mt-10">
             <h6>이 그룹의 BEST PICK 주식</h6>
-            <div className=" flex items-center"></div>
+            <div className=" flex items-center justify-center gap-14">
+              {data?.SimulationStockRankingInfo.topNProfitList[0].map((topProfitStock, index) => (
+                <TopProfitStock topProfitStock={topProfitStock} key={index} />
+              ))}
+            </div>
           </div>
-          <div className=" flex items-center">
+          <div className=" flex flex-col gap-4">
             <h6>이 그룹의 WORST PICK 주식</h6>
-            <div className=" flex items-center"></div>
+            <div className=" flex items-center justify-center gap-14">
+              {data?.SimulationStockRankingInfo.topNLossList[0].map((topLossStock, index) => (
+                <TopLossStock topLossStock={topLossStock} key={index} />
+              ))}
+            </div>
           </div>
           <div className=" flex flex-col gap-4">
             <h6>이 그룹의 인기 산업군</h6>

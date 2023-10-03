@@ -28,6 +28,7 @@ export type MyStockList = {
   name: string;
   amount: number;
   lastModifiedDate: string;
+  price: number;
 }[];
 
 export type MyInvestingRanking = {
@@ -48,7 +49,7 @@ export type MyInvestingRanking = {
         stockName: string;
         stockMarketPrice: string;
         totalStockPrice: number;
-        stockImgSearchName: null;
+        stockImgSearchName: string;
       },
     ];
   };
