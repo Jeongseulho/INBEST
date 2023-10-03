@@ -290,7 +290,23 @@ public class GroupController {
 		log.info("===== 유저의 보유 주식 찾기 끝=====");
 		return new ResponseEntity<>(stockList, HttpStatus.OK);
 	}
+	@Operation(summary = "유저의 보유 주식")
+	@GetMapping("/{simulationSeq}/users/{userSeq}/stocks/{stockCode}")
+	ResponseEntity<?> findUserStocks(
+		@PathVariable(name = "simulationSeq") Long simulationSeq,
+		@PathVariable(name = "userSeq") Long userSeq,
+		@PathVariable(name = "stockCode") String stockCode,
+		@RequestParam(name = "stockType") Integer stockType
+	) throws Exception {
+		log.info("===== 유저의 보유 주식 찾기 시작=====");
+		log.info("방 seq :  " + simulationSeq);
+		log.info("유저 seq :  " + userSeq);
 
+		ResponseUserStockDTO responseUserStockDTO = tradingService.findUserStock(userSeq,simulationSeq,stockCode,stockType);
+
+		log.info("===== 유저의 보유 주식 찾기 끝=====");
+		return new ResponseEntity<>(responseUserStockDTO, HttpStatus.OK);
+	}
 	@Operation(summary = "키워드가 포함된 시뮬레이션 리스트 검색")
 	@Parameters(value = {
 		@Parameter(required = true, name = "keyword", description = "검색할 키워드")

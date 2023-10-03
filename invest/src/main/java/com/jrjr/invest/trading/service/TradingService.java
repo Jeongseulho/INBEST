@@ -151,7 +151,7 @@ public class TradingService {
 			FinancialDataCompany financialDataCompany =
 				financialDataCompanyRepository
 					.findByCompanyStockTypeAndCompanyStockCode(String.valueOf(userStockDTO.getType())
-				,userStockDTO.getStockCode());
+						,userStockDTO.getStockCode());
 
 			if(financialDataCompany == null){
 				userStockDTO.setLogoUrl("https://jpassets.jobplanet.co.kr/assets/default_logo_share-12e4cb8f87fe87d4c2316feb4cb33f42d7f7584f2548350d6a42e47688a00bd0.png");
@@ -164,5 +164,47 @@ public class TradingService {
 		}
 
 		return pagedStocks;
+	}
+	public ResponseUserStockDTO findUserStock(Long userSeq, Long simulationSeq, String stockCode,Integer stockType) throws
+		Exception {
+		HashOperations<String, String, RedisStockUserDTO> hashOperations = stockUserRedisTemplate.opsForHash();
+		String key = "simulation_" + simulationSeq + "_user_" + userSeq;
+		String hashKey = stockType+"_"+stockCode;
+		RedisStockUserDTO stock = hashOperations.get(key,hashKey);
+
+		HashOperations<String,String,RedisStockDTO> redisStockDTOHashOperations = stockRedisTemplate.opsForHash();
+
+		if(stock == null){
+			throw new Exception("보유하지 않는 주식입니다.");
+		}
+
+		ResponseUserStockDTO userStockDTO
+			= ResponseUserStockDTO.builder()
+			.amount(stock.getAmount())
+			.stockCode(stock.getStockCode())
+			.name(stock.getName())
+			.type(stock.getType())
+			.lastModifiedDate(stock.getLastModifiedDate())
+			.price(0L)
+			.build();
+
+			//시가 저장
+			RedisStockDTO stockDTO = redisStockDTOHashOperations.get("stock",userStockDTO.getType()+"_"+userStockDTO.getStockCode());
+
+			if(stockDTO != null){
+				userStockDTO.setPrice(Long.valueOf(stockDTO.getMarketPrice()));
+			}
+			FinancialDataCompany financialDataCompany =
+				financialDataCompanyRepository
+					.findByCompanyStockTypeAndCompanyStockCode(String.valueOf(userStockDTO.getType())
+						,userStockDTO.getStockCode());
+
+			if(financialDataCompany == null){
+				userStockDTO.setLogoUrl("https://jpassets.jobplanet.co.kr/assets/default_logo_share-12e4cb8f87fe87d4c2316feb4cb33f42d7f7584f2548350d6a42e47688a00bd0.png");
+			}else{
+				userStockDTO.setLogoUrl(financialDataCompany.getImgUrl());
+			}
+
+		return userStockDTO;
 	}
 }
