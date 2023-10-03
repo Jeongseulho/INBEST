@@ -1,4 +1,5 @@
 import { PiSmileySadLight, PiSmileyLight } from "react-icons/pi";
+import { truncateContent } from "../../../util/formatContent";
 
 interface Props {
   title: string;
@@ -10,11 +11,11 @@ interface Props {
 
 const CompanyNews = ({ title, sentiment_analysis, imgUrl, linkUrl, time }: Props) => {
   return (
-    <a className=" flex items-center" href={linkUrl} target="_black">
-      <img src={imgUrl} />
+    <a className=" flex items-center gap-2" href={linkUrl} target="_black">
+      <img src={imgUrl} width={60} />
       <div className=" flex flex-col">
         <div className=" flex">
-          <p>{title}</p>
+          <p className=" text-sm">{truncateContent(title, 20)}</p>
           {sentiment_analysis >= 50 ? (
             <div className=" bg-main px-1 rounded-full flex items-center bg-opacity-30 gap-1">
               <PiSmileyLight
@@ -22,7 +23,7 @@ const CompanyNews = ({ title, sentiment_analysis, imgUrl, linkUrl, time }: Props
                   color: "#1B4265",
                 }}
               />
-              <p className=" text-mainMoreDark font-semiBold">{sentiment_analysis}</p>
+              <p className=" text-mainMoreDark font-semiBold">{sentiment_analysis.toFixed(2)}</p>
             </div>
           ) : (
             <div className=" bg-lightRed px-1 rounded-full flex items-center bg-opacity-30 gap-1">
@@ -31,7 +32,7 @@ const CompanyNews = ({ title, sentiment_analysis, imgUrl, linkUrl, time }: Props
                   color: "#1B4265",
                 }}
               />
-              <p className=" font-semiBold text-red-600">{sentiment_analysis}</p>
+              <p className=" font-semiBold text-red-600">{sentiment_analysis.toFixed(2)}</p>
             </div>
           )}
         </div>

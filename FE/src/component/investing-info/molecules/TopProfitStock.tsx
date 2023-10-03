@@ -13,6 +13,7 @@ const TopProfitStock = ({ topProfitStock }: Props) => {
       name={topProfitStock.stockName}
       price={topProfitStock.stockMarketPrice}
       totalStockPrice={topProfitStock.totalStockPrice}
+      stockImg={topProfitStock.stockImgSearchName}
     />
   );
 };

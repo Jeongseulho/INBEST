@@ -36,6 +36,7 @@ const SearchList = ({ searchList, setCompanyInfo, isLoading }: Props) => {
                 code={item.company_stock_code}
                 type={item.company_stock_type}
                 setCompanyInfo={setCompanyInfo}
+                companyImg={item.company_image_url}
               />
             ))}
           </>

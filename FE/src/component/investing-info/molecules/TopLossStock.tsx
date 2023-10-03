@@ -13,6 +13,7 @@ const TopLossStock = ({ topLossStock }: Props) => {
       name={topLossStock.stockName}
       price={topLossStock.stockMarketPrice}
       totalStockPrice={topLossStock.totalStockPrice}
+      stockImg={topLossStock.stockImgSearchName}
     />
   );
 };

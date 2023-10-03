@@ -29,6 +29,7 @@ export type CompanySearchList = {
   company_name: string;
   company_stock_code: string;
   company_stock_type: CompanyStockType;
+  company_image_url: string;
 }[];
 
 export interface StockSummaryInfo {

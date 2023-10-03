@@ -16,15 +16,15 @@ const Summary = ({ companyInfo }: Props) => {
       </div>
       <div className=" grid grid-cols-12 h-[80vh] grid-rows-2 gap-8">
         <div className=" shadow-component col-start-3 col-end-11 row-span-1 p-4 flex flex-col gap-10 items-center justify-center">
-          <h4>기업 주요 지표</h4>
+          <h6>기업 주요 지표</h6>
           <CompanyMainIcon companyInfo={companyInfo} />
         </div>
         <div className=" shadow-component col-start-2 col-end-7 p-4 flex flex-col gap-10 items-center justify-center">
-          <h4>영업 이익 변화</h4>
+          <h6>영업 이익 변화</h6>
           <IncomeThreeYearsChart companyInfo={companyInfo} />
         </div>
         <div className=" shadow-component col-start-7 col-end-12 flex flex-col gap-10 items-center justify-center">
-          <h4>매출액 변화</h4>
+          <h6>매출액 변화</h6>
           <RevenueThreeYearsChart companyInfo={companyInfo} />
         </div>
       </div>

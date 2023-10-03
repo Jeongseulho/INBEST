@@ -17,7 +17,13 @@ const MyStock = () => {
           <></>
         ) : (
           data?.map((stockInfo, index) => (
-            <StockComponent name={stockInfo.name} amount={stockInfo.amount} key={index} price={stockInfo?.price || 0} />
+            <StockComponent
+              name={stockInfo.name}
+              amount={stockInfo.amount}
+              key={index}
+              price={stockInfo?.price || 0}
+              stockImg=""
+            />
           ))
         )}
       </div>

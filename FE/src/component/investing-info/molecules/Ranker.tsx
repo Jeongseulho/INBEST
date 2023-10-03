@@ -23,7 +23,7 @@ interface Props {
 const Ranker = ({ ranking, profileImg, nickname, money, percentage, stockInfoList }: Props) => {
   return (
     <div
-      className={`flex flex-col gap-4 p-2 rounded-xl ${
+      className={`flex flex-col gap-4 p-2 rounded-xl items-center ${
         ranking === 1 ? "bg-[#FFD700]" : ranking === 2 ? "bg-[#C0C0C0]" : "bg-[#CD7F32]"
       }`}
     >
@@ -47,7 +47,12 @@ const Ranker = ({ ranking, profileImg, nickname, money, percentage, stockInfoLis
 
       <div className=" flex items-center gap-1">
         {stockInfoList.map((stockInfo, index) => (
-          <StockComponent name={stockInfo.stockName} price={stockInfo.stockMarketPrice} key={index} />
+          <StockComponent
+            name={stockInfo.stockName}
+            price={stockInfo.stockMarketPrice}
+            key={index}
+            stockImg={stockInfo.stockImgSearchName}
+          />
         ))}
       </div>
     </div>
