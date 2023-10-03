@@ -17,8 +17,11 @@ import com.jrjr.invest.rank.dto.RedisStockDTO;
 import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 import com.jrjr.invest.simulation.dto.ResponseUserStockDTO;
 import com.jrjr.invest.trading.constant.TradingResultType;
+import com.jrjr.invest.trading.dto.ResponseTradingDTO;
 import com.jrjr.invest.trading.dto.TradingDTO;
+import com.jrjr.invest.trading.entity.FinancialDataCompany;
 import com.jrjr.invest.trading.entity.Trading;
+import com.jrjr.invest.trading.repository.FinancialDataCompanyRepository;
 import com.jrjr.invest.trading.repository.TradingRepository;
 import com.jrjr.invest.user.repository.UserRepository;
 
@@ -33,6 +36,7 @@ public class TradingService {
 	private final TradingRepository tradingRepository;
 	private final RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate;
 	private final RedisTemplate<String, RedisStockDTO> stockRedisTemplate;
+	private final FinancialDataCompanyRepository financialDataCompanyRepository;
 
 	public List<TradingDTO> findAllSuccessTrading(Long userSeq, Long simulationSeq) {
 		List<Trading> tradingList = tradingRepository.findBySimulationSeqAndUserSeqAndConclusionTypeOrderByCreatedDateAsc(
@@ -47,7 +51,7 @@ public class TradingService {
 		return tradingDTOList;
 	}
 
-	public List<TradingDTO> findAllSuccessTrading(Long userSeq, Long simulationSeq, Integer pageNo,
+	public List<ResponseTradingDTO> findAllSuccessTrading(Long userSeq, Long simulationSeq, Integer pageNo,
 		Integer pageSize) throws Exception {
 		Pageable topCount = PageRequest.of(pageNo - 1, pageSize);
 		Page<Trading> pageTradingList = tradingRepository.findBySimulationSeqAndUserSeqAndConclusionTypeOrderByCreatedDateDesc(
@@ -55,11 +59,32 @@ public class TradingService {
 			TradingResultType.SUCCESS, topCount);
 
 		List<Trading> tradingList = pageTradingList.getContent();
-		List<TradingDTO> tradingDTOList = new ArrayList<>();
-
+		List<ResponseTradingDTO> tradingDTOList = new ArrayList<>();
+		//로고 이미지 url 저장
 		for (Trading trading : tradingList) {
-			TradingDTO tradingDTO = trading.toTradingDto();
-			tradingDTOList.add(tradingDTO);
+			ResponseTradingDTO responseTradingDTO
+				= ResponseTradingDTO.builder()
+				.seq(trading.getSeq())
+				.conclusionType(trading.getConclusionType())
+				.createdDate(trading.getCreatedDate())
+				.tradingType(trading.getTradingType())
+				.nickname(trading.getNickname())
+				.amount(trading.getAmount())
+				.simulationType(0)
+				.lastModifiedDate(trading.getLastModifiedDate())
+				.stockName(trading.getStockName())
+				.stockType(trading.getStockType())
+				.simulationSeq(trading.getSimulationSeq())
+				.price(trading.getPrice())
+				.userSeq(trading.getUserSeq())
+				.stockCode(trading.getStockCode())
+				.build();
+			FinancialDataCompany company = financialDataCompanyRepository
+				.findByCompanyStockTypeAndCompanyStockCode(trading.getStockType(),trading.getStockCode());
+
+			responseTradingDTO.setLogoUrl(company.getImgUrl());
+
+			tradingDTOList.add(responseTradingDTO);
 		}
 		return tradingDTOList;
 	}
@@ -117,10 +142,21 @@ public class TradingService {
 				.price(0L)
 				.build();
 
+			//시가 저장
 			RedisStockDTO stockDTO = redisStockDTOHashOperations.get("stock",userStockDTO.getType()+"_"+userStockDTO.getStockCode());
 
 			if(stockDTO != null){
 				userStockDTO.setPrice(Long.valueOf(stockDTO.getMarketPrice()));
+			}
+			FinancialDataCompany financialDataCompany =
+				financialDataCompanyRepository
+					.findByCompanyStockTypeAndCompanyStockCode(String.valueOf(userStockDTO.getType())
+				,userStockDTO.getStockCode());
+
+			if(financialDataCompany == null){
+				userStockDTO.setLogoUrl("https://jpassets.jobplanet.co.kr/assets/default_logo_share-12e4cb8f87fe87d4c2316feb4cb33f42d7f7584f2548350d6a42e47688a00bd0.png");
+			}else{
+				userStockDTO.setLogoUrl(financialDataCompany.getImgUrl());
 			}
 
 			pagedStocks.add(userStockDTO);

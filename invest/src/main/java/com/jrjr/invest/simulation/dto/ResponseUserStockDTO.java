@@ -36,4 +36,6 @@ public class ResponseUserStockDTO {
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime lastModifiedDate;
 	private Long price;
+
+	private String logoUrl;
 }
