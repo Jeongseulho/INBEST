@@ -10,6 +10,7 @@ import up from "../../../asset/image/up.png";
 const MyRanking = () => {
   const { simulationSeq } = useParams();
   const { data, isLoading } = useQuery(["myRanking", simulationSeq], () => getMyInvestingRanking(simulationSeq));
+  console.log(data);
   return (
     <div className=" shadow-component col-span-7 row-span-1 p-4 flex flex-col gap-10">
       <div className="  flex items-center gap-2">

@@ -3,11 +3,17 @@ import MyAssets from "../organisms/MyAssets";
 import MyRanking from "../organisms/MyRanking";
 import MyStock from "../organisms/MyStock";
 import RecentDealStock from "../organisms/RecentDealStock";
+import { getMyAsset } from "../../../api/investingMyInfo";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 
 const InvestingMyInfo = () => {
+  const { simulationSeq } = useParams();
+
+  const { data, isLoading } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq));
   return (
     <div className=" grid grid-cols-12 grid-rows-6 gap-4">
-      <MyAssets />
+      <MyAssets data={data} isLoading={isLoading} />
       <Compare />
       <MyRanking />
       <MyStock />

@@ -1,17 +1,17 @@
 import assets from "../../../asset/image/assets.png";
 import IncreaseIcon from "../../common/IncreaseIcon";
 import DecreaseIcon from "../../common/DecreaseIcon";
-import { getMyAsset } from "../../../api/investingMyInfo";
-import { useQuery } from "react-query";
+
 import { formatNumberToWon } from "../../../util/formatMoney";
 import spinner from "../../../asset/image/spinner.svg";
-import { useParams } from "react-router-dom";
 import Chart from "react-apexcharts";
 import { formatNumberToKoreanWon } from "../../../util/formatMoney";
-
-const MyAssets = () => {
-  const { simulationSeq } = useParams();
-  const { data, isLoading } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq));
+import { MyAsset } from "../../../type/InvestingMyInfo";
+interface Props {
+  data: MyAsset | undefined;
+  isLoading: boolean;
+}
+const MyAssets = ({ data, isLoading }: Props) => {
   return (
     <div className=" shadow-component col-span-5 row-span-2 p-4 flex flex-col gap-10">
       <div className="  flex items-center gap-2">
@@ -31,11 +31,12 @@ const MyAssets = () => {
           {data && (
             <div className=" flex items-center justify-center">
               <h5 className=" font-bold">{formatNumberToWon(data[0].asset)}</h5>
-              {data.length >= 2 && data[0].asset > data[1].asset ? (
-                <IncreaseIcon number={((data[0].asset - data[1].asset) / data[1].asset) * 100} />
-              ) : (
-                <DecreaseIcon number={((data[1].asset - data[0].asset) / data[1].asset) * 100} />
-              )}
+              {data.length >= 2 &&
+                (data[0].asset > data[1].asset ? (
+                  <IncreaseIcon number={((data[0].asset - data[1].asset) / data[1].asset) * 100} />
+                ) : (
+                  <DecreaseIcon number={((data[1].asset - data[0].asset) / data[1].asset) * 100} />
+                ))}
             </div>
           )}
           <div>
