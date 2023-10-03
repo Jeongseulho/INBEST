@@ -27,6 +27,7 @@ import com.jrjr.invest.invest.dto.RequestHanTuAccessTokenDTO;
 import com.jrjr.invest.invest.dto.ResponseHanTuAccessTokenDTO;
 import com.jrjr.invest.invest.dto.ResponseUSAPriceDTO;
 import com.jrjr.invest.invest.service.InvestService;
+import com.jrjr.invest.rank.dto.RedisStockDTO;
 import com.jrjr.invest.trading.entity.FinancialDataCompany;
 import com.jrjr.invest.trading.repository.FinancialDataCompanyRepository;
 
@@ -51,7 +52,7 @@ import reactor.core.publisher.Mono;
 public class InvestController {
 	private final InvestService investService;
 	private final RedisTemplate<String,ResponseUSAPriceDTO> usaPriceDTORedisTemplate;
-
+	private final RedisTemplate<String, RedisStockDTO> stockRedisTemplate;
 	@Value("${token.hantu.appkey}")
 	String appkey;
 	@Value("${token.hantu.appsecret}")
