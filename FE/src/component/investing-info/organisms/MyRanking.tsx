@@ -10,9 +10,8 @@ import up from "../../../asset/image/up.png";
 const MyRanking = () => {
   const { simulationSeq } = useParams();
   const { data, isLoading } = useQuery(["myRanking", simulationSeq], () => getMyInvestingRanking(simulationSeq));
-  console.log(data);
   return (
-    <div className=" shadow-component col-span-7 row-span-1 p-4 flex flex-col gap-10">
+    <div className=" shadow-component col-span-4 p-4 flex flex-col gap-10">
       <div className="  flex items-center gap-2">
         <img src={crown} width={40} />
         <h5>내 순위</h5>
@@ -27,6 +26,7 @@ const MyRanking = () => {
               percentage={data.MySimulationUserRankingInfo.rate}
               money={data.MySimulationUserRankingInfo.currentMoney}
               profileImg={data.MySimulationUserRankingInfo.profileImgSearchName}
+              nickname={data.MySimulationUserRankingInfo.nickname}
             />
             <div className=" flex items-center justify-center gap-2">
               <p className=" text-center text-myGray text-sm">내 순위 변동 :</p>

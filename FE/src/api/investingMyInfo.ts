@@ -1,5 +1,5 @@
 import { instanceWithAuth } from "./interceptors";
-import { MyAsset, MyInvestingRanking, MyStockList, RecentlyDeal } from "../type/InvestingMyInfo";
+import { MyAsset, MyInvestingRanking, MyStockList, RecentlyDeal, HeldStockInfo } from "../type/InvestingMyInfo";
 import userStore from "../store/userStore";
 
 const apiWithAuth = instanceWithAuth("invest-service");
@@ -49,6 +49,24 @@ export const getRecentlyDeal = async (simulationSeq: string | undefined): Promis
     params: {
       pageNo: 1,
       pageSize: 5,
+    },
+  });
+  return data;
+};
+
+export const getHeldStockNum = async (
+  simulationSeq: string | undefined,
+  stockCode: string
+): Promise<{ success: "false"; message: "보유하지 않는 주식입니다." } | HeldStockInfo> => {
+  if (!simulationSeq) {
+    throw new Error("simulationSeq is undefined");
+  }
+
+  const { userInfo } = userStore.getState();
+
+  const { data } = await apiWithAuth.get(`group/${simulationSeq}/users/${userInfo?.seq}/stocks/${stockCode}`, {
+    params: {
+      stockType: 0,
     },
   });
   return data;

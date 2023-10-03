@@ -19,12 +19,12 @@ const RecentDealStock = () => {
         {isLoading ? (
           <></>
         ) : (
-          data?.map((stockInfo) => (
+          data?.map((stockInfo, index) => (
             <div
               className={`${
                 stockInfo.tradingType === 0 ? "bg-lightPrimary" : "bg-lightRed"
               } bg-opacity-30 flex flex-col items-center p-2 rounded-md w-1/6 gap-6`}
-              key={stockInfo.stockCode}
+              key={index}
             >
               <div className=" flex items-center justify-between w-full">
                 <div className=" flex items-center gap-1">

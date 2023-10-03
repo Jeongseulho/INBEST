@@ -69,3 +69,13 @@ export type CompareProfit = {
   spcl_cnd: "0"; //우대금리 조건
   etc_note: "초고위험"; //기타사항
 };
+
+export interface HeldStockInfo {
+  stockCode: string;
+  type: number;
+  name: string;
+  amount: number;
+  lastModifiedDate: string;
+  price: number;
+  logoUrl: string;
+}

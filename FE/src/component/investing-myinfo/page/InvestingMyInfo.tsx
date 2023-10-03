@@ -1,6 +1,5 @@
 import Compare from "../organisms/Compare";
 import MyAssets from "../organisms/MyAssets";
-import MyRanking from "../organisms/MyRanking";
 import MyStock from "../organisms/MyStock";
 import RecentDealStock from "../organisms/RecentDealStock";
 import { getMyAsset } from "../../../api/investingMyInfo";
@@ -12,10 +11,9 @@ const InvestingMyInfo = () => {
 
   const { data, isLoading } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq));
   return (
-    <div className=" grid grid-cols-12 grid-rows-6 gap-4">
+    <div className=" grid grid-cols-12 grid-rows-none gap-4">
       <MyAssets data={data} isLoading={isLoading} />
       <Compare />
-      <MyRanking />
       <MyStock />
       <RecentDealStock />
     </div>

@@ -26,7 +26,7 @@ const BuyOrderTab = ({ expectedPrice, companyInfo }: Props) => {
     {
       onMutate: () => {
         if (myAsset && myAsset[0].asset < amount * price) {
-          toast.error("보유하고 있는 돈이 부족합니다.");
+          toast.error(`보유하고 있는 돈이 부족합니다, 현재 ${formatNumberToKoreanWon(myAsset[0].asset)} 보유중입니다.`);
           throw new Error("보유하고 있는 돈이 부족합니다.");
         }
       },

@@ -7,6 +7,8 @@ import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 import { useParams } from "react-router-dom";
+import { getHeldStockNum } from "../../../api/investingMyInfo";
+import { useQuery } from "react-query";
 
 interface Props {
   expectedPrice: number;
@@ -18,9 +20,24 @@ const SellOrderTab = ({ expectedPrice, companyInfo }: Props) => {
   const profitPercentage =
     expectedPrice === 0 ? 0 : Number((((price - expectedPrice) / expectedPrice) * 100).toFixed(2));
 
+  const { data: heldStockNum } = useQuery(["myStock", simulationSeq], () =>
+    getHeldStockNum(simulationSeq, companyInfo.code)
+  );
+  console.log(heldStockNum);
+
   const { mutate } = useMutation(
     () => tradeStock(simulationSeq, companyInfo.code, companyInfo.name, amount, price, 0, 0, 0),
     {
+      onMutate: () => {
+        if ((heldStockNum && "success" in heldStockNum) || (heldStockNum && heldStockNum.amount < amount)) {
+          toast.error(
+            `보유하고 있는 주식 개수가 부족합니다, 현재 ${
+              "success" in heldStockNum ? 0 : heldStockNum.amount
+            }주 보유중입니다.`
+          );
+          throw new Error("보유하고 있는 주식이 부족합니다.");
+        }
+      },
       onSuccess: () => {
         toast.success("매도 주문이 완료되었습니다.");
       },
