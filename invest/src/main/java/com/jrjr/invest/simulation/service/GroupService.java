@@ -5,12 +5,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.jrjr.invest.rank.service.SimulationRankService;
 import com.jrjr.invest.simulation.dto.AssetDTO;
 import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
 import com.jrjr.invest.simulation.dto.SearchByTitleDTO;
@@ -25,7 +23,6 @@ import com.jrjr.invest.simulation.dto.group.WaitingGroupDetailsDTO;
 import com.jrjr.invest.simulation.entity.Simulation;
 import com.jrjr.invest.simulation.entity.SimulationUser;
 import com.jrjr.invest.simulation.repository.LoginHistoryRepository;
-import com.jrjr.invest.simulation.repository.NotificationRepository;
 import com.jrjr.invest.simulation.repository.SimulationRepository;
 import com.jrjr.invest.simulation.repository.SimulationUserRepository;
 import com.jrjr.invest.trading.constant.TradingType;
@@ -42,15 +39,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class GroupService {
-	private final SimulationRankService simulationRankServiceImpl;
-	private final NotificationRepository notificationRepository;
 	private final UserRepository userRepository;
 	private final TradingService tradingService;
 	private final SimulationRepository simulationRepository;
 	private final SimulationUserRepository simulationUserRepository;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
 	private final LoginHistoryRepository loginHistoryRepository;
-	private final RabbitTemplate rabbitTemplate;
 	private final NotificationService notificationService;
 
 	public List<UserDTO> searchUsers(String keyword) {
@@ -96,11 +90,9 @@ public class GroupService {
 		// 모의 투자에 유저 초대하기
 		if (groupDTO.getUserSeqList() != null) {
 			for (Long userSeq : groupDTO.getUserSeqList()) {
-
-				if (userSeq == owner.getSeq()) {
+				if (userSeq.equals(owner.getSeq())) {
 					continue;
 				}
-
 				notificationService.inviteUser(simulation.getSeq(), owner.getNickname(), userSeq);
 			}
 		}
@@ -147,7 +139,6 @@ public class GroupService {
 		// 				.previousRank(null)
 		// 				.build());
 		// }
-
 	}
 
 	// redis Key 생성
@@ -288,7 +279,7 @@ public class GroupService {
 		for (SimulationUser simulationUser : simulationUserList) {
 			memberImageList.add(simulationUser.getUser().getProfileImgSearchName());
 		}
-		log.info("memberImageList" + memberImageList.toString());
+		log.info("memberImageList" + memberImageList);
 		return memberImageList;
 	}
 
@@ -312,8 +303,8 @@ public class GroupService {
 			throw new RuntimeException(userSeq + " 유저가 존재하지 않습니다.");
 		}
 
-		log.info("참가 유저 : " + user.toString());
-		log.info("모의투자방 : " + simulation.toString());
+		log.info("참가 유저 : " + user);
+		log.info("모의투자방 : " + simulation);
 
 		//현재 해당 모의 투자에 참여 중인 유저가 아닌 경우를 탐색
 		List<SimulationUser> simulationUserList = simulation.getSimulationUserList();
@@ -321,7 +312,7 @@ public class GroupService {
 		if (simulationUserList != null) {
 			for (SimulationUser simulationUser : simulationUserList) {
 				User participant = simulationUser.getUser();
-				if (participant.getSeq() == userSeq) {
+				if (participant.getSeq().equals(userSeq)) {
 					throw new Exception("이미 참여중인 유저입니다.");
 				}
 			}
@@ -359,7 +350,7 @@ public class GroupService {
 		//예외 처리
 		if (simulation == null) {
 			throw new Exception(simulationSeq + "번 모의 투자방이 없습니다.");
-		} else if (simulation.getOwner().getSeq() != loginSeq) {
+		} else if (!simulation.getOwner().getSeq().equals(loginSeq)) {
 			throw new Exception(loginSeq + "는 " + simulationSeq + "번 모의 투자방을 실행시킬 권한이 없습니다.");
 		} else if (simulation.getStartDate() != null) {
 			throw new Exception("이미 진행중인 모의 투자 입니다.");
@@ -406,7 +397,7 @@ public class GroupService {
 			throw new Exception(simulationSeq + "번 방이 없습니다,");
 		}
 
-		InProgressGroupDetailsDTO inProgressGroupDetailsDTO = InProgressGroupDetailsDTO.builder()
+		return InProgressGroupDetailsDTO.builder()
 			.seedMoney(simulation.getSeedMoney())
 			.averageTier(0)
 			.rankInGroup(0)
@@ -416,8 +407,6 @@ public class GroupService {
 			.period(simulation.getPeriod())
 			.title(simulation.getTitle())
 			.build();
-
-		return inProgressGroupDetailsDTO;
 	}
 
 	//시작 전인 그룹 상세정보 가져오기
@@ -428,7 +417,7 @@ public class GroupService {
 			throw new Exception(simulationSeq + "번 방이 없습니다,");
 		}
 
-		WaitingGroupDetailsDTO waitingGroupDetailsDTO = WaitingGroupDetailsDTO.builder()
+		return WaitingGroupDetailsDTO.builder()
 			.seedMoney(simulation.getSeedMoney())
 			.averageTier(0)
 			.currentMemberImageList(getMemberImageList(simulationSeq))
@@ -436,8 +425,6 @@ public class GroupService {
 			.ownerSeq(simulation.getOwner().getSeq())
 			.title(simulation.getTitle())
 			.build();
-
-		return waitingGroupDetailsDTO;
 	}
 
 	public void leaveGroup(Long simulationSeq, Long userSeq) throws Exception {
@@ -466,7 +453,7 @@ public class GroupService {
 		simulationUserRepository.delete(simulationUser);
 
 		//방장이 나간 경우 모든 맴버 없애기
-		if (simulation.getOwner().getSeq() == user.getSeq()) {
+		if (simulation.getOwner().getSeq().equals(user.getSeq())) {
 			List<SimulationUser> simulationUserList = simulationUserRepository.findBySimulationSeq(simulation.getSeq());
 
 			for (SimulationUser participant : simulationUserList) {
@@ -629,11 +616,11 @@ public class GroupService {
 		if (tradingDTOList != null) {
 			for (TradingDTO tradingDTO : tradingDTOList) {
 				//매수인 경우
-				if (tradingDTO.getTradingType() == TradingType.BUY) {
+				if (tradingDTO.getTradingType().equals(TradingType.BUY)) {
 					currentMoney = currentMoney - tradingDTO.getAmount() * tradingDTO.getPrice();
 				}
 				//매도인 경우
-				else if (tradingDTO.getTradingType() == TradingType.SELL) {
+				else if (tradingDTO.getTradingType().equals(TradingType.SELL)) {
 					currentMoney = currentMoney + tradingDTO.getAmount() * tradingDTO.getPrice();
 				} else {
 					log.info("알 수 없는 결제 내역입니다.");
