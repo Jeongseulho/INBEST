@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication
-// @EnableDiscoveryClient	//유레카 등록 어노테이션
+@EnableDiscoveryClient	//유레카 등록 어노테이션
 @EnableJpaAuditing	//jpa에서 Creatdatetime을 위한 어노테이션
 @EnableScheduling
 public class TradingApplication {
