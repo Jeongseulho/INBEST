@@ -30,7 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 		@NonNull FilterChain filterChain) throws ServletException, IOException {
-		log.info("JwtAuthenticationFilter 실행, uri : {}", request.getParameter("uri"));
+		log.info("========== JwtAuthenticationFilter 실행 시작 ==========");
+		log.info("요청 uri : {}", request.getParameter("uri"));
 		StringTokenizer st = new StringTokenizer(request.getParameter("uri"), "/", true);
 
 		for (int i = 0; i < 4; i++) {
@@ -52,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String inputAccessToken = request.getParameter("accessToken");
 		String refreshToken = request.getParameter("refreshToken");
 
-		log.info("inputAccessToken: {}", inputAccessToken);
+		log.info("accessToken: {}", inputAccessToken);
 		log.info("refreshToken: {}", refreshToken);
 
 		Optional<String> accessToken = jwtProvider.resolveAccessToken(inputAccessToken);
@@ -79,6 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			log.info("AccessToken 정상 - 권한 저장");
 			Authentication authentication = jwtProvider.getAuthentication(accessToken.get());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			log.info("========== JwtAuthenticationFilter 실행 완료 ==========");
 			filterChain.doFilter(request, response);
 		}
 	}
