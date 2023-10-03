@@ -39,7 +39,8 @@ public class ExControllerAdvice {
 		errorResult.setMessage(ex.getMessage());
 		errorResult.setCode(errorCode.getCode());
 		log.info(errorResult.toString());
-		
+		log.info("Error: {}", ex.getStackTrace());
+
 		return new ResponseEntity<>(errorResult, HttpStatus.OK);
 	}
 }
