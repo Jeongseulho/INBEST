@@ -1,18 +1,10 @@
 package com.jrjr.inbest.rank.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-
 import org.springframework.stereotype.Service;
 
 import com.jrjr.inbest.rank.repository.SimulationRankRedisRepository;
-import com.jrjr.inbest.trading.repository.FinancialDataCompanyRepository;
-import com.jrjr.inbest.trading.repository.TradingRepository;
+// import com.jrjr.inbest.trading.repository.FinancialDataCompanyRepository;
+// import com.jrjr.inbest.trading.repository.TradingRepository;
 
 
 import lombok.RequiredArgsConstructor;
