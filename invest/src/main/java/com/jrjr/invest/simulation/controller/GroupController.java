@@ -26,6 +26,7 @@ import com.jrjr.invest.simulation.dto.group.CreatedGroupDTO;
 import com.jrjr.invest.simulation.dto.group.GroupDTO;
 import com.jrjr.invest.simulation.dto.group.GroupUserDTO;
 import com.jrjr.invest.simulation.service.GroupService;
+import com.jrjr.invest.trading.dto.ResponseTradingDTO;
 import com.jrjr.invest.trading.dto.TradingDTO;
 import com.jrjr.invest.trading.service.TradingService;
 
@@ -259,7 +260,7 @@ public class GroupController {
 		log.info("페이지 사이즈 :  " + pageSize);
 		log.info("페이지 번호 :  " + pageNo);
 
-		List<TradingDTO> tradingDTOList = tradingService.findAllSuccessTrading(userSeq, simulationSeq, pageNo,
+		List<ResponseTradingDTO> tradingDTOList = tradingService.findAllSuccessTrading(userSeq, simulationSeq, pageNo,
 			pageSize);
 
 		log.info("===== 유저의 최근 거래 찾기 끝=====");
