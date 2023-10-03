@@ -284,8 +284,8 @@ public class UserServiceImpl implements UserService {
 		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 완료 ---");
 
 		log.info("--- 팔로잉, 팔로워 수 조회 시작 ---");
-		Optional<Integer> followingNum = friendRepository.getFollowingNum(userSeq);
-		Optional<Integer> followerNum = friendRepository.getFollowerNum(userSeq);
+		Optional<Integer> followingNum = friendRepository.countByFollowingSeq(userSeq);
+		Optional<Integer> followerNum = friendRepository.countByFollowedSeq(userSeq);
 		log.info("팔로잉 수: {}", followingNum.orElse(0));
 		log.info("팔로워 수: {}", followerNum.orElse(0));
 		log.info("--- 팔로잉, 팔로워 수 조회 완료 ---");
