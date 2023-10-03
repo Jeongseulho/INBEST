@@ -30,7 +30,12 @@ export const getMyStockList = async (simulationSeq: string | undefined): Promise
   }
 
   const { userInfo } = userStore.getState();
-  const { data } = await apiWithAuth.get(`group/${simulationSeq}/users/${userInfo?.seq}/stock`);
+  const { data } = await apiWithAuth.get(`group/${simulationSeq}/users/${userInfo?.seq}/stocks`, {
+    params: {
+      pageNo: 1,
+      pageSize: 10,
+    },
+  });
   return data;
 };
 
@@ -43,7 +48,7 @@ export const getRecentlyDeal = async (simulationSeq: string | undefined): Promis
   const { data } = await apiWithAuth.get(`group/${simulationSeq}/users/${userInfo?.seq}/trading-history`, {
     params: {
       pageNo: 1,
-      size: 7,
+      pageSize: 5,
     },
   });
   return data;

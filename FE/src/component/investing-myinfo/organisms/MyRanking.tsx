@@ -23,7 +23,6 @@ const MyRanking = () => {
           <>
             <NormalRanking
               ranking={data.MySimulationUserRankingInfo.currentRank}
-              nickname={data.MySimulationUserRankingInfo.nickname}
               percentage={data.MySimulationUserRankingInfo.rate}
               money={data.MySimulationUserRankingInfo.currentMoney}
               profileImg={data.MySimulationUserRankingInfo.profileImgSearchName}

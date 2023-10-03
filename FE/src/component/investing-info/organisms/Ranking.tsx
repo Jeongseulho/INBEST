@@ -15,7 +15,7 @@ const Ranking = () => {
   );
 
   return (
-    <div className=" shadow-component col-span-3 row-span-full flex flex-col gap-4 p-4">
+    <div className=" shadow-component col-span-4 row-span-full flex flex-col gap-4 p-4">
       <div className="  flex items-center gap-2">
         <img src={ranking} width={40} />
         <h5>그룹 내 순위</h5>
@@ -48,7 +48,6 @@ const Ranking = () => {
                 key={ranker.userSeq}
                 ranking={ranker.currentRank}
                 profileImg={ranker.profileImgSearchName}
-                nickname={ranker.nickname}
                 money={ranker.totalMoney}
                 percentage={ranker.rate}
               />
