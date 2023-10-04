@@ -30,7 +30,7 @@ public class DictionaryService {
 			financialWordEntityList = financialWordRepository.findAll(
 				PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdDate"));
 		} else {
-			financialWordEntityList = financialWordRepository.findAllByTitleContainingOrContentContaining(keyword, keyword,
+			financialWordEntityList = financialWordRepository.findAllByTitleRegexIgnoreCaseOrContentRegexIgnoreCase(keyword, keyword,
 				PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdDate"));
 		}
 
