@@ -26,8 +26,9 @@ const ChattingArea = ({ simulationSeq }: Props) => {
       message: `${userInfo?.nickname}님이 입장하셨습니다.`,
       dateTime: new Date(),
       profileImgSearchName: userInfo?.profileImgSearchName,
+      nickname: userInfo?.nickname,
     };
-    client?.publish({ destination: "/app/chat.enter." + simulationSeq, body: JSON.stringify(enterData) });
+    client?.publish({ destination: `/app/chat.enter.${simulationSeq}`, body: JSON.stringify(enterData) });
 
     return () => {
       const exitData = {
@@ -37,6 +38,7 @@ const ChattingArea = ({ simulationSeq }: Props) => {
         message: `${userInfo?.nickname}님이 퇴장하셨습니다.`,
         dateTime: new Date(),
         profileImgSearchName: userInfo?.profileImgSearchName,
+        nickname: userInfo?.nickname,
       };
       client?.publish({ destination: "/app/chat.exit." + simulationSeq, body: JSON.stringify(exitData) });
       subscription?.unsubscribe();
@@ -52,6 +54,7 @@ const ChattingArea = ({ simulationSeq }: Props) => {
           message={chat.message}
           profileImage={chat.profileImgSearchName}
           dateTime={chat.dateTime}
+          nickname={chat.nickname}
         />
       ))}
     </div>

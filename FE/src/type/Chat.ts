@@ -6,4 +6,5 @@ export interface Chat {
   message: string;
   dateTime: string;
   profileImgSearchName: string;
+  nickname: string;
 }

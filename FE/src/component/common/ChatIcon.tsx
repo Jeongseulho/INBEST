@@ -34,6 +34,7 @@ const ChatIcon = () => {
       message,
       dateTime: new Date(),
       profileImgSearchName: userInfo?.profileImgSearchName,
+      nickname: userInfo?.nickname,
     };
     client?.publish({ destination: "/app/chat.send", body: JSON.stringify(sendData) });
     setMessage("");
