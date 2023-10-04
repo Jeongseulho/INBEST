@@ -8,7 +8,6 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.jrjr.invest.invest.dto.HanTuSocketAccessTokenDTO;
-import com.jrjr.invest.invest.dto.ResponseHanTuAccessTokenDTO;
 
 import lombok.RequiredArgsConstructor;
 

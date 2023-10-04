@@ -1,4 +1,4 @@
-package com.jrjr.invest.trading.entity;
+package com.jrjr.invest.invest.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

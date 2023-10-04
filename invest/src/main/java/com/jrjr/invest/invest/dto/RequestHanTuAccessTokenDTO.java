@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class RequestHanTuAccessTokenDTO {
 	private String appkey;
-	private String appsecret;
+	private String secretkey;
 	private String grant_type;
 }

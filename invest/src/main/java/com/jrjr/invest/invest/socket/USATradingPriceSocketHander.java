@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -28,7 +27,7 @@ public class USATradingPriceSocketHander extends TextWebSocketHandler {
 		session.getAttributes().put("receivedData", message.getPayload());
 		HashOperations<String,String,RedisStockDTO> dollarHashOperations
 			= stockRedisTemplate.opsForHash();
-		RedisStockDTO dollar = dollarHashOperations.get("stock","_USD/KRW");
+		RedisStockDTO dollar = dollarHashOperations.get("stock","1_USD/KRW");
 		if(dollar == null){
 			dollar =RedisStockDTO.builder()
 				.marketPrice("1300")
@@ -86,7 +85,7 @@ public class USATradingPriceSocketHander extends TextWebSocketHandler {
 				.dask5(Double.valueOf(splited[40]).intValue()*Integer.valueOf(dollar.getMarketPrice()))
 				.build();
 
-			log.info(responseUSAPriceDTO.getSymb()+" 미국 호가 데이터 저장 완료");
+			// log.info(responseUSAPriceDTO.getSymb()+" 미국 호가 데이터 저장 완료");
 
 			HashOperations<String,String, ResponseUSAPriceDTO> hashOperations
 				= usaPriceDTORedisTemplate.opsForHash();
@@ -94,4 +93,5 @@ public class USATradingPriceSocketHander extends TextWebSocketHandler {
 			hashOperations.put("USAPrice",responseUSAPriceDTO.getSymb(),responseUSAPriceDTO);
 		}
 	}
+
 }

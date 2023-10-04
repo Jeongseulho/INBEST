@@ -1,4 +1,4 @@
-package com.jrjr.invest.rank.dto;
+package com.jrjr.invest.invest.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,13 +14,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class RedisTierRankDTO {
+public class RedisStockDTO {
 
-	private Integer bronze;
+	private Integer stockType;
 
-	private Integer silver;
+	private String stockCode;
 
-	private Integer gold;
+	private String marketPrice;
 
-	private Integer diamond;
+	private Long amount;
+
+	private String name;
 }
