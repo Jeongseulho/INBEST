@@ -1,7 +1,5 @@
 package com.jrjr.inbest.user.dto;
 
-import com.jrjr.inbest.login.constant.Role;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +15,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class FriendDTO {
-	Long seq;
-	UserDto following;
-	UserDto follower;
+
+	Long userSeq;
+
+	private String email;
+
+	private String nickname;
+
+	private String profileImgSearchName;
+
+	private Long tier;
+
+	private Boolean isFollowBack;
 }
