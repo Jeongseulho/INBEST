@@ -19,6 +19,7 @@ public class ChatDTO {
     private String message;
     private LocalDateTime dateTime;
     private String profileImgSearchName;
+    private String nickname;
 
     public void setChatMessage(String userNickname, String type) {
         this.message = userNickname + "님이 " + type + "하셨습니다.";

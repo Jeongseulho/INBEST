@@ -26,9 +26,9 @@ public class RabbitController {
     @RabbitListener(queues = "realtime-queue")
     public void receiveRealTimeMessage(ChatDTO chatDTO) {
         log.info("RealTime Service에서 온 메세지: {}", chatDTO.toString());
-        chatDTO = chatService.setMessage(chatDTO);
-        chatDTO.setDateTime();
-        chatDTO.setProfileImgSearchName(chatService.setProfileImage(chatDTO.getUserSeq()));
+        // chatDTO = chatService.setMessage(chatDTO);
+        // chatDTO.setDateTime();
+        // chatDTO.setProfileImgSearchName(chatService.setProfileImage(chatDTO.getUserSeq()));
         rabbitTemplate.convertAndSend(EXCHANGE_NAME, CHAT_ROUTING_KEY, chatDTO);
     }
 }
