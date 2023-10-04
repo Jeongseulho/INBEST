@@ -19,14 +19,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 @Slf4j
 public class User extends BaseEntity {
 
@@ -70,5 +68,20 @@ public class User extends BaseEntity {
 		this.gender = gender;
 		this.profileImgSearchName = profileImgSearchName;
 		this.profileImgOriginalName = profileImgOriginalName;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"email='" + email + '\'' +
+			", name='" + name + '\'' +
+			", nickname='" + nickname + '\'' +
+			", birthyear='" + birthyear + '\'' +
+			", birthday='" + birthday + '\'' +
+			", gender=" + gender +
+			", profileImgSearchName='" + profileImgSearchName + '\'' +
+			", profileImgOriginalName='" + profileImgOriginalName + '\'' +
+			", deletedDate=" + deletedDate +
+			'}';
 	}
 }
