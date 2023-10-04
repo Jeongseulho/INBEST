@@ -1,12 +1,43 @@
-import { Popover, Transition } from "@headlessui/react";
+import { Popover, Transition, Listbox } from "@headlessui/react";
 import { Fragment } from "react";
 import { PiWechatLogoLight } from "react-icons/pi";
-import default_image from "../../asset/image/default_image.png";
-import ChatContentItem from "./ChatContentItem";
-// import { useState } from "react";
+import ChattingArea from "./ChattingArea";
+import { useState } from "react";
+import { RiExpandUpDownLine } from "react-icons/ri";
+import { AiOutlineCheck } from "react-icons/ai";
+import { useQuery } from "react-query";
+import { getMyGroupList } from "../../api/group";
+import { MyGroup } from "../../type/Group";
+import stompStore from "../../store/stompStore";
+import userStore from "../../store/userStore";
 
 const ChatIcon = () => {
-  // const [chatTab, setChatTab] = useState("");
+  const [curChatGroup, setCurChatGroup] = useState<MyGroup>();
+  const [message, setMessage] = useState("");
+  const onChangeMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+  };
+  const { data } = useQuery(["myGroupList"], getMyGroupList, {
+    onSuccess: (data) => {
+      setCurChatGroup(data[0]);
+    },
+  });
+
+  const { client } = stompStore();
+  const { userInfo } = userStore();
+  const onSendMessage = () => {
+    const sendData = {
+      type: "message",
+      simulationSeq: curChatGroup?.simulationSeq,
+      userSeq: userInfo?.seq,
+      message,
+      dateTime: new Date(),
+      profileImgSearchName: userInfo?.profileImgSearchName,
+    };
+    client?.publish({ destination: "/app/chat.send", body: JSON.stringify(sendData) });
+    setMessage("");
+  };
+
   return (
     <div className=" fixed right-10 bottom-10 z-20">
       <Popover className="relative">
@@ -32,30 +63,73 @@ const ChatIcon = () => {
             leaveFrom="opacity-100 translate-y-0"
             leaveTo="opacity-0 translate-y-1"
           >
-            <Popover.Panel className="absolute bottom-24 border-2 right-0 w-96 h-[500px] rounded-md bg-slate-100 ">
-              <div className="h-full flex flex-col absolute w-full ">
-                <div className="w-full h-1/2 flex justify-around items-center py-4 text-gray-500">
-                  <p className="font-regular text-md">안녕하세요</p>
-                  <p className="font-regular text-md">안녕하세요</p>
-                  <p className="font-regular text-md">안녕하세요</p>
+            <Popover.Panel className="absolute bottom-[120px] border-2 right-0 w-96 h-[450px] rounded-md bg-slate-100 ">
+              <div className="h-full flex flex-col absolute w-full rounded-md ">
+                <div className="w-full  bg-mainDark py-2 text-white flex justify-between items-center shadow-md rounded-md">
+                  <div className="text-green-100 ms-2 font-semiBold text-lg tracking-wide">그룹 이름 적당히</div>
+                  <Listbox value={curChatGroup} onChange={setCurChatGroup} by="simulationSeq">
+                    <div className="relative w-1/2">
+                      <Listbox.Button className="relative w-11/12 mr-2 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                        <span className="block truncate text-black">{curChatGroup?.title}</span>
+                        <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                          <RiExpandUpDownLine className="h-5 w-5 text-gray-400" />
+                        </span>
+                      </Listbox.Button>
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                      >
+                        <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                          {data?.map((myGroup, index) => (
+                            <Listbox.Option
+                              key={index}
+                              className={({ active }) =>
+                                `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                  active ? "bg-amber-100 text-amber-900" : "text-gray-900"
+                                }`
+                              }
+                              value={myGroup}
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                                    {myGroup.title}
+                                  </span>
+                                  {selected && (
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                      <AiOutlineCheck />
+                                    </span>
+                                  )}
+                                </>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </Transition>
+                    </div>
+                  </Listbox>
                 </div>
-                <div className="w-full bg-mainDark pt-2 text-white flex justify-center items-center shadow-md">
-                  <div className="text-green-100 font-semiBold text-lg tracking-wide">그룹 이름 : 그룹 이름 적당히</div>
-                </div>
-                <div className="overflow-y-scroll flex-col min-h-[80%]">
-                  <ChatContentItem isMine={true} message={"상대방 메세지"} profileImage={default_image} />
-                  <ChatContentItem isMine={false} message={"내 메세지"} />
-                </div>
+                <ChattingArea simulationSeq={curChatGroup?.simulationSeq || 0} />
                 <div className="w-full flex justify-around bg-green-100 items-center gap-2">
                   <textarea
                     className="flex-grow m-2 py-3 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none text-sm items-center"
                     rows={1}
                     placeholder="Message..."
                     style={{ outline: "none" }}
+                    onChange={onChangeMessage}
+                    onKeyUp={(e) => {
+                      if (e.key === "Enter") {
+                        onSendMessage();
+                      }
+                    }}
+                    value={message}
                   ></textarea>
                   <button
                     type="button"
                     className=" h-3/4 mr-1 inline-flex items-center justify-center rounded-lg px-2 transition duration-500 ease-in-out text-white bg-mainDark hover:bg-mainMoreDark focus:outline-none"
+                    onClick={onSendMessage}
                   >
                     <span className="font-bold text-sm">Send</span>
                     <svg

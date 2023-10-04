@@ -33,7 +33,7 @@ const HeaderAlarmItem = ({ setAlarmList, id, alarm }: Props) => {
       <p className=" text-md font-bold">{alarm.title}</p>
       <p className=" text-sm text-gray-600">
         {alarm.message}
-        {alarm.title.includes("초대") ? (
+        {alarm?.title?.includes("초대") ? (
           <div className=" flex items-center justify-center gap-4">
             <span
               className=" flex items-center gap-1 mt-1 cursor-pointer"
