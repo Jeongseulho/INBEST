@@ -34,7 +34,7 @@ public interface UserService {
 
 	UserDto getProfileInfo(Long seq);
 
-	UserDetailsDTO getUserDetailsInfo(Long userSeq);
+	UserDetailsDTO getUserDetailsInfo(Long userSeq, Long loginSeq);
 
 	void updateDefaultImg(Long userSeq, Long tokenSeq);
 

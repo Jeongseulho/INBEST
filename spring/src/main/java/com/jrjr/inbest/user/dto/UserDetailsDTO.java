@@ -40,6 +40,12 @@ public class UserDetailsDTO {
 	@Schema(description = "티어 점수")
 	Integer tier;
 
+	@Schema(description = "전체 회원 수")
+	Long userCnt;
+
+	@Schema(description = "팔로잉 여부")
+	Boolean isFollow;
+
 	@Schema(description = "자주 투자한 종목")
 	List<IndustryDTO> industries;
 

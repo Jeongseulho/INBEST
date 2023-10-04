@@ -185,11 +185,12 @@ public class UserController {
 		@ApiResponse(responseCode = "404", description = "조회 회원 정보 없음")
 	})
 	@GetMapping("/{seq}/details")
-	ResponseEntity<Map<String, Object>> getUserDetailsInfo(@PathVariable(value = "seq") Long userSeq) {
+	ResponseEntity<Map<String, Object>> getUserDetailsInfo(@PathVariable(value = "seq") Long userSeq,
+		@RequestParam Long loginSeq) {
 		log.info("========== {}, 회원 상세 정보 조회 시작 ==========", userSeq);
 		Map<String, Object> resultMap = new HashMap<>();
 
-		UserDetailsDTO userDetailsInfo = userService.getUserDetailsInfo(userSeq);
+		UserDetailsDTO userDetailsInfo = userService.getUserDetailsInfo(userSeq, loginSeq);
 
 		log.info("========== {}, 회원 상세 정보 조회 완료 ==========", userSeq);
 		resultMap.put("UserDetailsInfo", userDetailsInfo);
