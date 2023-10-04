@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,6 @@ import lombok.ToString;
 @Table(name = "trading")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @ToString
 public class Trading extends BaseEntity {
 
@@ -37,35 +35,37 @@ public class Trading extends BaseEntity {
 
 	private Long price;
 
+	private String stockType;
+
 	private String stockCode;
 
-	private String stockType;
+	private String stockName;
 
 	private Integer tradingType;
 
 	private Integer conclusionType;
 
-	private String stockName;
-
 	@Builder
-	public Trading(Long simulationSeq, Long userSeq, String nickname, Long amount, Long price, String stockCode,
-		Integer tradingType, Integer conclusionType, String stockName) {
+	public Trading(Long simulationSeq, Long userSeq, String nickname, Long amount, Long price, String stockType,
+		String stockCode, String stockName, Integer tradingType, Integer conclusionType) {
 		this.simulationSeq = simulationSeq;
 		this.userSeq = userSeq;
 		this.nickname = nickname;
 		this.amount = amount;
 		this.price = price;
+		this.stockType = stockType;
 		this.stockCode = stockCode;
+		this.stockName = stockName;
 		this.tradingType = tradingType;
 		this.conclusionType = conclusionType;
-		this.stockName = stockName;
 	}
-	public TradingDTO toTradingDto(){
-		return TradingDTO.builder().
-			seq(seq).userSeq(userSeq).nickname(nickname).
-			amount(amount).stockCode(stockCode).tradingType(tradingType).conclusionType(conclusionType).
-			stockName(stockName).createdDate(getCreatedDate()).lastModifiedDate(getLastModifiedDate())
-			.price(price).stockType(stockType).simulationSeq(simulationSeq)
+
+	public TradingDTO toTradingDto() {
+		return TradingDTO.builder()
+			.seq(seq).simulationSeq(simulationSeq).userSeq(userSeq)
+			.nickname(nickname).amount(amount).price(price)
+			.stockType(stockType).stockCode(stockCode).stockName(stockName)
+			.tradingType(tradingType).conclusionType(conclusionType)
 			.build();
 	}
 }
