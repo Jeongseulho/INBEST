@@ -1,15 +1,13 @@
 package com.jrjr.inbest.user.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jrjr.inbest.user.dto.UserDto;
+import com.jrjr.inbest.user.dto.FriendDTO;
 import com.jrjr.inbest.user.entity.Friend;
-import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.FriendRepository;
 import com.jrjr.inbest.user.repository.UserRepository;
 
@@ -31,6 +29,12 @@ public class FriendService {
 	public void insertFriend(Long followingSeq, Long followedSeq) throws Exception {
 		log.info("팔로잉 대상 seq: {}", followingSeq);
 		log.info("팔로워 seq: {}", followedSeq);
+
+		if (followingSeq.equals(followedSeq)) {
+			log.info("자기 자신을 팔로우 할 수 없습니다.");
+			throw new Exception("자기 자신을 팔로우 할 수 없습니다.");
+		}
+
 		this.existsUser(followingSeq);
 		this.existsUser(followedSeq);
 
@@ -76,6 +80,11 @@ public class FriendService {
 		this.existsUser(followingSeq);
 		this.existsUser(followedSeq);
 
+		if (followingSeq.equals(followedSeq)) {
+			log.info("자기 자신을 팔로우 취소 할 수 없습니다.");
+			throw new Exception("자기 자신을 팔로우 취소 할 수 없습니다.");
+		}
+
 		// 팔로잉 여부 확인
 		if (!friendRepository.existsByFollowingSeqAndFollowedSeq(followingSeq, followedSeq)) {
 			log.info("{}를 팔로우 하고 있지 않습니다.", followingSeq);
@@ -96,62 +105,32 @@ public class FriendService {
 		}
 	}
 
-	public List<UserDto> findAllFollowings(Long followedSeq) {
-		User followedUser = userRepository.findById(followedSeq).orElse(null);
+	/*
+		팔로잉 목록 조회
+	 */
+	public List<FriendDTO> findAllFollowings(Long followedSeq) throws Exception {
+		log.info("팔로잉 목록을 조회 할 회원 seq: {}", followedSeq);
+		this.existsUser(followedSeq);
 
-		//팔로워 유저 예외
-		if (followedUser == null) {
-			log.info(followedSeq + " 유저가 없습니다.");
-		}
+		// 팔로잉 중인 회원 정보 조회 (pk 값, 이메일, 닉네임, 프로필 이미지 url, 티어, 맞팔 여부)
+		Optional<List<FriendDTO>> followingList = friendRepository.getFollowingList(followedSeq);
 
-		List<Friend> friendList = friendRepository.findAllByFollowedSeq(followedSeq).orElse(new ArrayList<>());
-		//반환할 팔로잉 목록
-		List<UserDto> followingList = new ArrayList<>();
-
-		//팔로잉 목록을 dto 로 변경
-		for (Friend friend : friendList) {
-			User following = userRepository.findById(friend.getFollowingSeq())
-				.orElse(null);
-
-			//없는 유저 스킵
-			if (following == null) {
-				continue;
-			}
-
-			//팔로잉 목록에 추가
-			followingList.add(following.convertToUserDto(following));
-		}
-
-		return followingList;
+		// 팔로잉 중인 회원이 없다면
+		return followingList.orElse(null);
 	}
 
-	public List<UserDto> findAllFollowers(Long followedSeq) {
-		User followedUser = userRepository.findById(followedSeq).orElse(null);
+	/*
+		팔로워 목록 조회
+	 */
+	public List<FriendDTO> findAllFollowers(Long followingSeq) throws Exception {
+		log.info("팔로워 목록을 조회 할 회원 seq: {}", followingSeq);
+		this.existsUser(followingSeq);
 
-		//팔로워 유저 예외
-		if (followedUser == null) {
-			log.info(followedSeq + " 유저가 없습니다.");
-		}
+		// 팔로워 정보 조회 (pk 값, 이메일, 닉네임, 프로필 이미지 url, 티어, 맞팔 여부)
+		Optional<List<FriendDTO>> followerList = friendRepository.getFollowerList(followingSeq);
 
-		List<Friend> friendList = friendRepository.findAllByFollowingSeq(followedSeq).orElse(new ArrayList<>());
-		// 반환할 팔로잉 목록
-		List<UserDto> followerList = new ArrayList<>();
-
-		// 팔로잉 목록을 dto 로 변경
-		for (Friend friend : friendList) {
-			User follower = userRepository.findById(friend.getFollowedSeq())
-				.orElse(null);
-
-			//없는 유저 스킵
-			if (follower == null) {
-				continue;
-			}
-
-			//팔로잉 목록에 추가
-			followerList.add(follower.convertToUserDto(follower));
-		}
-
-		return followerList;
+		// 팔로워가 없다면
+		return followerList.orElse(null);
 	}
 
 	/*
