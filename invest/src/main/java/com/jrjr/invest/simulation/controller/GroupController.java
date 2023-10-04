@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 import com.jrjr.invest.simulation.dto.AssetDTO;
 import com.jrjr.invest.simulation.dto.ResponseUserStockDTO;
 import com.jrjr.invest.simulation.dto.SearchByTitleDTO;
@@ -27,7 +26,6 @@ import com.jrjr.invest.simulation.dto.group.GroupDTO;
 import com.jrjr.invest.simulation.dto.group.GroupUserDTO;
 import com.jrjr.invest.simulation.service.GroupService;
 import com.jrjr.invest.trading.dto.ResponseTradingDTO;
-import com.jrjr.invest.trading.dto.TradingDTO;
 import com.jrjr.invest.trading.service.TradingService;
 
 import io.swagger.v3.oas.annotations.Operation;
