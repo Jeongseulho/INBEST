@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
 @ToString
@@ -24,6 +25,7 @@ public class Notification {
     private String id;
     private Long simulationSeq;
     private Long userSeq;
+    private String title;
     private String message;
     private Boolean isRead;
     private LocalDateTime dateTime;
@@ -50,13 +52,25 @@ public class Notification {
 
         // 매매 타입
         String tradingType = tradingDTO.getTradingType() == 0 ? "매도" : "매수";
+
         // 성공 여부
-        String conclusionType = tradingDTO.getConclusionType() == 1 ? "성공" : tradingDTO.getConclusionType() == 2 ? "실패" : "미체결";
+        String conclusionType = "미체결";
+        if (tradingDTO.getConclusionType() == 1) {
+            this.title = "주식 체결 성공 알림";
+            conclusionType = "성공";
+        } else if (tradingDTO.getConclusionType() == 2) {
+            this.title = "주식 체결 실패 알림";
+            conclusionType = "실패";
+        }
+
         // 가상화페인 경우
         String amountType = tradingDTO.getStockType() == 2 ? "개" : "주";
 
-        this.message = "진행중인 " + simulationTitle+ " 모의 투자에서 " + tradingDTO.getStockName() + " " + tradingDTO.getAmount()
-                + amountType + "를 " + tradingDTO.getPrice() + "원(KRW)에 " + tradingType + " " + conclusionType  + "하였습니다.";
+        // 가격 쉼표 처리
+        DecimalFormat decFormat = new DecimalFormat("###,###");
+
+        this.message = "모의투자(" + simulationTitle+ ")에서 " + tradingDTO.getStockName() + " " + tradingDTO.getAmount()
+                + amountType + "를 " + decFormat.format(tradingDTO.getPrice() * tradingDTO.getAmount()) + "원(KRW)에 " + tradingType + " " + conclusionType  + "하였습니다.";
     }
 
     public NotificationDTO toNotificationDTO() {
@@ -65,6 +79,7 @@ public class Notification {
                 .simulationSeq(simulationSeq)
                 .userSeq(userSeq)
                 .message(message)
+                .title(title)
                 .isRead(isRead)
                 .dateTime(dateTime)
                 .build();

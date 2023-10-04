@@ -15,6 +15,7 @@ public class NotificationDTO {
     private String id;
     private Long simulationSeq;
     private Long userSeq;
+    private String title;
     private String message;
     private Boolean isRead;
     private LocalDateTime dateTime;
