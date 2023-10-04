@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class RabbitController {
+public class  RabbitController {
 
 //    private final RabbitTemplate rabbitTemplate;
     private final SimpMessagingTemplate messageTemplate;

@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 public class RabbitMqConfig {
 
@@ -32,19 +35,28 @@ public class RabbitMqConfig {
     private String rabbitmqPassword;
 
     // Exchange 이름
-    private static final String EXCHANGE_NAME = "realtime_direct";
+    @Value("${custom.rabbitmq.exchange}")
+    private String EXCHANGE_NAME;
 
     // Queue 이름
-    private static final String INVEST_QUEUE_NAME = "invest-queue";
-    private static final String TRADING_QUEUE_NAME = "trading-queue";
-    private static final String CHAT_QUEUE_NAME = "chat-queue";
-    private static final String REALTIME_QUEUE_NAME = "realtime-queue";
+    @Value("${custom.rabbitmq.queue.invest}")
+    private String INVEST_QUEUE_NAME;
+    @Value("${custom.rabbitmq.queue.trading}")
+    private String TRADING_QUEUE_NAME;
+    @Value("${custom.rabbitmq.queue.chat}")
+    private String CHAT_QUEUE_NAME;
+    @Value("${custom.rabbitmq.queue.realtime}")
+    private String REALTIME_QUEUE_NAME;
 
     // 라우팅 키
-    private static final String INVEST_ROUTING_KEY = "invest";
-    private static final String TRADING_ROUTING_KEY = "trading";
-    private static final String CHAT_ROUTING_KEY = "chat";
-    private static final String REALTIME_ROUTING_KEY = "realtime";
+    @Value("${custom.rabbitmq.routing-key.invest}")
+    private String INVEST_ROUTING_KEY;
+    @Value("${custom.rabbitmq.routing-key.trading}")
+    private String TRADING_ROUTING_KEY;
+    @Value("${custom.rabbitmq.routing-key.chat}")
+    private String CHAT_ROUTING_KEY;
+    @Value("${custom.rabbitmq.routing-key.realtime}")
+    private String REALTIME_ROUTING_KEY;
 
     @Bean
     public DirectExchange directExchange() {
@@ -53,6 +65,8 @@ public class RabbitMqConfig {
 
     @Bean
     public Queue investQueue() {
+        log.info("invest queue name " + INVEST_QUEUE_NAME);
+
         return new Queue(INVEST_QUEUE_NAME);
     }
 
