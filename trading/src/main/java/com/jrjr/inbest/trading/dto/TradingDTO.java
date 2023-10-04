@@ -89,6 +89,7 @@ public class TradingDTO implements Serializable {
 			amount(this.amount).stockCode(this.stockCode)
 			.conclusionType(this.conclusionType).
 			price(price).stockName(stockName).simulationSeq(simulationSeq)
+			.tradingType(tradingType)
 			.stockType(String.valueOf(stockType)).build();
 	}
 
