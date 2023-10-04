@@ -17,6 +17,9 @@ import lombok.ToString;
 @ToString
 public class ParticipantDTO {
 
+	@Schema(description = "참가자 pk 값")
+	Long userSeq;
+
 	@Schema(description = "닉네임")
 	String nickname;
 

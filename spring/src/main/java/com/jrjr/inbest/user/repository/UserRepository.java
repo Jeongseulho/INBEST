@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Boolean existsByNickname(String nickname);
 
-	@Query("SELECT NEW com.jrjr.inbest.user.dto.ParticipantDTO(u.nickname, u.profileImgSearchName) "
+	@Query("SELECT NEW com.jrjr.inbest.user.dto.ParticipantDTO(u.seq, u.nickname, u.profileImgSearchName) "
 		+ "FROM User u "
 		+ "JOIN SimulationUser su "
 		+ "ON u.seq = su.user.seq "
