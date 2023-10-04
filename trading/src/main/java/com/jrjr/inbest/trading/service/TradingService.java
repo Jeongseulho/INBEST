@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 
-import com.jrjr.inbest.rank.dto.RedisStockUserDTO;
 import com.jrjr.inbest.rank.service.SimulationRankService;
 import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.constant.TradingResultType;
@@ -37,8 +36,6 @@ public class TradingService {
 	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
 	private final NotificationService notificationService;
 	private final SimulationRankService simulationRankService;
-	private final RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate;
-	private final RedisTemplate<String, RedisStockDTO> stockRedisTemplate;
 
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
@@ -80,7 +77,7 @@ public class TradingService {
 		//매매 정보를 매매 대기열(Redis)에 저장
 		RedisTradingEntity redisTradingEntity = tradingDTO.toRedisTradingEntity();
 		log.info(redisTradingEntity.toString());
-		
+
 		//매매 작업 대기 열에 입력받은 매매 정보 추가
 		//서버 pk로 매매 작업 해시키 생성
 		String tradingHashKey = instanceId+"-trading-task";
@@ -210,7 +207,7 @@ public class TradingService {
 		TradingEntity tradingEntity = tradingRepository.findBySeq(tradingDTO.getSeq()).orElse(null);
 		tradingEntity.setConclusionType(TradingResultType.SUCCESS);
 		tradingRepository.save(tradingEntity);
-		
+
 		//tradingDTO 최신화
 		tradingDTO = tradingEntity.toTradingDto();
 		log.info("거래 최신화");
@@ -255,7 +252,7 @@ public class TradingService {
 		HashOperations<String,String,RedisSimulationUserDTO> hashOperations= redisSimulationUserTemplate.opsForHash();
 
 		RedisSimulationUserDTO user = hashOperations.get("simulation_"+tradingDTO.getSimulationSeq(),tradingDTO.getUserSeq());
-		
+
 		//대상 유저가 없는 경우
 		if(user == null){
 			throw new Exception(tradingDTO.getSimulationSeq()+"에 참가하고 있는 "+tradingDTO.getSeq()+"번 방이 없습니다.");
@@ -264,7 +261,7 @@ public class TradingService {
 		if(tradingDTO.getAmount() *tradingDTO.getPrice() < user.getCurrentMoney()){
 			throw new Exception("의 소지금("+user.getCurrentMoney()+") 보다 더 많이 살 수 없습니다.");
 		}
-		
+
 		return true;
 	}
 	public boolean canSell(TradingDTO tradingDTO) throws Exception {
