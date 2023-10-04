@@ -11,13 +11,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "login")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Login {
 
 	@Id
@@ -38,4 +41,13 @@ public class Login {
 
 	@Column(nullable = false)
 	private String provider;
+
+	@Builder
+	public Login(String email, String password, Role role, Long userSeq, String provider) {
+		this.email = email;
+		this.password = password;
+		this.role = role;
+		this.userSeq = userSeq;
+		this.provider = provider;
+	}
 }
