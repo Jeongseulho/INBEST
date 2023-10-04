@@ -43,28 +43,28 @@ public class TradingService {
 	public void insertTrading(TradingDTO tradingDTO) throws Exception {
 		log.info(tradingDTO.toString());
 
-		if(tradingDTO.getTradingType() == TradingType.BUY
-			!= canBuy(tradingDTO)){
+		if(tradingDTO.getTradingType() == TradingType.BUY &&
+			!canBuy(tradingDTO)){
 			throw new Exception("매수가 불가능한 거래 입니다.");
-		}else if(tradingDTO.getTradingType() == TradingType.SELL
-			!= canSell(tradingDTO)){
+		}else if(tradingDTO.getTradingType() == TradingType.SELL &&
+			!canSell(tradingDTO)){
 			throw new Exception("매도가 불가능한 거래 입니다.");
 		}
 
 		LocalTime currentTime = LocalTime.now();
 
-		//한국 주식 장이 닫혀 있을 경우
-		if (tradingDTO.getStockType() == StockType.KOREA) {
-			if (currentTime.isAfter(LocalTime.of(18, 0)) && currentTime.isBefore(LocalTime.of(8, 59))) {
-				// notificationService.sendApplyFailMessage(tradingDTO);
-			}
-		}
-		//미국 주식 장이 닫혀 있을 경우
-		if (tradingDTO.getStockType() == StockType.GLOBAL) {
-			if (currentTime.isAfter(LocalTime.of(6, 0)) && currentTime.isAfter(LocalTime.of(23, 29))) {
-				// notificationService.sendApplyFailMessage(tradingDTO);
-			}
-		}
+		// //한국 주식 장이 닫혀 있을 경우
+		// if (tradingDTO.getStockType() == StockType.KOREA) {
+		// 	if (currentTime.isAfter(LocalTime.of(18, 0)) && currentTime.isBefore(LocalTime.of(8, 59))) {
+		// 		notificationService.sendApplyFailMessage(tradingDTO);
+		// 	}
+		// }
+		// //미국 주식 장이 닫혀 있을 경우
+		// if (tradingDTO.getStockType() == StockType.GLOBAL) {
+		// 	if (currentTime.isAfter(LocalTime.of(6, 0)) && currentTime.isAfter(LocalTime.of(23, 29))) {
+		// 		notificationService.sendApplyFailMessage(tradingDTO);
+		// 	}
+		// }
 
 
 		//매매 정보를 DB에 저장
@@ -251,14 +251,15 @@ public class TradingService {
 	public boolean canBuy(TradingDTO tradingDTO) throws Exception {
 		HashOperations<String,String,RedisSimulationUserDTO> hashOperations= redisSimulationUserTemplate.opsForHash();
 
-		RedisSimulationUserDTO user = hashOperations.get("simulation_"+tradingDTO.getSimulationSeq(),tradingDTO.getUserSeq());
+		RedisSimulationUserDTO user = hashOperations.get("simulation_"+tradingDTO.getSimulationSeq()
+			,String.valueOf(tradingDTO.getUserSeq()));
 
 		//대상 유저가 없는 경우
 		if(user == null){
 			throw new Exception(tradingDTO.getSimulationSeq()+"에 참가하고 있는 "+tradingDTO.getSeq()+"번 방이 없습니다.");
 		}
 		//소지금이 부족한 경우
-		if(tradingDTO.getAmount() *tradingDTO.getPrice() < user.getCurrentMoney()){
+		if(tradingDTO.getAmount() *tradingDTO.getPrice() > user.getCurrentMoney()){
 			throw new Exception("의 소지금("+user.getCurrentMoney()+") 보다 더 많이 살 수 없습니다.");
 		}
 

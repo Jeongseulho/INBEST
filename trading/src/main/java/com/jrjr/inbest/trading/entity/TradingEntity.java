@@ -19,53 +19,56 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class TradingEntity extends BaseEntity {
-	//시뮬레이션 pk 넣어야함
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
-	private Long userSeq;
+
 	private Long simulationSeq;
+
+	private Long userSeq;
+
 	private String nickname;
+
 	private Long amount;
+
 	private Long price;
+
+	private String stockType;
+
 	private String stockCode;
-	private Integer tradingType;
-	private Integer conclusionType;
+
 	private String stockName;
-	private Integer stockType;
+
+	private Integer tradingType;
+
+	private Integer conclusionType;
 
 	@Builder
-	public TradingEntity(Long userSeq,
- 		String nickname,
- 		Long amount,
- 		Long price,
-	 	String stockCode,
-	 	Integer tradingType,
-		Integer conclusionType,
-		String stockName,
-		Long simulationSeq,
-		Integer stockType){
+	public TradingEntity(Long simulationSeq, Long userSeq, String nickname, Long amount, Long price, String stockType,
+		String stockCode, String stockName, Integer tradingType, Integer conclusionType) {
+		this.simulationSeq = simulationSeq;
 		this.userSeq = userSeq;
+		this.nickname = nickname;
 		this.amount = amount;
 		this.price = price;
-		this.nickname = nickname;
+		this.stockType = stockType;
 		this.stockCode = stockCode;
+		this.stockName = stockName;
 		this.tradingType = tradingType;
 		this.conclusionType = conclusionType;
-		this.stockName = stockName;
-		this.simulationSeq = simulationSeq;
-		this.stockType = stockType;
 	}
 
 	public void setConclusionType(Integer conclusionType) {
 		this.conclusionType = conclusionType;
 	}
 
-	public TradingDTO toTradingDto(){
-		return TradingDTO.builder().
-			seq(seq).userSeq(userSeq).nickname(nickname).
-			amount(amount).stockCode(stockCode).tradingType(tradingType).conclusionType(conclusionType).
-			stockName(stockName).stockType(stockType).price(price).simulationSeq(simulationSeq)
-				.build();
+	public TradingDTO toTradingDto() {
+		return TradingDTO.builder()
+			.seq(seq).simulationSeq(simulationSeq).userSeq(userSeq)
+			.nickname(nickname).amount(amount).price(price)
+			.stockType(Integer.parseInt(stockType)).stockCode(stockCode).stockName(stockName)
+			.tradingType(tradingType).conclusionType(conclusionType)
+			.build();
 	}
 }
