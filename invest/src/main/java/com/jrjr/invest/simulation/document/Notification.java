@@ -40,17 +40,17 @@ public class Notification {
 
 	public void setInvititionMessage(String simulationTitle, String ownerNickname) {
 		this.title = "모의 투자 초대 알림";
-		this.message = ownerNickname + "님이 " + simulationTitle + "에 초대하셨습니다.";
+		this.message = ownerNickname + "님이 모의투자(" + simulationTitle + ")에 초대하셨습니다.";
 	}
 
 	public void setStartMessage(String simulationTitle) {
 		this.title = "모의 투자 시작 알림";
-		this.message = simulationTitle + "에서 모의 투자가 시작되었습니다!";
+		this.message = "모의투자(" + simulationTitle + ")가 시작되었습니다!";
 	}
 
 	public void setFinishMessage(String simulationTitle) {
 		this.title = "모의 투자 종료 알림";
-		this.message = simulationTitle + "에서 모의 투자가 종료되었습니다!";
+		this.message = "모의투자(" + simulationTitle + ")가 종료되었습니다!";
 	}
 
 	public NotificationDTO toNotificationDTO() {
