@@ -251,7 +251,8 @@ public class TradingService {
 	public boolean canBuy(TradingDTO tradingDTO) throws Exception {
 		HashOperations<String,String,RedisSimulationUserDTO> hashOperations= redisSimulationUserTemplate.opsForHash();
 
-		RedisSimulationUserDTO user = hashOperations.get("simulation_"+tradingDTO.getSimulationSeq(),tradingDTO.getUserSeq());
+		RedisSimulationUserDTO user = hashOperations.get("simulation_"+tradingDTO.getSimulationSeq()
+			,String.valueOf(tradingDTO.getUserSeq()));
 
 		//대상 유저가 없는 경우
 		if(user == null){
