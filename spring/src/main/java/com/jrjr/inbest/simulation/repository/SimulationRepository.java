@@ -12,10 +12,11 @@ import com.jrjr.inbest.user.dto.SimulationRecordDTO;
 public interface SimulationRepository extends JpaRepository<Simulation, Long> {
 
 	@Query(
-		"SELECT NEW com.jrjr.inbest.user.dto.SimulationRecordDTO(s.seq, s.title, s.startDate, s.finishedDate, s.period, s.memberNum, su.currentRank, r.rate) "
+		"SELECT NEW com.jrjr.inbest.user.dto.SimulationRecordDTO(s.seq, s.title, s.startDate, s.finishedDate, s.period, s.memberNum, su.currentRank, r.rate, t.tier) "
 			+ "FROM Simulation s "
 			+ "JOIN SimulationUser su ON s.seq = su.simulation.seq "
 			+ "LEFT JOIN Rate r ON su.user.seq = r.userSeq AND s.seq = r.simulationSeq "
+			+ "LEFT JOIN Tier t ON su.user.seq = t.userSeq AND s.seq = t.simulationSeq "
 			+ "WHERE su.user.seq = :userSeq AND s.finishedDate IS NOT NULL")
 	List<SimulationRecordDTO> getSimulationByUserSeq(@Param("userSeq") Long userSeq);
 }
