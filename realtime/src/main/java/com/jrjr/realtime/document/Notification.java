@@ -23,6 +23,7 @@ public class Notification {
     private String id;
     private Long simulationSeq;
     private Long userSeq;
+    private String title;
     private String message;
     private Boolean isRead;
     private LocalDateTime dateTime;
@@ -68,6 +69,7 @@ public class Notification {
                 .id(id)
                 .simulationSeq(simulationSeq)
                 .userSeq(userSeq)
+                .title(title)
                 .message(message)
                 .isRead(isRead)
                 .dateTime(dateTime)
