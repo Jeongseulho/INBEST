@@ -15,7 +15,6 @@ export const useBoardDetailContent = () => {
   const [showCommentCreate, setShowCommentCreate] = useState(false);
   const navigator = useNavigate();
   const queryClient = useQueryClient();
-  console.log(data);
   const onPostComment = async () => {
     if (commentText.trim() === "") {
       toast.error("댓글을 입력해 주세요");

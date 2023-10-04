@@ -1,19 +1,16 @@
-import { Menu, Transition } from "@headlessui/react";
+import { Popover, Transition } from "@headlessui/react";
 import HeaderAlarmItem from "./HeaderAlarmItem";
 import bell from "../../asset/image/bell.png";
 import { Fragment } from "react";
 import { useHeaderAlarm } from "./useHeaderAlarm";
-
 const Bell = () => {
-  const { shakeBell, alarmList, setAlarmList } = useHeaderAlarm();
+  const { alarmList, setAlarmList } = useHeaderAlarm();
   return (
-    <Menu as="div" className="relative inline-block text-left me-10">
-      <Menu.Button
-        as="img"
-        src={bell}
-        className={`cursor-pointer ${shakeBell && "animate__animated animate__shakeX animate__infinite"}`}
-        width={45}
-      />
+    <Popover as="div" className="relative inline-block text-left me-10">
+      <div className=" rounded-full w-6 h-6 bg-red-600 absolute z-10 left-6 text-center text-white">
+        {alarmList.length}
+      </div>
+      <Popover.Button as="img" src={bell} id="bell" className={"cursor-pointer "} width={45} />
 
       <Transition
         as={Fragment}
@@ -24,21 +21,21 @@ const Bell = () => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className=" z-20 absolute -left-6  mt-4 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Popover.Panel className=" z-20 absolute -left-6  mt-4 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {alarmList.map((alarm, index) => (
-              <HeaderAlarmItem
-                key={index}
-                title={alarm.title}
-                content={alarm.message}
-                setAlarmList={setAlarmList}
-                id={alarm.id}
-              />
-            ))}
+            {alarmList.length > 0 ? (
+              alarmList.map((alarm) => (
+                <HeaderAlarmItem key={alarm.id} setAlarmList={setAlarmList} alarm={alarm} id={alarm.id} />
+              ))
+            ) : (
+              <div className=" flex flex-col px-4 py-2">
+                <p className=" text-sm font-bold text-gray-600">알림이 없습니다.</p>
+              </div>
+            )}
           </div>
-        </Menu.Items>
+        </Popover.Panel>
       </Transition>
-    </Menu>
+    </Popover>
   );
 };
 export default Bell;

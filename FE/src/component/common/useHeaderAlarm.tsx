@@ -7,9 +7,20 @@ import { Alarm } from "../../type/Alarm";
 
 export const useHeaderAlarm = () => {
   const { accessToken, userInfo } = userStore();
-  const [shakeBell, setShakeBell] = useState(false);
-  const [alarmList, setAlarmList] = useState<Alarm[]>([]);
+  const [alarmList, setAlarmList] = useState<Alarm[] | []>([]);
   const { setClient } = stompStore();
+  const [shakeBell, setShakeBell] = useState(false);
+
+  useEffect(() => {
+    if (shakeBell) {
+      const bell = document.getElementById("bell");
+      bell?.classList.add("shake-bell");
+      setTimeout(() => {
+        bell?.classList.remove("shake-bell");
+        setShakeBell(false);
+      }, 3000);
+    }
+  }, [shakeBell]);
 
   useEffect(() => {
     if (accessToken) {
@@ -24,14 +35,18 @@ export const useHeaderAlarm = () => {
         },
         onConnect: () => {
           console.log("Connected to WebSocket");
-          newClient.subscribe(`/topic/notification.${userInfo?.seq}`, (message) => {
-            setShakeBell(true);
-            setTimeout(() => {
-              setShakeBell(false);
-            }, 3000);
 
-            console.log(message);
+          newClient.subscribe(`/topic/notification.${userInfo?.seq}`, (msg) => {
+            setAlarmList((prev) => {
+              const body = JSON.parse(msg.body);
+              const isDuplicate = prev.some((alarm) => alarm.id === body.id);
+              if (isDuplicate) return prev;
+              else return [...prev, JSON.parse(msg.body)];
+            });
+            setShakeBell(true);
           });
+
+          newClient.publish({ destination: "/app/notification.resend." + userInfo?.seq });
         },
         onDisconnect: () => {
           console.log("Disconnected from WebSocket");
@@ -48,7 +63,7 @@ export const useHeaderAlarm = () => {
       setClient(newClient);
       newClient.activate();
     }
-  }, [accessToken]);
+  }, [accessToken, userInfo?.seq, setClient]);
 
-  return { shakeBell, alarmList, setAlarmList };
+  return { alarmList, setAlarmList };
 };
