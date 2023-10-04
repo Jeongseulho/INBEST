@@ -37,7 +37,7 @@ public class TradingController {
 	private final TradingService tradingService;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
 	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
-	private final FileReaderService fileReaderService;
+	// private final FileReaderService fileReaderService;
 	// private final LogoCrawler logoCrawler;
 	//
 	// @GetMapping("/logo")
