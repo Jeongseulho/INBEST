@@ -21,6 +21,7 @@ public class RabbitController {
         log.info("RealTime Service에서 온 메세지: {}", chatDTO.toString());
         chatDTO = chatService.setMessage(chatDTO);
         chatDTO.setDateTime();
+        chatDTO.setProfileImgSearchName(chatService.setProfileImage(chatDTO.getUserSeq()));
         rabbitTemplate.convertAndSend("realtime_direct", "chat", chatDTO);
     }
 }

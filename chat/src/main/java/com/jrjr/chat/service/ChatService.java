@@ -28,4 +28,7 @@ public class ChatService {
         return chatDTO;
     }
 
+    public String setProfileImage(Long userSeq) {
+        return userRepository.findBySeq(userSeq).getProfileImgSearchName();
+    }
 }

@@ -18,6 +18,7 @@ public class ChatDTO {
     private Long userSeq;
     private String message;
     private LocalDateTime dateTime;
+    private String profileImgSearchName;
 
     public void setChatMessage(String userNickname, String type) {
         this.message = userNickname + "님이 " + type + "하셨습니다.";
