@@ -298,11 +298,7 @@ public class UserServiceImpl implements UserService {
 		log.info("팔로워 수: {}", followerNum.orElse(0));
 		// 상세 정보를 확인하는 사람이 본인인지 확인
 		if (!userSeq.equals(loginSeq)) {
-			if (friendRepository.existsByFollowingSeqAndFollowedSeq(userSeq, loginSeq)) {
-				isFollow = true;
-			} else {
-				isFollow = false;
-			}
+			isFollow = friendRepository.existsByFollowingSeqAndFollowedSeq(userSeq, loginSeq);
 		}
 		log.info("--- 팔로잉, 팔로워 조회 완료 ---");
 
@@ -320,7 +316,7 @@ public class UserServiceImpl implements UserService {
 
 		log.info("--- 자주 투자한 종목 조회 시작 ---");
 		// 1. trading table 에서 모든 구매 거래 내역 조회 후 구매 가격 합산
-		// 2. financialdata_company 에서 stock_type 과 stock_code 를 이용해 산업군 이름 조회
+		// 2. financial_data_company 에서 stock_type 과 stock_code 를 이용해 산업군 이름 조회
 		List<IndustryDTO> industries = tradingRepository.calculatePurchaseAmountByIndustry(userSeq);
 		log.info(industries.toString());
 		log.info("--- 자주 투자한 종목 조회 완료 ---");
