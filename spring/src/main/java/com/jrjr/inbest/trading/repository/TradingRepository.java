@@ -17,7 +17,7 @@ public interface TradingRepository extends CrudRepository<Trading, Long> {
 	@Query(
 		"SELECT NEW com.jrjr.inbest.user.dto.IndustryDTO(fc.companyIndustry, sum(t.price * t.amount)) "
 			+ "FROM Trading t "
-			+ "         JOIN FinancialdataCompany fc "
+			+ "         JOIN FinancialDataCompany fc "
 			+ "              ON t.stockType = fc.companyStockType "
 			+ "                  AND t.stockCode = fc.companyStockCode "
 			+ "WHERE t.userSeq = :userSeq "
@@ -28,7 +28,7 @@ public interface TradingRepository extends CrudRepository<Trading, Long> {
 
 	@Query("SELECT fc.companyIndustry "
 		+ "FROM Trading t "
-		+ "         JOIN FinancialdataCompany fc "
+		+ "         JOIN FinancialDataCompany fc "
 		+ "              ON t.stockType = fc.companyStockType "
 		+ "                  AND t.stockCode = fc.companyStockCode "
 		+ "WHERE t.userSeq = :userSeq "
