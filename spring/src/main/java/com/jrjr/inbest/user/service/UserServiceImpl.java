@@ -241,7 +241,13 @@ public class UserServiceImpl implements UserService {
 			throw new AuthenticationFailedException("회원 정보 없음");
 		}
 
+		// 팔로잉, 팔로워 내역 삭제
+		friendRepository.deleteByFollowingSeq(userSeq);
+		friendRepository.deleteByFollowedSeq(userSeq);
+		log.info("friend table 팔로잉, 팔로워 내역 삭제 완료");
+
 		userEntity.get().withdraw(LocalDateTime.now());
+		log.info("user table 회원 탈퇴 처리 완료");
 	}
 
 	@Override

@@ -42,4 +42,8 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 	Optional<Integer> countByFollowingSeq(Long userSeq);
 
 	Optional<Integer> countByFollowedSeq(Long userSeq);
+
+	void deleteByFollowingSeq(Long userSeq);
+
+	void deleteByFollowedSeq(Long userSeq);
 }
