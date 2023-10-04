@@ -2,6 +2,7 @@ package com.jrjr.inbest.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,29 +26,48 @@ public class FriendService {
 
 	@Transactional
 	public void insertFriend(Long followingSeq, Long followedSeq) throws Exception {
+		log.info("팔로잉 대상 seq: {}", followingSeq);
+		log.info("팔로워 seq: {}", followedSeq);
 
-		User followingUser = userRepository.findById(followingSeq).orElse(null);
-
-		// 팔로잉 유저 예외
-		if (followingUser == null) {
+		if (!userRepository.existsById(followingSeq)) {
 			log.info(followingSeq + " 유저가 없습니다.");
 			throw new Exception(followingSeq + " 유저가 없습니다.");
 		}
 
-		User followedUser = userRepository.findById(followedSeq).orElse(null);
-
-		//팔로워 유저 예외
-		if (followedUser == null) {
-			log.info(followedSeq + " 유저가 없습니다.");
-			throw new Exception(followedSeq + " 유저가 없습니다.");
+		if (!userRepository.existsById(followedSeq)) {
+			log.info(followingSeq + " 유저가 없습니다.");
+			throw new Exception(followingSeq + " 유저가 없습니다.");
 		}
 
-		Friend friend = Friend.builder()
-			.followingSeq(followingSeq)
-			.followedSeq(followedSeq)
-			.build();
+		if (friendRepository.existsByFollowingSeqAndFollowedSeq(followingSeq, followedSeq)) {
+			log.info("이미 {}를 팔로잉 중입니다.", followingSeq);
+			throw new Exception("이미 " + followingSeq + "를 팔로잉 중입니다.");
+		}
 
-		friendRepository.save(friend);
+		// 팔로잉 대상이 나를 팔로우하고 있는지 확인
+		Optional<Friend> friendEntity = friendRepository.findByFollowingSeqAndFollowedSeq(followedSeq,
+			followingSeq);
+
+		boolean isFollowBack = false;
+
+		if (friendEntity.isEmpty()) {
+			log.info("팔로잉 대상이 나를 팔로우 하지 않는 중");
+		}
+
+		if (friendEntity.isPresent()) {
+			log.info("팔로잉 대상이 나를 팔로우 하는 중");
+			isFollowBack = true;
+			friendEntity.get().updateFollowBack(true);
+			friendRepository.save(friendEntity.get());
+			log.info("맞팔로우 여부 변경 완료");
+		}
+
+		friendRepository.save(
+			Friend.builder()
+				.followingSeq(followingSeq)
+				.followedSeq(followedSeq)
+				.isFollowBack(isFollowBack)
+				.build());
 	}
 
 	public List<UserDto> findAllFollowings(Long followedSeq) {

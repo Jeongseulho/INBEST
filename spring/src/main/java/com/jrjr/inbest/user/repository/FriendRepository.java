@@ -11,6 +11,8 @@ import com.jrjr.inbest.user.entity.Friend;
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
+	Boolean existsByFollowingSeqAndFollowedSeq(Long followingSeq, Long followedSeq);
+
 	Optional<List<Friend>> findAllByFollowedSeq(Long followedSeq);
 
 	Optional<List<Friend>> findAllByFollowingSeq(Long followingSeq);
