@@ -2,6 +2,7 @@ import { apiInstance } from "./index";
 import { instanceWithAuth } from "./interceptors";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 import { SignupSubmitFormValue, LoginFormValue, LoginResultValue, ApiGetUserInfo } from "../type/Accounts";
+import { GetFinancialDictionary } from "../type/Dictionary";
 const api = apiInstance("spring-service");
 const apiWithAuth = instanceWithAuth("spring-service");
 export const checkEmail = async (email: string): Promise<ApiSuccessMessage> => {
@@ -60,5 +61,11 @@ export const passwordUpdate = async (seq: number, password: string): Promise<Api
 };
 export const changeDefaultImg = async (seq: number): Promise<ApiSuccessMessage> => {
   const { data } = await apiWithAuth.put(`/users/${seq}/img`);
+  return data;
+};
+export const getDictionary = async (keyword: string): Promise<GetFinancialDictionary> => {
+  const { data } = await apiWithAuth.get("financial-dictionary", {
+    params: { pageNo: 1, pageSize: 1000, keyword },
+  });
   return data;
 };

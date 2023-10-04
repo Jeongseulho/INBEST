@@ -23,8 +23,8 @@ export const usePersonalTotal = () => {
     setEndItem(calculatePageRange(page)[1]);
   }, [page]);
 
-  const { data } = useQuery(["rankingList", startItem, endItem], () => getTotalRank(startItem, endItem));
-  const { data: myData } = useQuery(["myRanking", userInfo?.seq], () => getMyRanking(userInfo?.seq));
+  const { data } = useQuery(["rankingList", startItem, endItem], () => getTotalRank(startItem, endItem), { retry: 10 });
+  const { data: myData } = useQuery(["myRanking", userInfo?.seq], () => getMyRanking(userInfo?.seq), { retry: 10 });
   const myRanking = myData?.MyUserRankingInfo;
   const rankingList = data?.UserRankingInfo;
 

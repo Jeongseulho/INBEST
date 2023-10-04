@@ -25,6 +25,7 @@
     "prettier": "^3.0.3",
     "rc-slider": "^10.2.1",
     "react": "^18.2.0",
+    "react-accessible-accordion": "^5.0.0",
     "react-apexcharts": "^1.4.1",
     "react-cropper": "^2.3.3",
     "react-datepicker": "^4.16.0",

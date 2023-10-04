@@ -19,6 +19,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import PersonalRanking from "./component/ranking/organisms/PersonalRanking";
 import PersonalRankingSearch from "./component/ranking/organisms/PersonalRankingSearch";
 import GroupRanking from "./component/ranking/organisms/GroupRanking";
+import FinancialDictionary from "./component/financial-dictionary/page/FinancialDictionary";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -54,6 +55,7 @@ function App() {
                 <Route path="group/:seq" element={<GroupRanking />} />
                 <Route path="search/:nickname" element={<PersonalRankingSearch />} />
               </Route>
+              <Route path="financial-dictionary" element={<FinancialDictionary />} />
             </Routes>
           </AnimatePresence>
         </Layout>
