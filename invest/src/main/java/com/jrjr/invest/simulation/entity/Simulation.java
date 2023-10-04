@@ -71,6 +71,22 @@ public class Simulation {
 		this.simulationUserList = simulationUserList;
 	}
 
+	@Override
+	public String toString() {
+		return "Simulation{" +
+			"seq=" + seq +
+			", title='" + title + '\'' +
+			", memberNum=" + memberNum +
+			", revenuRate=" + revenuRate +
+			", seedMoney=" + seedMoney +
+			", startDate=" + startDate +
+			", finishedDate=" + finishedDate +
+			", period=" + period +
+			", owner=" + owner +
+			", simulationUserList=" + simulationUserList +
+			'}';
+	}
+
 	public void updateSimulationRate(Integer revenuRate) {
 		this.revenuRate = revenuRate;
 	}

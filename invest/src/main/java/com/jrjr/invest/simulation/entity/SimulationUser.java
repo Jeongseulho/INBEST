@@ -60,6 +60,19 @@ public class SimulationUser {
 		this.isExited = isExited;
 	}
 
+	@Override
+	public String toString() {
+		return "SimulationUser{" +
+			"simulation=" + simulation.getSeq() +
+			", user=" + user.getSeq() +
+			", seedMoney=" + seedMoney +
+			", currentMoney=" + currentMoney +
+			", previousRank=" + previousRank +
+			", currentRank=" + currentRank +
+			", isExited=" + isExited +
+			'}';
+	}
+
 	public void update(RedisSimulationUserDTO simulationUserDTO) {
 		this.currentMoney = simulationUserDTO.getCurrentMoney();
 		this.currentRank = simulationUserDTO.getCurrentRank();
