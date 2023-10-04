@@ -10,6 +10,6 @@ import com.jrjr.inbest.dictionary.entity.FinancialWordEntity;
 @Repository
 public interface FinancialWordRepository extends MongoRepository<FinancialWordEntity, String> {
 	Page<FinancialWordEntity> findAll(Pageable pageable);
-	Page<FinancialWordEntity> findAllByTitleContainingOrContentContaining(String titleKeyword, String contentKeyword,
+	Page<FinancialWordEntity> findAllByTitleRegexIgnoreCaseOrContentRegexIgnoreCase(String titleKeyword, String contentKeyword,
 		Pageable pageable);
 }
