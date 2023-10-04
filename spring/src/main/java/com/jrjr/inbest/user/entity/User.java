@@ -130,4 +130,19 @@ public class User extends BaseEntity {
 			this.birthday = null;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+			"email='" + email + '\'' +
+			", name='" + name + '\'' +
+			", nickname='" + nickname + '\'' +
+			", birthyear='" + birthyear + '\'' +
+			", birthday='" + birthday + '\'' +
+			", gender=" + gender +
+			", profileImgSearchName='" + profileImgSearchName + '\'' +
+			", profileImgOriginalName='" + profileImgOriginalName + '\'' +
+			", deletedDate=" + deletedDate +
+			'}';
+	}
 }

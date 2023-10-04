@@ -58,4 +58,17 @@ public class SimulationUser {
 		this.currentRank = currentRank;
 		this.isExited = isExited;
 	}
+
+	@Override
+	public String toString() {
+		return "SimulationUser{" +
+			"simulation=" + simulation.getSeq() +
+			", user=" + user.getSeq() +
+			", seedMoney=" + seedMoney +
+			", currentMoney=" + currentMoney +
+			", previousRank=" + previousRank +
+			", currentRank=" + currentRank +
+			", isExited=" + isExited +
+			'}';
+	}
 }
