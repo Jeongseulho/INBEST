@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jrjr.inbest.user.dto.UserDto;
+import com.jrjr.inbest.user.dto.FriendDTO;
 import com.jrjr.inbest.user.service.FriendService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,7 +61,7 @@ public class FriendController {
 		@RequestParam(name = "loginSeq") Long loginSeq) throws Exception {
 		log.info("========== 팔로우 취소 시작 ==========");
 
-		friendService.deleteFollowing(followingSeq, loginSeq);
+		friendService.deleteFriend(followingSeq, loginSeq);
 
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);
@@ -76,10 +76,10 @@ public class FriendController {
 	})
 	@GetMapping("/followings")
 	ResponseEntity<Map<String, Object>> findAllFollowings(
-		@RequestParam(name = "loginSeq") Long loginSeq) {
+		@RequestParam(name = "loginSeq") Long loginSeq) throws Exception {
 		log.info("========== 팔로잉 목록 시작 ==========");
 
-		List<UserDto> followingList = friendService.findAllFollowings(loginSeq);
+		List<FriendDTO> followingList = friendService.findAllFollowings(loginSeq);
 
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);
@@ -95,10 +95,10 @@ public class FriendController {
 	})
 	@GetMapping("/followers")
 	ResponseEntity<Map<String, Object>> findAllFollowers(
-		@RequestParam(name = "loginSeq") Long loginSeq) {
+		@RequestParam(name = "loginSeq") Long loginSeq) throws Exception {
 		log.info("========== 팔로워 목록 시작 ==========");
 
-		List<UserDto> followerList = friendService.findAllFollowers(loginSeq);
+		List<FriendDTO> followerList = friendService.findAllFollowers(loginSeq);
 
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);

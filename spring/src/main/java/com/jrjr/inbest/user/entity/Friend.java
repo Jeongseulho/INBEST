@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public class Friend extends BaseEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seq;
@@ -30,9 +31,17 @@ public class Friend extends BaseEntity {
 	@Column(nullable = false)
 	private Long followedSeq;
 
+	@Column(nullable = false)
+	private Boolean isFollowBack;
+
 	@Builder
-	public Friend(Long followingSeq, Long followedSeq) {
+	public Friend(Long followingSeq, Long followedSeq, Boolean isFollowBack) {
 		this.followingSeq = followingSeq;
 		this.followedSeq = followedSeq;
+		this.isFollowBack = isFollowBack;
+	}
+
+	public void updateFollowBack(Boolean isFollowBack) {
+		this.isFollowBack = isFollowBack;
 	}
 }
