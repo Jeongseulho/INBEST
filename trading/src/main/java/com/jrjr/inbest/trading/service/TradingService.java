@@ -259,7 +259,7 @@ public class TradingService {
 			throw new Exception(tradingDTO.getSimulationSeq()+"에 참가하고 있는 "+tradingDTO.getSeq()+"번 방이 없습니다.");
 		}
 		//소지금이 부족한 경우
-		if(tradingDTO.getAmount() *tradingDTO.getPrice() < user.getCurrentMoney()){
+		if(tradingDTO.getAmount() *tradingDTO.getPrice() > user.getCurrentMoney()){
 			throw new Exception("의 소지금("+user.getCurrentMoney()+") 보다 더 많이 살 수 없습니다.");
 		}
 
