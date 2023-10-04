@@ -39,7 +39,7 @@ public class USATradingPriceSocketHander extends TextWebSocketHandler {
 
 		String [] splited = data.split("\\^");
 
-		System.out.println(Arrays.toString(splited));
+		// System.out.println(Arrays.toString(splited));
 		if(splited.length > 20){
 			ResponseUSAPriceDTO responseUSAPriceDTO = ResponseUSAPriceDTO.builder()
 				.rsym(splited[0])
