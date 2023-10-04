@@ -43,11 +43,11 @@ public class TradingService {
 	public void insertTrading(TradingDTO tradingDTO) throws Exception {
 		log.info(tradingDTO.toString());
 
-		if(tradingDTO.getTradingType() == TradingType.BUY
-			!= canBuy(tradingDTO)){
+		if(tradingDTO.getTradingType() == TradingType.BUY &&
+			canBuy(tradingDTO)){
 			throw new Exception("매수가 불가능한 거래 입니다.");
-		}else if(tradingDTO.getTradingType() == TradingType.SELL
-			!= canSell(tradingDTO)){
+		}else if(tradingDTO.getTradingType() == TradingType.SELL &&
+			canSell(tradingDTO)){
 			throw new Exception("매도가 불가능한 거래 입니다.");
 		}
 
