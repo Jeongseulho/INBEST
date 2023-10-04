@@ -1,10 +1,15 @@
 package com.jrjr.invest.simulation.dto.notification;
 
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
@@ -14,10 +19,11 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class NotificationDTO {
-    private String id;
-    private Long simulationSeq;
-    private Long userSeq;
-    private String message;
-    private Boolean isRead;
-    private LocalDateTime dateTime;
+	private String id;
+	private String title;
+	private Long simulationSeq;
+	private Long userSeq;
+	private String message;
+	private Boolean isRead;
+	private LocalDateTime dateTime;
 }
