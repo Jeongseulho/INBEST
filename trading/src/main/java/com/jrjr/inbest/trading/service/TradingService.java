@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 
+import com.jrjr.inbest.rank.dto.RedisStockUserDTO;
 import com.jrjr.inbest.rank.service.SimulationRankService;
 import com.jrjr.inbest.trading.constant.StockType;
 import com.jrjr.inbest.trading.constant.TradingResultType;
+import com.jrjr.inbest.trading.constant.TradingType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
@@ -14,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
+import com.jrjr.inbest.trading.dto.RedisStockDTO;
 import com.jrjr.inbest.trading.dto.StockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.entity.RedisTradingEntity;
@@ -34,12 +37,22 @@ public class TradingService {
 	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
 	private final NotificationService notificationService;
 	private final SimulationRankService simulationRankService;
+	private final RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate;
+	private final RedisTemplate<String, RedisStockDTO> stockRedisTemplate;
 
 	@Value("${eureka.instance.instance-id}")
 	public String instanceId;
 
-	public void insertTrading(TradingDTO tradingDTO){
+	public void insertTrading(TradingDTO tradingDTO) throws Exception {
 		log.info(tradingDTO.toString());
+
+		if(tradingDTO.getTradingType() == TradingType.BUY
+			!= canBuy(tradingDTO)){
+			throw new Exception("매수가 불가능한 거래 입니다.");
+		}else if(tradingDTO.getTradingType() == TradingType.SELL
+			!= canSell(tradingDTO)){
+			throw new Exception("매도가 불가능한 거래 입니다.");
+		}
 
 		LocalTime currentTime = LocalTime.now();
 
@@ -238,5 +251,36 @@ public class TradingService {
 		notificationService.sendTradingMessage(tradingDTO);
 	}
 
+	public boolean canBuy(TradingDTO tradingDTO) throws Exception {
+		HashOperations<String,String,RedisSimulationUserDTO> hashOperations= redisSimulationUserTemplate.opsForHash();
 
+		RedisSimulationUserDTO user = hashOperations.get("simulation_"+tradingDTO.getSimulationSeq(),tradingDTO.getUserSeq());
+		
+		//대상 유저가 없는 경우
+		if(user == null){
+			throw new Exception(tradingDTO.getSimulationSeq()+"에 참가하고 있는 "+tradingDTO.getSeq()+"번 방이 없습니다.");
+		}
+		//소지금이 부족한 경우
+		if(tradingDTO.getAmount() *tradingDTO.getPrice() < user.getCurrentMoney()){
+			throw new Exception("의 소지금("+user.getCurrentMoney()+") 보다 더 많이 살 수 없습니다.");
+		}
+		
+		return true;
+	}
+	public boolean canSell(TradingDTO tradingDTO) throws Exception {
+		HashOperations<String,String,StockUserDTO> hashOperations= redisStockUserTemplate.opsForHash();
+		StockUserDTO stock = hashOperations.get("simulation_"+tradingDTO.getSimulationSeq()+"_user_"+tradingDTO.getSeq(),
+			tradingDTO.getStockType()+"_"+tradingDTO.getStockCode());
+
+		//소지 주식이 없는 경우
+		if(stock == null){
+			throw new Exception(tradingDTO.getStockCode()+"주식을 보유하고 있지 않습니다.");
+		}
+		//더 많은 양을 파려고 하는경우
+		if(tradingDTO.getAmount()  > stock.getAmount()){
+			throw new Exception(tradingDTO.getStockCode()+"의 보유량("+stock.getAmount()+") 보다 더 많이 팔 수 없습니다.");
+		}
+
+		return true;
+	}
 }
