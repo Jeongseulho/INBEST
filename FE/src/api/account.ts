@@ -63,7 +63,9 @@ export const changeDefaultImg = async (seq: number): Promise<ApiSuccessMessage> 
   const { data } = await apiWithAuth.put(`/users/${seq}/img`);
   return data;
 };
-export const getDictionary = async (): Promise<GetFinancialDictionary> => {
-  const { data } = await apiWithAuth.get("financial-dictionary", { params: { pageNo: 1, pageSize: 1000 } });
+export const getDictionary = async (keyword: string): Promise<GetFinancialDictionary> => {
+  const { data } = await apiWithAuth.get("financial-dictionary", {
+    params: { pageNo: 1, pageSize: 1000, keyword },
+  });
   return data;
 };

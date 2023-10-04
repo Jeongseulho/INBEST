@@ -1,8 +1,12 @@
 import { useQuery } from "react-query";
 import { getDictionary } from "../../../api/account";
-
+import { useState, useEffect } from "react";
 export const useFinancialDictionary = () => {
-  const { data } = useQuery(["getDictionary"], () => getDictionary());
-  const dictionary = data?.financial_dictionary;
-  return { dictionary };
+  const [inputText, setInputText] = useState("");
+  const { data } = useQuery(["getDictionary", inputText], () => getDictionary(inputText), { retry: 5 });
+  const [dictionary, setDictionary] = useState(data?.financial_dictionary);
+  useEffect(() => {
+    setDictionary(data?.financial_dictionary);
+  }, [inputText]);
+  return { dictionary, setDictionary, inputText, setInputText };
 };
