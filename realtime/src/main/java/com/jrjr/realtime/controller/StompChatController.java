@@ -35,7 +35,7 @@ public class StompChatController {
 
     @Operation(summary = "채팅, 입장, 퇴장")
     @MessageMapping("/chat.message.{simulationSeq}")
-    public void chat(@DestinationVariable Long simulationSeq, @Payload ChatDTO chatDTO) {
+    public void chat(@DestinationVariable Long simulationSeq, ChatDTO chatDTO) {
         log.info("[채팅, 입장, 퇴장]");
         log.info("simulationSeq " + simulationSeq);
         log.info(chatDTO.toString());

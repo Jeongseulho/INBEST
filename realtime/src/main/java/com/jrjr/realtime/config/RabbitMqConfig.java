@@ -118,12 +118,7 @@ public class RabbitMqConfig {
         return connectionFactory;
     }
 
-    /**
-     * RabbitTemplate을 생성하여 반환
-     *
-     * @param connectionFactory RabbitMQ와의 연결을 위한 ConnectionFactory 객체
-     * @return RabbitTemplate 객체
-     */
+
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -132,11 +127,7 @@ public class RabbitMqConfig {
         return rabbitTemplate;
     }
 
-    /**
-     * Jackson 라이브러리를 사용하여 메시지를 JSON 형식으로 변환하는 MessageConverter 빈을 생성
-     *
-     * @return MessageConverter 객체
-     */
+
     @Bean
     public MessageConverter jackson2JsonMessageConverter() {
         //LocalDateTime serializable 을 위해

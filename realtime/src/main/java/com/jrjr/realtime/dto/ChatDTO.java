@@ -19,4 +19,5 @@ public class ChatDTO {
     private String message;
     private LocalDateTime dateTime;
     private String profileImgSearchName;
+    private String nickname;
 }

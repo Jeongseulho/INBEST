@@ -32,7 +32,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
 //        registry.setPathMatcher(new AntPathMatcher(".")); // URL을 / -> .으로
         registry.setApplicationDestinationPrefixes("/app"); // @MessageMapping으로 연결
-        registry.enableStompBrokerRelay("/queue", "/topic", "/exchange", "/amq/queue")
+        registry.enableStompBrokerRelay("/topic")
                 .setRelayHost(host)
                 .setRelayPort(61613)
                 .setSystemLogin(username)
