@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.jrjr.invest.global.entity.BaseEntity;
-import com.jrjr.invest.simulation.dto.UserDTO;
 import com.jrjr.invest.simulation.entity.SimulationUser;
 
 import jakarta.persistence.Column;
@@ -20,12 +19,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Slf4j
 public class User extends BaseEntity {
 
@@ -69,39 +70,5 @@ public class User extends BaseEntity {
 		this.gender = gender;
 		this.profileImgSearchName = profileImgSearchName;
 		this.profileImgOriginalName = profileImgOriginalName;
-	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-			"email='" + email + '\'' +
-			", name='" + name + '\'' +
-			", nickname='" + nickname + '\'' +
-			", birthyear='" + birthyear + '\'' +
-			", birthday='" + birthday + '\'' +
-			", gender=" + gender +
-			", profileImgSearchName='" + profileImgSearchName + '\'' +
-			", profileImgOriginalName='" + profileImgOriginalName + '\'' +
-			", deletedDate=" + deletedDate +
-			'}';
-	}
-
-	public UserDTO convertToUserDto(User user) {
-		String birth = null;
-		if (user.getBirthyear() != null && user.getBirthday() != null) {
-			birth = String.format("%s-%s-%s", user.getBirthyear(),
-				user.getBirthday().substring(0, 2),
-				user.getBirthday().substring(2, 4));
-		}
-
-		return UserDTO.builder()
-			.seq(user.getSeq())
-			.email(user.getEmail())
-			.name(user.getName())
-			.nickname(user.getNickname())
-			.birth(birth)
-			.gender(user.getGender())
-			.profileImgSearchName(user.getProfileImgSearchName())
-			.build();
 	}
 }
