@@ -279,7 +279,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetailsDTO getUserDetailsInfo(Long userSeq) {
+	public UserDetailsDTO getUserDetailsInfo(Long userSeq, Long loginSeq) {
+
+		Boolean isFollow = null; // loginSeq 가 userSeq 를 팔로우 하는지 여부
 
 		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 시작 ---");
 		Optional<User> userEntity = userRepository.findById(userSeq);
@@ -289,12 +291,20 @@ public class UserServiceImpl implements UserService {
 		log.info(userEntity.toString());
 		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 완료 ---");
 
-		log.info("--- 팔로잉, 팔로워 수 조회 시작 ---");
+		log.info("--- 팔로잉, 팔로워 조회 시작 ---");
 		Optional<Integer> followingNum = friendRepository.countByFollowingSeq(userSeq);
 		Optional<Integer> followerNum = friendRepository.countByFollowedSeq(userSeq);
 		log.info("팔로잉 수: {}", followingNum.orElse(0));
 		log.info("팔로워 수: {}", followerNum.orElse(0));
-		log.info("--- 팔로잉, 팔로워 수 조회 완료 ---");
+		// 상세 정보를 확인하는 사람이 본인인지 확인
+		if (!userSeq.equals(loginSeq)) {
+			if (friendRepository.existsByFollowingSeqAndFollowedSeq(userSeq, loginSeq)) {
+				isFollow = true;
+			} else {
+				isFollow = false;
+			}
+		}
+		log.info("--- 팔로잉, 팔로워 조회 완료 ---");
 
 		log.info("--- 티어 점수 조회 시작 ---");
 		Optional<Integer> totalTier = tierRepository.getTotalTier(userSeq);
@@ -345,9 +355,11 @@ public class UserServiceImpl implements UserService {
 			.email(userEntity.get().getEmail())
 			.nickname(userEntity.get().getNickname())
 			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
+			.userCnt(userRepository.count())
 			// friend table
 			.followingNum(followingNum.orElse(0))
 			.followerNum(followerNum.orElse(0))
+			.isFollow(isFollow)
 			// tier table
 			.tier(totalTier.orElse(0))
 			.tierByDates(tierByDates)
