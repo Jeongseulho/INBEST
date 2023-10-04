@@ -1,19 +1,28 @@
 package com.jrjr.inbest.trading.service;
 
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.jrjr.inbest.trading.document.Notification;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.repository.NotificationRepository;
 import com.jrjr.inbest.trading.repository.TradingRepository;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class NotificationService {
+
+    @Value("${custom.rabbitmq.exchange}")
+    private String EXCHANGE_NAME;
+
+    @Value("${custom.rabbitmq.routing-key.trading}")
+    private String TRADING_ROUTING_KEY;
 
     private final RabbitTemplate rabbitTemplate;
     private final TradingRepository tradingRepository;
@@ -31,7 +40,7 @@ public class NotificationService {
         notification.setApplyFailMessage();
         notificationRepository.save(notification);
 
-        rabbitTemplate.convertAndSend("realtime_direct", "trading", notification.toNotificationDTO());
+        rabbitTemplate.convertAndSend(EXCHANGE_NAME, TRADING_ROUTING_KEY, notification.toNotificationDTO());
     }
 
     // 매매 신청 완료 알림 보내기
@@ -47,7 +56,7 @@ public class NotificationService {
         notification.setApplyTradingMessage(simulationTitle, tradingDTO);
         notificationRepository.save(notification);
 
-        rabbitTemplate.convertAndSend("realtime_direct", "trading", notification.toNotificationDTO());
+        rabbitTemplate.convertAndSend(EXCHANGE_NAME, TRADING_ROUTING_KEY, notification.toNotificationDTO());
     }
 
     // 매매 성공, 실패 알림 보내기
@@ -63,6 +72,6 @@ public class NotificationService {
         notification.setTradingMessage(simulationTitle, tradingDTO);
         notificationRepository.save(notification);
 
-        rabbitTemplate.convertAndSend("realtime_direct", "trading", notification.toNotificationDTO());
+        rabbitTemplate.convertAndSend(EXCHANGE_NAME, TRADING_ROUTING_KEY, notification.toNotificationDTO());
     }
 }
