@@ -19,7 +19,6 @@ import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
 import com.jrjr.inbest.trading.dto.StockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.constant.TradingResultType;
-import com.jrjr.inbest.trading.service.FileReaderService;
 import com.jrjr.inbest.trading.service.TradingService;
 
 import io.swagger.v3.oas.annotations.Operation;
