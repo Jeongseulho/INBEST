@@ -36,11 +36,11 @@ for option_item in option_list:
     fin_prdt_cd = option_item["fin_prdt_cd"]
     intr_rate_type_nm = option_item["intr_rate_type_nm"]
     save_trm = int(option_item["save_trm"])
-    # "intr_rate"와 "intr_rate2" 값이 None인 경우 0.0으로 초기화합니다.
+    # "intr_rate"와 "intr_rate2" 값이 None인 경우 0.0으로 초기화
     intr_rate = float(option_item["intr_rate"]) if option_item["intr_rate"] is not None else 0.0
     intr_rate2 = float(option_item["intr_rate2"]) if option_item["intr_rate2"] is not None else 0.0
     
-    # 해당 "fin_prdt_cd"를 가진 "baseList" 항목을 찾아옵니다.
+    # 해당 "fin_prdt_cd"를 가진 "baseList" 항목을 찾기
     base_item = base_items_dict.get(fin_prdt_cd, {})
     
     # FinancialProduct 모델에 데이터 추가

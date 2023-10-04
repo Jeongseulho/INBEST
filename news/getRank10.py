@@ -11,7 +11,7 @@ filtered_products = FinancialProduct.objects.filter(
     bank_type_nm="1금융권",
 ).order_by('-intr_rate2')
 
-# 중복 제거 후의 데이터를 가지고 중복되지 않는 상위 10개를 선택합니다.
+# 중복 제거 후의 데이터를 가지고 중복되지 않는 상위 10개
 unique_products = []
 selected_products = []
 
@@ -20,7 +20,7 @@ for product in filtered_products:
         unique_products.append(product.fin_prdt_nm)
         selected_products.append(product)
 
-# 상위 10개를 선택합니다.
+# 상위 10개
 top_10_products = selected_products[:10]
 
 
