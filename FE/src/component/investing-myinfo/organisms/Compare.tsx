@@ -51,15 +51,25 @@ const Compare = ({ myProfit }: Props) => {
                 },
               ]}
               options={{
-                fill: {
-                  colors: ["#62c593"],
-                },
-
                 plotOptions: {
                   bar: {
                     borderRadius: 10,
                     dataLabels: {
                       position: "top", // top, center, bottom
+                    },
+                    colors: {
+                      ranges: [
+                        {
+                          from: -100,
+                          to: 0,
+                          color: "#627bc5",
+                        },
+                        {
+                          from: 1,
+                          to: 100,
+                          color: "#F15B46",
+                        },
+                      ],
                     },
                   },
                 },
