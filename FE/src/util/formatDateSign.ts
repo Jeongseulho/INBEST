@@ -89,21 +89,13 @@ export function calEndDateAndProceed(
   };
 }
 
-export function formatDate(input: string): string | null {
-  // 정규 표현식을 사용하여 날짜 형식의 문자열을 찾습니다.
-  const dateRegex = /(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6})/;
-  const match = input.match(dateRegex);
+export function formatDate(input: string): string {
+  const date = new Date(input);
 
-  if (match) {
-    const dateString = match[1]; // 첫 번째 매치된 그룹 (날짜 문자열)
-    const dateObject = new Date(dateString);
+  const month = date.getMonth() + 1; // 월은 0부터 시작하므로 1을 더합니다.
+  const day = date.getDate();
 
-    // 월과 일을 추출하여 "10월 1일" 형식으로 반환합니다.
-    const month = dateObject.getMonth() + 1;
-    const day = dateObject.getDate();
-
-    return `${month}월 ${day}일`;
-  }
-
-  return null; // 날짜 문자열을 찾지 못한 경우
+  // "월 일" 형식으로 변환
+  const formattedDate = `${month}월 ${day}일`;
+  return formattedDate;
 }

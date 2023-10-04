@@ -67,7 +67,7 @@ const Compare = ({ myProfit }: Props) => {
                         {
                           from: 1,
                           to: 100,
-                          color: "#F15B46",
+                          color: "#ffb488",
                         },
                       ],
                     },
@@ -105,6 +105,12 @@ const Compare = ({ myProfit }: Props) => {
                 xaxis: {
                   categories: ["내 모의투자 수익률"].concat(results.map((res) => res.data!.fin_prdt_nm)),
                   position: "bottom",
+                  labels: {
+                    style: {
+                      fontSize: "10px",
+                      fontWeight: 500,
+                    },
+                  },
                 },
               }}
             />

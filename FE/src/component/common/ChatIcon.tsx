@@ -12,19 +12,20 @@ import stompStore from "../../store/stompStore";
 import userStore from "../../store/userStore";
 
 const ChatIcon = () => {
+  const { client } = stompStore();
+  const { userInfo, accessToken } = userStore();
   const [curChatGroup, setCurChatGroup] = useState<MyGroup>();
   const [message, setMessage] = useState("");
   const onChangeMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
+
   const { data } = useQuery(["myGroupList"], getMyGroupList, {
     onSuccess: (data) => {
       setCurChatGroup(data[0]);
     },
+    enabled: !!accessToken,
   });
-
-  const { client } = stompStore();
-  const { userInfo } = userStore();
   const onSendMessage = () => {
     const sendData = {
       type: "message",
