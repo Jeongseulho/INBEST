@@ -6,7 +6,6 @@ import Skeleton from "react-loading-skeleton";
 const BoardList = () => {
   const { boards, isLoading } = useBoardList();
   return (
-    // TODO: 스켈레톤 로딩
     <>
       <div className=" grid grid-cols-1 lg:grid-cols-2 gap-2 ">
         {isLoading

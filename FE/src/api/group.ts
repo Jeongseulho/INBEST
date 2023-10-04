@@ -11,11 +11,8 @@ import {
   InvestingStatus,
 } from "../type/Group";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
-// import { apiInstance } from ".";
 
-// TODO: 테스트용
 const apiWithAuth = instanceWithAuth("invest-service/group");
-// const api = apiInstance("invest-service/group");
 
 export const getInvestingStatus = async (): Promise<InvestingStatus> => {
   const { data } = await apiWithAuth.get("/status");
