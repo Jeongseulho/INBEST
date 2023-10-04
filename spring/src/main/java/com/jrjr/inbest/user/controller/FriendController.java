@@ -61,7 +61,7 @@ public class FriendController {
 		@RequestParam(name = "loginSeq") Long loginSeq) throws Exception {
 		log.info("========== 팔로우 취소 시작 ==========");
 
-		friendService.deleteFollowing(followingSeq, loginSeq);
+		friendService.deleteFriend(followingSeq, loginSeq);
 
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", true);

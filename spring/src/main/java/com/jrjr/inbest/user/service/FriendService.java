@@ -24,29 +24,25 @@ public class FriendService {
 	private final FriendRepository friendRepository;
 	private final UserRepository userRepository;
 
+	/*
+		팔로우 하기
+	 */
 	@Transactional
 	public void insertFriend(Long followingSeq, Long followedSeq) throws Exception {
 		log.info("팔로잉 대상 seq: {}", followingSeq);
 		log.info("팔로워 seq: {}", followedSeq);
+		this.existsUser(followingSeq);
+		this.existsUser(followedSeq);
 
-		if (!userRepository.existsById(followingSeq)) {
-			log.info(followingSeq + " 유저가 없습니다.");
-			throw new Exception(followingSeq + " 유저가 없습니다.");
-		}
-
-		if (!userRepository.existsById(followedSeq)) {
-			log.info(followingSeq + " 유저가 없습니다.");
-			throw new Exception(followingSeq + " 유저가 없습니다.");
-		}
-
+		// 중복 팔로잉 확인
 		if (friendRepository.existsByFollowingSeqAndFollowedSeq(followingSeq, followedSeq)) {
 			log.info("이미 {}를 팔로잉 중입니다.", followingSeq);
 			throw new Exception("이미 " + followingSeq + "를 팔로잉 중입니다.");
 		}
 
 		// 팔로잉 대상이 나를 팔로우하고 있는지 확인
-		Optional<Friend> friendEntity = friendRepository.findByFollowingSeqAndFollowedSeq(followedSeq,
-			followingSeq);
+		Optional<Friend> friendEntity =
+			friendRepository.findByFollowingSeqAndFollowedSeq(followedSeq, followingSeq);
 
 		boolean isFollowBack = false;
 
@@ -68,6 +64,36 @@ public class FriendService {
 				.followedSeq(followedSeq)
 				.isFollowBack(isFollowBack)
 				.build());
+	}
+
+	/*
+		팔로우 취소
+	 */
+	@Transactional
+	public void deleteFriend(Long followingSeq, Long followedSeq) throws Exception {
+		log.info("팔로잉 대상 seq: {}", followingSeq);
+		log.info("팔로워 seq: {}", followedSeq);
+		this.existsUser(followingSeq);
+		this.existsUser(followedSeq);
+
+		// 팔로잉 여부 확인
+		if (!friendRepository.existsByFollowingSeqAndFollowedSeq(followingSeq, followedSeq)) {
+			log.info("{}를 팔로우 하고 있지 않습니다.", followingSeq);
+			throw new Exception(followingSeq + "를 팔로우 하고 있지 않습니다.");
+		}
+
+		// 팔로우 취소
+		friendRepository.deleteByFollowingSeqAndFollowedSeq(followingSeq, followedSeq);
+
+		// 맞팔로우 중이라면, 맞팔로우 여부 변경
+		Optional<Friend> friendEntity =
+			friendRepository.findByFollowingSeqAndFollowedSeq(followedSeq, followingSeq);
+
+		if (friendEntity.isPresent()) {
+			friendEntity.get().updateFollowBack(false);
+			friendRepository.save(friendEntity.get());
+			log.info("맞팔로우 여부 변경 완료");
+		}
 	}
 
 	public List<UserDto> findAllFollowings(Long followedSeq) {
@@ -128,31 +154,13 @@ public class FriendService {
 		return followerList;
 	}
 
-	@Transactional
-	public void deleteFollowing(Long followingSeq, Long followedSeq) throws Exception {
-		User followingUser = userRepository.findById(followingSeq).orElse(null);
-
-		//팔로잉 유저 예외
-		if (followingUser == null) {
-			log.info(followingSeq + " 유저가 없습니다.");
-			throw new Exception(followingSeq + " 유저가 없습니다.");
+	/*
+		회원 존재 여부 확인
+	 */
+	private void existsUser(Long userSeq) throws Exception {
+		if (!userRepository.existsById(userSeq)) {
+			log.info(userSeq + " 유저가 없습니다.");
+			throw new Exception(userSeq + " 유저가 없습니다.");
 		}
-
-		User followedUser = userRepository.findById(followedSeq).orElse(null);
-
-		//팔로워 유저 예외
-		if (followedUser == null) {
-			log.info(followedSeq + " 유저가 없습니다.");
-			throw new Exception(followedSeq + " 유저가 없습니다.");
-		}
-
-		Friend friend = friendRepository.findByFollowingSeqAndFollowedSeq(followingSeq, followedSeq).orElse(null);
-
-		//친구가 아닌경우
-		if (friend == null) {
-			throw new Exception(followedSeq + "유저는 " + followingSeq + " 유저를 팔로잉 하고 있지 않습니다.");
-		}
-
-		friendRepository.delete(friend);
 	}
 }

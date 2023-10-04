@@ -13,11 +13,13 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
 	Boolean existsByFollowingSeqAndFollowedSeq(Long followingSeq, Long followedSeq);
 
+	Optional<Friend> findByFollowingSeqAndFollowedSeq(Long followingSeq, Long followedSeq);
+
+	void deleteByFollowingSeqAndFollowedSeq(Long followingSeq, Long followedSeq);
+
 	Optional<List<Friend>> findAllByFollowedSeq(Long followedSeq);
 
 	Optional<List<Friend>> findAllByFollowingSeq(Long followingSeq);
-
-	Optional<Friend> findByFollowingSeqAndFollowedSeq(Long followingSeq, Long followedSeq);
 
 	Optional<Integer> countByFollowingSeq(Long userSeq);
 
