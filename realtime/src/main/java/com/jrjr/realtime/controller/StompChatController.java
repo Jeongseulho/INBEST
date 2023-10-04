@@ -28,8 +28,8 @@ public class StompChatController {
     @Value("${custom.rabbitmq.exchange}")
     private String EXCHANGE_NAME;
 
-    @Value("${custom.rabbitmq.routing-key.chat}")
-    private String CHAT_ROUTING_KEY;
+    @Value("${custom.rabbitmq.routing-key.realtime}")
+    private String REALTIME_ROUTING_KEY;
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -39,7 +39,7 @@ public class StompChatController {
         log.info("[채팅, 입장, 퇴장]");
         log.info("simulationSeq " + simulationSeq);
         log.info(chatDTO.toString());
-        rabbitTemplate.convertAndSend(EXCHANGE_NAME, CHAT_ROUTING_KEY, chatDTO);
+        rabbitTemplate.convertAndSend(EXCHANGE_NAME, REALTIME_ROUTING_KEY, chatDTO);
     }
 
 }

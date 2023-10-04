@@ -65,8 +65,6 @@ public class RabbitMqConfig {
 
     @Bean
     public Queue investQueue() {
-        log.info("invest queue name " + INVEST_QUEUE_NAME);
-
         return new Queue(INVEST_QUEUE_NAME);
     }
 
