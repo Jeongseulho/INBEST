@@ -32,7 +32,7 @@ public class SimulationRankRedisRepository {
 	private final HashOperations<String, String, RedisStockDTO> stockHash; // key: STOCK_HASH_KEY
 	private final HashOperations<String, String, RedisStockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
 	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet; // key: simulation_simulationSeq_sort
-	private FinancialDataCompanyRepository financialDataCompanyRepository;
+	private final FinancialDataCompanyRepository financialDataCompanyRepository;
 
 	static final String USER_HASH_KEY = "user";
 
