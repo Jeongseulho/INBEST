@@ -56,13 +56,13 @@ public class TradingService {
 		//한국 주식 장이 닫혀 있을 경우
 		if (tradingDTO.getStockType() == StockType.KOREA) {
 			if (currentTime.isAfter(LocalTime.of(18, 0)) && currentTime.isBefore(LocalTime.of(8, 59))) {
-				notificationService.sendApplyFailMessage(tradingDTO);
+				// notificationService.sendApplyFailMessage(tradingDTO);
 			}
 		}
 		//미국 주식 장이 닫혀 있을 경우
 		if (tradingDTO.getStockType() == StockType.GLOBAL) {
 			if (currentTime.isAfter(LocalTime.of(6, 0)) && currentTime.isAfter(LocalTime.of(23, 29))) {
-				notificationService.sendApplyFailMessage(tradingDTO);
+				// notificationService.sendApplyFailMessage(tradingDTO);
 			}
 		}
 
@@ -120,7 +120,7 @@ public class TradingService {
 
 
 		// 매매 신청 완료 알림 보내기
-		notificationService.sendApplySuccessMessage(tradingDTO);
+		// notificationService.sendApplySuccessMessage(tradingDTO);
 	}
 
 	public void sellStock(TradingDTO tradingDTO) throws Exception{

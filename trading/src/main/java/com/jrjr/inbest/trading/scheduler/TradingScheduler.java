@@ -89,7 +89,7 @@ public class TradingScheduler {
 			tradingDTO = failedTrading.toTradingDto();
 
 			// 매매 실패 알람 보내기
-			notificationService.sendApplyFailMessage(tradingDTO);
+			// notificationService.sendApplyFailMessage(tradingDTO);
 		}
 
 
