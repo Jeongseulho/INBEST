@@ -16,11 +16,13 @@ import PasswordUpdate from "../account/page/PasswordUpdate";
 import bell from "../../asset/image/bell.png";
 import login from "../../asset/image/login.png";
 import HeaderAlarmItem from "./HeaderAlarmItem";
+import { useNavigate } from "react-router-dom";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 const Header = () => {
+  const navigate = useNavigate();
   const [myInfo, setMyInfo] = useState<GetUserInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -29,9 +31,14 @@ const Header = () => {
   const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
   return (
     <header className="w-full h-[8vh] flex justify-evenly items-center bg-gray-50  bg-opacity-90">
-      <Link to="/">
-        <img className="h-[8vh] " src={temp_logo} />
-      </Link>
+      <img
+        className="h-[8vh] "
+        src={temp_logo}
+        onClick={() => {
+          navigate("/");
+        }}
+      />
+
       <div className="flex items-center justify-center gap-16">
         <Link to="/invest" className=" text-center text-md">
           모의 투자
@@ -42,11 +49,6 @@ const Header = () => {
         <Link to={"/community"} className=" text-center text-md">
           게시판
         </Link>
-        <a className=" text-center text-md">금융 상품 추천</a>
-        <Link to={"financial-dictionary"}>
-          <a className=" text-center text-md">금융 사전</a>
-        </Link>
-        <a className=" text-center text-md">관리자 페이지</a>
       </div>
       {!accessToken && (
         <>
