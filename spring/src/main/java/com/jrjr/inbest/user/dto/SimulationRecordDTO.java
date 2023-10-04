@@ -45,6 +45,9 @@ public class SimulationRecordDTO {
 	@Schema(description = "내 수익률")
 	Integer rate;
 
+	@Schema(description = "티어 변화량")
+	Integer tier;
+
 	@Schema(description = "자주 투자한 산업군 3가지")
 	List<String> industries;
 
@@ -53,7 +56,7 @@ public class SimulationRecordDTO {
 
 	public SimulationRecordDTO(Long simulationSeq, String title, LocalDateTime startDate, LocalDateTime finishedDate,
 		Integer period,
-		Integer memberNum, Integer rank, Integer rate) {
+		Integer memberNum, Integer rank, Integer rate, Integer tier) {
 		this.simulationSeq = simulationSeq;
 		this.title = title;
 		this.startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -62,5 +65,6 @@ public class SimulationRecordDTO {
 		this.memberNum = memberNum;
 		this.rank = rank;
 		this.rate = rate;
+		this.tier = tier;
 	}
 }
