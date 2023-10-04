@@ -7,6 +7,10 @@ export const useFinancialDictionary = () => {
   const [dictionary, setDictionary] = useState(data?.financial_dictionary);
   useEffect(() => {
     setDictionary(data?.financial_dictionary);
-  }, [inputText]);
-  return { dictionary, setDictionary, inputText, setInputText };
+  }, [inputText, data]);
+  const highlightText = (text?: string, searchText?: string) => {
+    const regex = new RegExp(`(${searchText})`, "gi");
+    return text?.replace(regex, (match: string) => `<mark>${match}</mark>`);
+  };
+  return { dictionary, setDictionary, inputText, setInputText, highlightText };
 };

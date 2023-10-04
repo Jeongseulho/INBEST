@@ -8,9 +8,10 @@ import {
 } from "react-accessible-accordion";
 import { useFinancialDictionary } from "./useFinancialDictionary";
 import { BsSearch } from "react-icons/bs";
+import DOMPurify from "dompurify";
 
 const FinancialDictionary = () => {
-  const { dictionary, inputText, setInputText } = useFinancialDictionary();
+  const { dictionary, inputText, setInputText, highlightText } = useFinancialDictionary();
   return (
     <div>
       <div className="h-20 flex justify-center mt-5">
@@ -53,12 +54,23 @@ const FinancialDictionary = () => {
                           idx === 0 ? "accordion_top_button" : ""
                         } accordion__button`}
                       >
-                        {item.title}
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(highlightText(item.title, inputText) ?? ""),
+                          }}
+                        />
                       </AccordionItemButton>
                     )}
                   </AccordionItemState>
                 </AccordionItemHeading>
-                <AccordionItemPanel>{item.content}</AccordionItemPanel>
+                <AccordionItemPanel>
+                  {" "}
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(highlightText(item.content, inputText) ?? ""),
+                    }}
+                  />
+                </AccordionItemPanel>
               </AccordionItem>
             ))}
         </Accordion>
