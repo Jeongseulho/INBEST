@@ -24,7 +24,6 @@ import com.jrjr.inbest.simulation.repository.TierRepository;
 import com.jrjr.inbest.user.entity.User;
 import com.jrjr.inbest.user.repository.UserRepository;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -114,7 +113,7 @@ public class InsertDummyData {
 		log.info("======================================================================");
 	}
 
-	@PostConstruct
+	// @PostConstruct
 	public void initEndSimulation() {
 		log.info("======================================================================");
 		log.info("============ 종료된 시뮬레이션 더미 데이터 추가 ============");
@@ -172,7 +171,7 @@ public class InsertDummyData {
 		log.info("======================================================================");
 	}
 
-	@PostConstruct
+	// @PostConstruct
 	public void initSimulation() {
 		log.info("======================================================================");
 		log.info("============ 진행 중인 시뮬레이션 더미 데이터 추가 ============");
