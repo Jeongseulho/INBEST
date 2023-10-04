@@ -20,11 +20,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "simulation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Simulation {
 
 	@Id
@@ -113,21 +115,4 @@ public class Simulation {
 
 		return "waiting";
 	}
-
-	@Override
-	public String toString() {
-		return "Simulation{" +
-			"seq=" + seq +
-			", title='" + title + '\'' +
-			", startDate=" + startDate +
-			", period=" + period +
-			", seedMoney=" + seedMoney +
-			", memberNum=" + memberNum +
-			", owner=" + owner +
-			", finishedDate=" + finishedDate +
-			", revenuRate=" + revenuRate +
-			", simulationUserList=" + simulationUserList +
-			'}';
-	}
-
 }
