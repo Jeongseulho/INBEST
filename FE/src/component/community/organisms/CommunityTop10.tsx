@@ -25,7 +25,7 @@ const CommunityTop10 = () => {
                   <img src={(idx === 0 && gold) || (idx === 1 && silver) || (idx === 2 && bronze) || ""}></img>
                 )}
                 {idx > 2 && (
-                  <div className="mx-[0.4rem] w-6 rounded-lg text-center bg-mainDark text-white ">{idx + 1}</div>
+                  <div className="mx-[0.4rem] px-2 rounded-lg text-center bg-mainDark text-white ">{idx + 1}</div>
                 )}
                 <div className="line-clamp-1">{board.title}</div>
               </div>

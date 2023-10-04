@@ -8,7 +8,8 @@ export interface UserDetailsInfo {
   tier: number;
   industries: Industry[];
   tierByDates: TierByDates[];
-  simulationRecords: SimulationRecords[];
+  simulationRecords: SimulationRecord[];
+  isFollow: boolean;
 }
 export interface GetUserDetailsInfo {
   success: boolean;
@@ -19,7 +20,7 @@ export interface TierByDates {
   date: string;
   tier: number;
 }
-export interface SimulationRecords {
+export interface SimulationRecord {
   simulationSeq: number;
   title: string;
   startDate: string;
@@ -30,11 +31,13 @@ export interface SimulationRecords {
   rate: number;
   industries: string[];
   participants: Participants[];
+  tier: number;
 }
 
 export interface Participants {
   nickname: string;
   profileImgSearchName: string;
+  userSeq: number;
 }
 
 export interface Industry {

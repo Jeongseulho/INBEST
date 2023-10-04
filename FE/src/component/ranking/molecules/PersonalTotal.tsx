@@ -3,6 +3,7 @@ import RankerItem from "../atoms/RankerItem";
 import NumberToTierImage from "../../common/NumberToTierImage";
 import { tierToString } from "../../../util/tierToString";
 import UserSearchInput from "../atoms/UserSearchInput";
+import { Link } from "react-router-dom";
 const PersonalTotal = () => {
   const { rankingList, myRanking } = usePersonalTotal();
   return (
@@ -28,10 +29,12 @@ const PersonalTotal = () => {
             <tr className="bg-gray-300 h-20 border-b">
               <td className="text-center">{myRanking?.currentRank}</td>
               <td>
-                <div className="flex items-center">
-                  <img src={myRanking?.profileImgSearchName} alt="유저 이미지" className="w-10 h-10 rounded-full" />
-                  <span className="ms-2">{myRanking?.nickname}</span>
-                </div>
+                <Link to={`/profile/${myRanking.seq}`}>
+                  <div className="flex items-center">
+                    <img src={myRanking?.profileImgSearchName} alt="유저 이미지" className="w-10 h-10 rounded-full" />
+                    <span className="ms-2">{myRanking?.nickname}</span>
+                  </div>
+                </Link>
               </td>
 
               <td>

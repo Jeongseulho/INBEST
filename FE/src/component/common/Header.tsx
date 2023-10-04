@@ -16,7 +16,7 @@ import PasswordUpdate from "../account/page/PasswordUpdate";
 import bell from "../../asset/image/bell.png";
 import login from "../../asset/image/login.png";
 import HeaderAlarmItem from "./HeaderAlarmItem";
-
+import "animate.css";
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -63,7 +63,7 @@ const Header = () => {
               <Menu.Button
                 as="img"
                 src={userInfo?.profileImgSearchName}
-                className="rounded-full hover:cursor-pointer shadow-md"
+                className="rounded-full hover:cursor-pointer shadow-md animate__animated animate__bounce"
                 width={50}
                 height={50}
                 alt="userImage"

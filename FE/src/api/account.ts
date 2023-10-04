@@ -74,3 +74,11 @@ export const getDictionary = async (keyword: string): Promise<GetFinancialDictio
   });
   return data;
 };
+export const putFollow = async (followingSeq: number): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.post(`friends/follow/${followingSeq}`);
+  return data;
+};
+export const deleteFollow = async (followingSeq: number): Promise<ApiSuccessMessage> => {
+  const { data } = await apiWithAuth.delete(`friends/follow/${followingSeq}`);
+  return data;
+};

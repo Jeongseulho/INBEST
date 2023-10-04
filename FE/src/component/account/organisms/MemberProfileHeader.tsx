@@ -15,7 +15,7 @@ const MemberProfileHeader = ({ userDetailsInfo }: { userDetailsInfo: UserDetails
         seq={userDetailsInfo.userSeq}
       />
       <MemberTierInfo tier={userDetailsInfo.tier} />
-      <FollowBtn memberSeq={userDetailsInfo.userSeq} />
+      <FollowBtn memberSeq={userDetailsInfo.userSeq} isFollow={userDetailsInfo.isFollow} />
     </div>
   );
 };

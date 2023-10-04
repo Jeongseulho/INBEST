@@ -15,11 +15,11 @@ const MemberBaseInfo = ({ profileImg, nickname, email, following, follower, seq 
         <div className="flex justify-center">
           <div className="border-e-2 pt-2 w-1/2 text-center">
             <div>팔로잉</div>
-            <div>{following}</div>
+            <div>{follower}</div>
           </div>
           <div className="pt-2 w-1/2 text-center">
             <div>팔로워</div>
-            <div>{follower}</div>
+            <div>{following}</div>
           </div>
         </div>
       </div>

@@ -63,7 +63,7 @@ const RankingSidebar = ({ activeTab, setActiveTab }: Props) => {
         backgroundColor={theme.sidebar.backgroundColor}
         rootStyles={{
           color: theme.sidebar.color,
-          minWidth: "220px",
+          minWidth: "250px",
           width: "10%",
           minHeight: "92vh",
           backgroundColor: "#ffffff",

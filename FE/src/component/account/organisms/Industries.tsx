@@ -41,6 +41,12 @@ const Industries = ({ industries }: { industries: Industry[] }) => {
                       label: "총 투자금액",
                       fontSize: "12px",
                       color: "red",
+                      formatter: function (w) {
+                        const total = w.globals.seriesTotals.reduce((a: number, b: number) => {
+                          return a + b;
+                        }, 0);
+                        return total.toLocaleString() + "원";
+                      },
                     },
                     value: {
                       fontSize: "22px",
@@ -55,11 +61,15 @@ const Industries = ({ industries }: { industries: Industry[] }) => {
             title: {
               text: industries.length > 0 ? "주로 투자한 종목" : "",
               align: "center",
+              style: {
+                fontSize: "16px",
+              },
             },
           }}
           series={purchaseAmount}
           type="donut"
           width="100%"
+          height={330}
         />
       )}
     </div>

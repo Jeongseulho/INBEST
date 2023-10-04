@@ -1,5 +1,6 @@
 import Industries from "../organisms/Industries";
 import MemberProfileHeader from "../organisms/MemberProfileHeader";
+import SimulationRecords from "../organisms/SimulationRecords";
 import TierByDate from "../organisms/TierByDate";
 import { useMemberProfile } from "./useMemberProfile";
 const MemberProfile = () => {
@@ -20,6 +21,14 @@ const MemberProfile = () => {
                 <Industries industries={userDetailInfo.industries} />
                 <TierByDate tierByDates={userDetailInfo.tierByDates} />
               </section>
+              <footer>
+                {userDetailInfo.simulationRecords.length > 0 && (
+                  <SimulationRecords
+                    simulationRecords={userDetailInfo.simulationRecords}
+                    seq={userDetailInfo.userSeq}
+                  />
+                )}
+              </footer>
             </>
           )}
         </div>
