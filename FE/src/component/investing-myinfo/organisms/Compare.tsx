@@ -30,7 +30,6 @@ const Compare = ({ myProfit }: Props) => {
   ]);
   const isAllLoading = results.some((res) => res.isLoading);
   const data = results.map((res) => res.data);
-  //TODO: skeleton loading
   return (
     <div className=" shadow-component col-span-7 p-4 flex flex-col gap-4">
       <div className="  flex items-center gap-2">
@@ -51,15 +50,25 @@ const Compare = ({ myProfit }: Props) => {
                 },
               ]}
               options={{
-                fill: {
-                  colors: ["#62c593"],
-                },
-
                 plotOptions: {
                   bar: {
                     borderRadius: 10,
                     dataLabels: {
                       position: "top", // top, center, bottom
+                    },
+                    colors: {
+                      ranges: [
+                        {
+                          from: -100,
+                          to: 0,
+                          color: "#627bc5",
+                        },
+                        {
+                          from: 1,
+                          to: 100,
+                          color: "#ffb488",
+                        },
+                      ],
                     },
                   },
                 },
@@ -95,6 +104,12 @@ const Compare = ({ myProfit }: Props) => {
                 xaxis: {
                   categories: ["내 모의투자 수익률"].concat(results.map((res) => res.data!.fin_prdt_nm)),
                   position: "bottom",
+                  labels: {
+                    style: {
+                      fontSize: "10px",
+                      fontWeight: 500,
+                    },
+                  },
                 },
               }}
             />

@@ -228,13 +228,69 @@ body{
   --animate-duration: 0.2s;
 }
 
+#chat-icon {
+  transition: all 400ms ease 0s;
+  animation:400ms cubic-bezier(0.36, 0, 0, 1) 0s 1 normal none running animate__fadeIn;
+  background: linear-gradient(rgb(160, 188, 11) 0%, rgb(131, 188, 11) 100%);
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.1) 0px 4px 6px, rgba(0, 0, 0, 0.15) 0px 8px 30px;
+  cursor: pointer;
+}
+
+#chat-icon {
+  transition: all 400ms ease 0s;
+  animation:400ms cubic-bezier(0.36, 0, 0, 1) 0s 1 normal none running animate__fadeIn;
+  background: linear-gradient(rgb(160, 188, 11) 0%, rgb(131, 188, 11) 100%);
+  box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.1) 0px 4px 6px, rgba(0, 0, 0, 0.15) 0px 8px 30px;
+  cursor: pointer;
+}
+
 .apexcharts-tooltip {
-   padding: 10px !important;
+  padding: 10px !important;
 }
 
 .disabledLinkClassName {
   @apply border-2 border-black
 }
+
+    
+@keyframes shake{
+    0%{
+        transform: rotate(0deg);
+      }
+    10%{
+      transform: rotate(45deg);
+      }
+    20%{
+      transform: rotate(-45deg);
+      }
+    30%{
+        transform: rotate(30deg);
+    }
+    40%{
+      transform: rotate(-30deg);
+    }
+    50%{
+      transform: rotate(10deg);
+        }
+        60%{
+        	transform: rotate(-10deg);
+        }
+        70%{
+        	transform: rotate(0deg);
+        }
+        100%{
+        	transform: rotate(0deg);
+        }
+}
+
+.shake-bell{
+      transform-origin: 50% 0%;
+      animation-name: shake;
+      animation-duration: 3.5s;
+      animation-iteration-count: infinite;
+      animation-delay: 0s;
+    }
+
 
 .accordion {
   border: 1px solid rgba(0, 0, 0, 0.1);

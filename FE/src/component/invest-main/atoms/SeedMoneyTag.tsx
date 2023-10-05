@@ -10,7 +10,7 @@ const SeedMoneyTag = ({ seedMoney }: Props) => {
     <div>
       <div className=" flex items-center gap-2">
         <p className=" font-medium text-gray-500">시드머니</p>
-        <img src={coin} width={40} />
+        <img src={coin} width={30} />
       </div>
       <p className=" font-bold text-xl">{seedMoney && formatComma(seedMoney)} 원</p>
     </div>

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import temp_logo from "../../asset/image/temp_logo.png";
-import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { FiLogOut } from "react-icons/fi";
 import { AiFillProfile } from "react-icons/ai";
@@ -13,11 +12,12 @@ import { logout } from "../../api/account";
 import { getUserInfo } from "../../api/account";
 import { GetUserInfo } from "../../type/Accounts";
 import PasswordUpdate from "../account/page/PasswordUpdate";
-import bell from "../../asset/image/bell.png";
 import login from "../../asset/image/login.png";
-import HeaderAlarmItem from "./HeaderAlarmItem";
+import Bell from "./Bell";
+import { Fragment } from "react";
 import "animate.css";
 import { useNavigate } from "react-router-dom";
+
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -175,25 +175,8 @@ const Header = () => {
               </Menu.Items>
             </Transition>
           </Menu>
-          <Menu as="div" className="relative inline-block text-left me-10">
-            <Menu.Button as="img" src={bell} className="cursor-pointer" width={45} />
 
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <Menu.Items className=" z-20 absolute -left-6  mt-4 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1">
-                  <HeaderAlarmItem />
-                </div>
-              </Menu.Items>
-            </Transition>
-          </Menu>
+          <Bell />
         </div>
       )}
       <ProfileUpdate myInfo={myInfo} showModal={showModal} setShowModal={setShowModal} />

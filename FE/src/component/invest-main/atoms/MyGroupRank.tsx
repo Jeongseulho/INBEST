@@ -9,7 +9,7 @@ const MyGroupRank = ({ rankInGroup, rankInGroupFluctuation }: Props) => {
     <div>
       <div className=" flex items-center gap-2">
         <p className=" font-medium text-gray-500">나의 순위</p>
-        <img src={crown} width={40} />
+        <img src={crown} width={30} />
       </div>
       <div className=" flex items-center">
         <p className=" font-bold text-xl">{rankInGroup}위</p>

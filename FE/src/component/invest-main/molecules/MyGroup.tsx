@@ -12,6 +12,11 @@ interface Props {
 }
 const MyGroup = ({ index, title, currentMemberNum, seedMoney, averageTier, progressState, simulationSeq }: Props) => {
   const { openModal } = modalStore();
+  const progressStateToKorean: { [key: string]: string } = {
+    waiting: "대기중",
+    inProgress: "진행중",
+  };
+
   return (
     <div
       onClick={() => {
@@ -29,10 +34,10 @@ const MyGroup = ({ index, title, currentMemberNum, seedMoney, averageTier, progr
       <div className=" w-32">
         <p className=" w-32">{formatNumberToWon(seedMoney)}</p>
       </div>
-      <div className=" w-16 h-16">
+      <div className=" w-16 h-16 text-center">
         <NumberToTierImage tier={averageTier} />
       </div>
-      <p className=" w-16">{progressState}</p>
+      <p className=" w-16">{progressStateToKorean[progressState]}</p>
     </div>
   );
 };

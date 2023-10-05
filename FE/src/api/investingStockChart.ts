@@ -31,6 +31,7 @@ export const getKorStockChart = async (companyCode: string, days: number) => {
       FID_INPUT_DATE_1: pastDate,
       FID_INPUT_DATE_2: currentDate,
       FID_PERIOD_DIV_CODE: "D",
+      FID_ORG_ADJ_PRC: 1,
     },
   });
   return data;

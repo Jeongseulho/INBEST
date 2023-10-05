@@ -36,18 +36,21 @@ const MyGroupList = ({ data, isLoading }: Props) => {
         </div>
       ) : (
         <div className=" flex flex-col gap-4 pb-8">
-          {data?.map((group, index) => (
-            <MyGroup
-              key={group.simulationSeq}
-              index={index}
-              title={group.title}
-              currentMemberNum={group.currentMemberNum}
-              seedMoney={group.seedMoney}
-              averageTier={group.averageTier}
-              progressState={group.progressState}
-              simulationSeq={group.simulationSeq}
-            />
-          ))}
+          {data?.map(
+            (group, index) =>
+              group.progressState !== "finished" && (
+                <MyGroup
+                  key={group.simulationSeq}
+                  index={index}
+                  title={group.title}
+                  currentMemberNum={group.currentMemberNum}
+                  seedMoney={group.seedMoney}
+                  averageTier={group.averageTier}
+                  progressState={group.progressState}
+                  simulationSeq={group.simulationSeq}
+                />
+              )
+          )}
         </div>
       )}
 
