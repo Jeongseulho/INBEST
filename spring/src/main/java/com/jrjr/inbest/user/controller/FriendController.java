@@ -107,4 +107,44 @@ public class FriendController {
 		log.info("========== 팔로워 목록 완료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 	}
+
+	@Operation(summary = "다른 회원의 팔로잉 목록")
+	@Parameters(value = {
+		@Parameter(description = "로그인한 유저 pk(실제로는 자동으로 들어가므로 신경 X)", name = "loginSeq")
+	})
+	@GetMapping("/followings/{userSeq}")
+	ResponseEntity<Map<String, Object>> findAllOtherFollowings(
+		@PathVariable(name = "userSeq") Long userSeq,
+		@RequestParam(name = "loginSeq") Long loginSeq) throws Exception {
+		log.info("========== {} 회원의 팔로잉 목록 조회 시작 ==========", userSeq);
+
+		List<FriendDTO> followingList = friendService.findAllOtherFollowings(userSeq, loginSeq);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+		resultMap.put("followingList", followingList);
+
+		log.info("========== {} 회원의 팔로잉 목록 조회 완료 ==========", userSeq);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
+
+	@Operation(summary = "다른 회원의 팔로워 목록")
+	@Parameters(value = {
+		@Parameter(description = "로그인한 유저 pk(실제로는 자동으로 들어가므로 신경 X)", name = "loginSeq")
+	})
+	@GetMapping("/followers/{userSeq}")
+	ResponseEntity<Map<String, Object>> findAllOtherFollowers(
+		@PathVariable(name = "userSeq") Long userSeq,
+		@RequestParam(name = "loginSeq") Long loginSeq) throws Exception {
+		log.info("========== {} 회원의 팔로워 목록 조회 시작 ==========", userSeq);
+
+		List<FriendDTO> followerList = friendService.findAllOtherFollowers(userSeq, loginSeq);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", true);
+		resultMap.put("followerList", followerList);
+
+		log.info("========== {} 회원의 팔로워 목록 조회 완료 ==========", userSeq);
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+	}
 }

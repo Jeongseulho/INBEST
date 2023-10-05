@@ -26,5 +26,13 @@ public class FriendDTO {
 
 	private Long tier;
 
-	private Boolean isFollowBack;
+	private Boolean isFollowed;
+
+	public FriendDTO(Long userSeq, String email, String nickname, String profileImgSearchName, Long tier) {
+		this.userSeq = userSeq;
+		this.email = email;
+		this.nickname = nickname;
+		this.profileImgSearchName = profileImgSearchName;
+		this.tier = tier;
+	}
 }
