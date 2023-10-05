@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.jrjr.security.constant.Role;
 import com.jrjr.security.dto.AccessTokenDto;
 import com.jrjr.security.dto.LoginDto;
 import com.jrjr.security.dto.TokenExpireTime;
@@ -25,9 +24,12 @@ import com.jrjr.security.repository.LoginRepository;
 import com.jrjr.security.repository.RefreshTokenRepository;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,14 +45,15 @@ public class JwtProvider {
 	private final LoginRepository loginRepository;
 	private static final String GRANT_TYPE = "Bearer";
 
-	public AccessTokenDto generateAccessToken(String email, Role role) {
+	public AccessTokenDto generateAccessToken(LoginDto loginDto) {
 		log.info("JwtProvider - generateAccessToken 실행");
 
 		String accessToken = Jwts.builder()
 			.setIssuer("inbest")
-			.setSubject(email)
+			.setSubject(loginDto.getEmail())
 			.setExpiration(new Date(System.currentTimeMillis() + TokenExpireTime.ACCESS_TOKEN_EXPIRE_TIME))
-			.claim("role", role.toString())
+			.claim("seq", loginDto.getUserSeq())
+			.claim("role", loginDto.getRole().toString())
 			.signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
 			.compact();
 
@@ -72,8 +75,6 @@ public class JwtProvider {
 		return Optional.empty();
 	}
 
-<<<<<<<< HEAD:spring/src/main/java/com/jrjr/inbest/jwt/service/JwtProvider.java
-========
 	public boolean isValidToken(String token) {
 		log.info("JwtProvider - isValidToken 실행");
 
@@ -92,7 +93,6 @@ public class JwtProvider {
 		}
 	}
 
->>>>>>>> origin/master:security/src/main/java/com/jrjr/security/service/JwtProvider.java
 	public Claims getClaims(String token) {
 		log.info("JwtProvider - getClaims 실행");
 
@@ -108,8 +108,6 @@ public class JwtProvider {
 		}
 	}
 
-<<<<<<<< HEAD:spring/src/main/java/com/jrjr/inbest/jwt/service/JwtProvider.java
-========
 	public boolean compareRefreshTokens(String refreshToken) {
 		log.info("JwtProvider - compareRefreshTokens 실행");
 
@@ -124,7 +122,6 @@ public class JwtProvider {
 		return refreshToken.equals(refreshTokenEntity.get().getRefreshToken());
 	}
 
->>>>>>>> origin/master:security/src/main/java/com/jrjr/security/service/JwtProvider.java
 	public LoginDto getUserInfoFromToken(String token) {
 		log.info("JwtProvider - getUserInfoFromToken 실행");
 
@@ -137,6 +134,7 @@ public class JwtProvider {
 		}
 
 		return LoginDto.builder()
+			.userSeq(loginEntity.get().getUserSeq())
 			.email(loginEntity.get().getEmail())
 			.role(loginEntity.get().getRole())
 			.build();
@@ -153,5 +151,22 @@ public class JwtProvider {
 
 		UserDetails userDetails = new User(claims.getSubject(), "", authorities);
 		return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
+	}
+
+	public void reissueAccessToken(@NonNull HttpServletResponse response, String refreshToken) {
+		// refreshToken 만료
+		if (!this.isValidToken(refreshToken)) {
+			throw new JwtException("EXPIRED_REFRESH_TOKEN");
+		}
+		// redis 에 저장된 refreshToken 과 비교
+		if (!this.compareRefreshTokens(refreshToken)) {
+			throw new JwtException("INVALID_TOKEN");
+		}
+		// accessToken 재발급
+		LoginDto loginDto = this.getUserInfoFromToken(refreshToken);
+		AccessTokenDto accessTokenDto = this.generateAccessToken(loginDto);
+		response.setHeader("Authorization", accessTokenDto.getAccessToken());
+		log.info("accessToken 재발급: {}", accessTokenDto.getAccessToken());
+		throw new JwtException("REISSUE_ACCESS_TOKEN");
 	}
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +39,6 @@ public class Login {
 
 	@Column(nullable = false)
 	private String provider;
-<<<<<<<< HEAD:spring/src/main/java/com/jrjr/inbest/login/entity/Login.java
 
 	@Builder
 	public Login(String email, String password, Role role, Long userSeq, String provider) {
@@ -48,10 +48,4 @@ public class Login {
 		this.userSeq = userSeq;
 		this.provider = provider;
 	}
-
-	public void updatePassword(String password) {
-		this.password = password;
-	}
-========
->>>>>>>> origin/master:security/src/main/java/com/jrjr/security/entity/Login.java
 }

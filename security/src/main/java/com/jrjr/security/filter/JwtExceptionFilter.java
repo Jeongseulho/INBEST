@@ -7,6 +7,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jrjr.security.constant.ErrorCode;
+import com.jrjr.security.dto.ErrorResult;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -41,6 +42,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 		log.info("JwtExceptionFilter - setErrorResponse 실행");
 
 		ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+		ErrorResult errorResult = ErrorResult.builder().success("false").build();
 
 		if (exception.getMessage().equals("INVALID_TOKEN")) {
 			errorCode = ErrorCode.INVALID_TOKEN; // 로그아웃
@@ -48,13 +50,19 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 
 		if (exception.getMessage().equals("REISSUE_ACCESS_TOKEN")) {
 			errorCode = ErrorCode.REISSUE_ACCESS_TOKEN; // 재요청
+			errorResult.setAccessToken(response.getHeader("Authorization"));
 		}
 
 		if (exception.getMessage().equals("EXPIRED_REFRESH_TOKEN")) {
 			errorCode = ErrorCode.EXPIRED_REFRESH_TOKEN; // 로그아웃
 		}
 
-		String responseBody = objectMapper.writeValueAsString(errorCode);
+		errorResult.setMessage(errorCode.getMessage());
+		errorResult.setCode(errorCode.getCode());
+
+		log.info(errorResult.toString());
+
+		String responseBody = objectMapper.writeValueAsString(errorResult);
 		response.setContentType("application/json;charset=UTF-8");
 		response.setStatus(200);
 		response.getWriter().println(responseBody);
