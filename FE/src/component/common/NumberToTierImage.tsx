@@ -5,9 +5,10 @@ import diamond from "../../asset/image/diamond.png";
 
 interface Props {
   tier: number | undefined;
+  width?: number;
 }
 
-const NumberToTierImage = ({ tier }: Props) => {
+const NumberToTierImage = ({ tier, width }: Props) => {
   if (tier === undefined) return <></>;
   return (
     <img
@@ -20,6 +21,9 @@ const NumberToTierImage = ({ tier }: Props) => {
           ? gold
           : diamond
       }
+      style={{
+        width: width ? width : 40,
+      }}
     />
   );
 };

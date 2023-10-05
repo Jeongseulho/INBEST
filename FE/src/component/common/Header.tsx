@@ -41,9 +41,7 @@ const Header = () => {
         <Link to={"/community"} className=" text-center text-md">
           게시판
         </Link>
-        <a className=" text-center text-md">금융 상품 추천</a>
         <a className=" text-center text-md">금융 사전</a>
-        <a className=" text-center text-md">관리자 페이지</a>
       </div>
       {!accessToken && (
         <>

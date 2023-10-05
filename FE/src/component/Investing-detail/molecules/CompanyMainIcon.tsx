@@ -117,7 +117,7 @@ const CompanyMainIcon = ({ companyInfo }: Props) => {
                   <div className="group relative cursor-pointer">
                     <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
                     <div className=" bg-opacity-90 z-50 hidden group-hover:block text-sm bottom-4 w-96 text-white bg-gray-500 rounded px-2 py-1 absolute left-1/2 transform -translate-x-1/2 ">
-                      2022 반기 ~ 2023 반기 사이에 해당 지표 증가율 계산하여 높을수록 점수 추가
+                      2022 반기 ~ 2023 반기 사이에 해당 지표 증가율 계산하여 높을수록 점수 측정
                     </div>
                   </div>
                 </div>
