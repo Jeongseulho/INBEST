@@ -204,6 +204,7 @@ const ProfileUpdate = ({
                 <input
                   type="text"
                   value={formNickname}
+                  defaultValue={formNickname}
                   disabled={isCheckedNickname}
                   className="signup-input w-full"
                   placeholder="닉네임을 입력해 주세요"
