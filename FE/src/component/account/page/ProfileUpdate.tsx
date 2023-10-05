@@ -54,7 +54,23 @@ const ProfileUpdate = ({
     reset,
     formState: { errors },
   } = useForm<SignupFormValue>();
-  useEffect(() => {}, [imgInfo]);
+  useEffect(() => {
+    setFormNickname(myInfo?.nickname ?? "");
+    if (showModal) {
+      document.body.style.overflow = "hidden"; // 바깥 스크롤 비활성화
+    } else {
+      document.body.style.overflowY = "auto";
+      document.body.style.overflowX = "hidden";
+    }
+    return () => {
+      document.body.style.overflowY = "auto";
+      document.body.style.overflowX = "hidden";
+      if (showModal) {
+        setShowModal(false);
+      }
+    };
+  }, [showModal]);
+
   return (
     <>
       <Modal
