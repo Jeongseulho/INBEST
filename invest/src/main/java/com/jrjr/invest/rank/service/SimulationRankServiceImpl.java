@@ -180,7 +180,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 			String stockInfoKey = stockType + "_" + stockCode;
 			// 주식 구매: -, 주식 판매: +
 			long totalAmount = trading.getAmount() * trading.getPrice();
-			if (trading.getConclusionType() == 1) {
+			if (trading.getTradingType() == 1) {
 				totalAmount *= -1;
 			}
 			log.info("stockInfoKey: {}", stockInfoKey);
@@ -302,7 +302,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 			.stockName(financialdataCompany.getCompanyName())
 			.stockMarketPrice(stockMarketPrice)
 			.totalStockPrice(totalAmount)
-			.stockImgSearchName(null)
+			.stockImgSearchName(financialdataCompany.getImgUrl())
 			.build();
 		log.info(topStockDto.toString());
 
