@@ -18,6 +18,8 @@ import com.jrjr.inbest.rank.dto.TopStockDTO;
 import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
 import com.jrjr.inbest.trading.dto.RedisStockDTO;
 import com.jrjr.inbest.trading.dto.StockUserDTO;
+import com.jrjr.inbest.trading.entity.FinancialDataCompany;
+import com.jrjr.inbest.trading.repository.FinancialDataCompanyRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,7 @@ public class SimulationRankRedisRepository {
 	private final HashOperations<String, String, RedisStockDTO> stockHash; // key: STOCK_HASH_KEY
 	private final HashOperations<String, String, StockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
 	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet; // key: simulation_simulationSeq_sort
+	private FinancialDataCompanyRepository financialDataCompanyRepository;
 
 	static final String USER_HASH_KEY = "user";
 
@@ -39,13 +42,16 @@ public class SimulationRankRedisRepository {
 	public SimulationRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
 		RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate,
 		RedisTemplate<String, RedisStockDTO> stockRedisTemplate,
-		RedisTemplate<String, StockUserDTO> redisStockUserTemplate,
-		RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate) {
+		RedisTemplate<String, StockUserDTO> stockUserRedisTemplate,
+		RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate,
+		FinancialDataCompanyRepository financialDataCompanyRepository
+	) {
 		this.userHash = userRedisTemplate.opsForHash();
 		this.simulationUserHash = simulationUserRedisTemplate.opsForHash();
 		this.stockHash = stockRedisTemplate.opsForHash();
-		this.stockUserHash = redisStockUserTemplate.opsForHash();
+		this.stockUserHash = stockUserRedisTemplate.opsForHash();
 		this.simulationUserRankingZSet = simulationUserRankingRedisTemplate.opsForZSet();
+		this.financialDataCompanyRepository = financialDataCompanyRepository;
 	}
 
 	/*
@@ -90,7 +96,7 @@ public class SimulationRankRedisRepository {
 			return null;
 		}
 		log.info(redisStockDto.toString());
-		return String.valueOf(redisStockDto.getMarketPrice());
+		return redisStockDto.getMarketPrice();
 	}
 
 	/*
@@ -102,6 +108,25 @@ public class SimulationRankRedisRepository {
 		return simulationUserRankingZSet.reverseRange(simulationUserRankingKey, start, end);
 	}
 
+	/*
+		시뮬레이션 별 내 랭킹 정보 불러오기
+	 */
+	public RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq) {
+		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
+			= this.getSimulationUserRankingInfoSet(simulationSeq, 0, -1);
+		for (RedisSimulationUserRankingDTO redisSimulationUserRankingDto : simulationUserRankingInfo) {
+			if (redisSimulationUserRankingDto.getUserSeq().equals(userSeq)) {
+				log.info(redisSimulationUserRankingDto.toString());
+				return redisSimulationUserRankingDto;
+			}
+		}
+		log.info("해당 시뮬레이션에 없는 참가자 정보");
+		return null;
+	}
+
+	/*
+		시뮬레이션 별 랭킹 정보 삭제
+	 */
 	public void deleteSimulationUserRankingInfo(Long simulationSeq) {
 		String simulationUserRankingKey = "simulation_" + simulationSeq + "_sort";
 		simulationUserRankingZSet.removeRange(simulationUserRankingKey, 0, -1);
@@ -111,6 +136,7 @@ public class SimulationRankRedisRepository {
 		시뮬레이션 별 참가자 랭킹 정보 산정
 	 */
 	public void updateSimulationUserRankingInfo(Long simulationSeq) {
+		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 시작 =====");
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -156,12 +182,18 @@ public class SimulationRankRedisRepository {
 					redisStockUserDto.getStockCode()); // 주식 시가 정보
 				long totalStockPrice = amount * Long.parseLong(stockMarketPrice); // 보유 중인 주식 가격
 
+				FinancialDataCompany financialDataCompanyEntity
+					= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(
+					String.valueOf(redisStockUserDto.getType()), redisStockUserDto.getStockCode());
+
 				// 참가자가 보유 중인 주식 정보 추가
 				TopStockDTO topStockDto = TopStockDTO.builder()
 					.stockName(redisStockUserDto.getName())
 					.stockMarketPrice(stockMarketPrice)
 					.totalStockPrice(totalStockPrice)
+					.stockImgSearchName(financialDataCompanyEntity.getImgUrl())
 					.build();
+
 				log.info("보유 주식 정보: {}", topStockDto.toString());
 				stockInfoList.add(topStockDto);
 				totalMoney += totalStockPrice; // 총 자산 합산
@@ -256,8 +288,26 @@ public class SimulationRankRedisRepository {
 			simulationUserHash.put(simulationUserHashKey, String.valueOf(userSeq), simulationUserDto);
 			log.info(simulationUserDto.toString());
 		}
-		
+
 		stopWatch.stop();
+		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 완료 =====");
 		log.info("랭킹 재산정 소요 시간: {} milliseconds", stopWatch.getTotalTimeMillis());
+	}
+
+	/*
+		시뮬레이션의 평균 티어 정보 가져오기
+	 */
+	public Integer getSimulationAvgTierInfo(Long simulationSeq) {
+		Map<String, RedisSimulationUserDTO> simulationUserDtoMap = this.getSimulationUserInfoMap(simulationSeq);
+		int totalTier = 0;
+		for (String userSeq : simulationUserDtoMap.keySet()) {
+			totalTier += this.getUserInfo(userSeq).getTier();
+		}
+		log.info("티어 점수 총합: {}", totalTier);
+
+		int avgTier = totalTier / simulationUserDtoMap.size();
+		log.info("평균 티어 점수: {}", avgTier);
+
+		return avgTier;
 	}
 }
