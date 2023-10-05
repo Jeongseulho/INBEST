@@ -18,6 +18,7 @@ import com.jrjr.invest.rank.dto.RedisStockUserDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
 import com.jrjr.invest.rank.dto.TopStockDTO;
 import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
+import com.jrjr.invest.simulation.repository.SimulationRepository;
 import com.jrjr.invest.trading.entity.FinancialDataCompany;
 import com.jrjr.invest.trading.repository.FinancialDataCompanyRepository;
 
@@ -33,7 +34,7 @@ public class SimulationRankRedisRepository {
 	private final HashOperations<String, String, RedisStockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
 	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet; // key: simulation_simulationSeq_sort
 	private final FinancialDataCompanyRepository financialDataCompanyRepository;
-
+	private final SimulationRepository simulationRepository;
 	static final String USER_HASH_KEY = "user";
 
 	static final String STOCK_HASH_KEY = "stock";
@@ -44,7 +45,8 @@ public class SimulationRankRedisRepository {
 		RedisTemplate<String, RedisStockDTO> stockRedisTemplate,
 		RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate,
 		RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate,
-		FinancialDataCompanyRepository financialDataCompanyRepository
+		FinancialDataCompanyRepository financialDataCompanyRepository,
+		SimulationRepository simulationRepository
 	) {
 		this.userHash = userRedisTemplate.opsForHash();
 		this.simulationUserHash = simulationUserRedisTemplate.opsForHash();
@@ -52,6 +54,7 @@ public class SimulationRankRedisRepository {
 		this.stockUserHash = stockUserRedisTemplate.opsForHash();
 		this.simulationUserRankingZSet = simulationUserRankingRedisTemplate.opsForZSet();
 		this.financialDataCompanyRepository = financialDataCompanyRepository;
+		this.simulationRepository = simulationRepository;
 	}
 
 	/*
@@ -296,16 +299,21 @@ public class SimulationRankRedisRepository {
 		시뮬레이션의 평균 티어 정보 가져오기
 	 */
 	public Integer getSimulationAvgTierInfo(Long simulationSeq) {
-		Map<String, RedisSimulationUserDTO> simulationUserDtoMap = this.getSimulationUserInfoMap(simulationSeq);
-		int totalTier = 0;
-		for (String userSeq : simulationUserDtoMap.keySet()) {
-			totalTier += this.getUserInfo(userSeq).getTier();
+		List<Long> simulationUserTier = simulationRepository.getSimulationUserTier(simulationSeq);
+		if (simulationUserTier.isEmpty()) {
+			log.info("{} 시뮬레이션의 정보가 없습니다.", simulationSeq);
+			return null;
+		}
+
+		long totalTier = 0;
+		for (Long tier : simulationUserTier) {
+			totalTier += tier;
 		}
 		log.info("티어 점수 총합: {}", totalTier);
 
-		int avgTier = totalTier / simulationUserDtoMap.size();
+		long avgTier = totalTier / simulationUserTier.size();
 		log.info("평균 티어 점수: {}", avgTier);
 
-		return avgTier;
+		return (int)avgTier;
 	}
 }
