@@ -34,4 +34,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u.seq FROM User u WHERE u.nickname = :nickname")
 	Long findSeqByNickname(@Param("nickname") String nickname);
+
+	@Query("SELECT s.seq "
+		+ "FROM SimulationUser su "
+		+ "JOIN Simulation s ON s.seq = su.simulation.seq "
+		+ "WHERE s.finishedDate is null AND su.user.seq = :userSeq")
+	List<Long> getParticipatingSimulationSeq(@Param("userSeq") Long userSeq);
 }
