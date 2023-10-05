@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -11,6 +12,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import net.minidev.json.JSONObject;
 
@@ -21,7 +23,7 @@ import reactor.core.publisher.Mono;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class SecurityGlobalFilter implements GlobalFilter {
+public class SecurityGlobalFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -66,6 +68,10 @@ public class SecurityGlobalFilter implements GlobalFilter {
 						JSONObject errorResponse = new JSONObject();
 						errorResponse.put("success", securityResponse.get("success"));
 						errorResponse.put("message", securityResponse.get("message"));
+						if (securityResponse.get("accessToken") != null) {
+							errorResponse.put("accessToken", securityResponse.get("accessToken"));
+						}
+
 						try {
 							return response.writeWith(Mono.just(response.bufferFactory()
 								.wrap(errorResponse.toString().getBytes())));
@@ -73,6 +79,20 @@ public class SecurityGlobalFilter implements GlobalFilter {
 							return Mono.error(e);
 						}
 					}
+
+					if (securityResponse.containsKey("seq") && securityResponse.containsKey("email")) {
+						UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(exchange.getRequest().getURI())
+							.queryParam("loginSeq", securityResponse.get("seq"))
+							.queryParam("loginEmail", securityResponse.get("email"));
+						ServerWebExchange newExchange = exchange.mutate()
+							.request(
+								exchange.getRequest().mutate().uri(uriBuilder.build().toUri()).build())
+							.response(exchange.getResponse())
+							.build();
+						log.info(newExchange.getRequest().getURI().toString());
+						return chain.filter(newExchange);
+					}
+
 					return chain.filter(exchange);
 				}
 			)
@@ -91,5 +111,10 @@ public class SecurityGlobalFilter implements GlobalFilter {
 					return Mono.error(e);
 				}
 			});
+	}
+
+	@Override
+	public int getOrder() {
+		return 100;
 	}
 }
