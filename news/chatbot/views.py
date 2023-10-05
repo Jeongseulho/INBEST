@@ -4,7 +4,7 @@ from .utils import generate_response
 
 
 
-# http://localhost:8000/chat/?message={질문}
+# http://localhost:8000/chatbot/?message={질문}
 def chat(request):
     if request.method == 'GET':
         message = request.GET.get('message', '')

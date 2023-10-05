@@ -1,6 +1,6 @@
 import openai
 
-# openai.api_key = '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'
+openai.api_key = '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'
 
 def generate_response(prompt):
     response = openai.Completion.create(
@@ -42,5 +42,4 @@ def load_single_document(file_path):
 def load_documents(source_dir):
     all_files = os.listdir(source_dir)
     return [load_single_document(f"{source_dir}/{file_name}") for file_name in all_files]
-
 '''
