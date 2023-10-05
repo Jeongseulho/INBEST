@@ -9,6 +9,7 @@ import { BsNewspaper } from "react-icons/bs";
 import { LiaCoinsSolid } from "react-icons/lia";
 import { INVESTING_TAB } from "../../constant/INVESTING_TAB";
 import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 interface Props {
   activeTab: number;
@@ -17,6 +18,10 @@ interface Props {
 
 const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
   const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
+
   const theme = {
     sidebar: {
       backgroundColor: "#ffffff",
