@@ -159,38 +159,54 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 	}
 
 	/*
-			시뮬레이션 별 BEST PICK 구하기
-			(1) 시뮬레이션에서 가장 높은 수익을 낸 주식 3가지
-			(2) 시뮬레이션에서 가장 높은 손실을 낸 주식 3가지
-			(3) 시뮬레이션에서 가장 인기가 많은 산업군 3가지
-		 */
+		시뮬레이션 별 BEST PICK 구하기
+		(1) 시뮬레이션에서 가장 높은 수익을 낸 주식 3가지
+		(2) 시뮬레이션에서 가장 높은 손실을 낸 주식 3가지
+		(3) 시뮬레이션에서 가장 인기가 많은 산업군 3가지
+	*/
 	@Override
 	public Map<String, List<Object>> getSimulationStockRankingInfo(Long simulationSeq) {
+		log.info("========== 시뮬레이션에서 거래된 주식 정보 산정 시작 ==========");
+		StringTokenizer st;
+		Map<String, TradingStock> stockInfoMap = new HashMap<>(); // 거래 및 보유 주식 정보 저장
+		Map<String, Long> industryInfoMap = new HashMap<>(); // 산업군 별 거래량 저장
+
+		// tradingInfoList: 시뮬레이션의 거래 성사 주식 내역 정보
 		List<Trading> tradingInfoList
 			= tradingRepository.findBySimulationSeqAndConclusionType(simulationSeq, 1);
 
-		Map<String, Long> stockInfoMap = new HashMap<>(); // 주식 별 수익, 손실 합을 저장
-		Map<String, Long> industryInfoMap = new HashMap<>(); // 산업군 별 거래량 저장
 		for (Trading trading : tradingInfoList) {
 			log.info("trading: {}", trading.toString());
-			// stockInfoMap 에 주식 별 수익, 손실 합을 저장
+
 			String stockType = trading.getStockType();
 			String stockCode = trading.getStockCode();
-			// stockInfoMap key: stockType_stockCode
 			String stockInfoKey = stockType + "_" + stockCode;
-			// 주식 구매: -, 주식 판매: +
-			long totalAmount = trading.getAmount() * trading.getPrice();
-			if (trading.getTradingType() == 1) {
-				totalAmount *= -1;
-			}
 			log.info("stockInfoKey: {}", stockInfoKey);
-			log.info("totalAmount: {}", totalAmount);
 
+			long cnt = trading.getAmount(); // 거래 개수
+			long totalPrice = trading.getPrice() + trading.getAmount(); // 거래 금액
+
+			TradingStock tradingStock;
 			if (stockInfoMap.containsKey(stockInfoKey)) {
-				stockInfoMap.put(stockInfoKey, stockInfoMap.get(stockInfoKey) + totalAmount);
+				tradingStock = stockInfoMap.get(stockInfoKey);
 			} else {
-				stockInfoMap.put(stockInfoKey, totalAmount);
+				tradingStock = new TradingStock(trading.getStockName(), 0, 0, 0);
 			}
+
+			// 판매
+			if (trading.getTradingType() == 0) {
+				tradingStock.sellCnt += cnt;
+				tradingStock.totalPrice += totalPrice;
+			}
+
+			// 구매
+			if (trading.getTradingType() == 1) {
+				tradingStock.buyCnt += cnt;
+				tradingStock.totalPrice -= totalPrice;
+			}
+
+			log.info("tradingStock: {}", tradingStock.toString());
+			stockInfoMap.put(stockInfoKey, tradingStock);
 
 			// companyIndustryInfoMap 에 산업군 별 주식 거래량을 저장
 			FinancialDataCompany financialdataCompany
@@ -198,72 +214,54 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 
 			String industryInfoKey = financialdataCompany.getCompanyIndustry();
 			log.info("CompanyIndustry : {}", industryInfoKey);
-			log.info("Amount: {}", trading.getAmount());
+			log.info("Amount: {}", cnt);
 
 			if (industryInfoMap.containsKey(industryInfoKey)) {
-				industryInfoMap.put(industryInfoKey, industryInfoMap.get(industryInfoKey) + trading.getAmount());
+				industryInfoMap.put(industryInfoKey, industryInfoMap.get(industryInfoKey) + cnt);
 			} else {
-				industryInfoMap.put(industryInfoKey, trading.getAmount());
+				industryInfoMap.put(industryInfoKey, cnt);
 			}
 		}
 
-		// stockInfoMap 정렬
-		log.info("----- stockInfoMap 정렬 전 -----");
-		for (String key : stockInfoMap.keySet()) {
-			log.info(key + ": " + stockInfoMap.get(key));
-		}
-		log.info("------------------------------");
-
+		// stockInfoMap 내림차순 정렬
 		List<String> sortedStockInfoKeyList = new ArrayList<>(stockInfoMap.keySet());
-		sortedStockInfoKeyList.sort((s1, s2) -> stockInfoMap.get(s2).compareTo(stockInfoMap.get(s1)));
-
+		sortedStockInfoKeyList.sort(
+			(o1, o2) -> (int)(stockInfoMap.get(o2).totalPrice - stockInfoMap.get(o1).totalPrice));
 		log.info("----- stockInfoMap 정렬 후 -----");
 		for (String key : sortedStockInfoKeyList) {
-			log.info(key + ": " + stockInfoMap.get(key));
+			TradingStock tradingStock = stockInfoMap.get(key);
+			log.info(tradingStock.stockName + ": " + tradingStock.totalPrice);
 		}
 		log.info("------------------------------");
+
+		log.info("========== 시뮬레이션에서 거래된 주식 정보 산정 완료 ==========");
 
 		Map<String, List<Object>> simulationStockRankingInfo = new HashMap<>();
 		List<TopStockDTO> topNProfitList = new ArrayList<>();
 		List<TopStockDTO> topNLossList = new ArrayList<>();
-		StringTokenizer st;
 
-		// topNProfitList 만들기
-		log.info("===== topNProfitList 만들기 =====");
+		log.info("===== topNProfitList, topNLossList 만들기 =====");
 		for (int i = 0; i < sortedStockInfoKeyList.size() && i < 3; i++) {
-			// stockInfoMap key: stockType_stockCode
+			// topNProfitList 만들기
 			st = new StringTokenizer(sortedStockInfoKeyList.get(i), "_");
 			String stockType = st.nextToken();
 			String stockCode = st.nextToken();
 
-			// 주식 총 거래량 가져오기
-			Long totalAmount = stockInfoMap.get(sortedStockInfoKeyList.get(i));
+			String key = sortedStockInfoKeyList.get(i);
+			Long totalCnt = stockInfoMap.get(key).buyCnt + stockInfoMap.get(key).sellCnt; // 주식 총 거래량 가져오기
+			topNProfitList.add(makeTopStockDto(stockType, stockCode, totalCnt));
 
-			topNProfitList.add(makeTopStockDto(stockType, stockCode, totalAmount));
+			// topNLossList 만들기
+			st = new StringTokenizer(sortedStockInfoKeyList.get(sortedStockInfoKeyList.size() - 1 - i), "_");
+			stockType = st.nextToken();
+			stockCode = st.nextToken();
+
+			key = sortedStockInfoKeyList.get(i);
+			totalCnt = stockInfoMap.get(key).buyCnt + stockInfoMap.get(key).sellCnt; // 주식 총 거래량 가져오기
+			topNLossList.add(makeTopStockDto(stockType, stockCode, totalCnt));
 		}
 		simulationStockRankingInfo.put("topNProfitList", Collections.singletonList(topNProfitList));
-
-		// topNLossList 만들기
-		log.info("===== topNLossList 만들기 =====");
-		for (int i = 0; i < sortedStockInfoKeyList.size() && i < 3; i++) {
-			// stockInfoMap key: stockType_stockCode
-			st = new StringTokenizer(sortedStockInfoKeyList.get(sortedStockInfoKeyList.size() - 1 - i), "_");
-			String stockType = st.nextToken();
-			String stockCode = st.nextToken();
-
-			// 주식 총 거래량 가져오기
-			Long totalAmount = stockInfoMap.get(sortedStockInfoKeyList.get(i));
-
-			topNLossList.add(makeTopStockDto(stockType, stockCode, totalAmount));
-		}
 		simulationStockRankingInfo.put("topNLossList", Collections.singletonList(topNLossList));
-
-		// companyIndustryInfoMap 정렬
-		log.info("----- industryInfoMap 정렬 전 -----");
-		for (String key : industryInfoMap.keySet()) {
-			log.info(key + ": " + industryInfoMap.get(key));
-		}
-		log.info("------------------------------");
 
 		List<String> sortedIndustryInfoKeyList = new ArrayList<>(industryInfoMap.keySet());
 		sortedIndustryInfoKeyList.sort((s1, s2) -> industryInfoMap.get(s2).compareTo(industryInfoMap.get(s1)));
@@ -293,11 +291,11 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		return simulationStockRankingInfo;
 	}
 
-	private TopStockDTO makeTopStockDto(String stockType, String stockCode, Long totalAmount) {
+	private TopStockDTO makeTopStockDto(String stockType, String stockCode, Long totalCnt) {
 		log.info("----- TopStockDTO 만들기 시작 -----");
 		log.info("stockType: {}", stockType);
 		log.info("stockCode: {}", stockCode);
-		log.info("totalAmount: {}", totalAmount);
+		log.info("totalCnt: {}", totalCnt);
 
 		// 주식 이름 가져오기
 		FinancialDataCompany financialdataCompany
@@ -312,7 +310,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 		TopStockDTO topStockDto = TopStockDTO.builder()
 			.stockName(financialdataCompany.getCompanyName())
 			.stockMarketPrice(stockMarketPrice)
-			.totalStockPrice(totalAmount)
+			.totalStockPrice(totalCnt) // 주식 총 거래량 (구매 개수 + 판매 개수)
 			.stockImgSearchName(financialdataCompany.getImgUrl())
 			.build();
 		log.info(topStockDto.toString());
@@ -327,5 +325,19 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 	@Override
 	public Integer getSimulationAvgTierInfo(Long simulationSeq) {
 		return simulationRankRedisRepository.getSimulationAvgTierInfo(simulationSeq);
+	}
+
+	private static class TradingStock {
+		String stockName;
+		long buyCnt;
+		long sellCnt;
+		long totalPrice;
+
+		public TradingStock(String stockName, long buyCnt, long sellCnt, long totalPrice) {
+			this.stockName = stockName;
+			this.buyCnt = buyCnt;
+			this.sellCnt = sellCnt;
+			this.totalPrice = totalPrice;
+		}
 	}
 }
