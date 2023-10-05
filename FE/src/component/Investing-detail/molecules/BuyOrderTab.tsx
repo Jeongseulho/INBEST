@@ -26,8 +26,12 @@ const BuyOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
     () => tradeStock(simulationSeq, companyInfo.code, companyInfo.name, amount, price, 1, stockType, 0),
     {
       onMutate: () => {
-        if (myAsset && myAsset[0].asset < amount * price) {
-          toast.error(`보유하고 있는 돈이 부족합니다, 현재 ${formatNumberToKoreanWon(myAsset[0].asset)} 보유중입니다.`);
+        if (myAsset && myAsset[myAsset.length - 1].asset < amount * price) {
+          toast.error(
+            `보유하고 있는 돈이 부족합니다, 현재 ${formatNumberToKoreanWon(
+              myAsset[myAsset.length - 1].asset
+            )} 보유중입니다.`
+          );
           throw new Error("보유하고 있는 돈이 부족합니다.");
         }
       },
