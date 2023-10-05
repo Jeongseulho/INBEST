@@ -8,9 +8,8 @@ import { MdOutlineGroupOff } from "react-icons/md";
 
 interface Props {
   simulationSeq: number;
-  scrollRef: React.ForwardedRef<HTMLDivElement>;
 }
-const ChattingArea = ({ simulationSeq, scrollRef }: Props) => {
+const ChattingArea = ({ simulationSeq }: Props) => {
   const { client } = stompStore();
   const [chatList, setChatList] = useState<Chat[]>([]);
   const { userInfo } = userStore();
@@ -63,7 +62,7 @@ const ChattingArea = ({ simulationSeq, scrollRef }: Props) => {
       <p className=" text-center text-myGray font-bold">참여한 그룹이 없어요.</p>
     </div>
   ) : (
-    <div className="overflow-y-scroll flex-col min-h-[80%]" ref={scrollRef}>
+    <div className="overflow-y-scroll flex-col min-h-[80%]">
       {chatList.map((chat, index) => (
         <ChatContentItem
           key={index}
