@@ -68,7 +68,7 @@ const ChatIcon = () => {
             <Popover.Panel className="absolute bottom-[120px] border-2 right-0 w-96 h-[450px] rounded-md bg-slate-100 ">
               <div className="h-full flex flex-col absolute w-full rounded-md ">
                 <div className="w-full  bg-mainDark py-2 text-white flex justify-between items-center shadow-md rounded-md">
-                  <div className="text-green-100 ms-2 font-semiBold text-lg tracking-wide">그룹 이름 적당히</div>
+                  <div className="text-green-100 ms-2 font-semiBold text-lg tracking-wide">{curChatGroup?.title}</div>
                   <Listbox value={curChatGroup} onChange={setCurChatGroup} by="simulationSeq">
                     <div className="relative w-1/2">
                       <Listbox.Button className="relative w-11/12 mr-2 cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
