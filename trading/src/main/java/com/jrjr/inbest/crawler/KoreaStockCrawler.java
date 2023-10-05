@@ -48,14 +48,13 @@ public class KoreaStockCrawler implements StockCrawler {
 			//,표시를 파싱해서 숫자로 변경
 			String priceText = price.text();
 			priceText = priceText.replaceAll(",", "");
-			// marketPrice = Long.valueOf(priceText);
-			// marketPrice = priceText;
+			marketPrice = Long.valueOf(priceText);
 
 			//시가를 Redis에 저장
 			RedisStockDTO stockDTO = RedisStockDTO.builder()
 				.name(name.text())
 				.stockCode(stockCode)
-				.marketPrice(priceText)
+				.marketPrice(marketPrice)
 				.stockType(StockType.KOREA)
 				.build();
 			// .lastModifiedDate(LocalDateTime.now()).build();

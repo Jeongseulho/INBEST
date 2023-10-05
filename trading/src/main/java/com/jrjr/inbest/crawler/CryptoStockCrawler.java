@@ -62,13 +62,13 @@ public class CryptoStockCrawler implements StockCrawler {
 			//,표시를 파싱해서 숫자로 변경
 			price = price.replaceAll(",", "");
 			price = price.substring(0, price.indexOf("."));
-			// marketPrice = Long.valueOf(price);
+			marketPrice = Long.valueOf(price);
 
 			//시가를 Redis에 저장
 			RedisStockDTO stockDTO = RedisStockDTO.builder()
 				.name(name)
 				.stockCode(stockCode)
-				.marketPrice(price)
+				.marketPrice(marketPrice)
 				// .lastModifiedDate(LocalDateTime.now())
 				.stockType(StockType.CRYPTO_MONEY)
 				.build();
