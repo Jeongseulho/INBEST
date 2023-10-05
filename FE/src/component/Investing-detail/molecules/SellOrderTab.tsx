@@ -25,6 +25,7 @@ const SellOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
     () => getHeldStockNum(simulationSeq, companyInfo.code, stockType),
     {
       staleTime: 0,
+      cacheTime: 0,
     }
   );
 

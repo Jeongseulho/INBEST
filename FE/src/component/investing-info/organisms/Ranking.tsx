@@ -15,6 +15,7 @@ const Ranking = () => {
     () => getInvestingAllUserRank(params.simulationSeq),
     {
       staleTime: 0,
+      cacheTime: 0,
     }
   );
 

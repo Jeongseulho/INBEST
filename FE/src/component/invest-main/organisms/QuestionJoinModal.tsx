@@ -76,6 +76,7 @@ const QuestionJoinModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Pro
                 <MeanTier tier={data?.averageTier} />
                 <CurJoinPeople profileImageList={data?.currentMemberImageList || [default_image]} />
               </div>
+              <p className=" font-regular text-md text-myGray ">이 그룹에 참여할 수 있어요.</p>
               <button
                 onClick={() => mutate(simulationSeq)}
                 className=" rounded-full text-white bg-mainDark py-2 px-4 transition-colors duration-500 hover:text-mainDark border-2 border-mainDark hover:bg-opacity-10"

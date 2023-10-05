@@ -12,6 +12,7 @@ const MyRanking = () => {
   const { simulationSeq } = useParams();
   const { data, isLoading } = useQuery(["myRanking", simulationSeq], () => getMyInvestingRanking(simulationSeq), {
     staleTime: 0,
+    cacheTime: 0,
   });
   return (
     <div className=" shadow-component col-span-4 p-4 flex flex-col gap-10">
