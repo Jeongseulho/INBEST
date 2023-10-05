@@ -43,7 +43,7 @@ const CryptoStockList = ({ title, stockList, isLoading }: Props) => {
                   <p className=" text-center ">{truncateContent(stock.Name, 8)}</p>
                 </div>
                 <div className=" flex items-center justify-center w-1/2">
-                  <p className=" text-center">${stock.Price}</p>
+                  <p className=" text-center">₩{stock.Price}</p>
                   {fluctuationStringToNumber(stock.Fluctuation) >= 0 ? (
                     <IncreaseIcon number={fluctuationStringToNumber(stock.Fluctuation)} />
                   ) : (
