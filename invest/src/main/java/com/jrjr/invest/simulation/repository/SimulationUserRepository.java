@@ -24,10 +24,10 @@ public interface SimulationUserRepository extends JpaRepository<SimulationUser, 
 	@Query("select count( distinct su.user.seq) from SimulationUser su where su.simulation.startDate >= :today")
 	Optional<Long> countAllTodayStartUser(LocalDateTime today);
 
-	@Query("select count( distinct su.seq) from Simulation su where su.startDate is not null")
+	@Query("select count( distinct su.seq) from Simulation su where su.startDate is not null and su.finishedDate is null")
 	Optional<Long> countAllStartSimulation();
 
-	@Query("select count( distinct su.seq) from Simulation su where su.startDate >= :today")
+	@Query("select count( distinct su.seq) from Simulation su where su.startDate >= :today and su.finishedDate is null")
 	Optional<Long> countAllTodayStartSimulation(LocalDateTime today);
 
 	@Query("select count( distinct su.seq) from Simulation su where su.finishedDate is not null")
