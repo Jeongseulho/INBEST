@@ -8,7 +8,6 @@ import { truncateContent } from "../../../util/formatContent";
 const RecentDealStock = () => {
   const { simulationSeq } = useParams();
   const { data, isLoading } = useQuery(["recentlyDeal", simulationSeq], () => getRecentlyDeal(simulationSeq));
-  //TODO: skeleton loading
   return (
     <div className=" shadow-component col-span-full p-4 flex flex-col gap-4">
       <div className="  flex items-center gap-2">

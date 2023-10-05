@@ -16,7 +16,7 @@ const ChatIcon = () => {
   const { userInfo, accessToken } = userStore();
   const [curChatGroup, setCurChatGroup] = useState<MyGroup>();
   const [message, setMessage] = useState("");
-  const onChangeMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChangeMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
 
@@ -115,10 +115,9 @@ const ChatIcon = () => {
                 </div>
                 <ChattingArea simulationSeq={curChatGroup?.simulationSeq || 0} />
                 <div className="w-full flex justify-around bg-green-100 items-center gap-2">
-                  <textarea
-                    className="flex-grow m-2 py-3 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none text-sm items-center"
-                    rows={1}
-                    placeholder="Message..."
+                  <input
+                    className=" overflow-y-hidden flex-grow m-2 py-3 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none text-sm items-center"
+                    placeholder="전송할 메세지를 입력해주세요."
                     style={{ outline: "none" }}
                     onChange={onChangeMessage}
                     onKeyUp={(e) => {
@@ -127,7 +126,7 @@ const ChatIcon = () => {
                       }
                     }}
                     value={message}
-                  ></textarea>
+                  ></input>
                   <button
                     type="button"
                     className=" h-3/4 mr-1 inline-flex items-center justify-center rounded-lg px-2 transition duration-500 ease-in-out text-white bg-mainDark hover:bg-mainMoreDark focus:outline-none"

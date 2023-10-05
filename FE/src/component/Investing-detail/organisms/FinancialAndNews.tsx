@@ -41,20 +41,19 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
   const keyToDescMap: { [key: string]: string } = {
     current_assets: "유동자산이란 1년 이내에 현금화가 가능한 자산을 의미합니다.",
     non_current_assets: "비유동자산이란 1년 이상의 기간이 소요되는 자산을 의미합니다.",
-    total_assets: "자산총계란 회사의 총 자산을 의미합니다.",
-    current_liabilities: "유동부채란 1년 이내에 상환해야 하는 부채를 의미합니다.",
+    total_assets: "자산총계란 회사가 소유한 총 자산의 합이며, 모든 부채와 자본을 합한 금액입니다.",
+    current_liabilities: "유동부채란 1년 이내에 상환해야하는 부채를 의미합니다.",
     non_current_liabilities: "비유동부채란 1년 이상의 기간이 소요되는 부채를 의미합니다.",
-    total_liabilities: "부채총계란 회사의 총 부채를 의미합니다.",
-    capital: "자본금이란 회사의 자본금을 의미합니다.",
-    total_equity: "자본총계란 회사의 총 자본을 의미합니다.",
-    revenue: "매출액이란 회사의 총 매출액을 의미합니다.",
-    gross_profit: "매출총이익이란 회사의 총 매출총이익을 의미합니다.",
-    operating_profit: "영업이익이란 회사의 총 영업이익을 의미합니다.",
-    income_before_tax: "법인세차감전이익이란 법인세를 제외한 총 이익을 의미합니다.",
-    income_tax_expense: "법인세비용이란 법인세를 의미합니다.",
-    net_income: "총당기순이익이란 총 당기순이익을 의미합니다.",
+    total_liabilities: "부채총계란 회사가 총 부담하고 있는 부채의 합을 의미합니다.",
+    capital: "자본금이란 회사가 발행한 주식의 총 금액을 의미합니다.",
+    total_equity: "자본총계란 회사의 자산에서 부채를 제외한 순자산을 의미합니다.",
+    revenue: "매출액이란 회사가 제품을 판매하거나 서비스를 제공하여 얻은 액수를 의미합니다.",
+    gross_profit: "매출총이익이란 매출액에서 매출원가를 빼서 얻은 순이익을 의미합니다.",
+    operating_profit: "영업이익이란 매출총이익에서 판매비와 관리비를 제외한 순이익을 의미합니다.",
+    income_before_tax: "법인세차감전이익이란 법인세를 제외한 순이익을 의미합니다.",
+    income_tax_expense: "법인세비용이란 기업이 낸 여러 세금을 의미합니다.",
+    net_income: "총당기순이익이란 기업이 낸 여러 세금을 제외한 순이익을 의미합니다.",
   };
-  //TODO: 도움말, skeleton loading
   return (
     <div className=" flex flex-col gap-4">
       <div className=" flex items-center gap-2">

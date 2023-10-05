@@ -18,8 +18,6 @@ const GroupList = ({ data, isLoading, filter }: Props) => {
   const filteredData = data?.filter((group) => {
     const { period, seedMoney, meanTier } = filter;
     const { period: groupPeriod, seedMoney: groupSeedMoney, averageTier } = group;
-    // console.log("data", groupPeriod, groupSeedMoney, averageTier);
-    // console.log("filter", period, seedMoney, meanTier);
 
     const isPeriodValid = groupPeriod >= period[0] && groupPeriod <= period[1];
     const isSeedMoneyValid = groupSeedMoney >= seedMoney[0] && groupSeedMoney <= seedMoney[1];

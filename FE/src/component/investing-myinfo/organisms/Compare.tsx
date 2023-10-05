@@ -30,7 +30,6 @@ const Compare = ({ myProfit }: Props) => {
   ]);
   const isAllLoading = results.some((res) => res.isLoading);
   const data = results.map((res) => res.data);
-  //TODO: skeleton loading
   return (
     <div className=" shadow-component col-span-7 p-4 flex flex-col gap-4">
       <div className="  flex items-center gap-2">

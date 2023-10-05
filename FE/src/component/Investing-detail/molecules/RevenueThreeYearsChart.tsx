@@ -9,7 +9,6 @@ interface Props {
 
 const RevenueThreeYearsChart = ({ companyInfo }: Props) => {
   const { data, isLoading } = useQuery(["revenue", companyInfo.code], () => getRevenue(companyInfo.code));
-  //TODO: skeleton loading
   return (
     <div className=" w-full">
       {isLoading ? (
