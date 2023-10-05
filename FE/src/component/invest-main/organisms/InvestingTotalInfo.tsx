@@ -21,7 +21,7 @@ const InvestingTotalInfo = () => {
           fluctuation={data?.totalUserNumFluctuation}
         />
         <TotalInfoItem
-          title="접속중 회원"
+          title="오늘 접속한 회원"
           number={data?.currentUserNum}
           scale="명"
           fluctuation={data?.currentUserNumFluctuation}
