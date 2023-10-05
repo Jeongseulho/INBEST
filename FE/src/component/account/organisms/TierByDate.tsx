@@ -33,7 +33,10 @@ const TierByDate = ({ tierByDates }: { tierByDates: TierByDates[] }) => {
               tickAmount: 4,
               labels: {
                 formatter: function (value) {
-                  return `${tierToString(value)} ${value % 100}P`;
+                  if (value < 300) {
+                    return `${tierToString(value)} ${value % 100}P`;
+                  }
+                  return `${tierToString(value)} ${value - 300}P`;
                 },
                 style: {
                   fontSize: "13px",
