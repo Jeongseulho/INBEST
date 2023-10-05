@@ -3,16 +3,22 @@ package com.jrjr.inbest.user.service;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import net.minidev.json.JSONObject;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.jrjr.inbest.global.exception.AuthenticationFailedException;
@@ -21,9 +27,19 @@ import com.jrjr.inbest.login.constant.Role;
 import com.jrjr.inbest.login.entity.Login;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.oauth.OAuth2UserInfo;
+import com.jrjr.inbest.simulation.repository.SimulationRepository;
+import com.jrjr.inbest.simulation.repository.TierRepository;
+import com.jrjr.inbest.trading.repository.TradingRepository;
+import com.jrjr.inbest.user.dto.IndustryDTO;
 import com.jrjr.inbest.user.dto.JoinDto;
+import com.jrjr.inbest.user.dto.ParticipantDTO;
+import com.jrjr.inbest.user.dto.SearchByNicknameDTO;
+import com.jrjr.inbest.user.dto.SimulationRecordDTO;
+import com.jrjr.inbest.user.dto.TierByDateDTO;
+import com.jrjr.inbest.user.dto.UserDetailsDTO;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
+import com.jrjr.inbest.user.repository.FriendRepository;
 import com.jrjr.inbest.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +53,10 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
+	private final FriendRepository friendRepository;
+	private final TierRepository tierRepository;
+	private final TradingRepository tradingRepository;
+	private final SimulationRepository simulationRepository;
 	private final AmazonS3 amazonS3;
 
 	@Value(value = "${cloud.aws.s3.bucket}")
@@ -72,16 +92,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto join(UserDto userDto) {
-		log.info("UserServiceImpl - join 실행: {}", userDto.getProvider());
+	public UserDto join(UserDto inputUserDto) {
+		log.info("UserServiceImpl - join 실행: {}", inputUserDto.getProvider());
 		User user = userRepository.save(
 			User.builder()
-				.email(userDto.getEmail())
-				.name(userDto.getName())
-				.nickname(userDto.getEmail())
-				.birthyear(userDto.getBirthyear())
-				.birthday(userDto.getBirthday())
-				.gender(userDto.getGender())
+				.email(inputUserDto.getEmail())
+				.name(inputUserDto.getName())
+				.nickname(inputUserDto.getEmail())
+				.birthyear(inputUserDto.getBirthyear())
+				.birthday(inputUserDto.getBirthday())
+				.gender(inputUserDto.getGender())
 				.profileImgOriginalName("DefaultProfile.png")
 				.profileImgSearchName(profileUrl + "DefaultProfile.png")
 				.build()
@@ -89,26 +109,29 @@ public class UserServiceImpl implements UserService {
 
 		Login login = loginRepository.save(
 			Login.builder()
-				.email(userDto.getEmail())
+				.email(inputUserDto.getEmail())
 				.role(Role.ROLE_USER)
 				.userSeq(user.getSeq())
-				.provider(userDto.getProvider())
+				.provider(inputUserDto.getProvider())
 				.build()
 		);
 
-		return UserDto.builder()
+		UserDto userDto = UserDto.builder()
 			.email(user.getEmail())
 			.seq(user.getSeq())
 			.profileImgSearchName(user.getProfileImgSearchName())
 			.role(login.getRole())
 			.provider(login.getProvider())
 			.build();
+
+		this.insertUserRankingInfo(userDto);
+		return userDto;
 	}
 
 	@Transactional
 	@Override
-	public void join(JoinDto joinDto) {
-		log.info("UserServiceImpl - join 실행: inbest");
+	public UserDto join(JoinDto joinDto) {
+		log.info("inbest 회원 가입 정보: {}", joinDto.toString());
 
 		String birthyear = null;
 		String birthday = null;
@@ -142,6 +165,31 @@ public class UserServiceImpl implements UserService {
 				.provider("inbest")
 				.build()
 		);
+
+		UserDto userDto = UserDto.builder()
+			.seq(user.getSeq())
+			.nickname(user.getNickname())
+			.profileImgSearchName(user.getProfileImgSearchName())
+			.build();
+
+		this.insertUserRankingInfo(userDto);
+		return userDto;
+	}
+
+	@Override
+	public void insertUserRankingInfo(UserDto userDto) {
+		log.info("UserServiceImpl - insertUserRankingInfo 실행: {}", userDto.toString());
+
+		// WebClient webClient = WebClient.create("http://localhost:9103");
+		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8103");
+		webClient.post()
+			.uri(uriBuilder -> uriBuilder
+				.path("/rank/users")
+				.build())
+			.body(BodyInserters.fromValue(userDto))
+			.retrieve()
+			.bodyToMono(JSONObject.class)
+			.block();
 	}
 
 	@Override
@@ -164,16 +212,16 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void updatePassword(Long userSeq, String inputEmail, String password) {
+	public void updatePassword(Long userSeq, Long tokenSeq, String password) {
 		log.info("UserServiceImpl - updatePassword 실행: {}", userSeq);
+
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치");
+		}
 
 		Optional<Login> loginEntity = loginRepository.findByUserSeq(userSeq);
 		if (loginEntity.isEmpty()) {
 			throw new AuthenticationFailedException("회원 정보 없음");
-		}
-
-		if (!loginEntity.get().getEmail().equals(inputEmail)) {
-			throw new AuthenticationFailedException("토큰의 이메일과 비밀번호를 변경하려는 계정의 이메일 불일치");
 		}
 
 		loginEntity.get().updatePassword(passwordEncoder.encode(password));
@@ -181,23 +229,45 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void withdraw(Long seq, String inputEmail) {
-		log.info("UserServiceImpl - withdraw 실행: {}", seq);
+	public void withdraw(Long userSeq, Long tokenSeq) {
+		log.info("UserServiceImpl - withdraw 실행: {}", userSeq);
 
-		Optional<User> userEntity = userRepository.findById(seq);
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치");
+		}
+
+		Optional<User> userEntity = userRepository.findById(userSeq);
 		if (userEntity.isEmpty()) {
 			throw new AuthenticationFailedException("회원 정보 없음");
 		}
 
-		if (!userEntity.get().getEmail().equals(inputEmail)) {
-			throw new AuthenticationFailedException("토큰의 이메일과 탈퇴하려는 계정의 이메일 불일치");
-		}
+		// 팔로잉, 팔로워 내역 삭제
+		friendRepository.deleteByFollowingSeq(userSeq);
+		friendRepository.deleteByFollowedSeq(userSeq);
+		log.info("friend table 팔로잉, 팔로워 내역 삭제 완료");
 
 		userEntity.get().withdraw(LocalDateTime.now());
+		log.info("user table 회원 탈퇴 처리 완료");
 	}
 
 	@Override
-	public UserDto getUserInfo(Long seq) {
+	public void deleteUserRankingInfo(Long seq) {
+		log.info("UserServiceImpl - updateUserRankingInfo 실행");
+
+		// WebClient webClient = WebClient.create("http://localhost:9103");
+		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8103");
+		webClient.delete()
+			.uri(uriBuilder -> uriBuilder
+				.path("/rank/users")
+				.queryParam("seq", seq)
+				.build())
+			.retrieve()
+			.bodyToMono(JSONObject.class)
+			.block();
+	}
+
+	@Override
+	public UserDto getProfileInfo(Long seq) {
 		log.info("UserServiceImpl - getUserInfo 실행: {}", seq);
 
 		Optional<User> userEntity = userRepository.findById(seq);
@@ -208,18 +278,120 @@ public class UserServiceImpl implements UserService {
 		return userEntity.get().convertToUserDto(userEntity.get());
 	}
 
+	@Override
+	public UserDetailsDTO getUserDetailsInfo(Long userSeq, Long loginSeq) {
+
+		Boolean isFollow = null; // loginSeq 가 userSeq 를 팔로우 하는지 여부
+
+		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 시작 ---");
+		Optional<User> userEntity = userRepository.findById(userSeq);
+		if (userEntity.isEmpty()) {
+			throw new NotFoundException("조회 회원 정보 없음");
+		}
+		log.info(userEntity.toString());
+		log.info("--- 이메일, 닉네임, 프로필 사진 정보 조회 완료 ---");
+
+		log.info("--- 팔로잉, 팔로워 조회 시작 ---");
+		Optional<Integer> followingNum = friendRepository.countByFollowingSeq(userSeq);
+		Optional<Integer> followerNum = friendRepository.countByFollowedSeq(userSeq);
+		log.info("팔로잉 수: {}", followingNum.orElse(0));
+		log.info("팔로워 수: {}", followerNum.orElse(0));
+		// 상세 정보를 확인하는 사람이 본인인지 확인
+		if (!userSeq.equals(loginSeq)) {
+			isFollow = friendRepository.existsByFollowingSeqAndFollowedSeq(userSeq, loginSeq);
+		}
+		log.info("--- 팔로잉, 팔로워 조회 완료 ---");
+
+		log.info("--- 티어 점수 조회 시작 ---");
+		Optional<Integer> totalTier = tierRepository.getTotalTier(userSeq);
+		// 티어 점수 총 합이 0보다 작다면, 0으로 설정
+		if (totalTier.isPresent()) {
+			log.info("티어 점수 총합이 0보다 작음: {}", totalTier.get());
+			if (totalTier.get() < 0) {
+				totalTier = Optional.of(0);
+			}
+		}
+		log.info("티어 점수: {}", totalTier.orElse(0));
+		log.info("--- 티어 점수 조회 완료 ---");
+
+		log.info("--- 자주 투자한 종목 조회 시작 ---");
+		// 1. trading table 에서 모든 구매 거래 내역 조회 후 구매 가격 합산
+		// 2. financial_data_company 에서 stock_type 과 stock_code 를 이용해 산업군 이름 조회
+		List<IndustryDTO> industries = tradingRepository.calculatePurchaseAmountByIndustry(userSeq);
+		log.info(industries.toString());
+		log.info("--- 자주 투자한 종목 조회 완료 ---");
+
+		log.info("--- 날짜 별 티어 점수 조회 시작 ---");
+		List<TierByDateDTO> tierByDates = tierRepository.getTierByDate(userSeq);
+		long sum = 0l;
+		for (int i = 0; i < tierByDates.size(); i++) {
+			TierByDateDTO tierByDateDTO = tierByDates.get(i);
+			sum += tierByDateDTO.getTier();
+			// 0점 미만일 시, 0점으로 계산
+			// 리팩토링 예정: 시뮬레이션 종료 후 티어 점수 계산 시, 티어 합산 결과가 0보다 작다면 0으로 저장 (0점 보다 내려 갈 수 없다.)
+			if (sum < 0) {
+				sum = 0l;
+			}
+			tierByDateDTO.setTier(sum);
+			tierByDates.set(i, tierByDateDTO);
+		}
+		log.info(tierByDates.toString());
+		log.info("--- 날짜 별 티어 점수 조회 완료 ---");
+
+		log.info("--- 시뮬레이션 전적 조회 시작 ---");
+		// 시뮬레이션 pk 값, 이름, 시작일, 종료일, 기간, 인원 수 및 내 랭킹, 수익률 조회
+		List<SimulationRecordDTO> simulationRecords = simulationRepository.getSimulationByUserSeq(userSeq);
+		for (SimulationRecordDTO simulationRecordDto : simulationRecords) {
+			log.info(simulationRecordDto.toString());
+			// 시뮬레이션에서 자주 투자한 산업군 3가지 구하기
+			List<String> topNIndustry
+				= tradingRepository.getTopNIndustry(simulationRecordDto.getSimulationSeq(), userSeq,
+				PageRequest.of(0, 3));
+			log.info(topNIndustry.toString());
+			simulationRecordDto.setIndustries(topNIndustry);
+			// 시뮬레이션 참가자들의 닉네임과 프로필 이미지 구하기
+			List<ParticipantDTO> participants
+				= userRepository.getParticipantsBySimulationSeq(simulationRecordDto.getSimulationSeq());
+			log.info(participants.toString());
+			simulationRecordDto.setParticipants(participants);
+		}
+		log.info("--- 시뮬레이션 전적 조회 완료 ---");
+
+		UserDetailsDTO userDetailsDto = UserDetailsDTO.builder()
+			// User table
+			.userSeq(userEntity.get().getSeq())
+			.email(userEntity.get().getEmail())
+			.nickname(userEntity.get().getNickname())
+			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
+			.userCnt(userRepository.count())
+			// friend table
+			.followingNum(followingNum.orElse(0))
+			.followerNum(followerNum.orElse(0))
+			.isFollow(isFollow)
+			// tier table
+			.tier(totalTier.orElse(0))
+			.tierByDates(tierByDates)
+			// simulation_user table
+			.industries(industries)
+			.simulationRecords(simulationRecords)
+			.build();
+		log.info(userDetailsDto.toString());
+
+		return userDetailsDto;
+	}
+
 	@Transactional
 	@Override
-	public void updateDefaultImg(Long seq, String inputEmail) {
-		log.info("UserServiceImpl - updateDefaultImg 실행: {}", seq);
+	public void updateDefaultImg(Long userSeq, Long tokenSeq) {
+		log.info("UserServiceImpl - updateDefaultImg 실행: {}", userSeq);
 
-		Optional<User> userEntity = userRepository.findById(seq);
-		if (userEntity.isEmpty()) {
-			throw new AuthenticationFailedException("회원 정보 없음");
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
 		}
 
-		if (!userEntity.get().getEmail().equals(inputEmail)) {
-			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
+		Optional<User> userEntity = userRepository.findById(userSeq);
+		if (userEntity.isEmpty()) {
+			throw new AuthenticationFailedException("회원 정보 없음");
 		}
 
 		String oldSearchName = userEntity.get().getProfileImgSearchName();
@@ -233,26 +405,24 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto updateUserInfo(Long seq, MultipartFile file, UserDto inputUserDto, String inputEmail) throws
+	public UserDto updateProfileInfo(Long userSeq, MultipartFile file, UserDto inputUserDto, Long tokenSeq) throws
 		IOException {
-		log.info("UserServiceImpl - updateUserInfo 실행: {}", seq);
-		log.info("수정할 유저 정보 " + inputUserDto);
-		log.info("수정할 파일 VVVVVV");
+		log.info("회원 정보: {}", inputUserDto);
+
+		if ((long)userSeq != tokenSeq) {
+			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
+		}
 
 		if (file == null) {
 			log.info("파일 없음");
 		} else {
 			log.info("파일 이름 : " + file.getOriginalFilename());
 		}
-		Optional<User> userEntity = userRepository.findById(seq);
+
+		Optional<User> userEntity = userRepository.findById(userSeq);
 		if (userEntity.isEmpty()) {
 			log.info("회원 정보 없음");
 			throw new AuthenticationFailedException("회원 정보 없음");
-		}
-
-		if (!userEntity.get().getEmail().equals(inputEmail)) {
-			log.info("이메일 불일치");
-			throw new AuthenticationFailedException("토큰의 이메일과 정보를 변경하려는 계정의 이메일 불일치");
 		}
 
 		if (file != null) {
@@ -291,5 +461,41 @@ public class UserServiceImpl implements UserService {
 
 		log.info("유저 변경 종료");
 		return userEntity.get().convertToUserDto(userEntity.get());
+	}
+
+	@Override
+	public void updateUserRankingInfo(UserDto inputUserDto) {
+		log.info("UserServiceImpl - updateUserRankingInfo 실행");
+		UserDto userDto = UserDto.builder()
+			.seq(inputUserDto.getSeq())
+			.nickname(inputUserDto.getNickname())
+			.profileImgSearchName(inputUserDto.getProfileImgSearchName())
+			.build();
+
+		// WebClient webClient = WebClient.create("http://localhost:9103");
+		WebClient webClient = WebClient.create("http://j9d110.p.ssafy.io:8103");
+		webClient.put()
+			.uri(uriBuilder -> uriBuilder
+				.path("/rank/users")
+				.build())
+			.body(BodyInserters.fromValue(userDto))
+			.retrieve()
+			.bodyToMono(JSONObject.class)
+			.block();
+	}
+
+	/*
+		키워드가 포함된 닉네임 리스트 검색
+	 */
+	@Override
+	public List<SearchByNicknameDTO> getUserSearchListByKeyword(String keyword) {
+		List<SearchByNicknameDTO> searchByNicknameDtos = userRepository.getUserSearchListByKeyword(keyword);
+		for (SearchByNicknameDTO searchByNicknameDto : searchByNicknameDtos) {
+			if (searchByNicknameDto.getTier() < 0) {
+				searchByNicknameDto.setTier(0L);
+			}
+			log.info(searchByNicknameDto.toString());
+		}
+		return searchByNicknameDtos;
 	}
 }

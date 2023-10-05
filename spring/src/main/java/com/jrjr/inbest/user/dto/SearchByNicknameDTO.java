@@ -14,17 +14,15 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class JoinDto {
+public class SearchByNicknameDTO {
+
+	private Long seq;
 
 	private String email;
 
-	private String password;
-
-	private String name;
-
 	private String nickname;
 
-	private String birth;
+	private String profileImgSearchName;
 
-	private Integer gender;
+	private Long tier;
 }

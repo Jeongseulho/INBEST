@@ -1,4 +1,6 @@
-package com.jrjr.inbest.user.dto;
+package com.jrjr.inbest.dictionary.dto;
+
+import com.jrjr.inbest.login.constant.Role;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,17 +16,8 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class JoinDto {
-
-	private String email;
-
-	private String password;
-
-	private String name;
-
-	private String nickname;
-
-	private String birth;
-
-	private Integer gender;
+public class FinancialWordDTO {
+	private String seq;
+	private String title;
+	private String content;
 }

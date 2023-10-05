@@ -9,6 +9,8 @@ import com.jrjr.inbest.global.exception.AuthenticationFailedException;
 import com.jrjr.inbest.jwt.repository.RefreshTokenRepository;
 import com.jrjr.inbest.login.dto.LoginDto;
 import com.jrjr.inbest.login.entity.Login;
+import com.jrjr.inbest.login.entity.LoginHistory;
+import com.jrjr.inbest.login.repository.LoginHistoryRepository;
 import com.jrjr.inbest.login.repository.LoginRepository;
 import com.jrjr.inbest.user.dto.UserDto;
 import com.jrjr.inbest.user.entity.User;
@@ -26,10 +28,11 @@ public class LoginServiceImpl implements LoginService {
 	private final LoginRepository loginRepository;
 	private final UserRepository userRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
+	private final LoginHistoryRepository loginHistoryRepository;
 
 	@Override
 	public UserDto login(LoginDto inputLoginDto) {
-		log.info("LoginServiceImpl - login 실행");
+		log.info(inputLoginDto.toString());
 
 		Optional<Login> loginEntity = loginRepository.findByEmail(inputLoginDto.getEmail());
 		Optional<User> userEntity = userRepository.findByEmail(inputLoginDto.getEmail());
@@ -47,9 +50,16 @@ public class LoginServiceImpl implements LoginService {
 			throw new AuthenticationFailedException("비밀번호 불일치");
 		}
 
+		// 로그인 기록 남기기
+		loginHistoryRepository.save(
+			LoginHistory.builder()
+				.userSeq(userEntity.get().getSeq())
+				.build());
+
 		return UserDto.builder()
 			.email(userEntity.get().getEmail())
 			.seq(userEntity.get().getSeq())
+			.nickname(userEntity.get().getNickname())
 			.profileImgSearchName(userEntity.get().getProfileImgSearchName())
 			.role(loginEntity.get().getRole())
 			.provider(loginEntity.get().getProvider())
@@ -58,8 +68,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public void logout(String email) {
-		log.info("LoginServiceImpl - logout 실행");
-
 		Optional<Login> loginEntity = loginRepository.findByEmail(email);
 		if (loginEntity.isEmpty()) {
 			throw new AuthenticationFailedException("회원 정보 없음");
@@ -69,7 +77,6 @@ public class LoginServiceImpl implements LoginService {
 		if (refreshTokenRepository.existsById(email)) {
 			refreshTokenRepository.deleteById(email);
 		}
-
-		log.info("로그아웃 성공: {}", email);
+		log.info("Redis: refreshToken 삭제 완료");
 	}
 }

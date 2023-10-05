@@ -1,5 +1,6 @@
 package com.jrjr.inbest.user.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,17 +15,11 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class JoinDto {
+public class IndustryDTO {
 
-	private String email;
+	@Schema(description = "산업군 이름")
+	String industry;
 
-	private String password;
-
-	private String name;
-
-	private String nickname;
-
-	private String birth;
-
-	private Integer gender;
+	@Schema(description = "총 구매 금액")
+	Long purchaseAmount;
 }
