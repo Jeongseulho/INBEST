@@ -6,6 +6,8 @@ import spinner from "../../../asset/image/spinner.svg";
 import Chart from "react-apexcharts";
 import { formatNumberToKoreanWon } from "../../../util/formatMoney";
 import { MyAsset } from "../../../type/InvestingMyInfo";
+import { AiFillQuestionCircle } from "react-icons/ai";
+
 interface Props {
   data: MyAsset | undefined;
   isLoading: boolean;
@@ -15,7 +17,13 @@ const MyAssets = ({ data, isLoading }: Props) => {
     <div className=" shadow-component col-span-5 p-4 flex flex-col gap-10">
       <div className="  flex items-center gap-2">
         <img src={assets} width={40} />
-        <h5>내 자산 변화</h5>
+        <h5>보유한 현금 변화</h5>
+        <div className="group relative cursor-pointer">
+          <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
+          <div className=" w-72 bottom-6 bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute left-1/2 transform -translate-x-1/2 ">
+            보유한 주식을 제외한 순수 자산 변화입니다.
+          </div>
+        </div>
       </div>
       {isLoading ? (
         <div

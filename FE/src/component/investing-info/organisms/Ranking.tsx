@@ -5,6 +5,7 @@ import { getInvestingAllUserRank } from "../../../api/investingGroupInfo";
 import { useParams } from "react-router-dom";
 import ranking from "../../../asset/image/ranking.png";
 import Skeleton from "react-loading-skeleton";
+import { AiFillQuestionCircle } from "react-icons/ai";
 
 const Ranking = () => {
   const params = useParams();
@@ -22,6 +23,12 @@ const Ranking = () => {
       <div className="  flex items-center gap-2">
         <img src={ranking} width={40} />
         <h5>그룹 내 순위</h5>
+        <div className="group relative cursor-pointer">
+          <AiFillQuestionCircle className="text-gray-500 hover:text-gray-700" />
+          <div className=" w-64 bottom-6 bg-opacity-80 z-50 hidden group-hover:block text-sm text-white bg-gray-500 rounded px-2 py-1 absolute left-1/2 transform -translate-x-1/2 ">
+            현금 보유량 + 보유한 주식의 현재 시세를 반영하여 계산한 순위입니다.
+          </div>
+        </div>
       </div>
 
       {isLoadingInvestingAllUserRank ? (
