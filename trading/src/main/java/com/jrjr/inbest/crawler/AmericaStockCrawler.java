@@ -73,7 +73,7 @@ public class AmericaStockCrawler implements StockCrawler {
 			HashOperations<String, String, RedisStockDTO> stockHashOperations = redisStockTemplate.opsForHash();
 			RedisStockDTO dollar = stockHashOperations.get("stock", "1_USD/KRW");
 
-			marketPrice = marketPrice * Long.valueOf(dollar.getMarketPrice());
+			marketPrice = marketPrice * dollar.getMarketPrice();
 
 			//종목 이름 태그가 들어있는 반복문을 위한 변수 초기화
 			String nameStr = "";
@@ -99,7 +99,7 @@ public class AmericaStockCrawler implements StockCrawler {
 			RedisStockDTO stockDTO = RedisStockDTO.builder()
 				.name(nameStr)
 				.stockCode(stockCode)
-				.marketPrice(String.valueOf(marketPrice))
+				.marketPrice(marketPrice)
 				.stockType(StockType.GLOBAL)
 				.build();
 			// .lastModifiedDate(LocalDateTime.now()).build();

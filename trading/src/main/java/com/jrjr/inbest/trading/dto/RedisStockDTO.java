@@ -20,7 +20,7 @@ public class RedisStockDTO {
 
 	private String stockCode;
 
-	private String marketPrice;
+	private Long marketPrice;
 
 	private Long amount;
 

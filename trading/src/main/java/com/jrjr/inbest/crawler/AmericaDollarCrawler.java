@@ -52,7 +52,7 @@ public class AmericaDollarCrawler implements StockCrawler {
 			RedisStockDTO stockDTO = RedisStockDTO.builder()
 				.name("달러 환율")
 				.stockCode("USD/KRW")
-				.marketPrice(dollarText)
+				.marketPrice((long)dollar)
 				.stockType(StockType.GLOBAL)
 				.build();
 			HashOperations<String, String, RedisStockDTO> stockHashOperations = redisStockTemplate.opsForHash();
