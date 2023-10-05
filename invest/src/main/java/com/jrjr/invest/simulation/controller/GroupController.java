@@ -85,7 +85,7 @@ public class GroupController {
 		statusDTO.setCurrentUserNum(groupService.getCurrentUserNum());
 		statusDTO.setCurrentUserNumFluctuation(groupService.getCurrentUserNumFluctuation());
 		statusDTO.setInprogressUserNum(groupService.getInprogressUserNum());
-		statusDTO.setInprogressUserNumFluctuation(groupService.getTotalUserNumFluctuation());
+		statusDTO.setInprogressUserNumFluctuation(groupService.getTodayInprogressUserNum());
 		statusDTO.setInprogressGroupNum(groupService.getInprogressGroupNum());
 		statusDTO.setInprogressGroupNumFluctuation(groupService.getInprogressGroupNumFluctuation());
 		statusDTO.setFinishedGroupNum(groupService.getFinishedGroupNum());
