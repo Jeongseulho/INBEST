@@ -20,8 +20,13 @@ const SellOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
   const { amount, price, onChangeAmount, onChangePrice } = useOrderTab(expectedPrice);
   const profitPercentage =
     expectedPrice === 0 ? 0 : Number((((price - expectedPrice) / expectedPrice) * 100).toFixed(2));
-  const { data: heldStockNum, refetch } = useQuery(["myStock", simulationSeq], () =>
-    getHeldStockNum(simulationSeq, companyInfo.code, stockType)
+  const { data: heldStockNum, refetch } = useQuery(
+    ["myStock", simulationSeq],
+    () => getHeldStockNum(simulationSeq, companyInfo.code, stockType),
+    {
+      staleTime: 0,
+      cacheTime: 0,
+    }
   );
 
   const { mutate } = useMutation(

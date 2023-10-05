@@ -17,7 +17,10 @@ interface Props {
 }
 const BuyOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
   const { simulationSeq } = useParams<{ simulationSeq: string }>();
-  const { data: myAsset, refetch } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq), {});
+  const { data: myAsset, refetch } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq), {
+    staleTime: 0,
+    cacheTime: 0,
+  });
   const { amount, price, onChangeAmount, onChangePrice } = useOrderTab(expectedPrice);
   const profitPercentage =
     expectedPrice === 0 ? 0 : Number((((price - expectedPrice) / expectedPrice) * 100).toFixed(2));

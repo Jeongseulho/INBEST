@@ -9,6 +9,7 @@ const RecentDealStock = () => {
   const { simulationSeq } = useParams();
   const { data, isLoading } = useQuery(["recentlyDeal", simulationSeq], () => getRecentlyDeal(simulationSeq), {
     staleTime: 0,
+    cacheTime: 0,
   });
   return (
     <div className=" shadow-component col-span-full p-4 flex flex-col gap-4">

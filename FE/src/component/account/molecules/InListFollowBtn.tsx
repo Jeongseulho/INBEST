@@ -11,6 +11,7 @@ const InListFollowBtn = ({ memberSeq, isFollow }: { memberSeq: number; isFollow:
       await deleteFollow(memberSeq);
       toast.success("팔로우를 취소했습니다.");
       queryClient.invalidateQueries("getFollowList");
+      queryClient.invalidateQueries("getMemberInfo");
     } catch {
       toast.error("실패했습니다.");
     }
@@ -20,6 +21,7 @@ const InListFollowBtn = ({ memberSeq, isFollow }: { memberSeq: number; isFollow:
       await putFollow(memberSeq);
       toast.success("팔로우 했습니다.");
       queryClient.invalidateQueries("getFollowList");
+      queryClient.invalidateQueries("getMemberInfo");
     } catch {
       toast.error("실패했습니다.");
     }

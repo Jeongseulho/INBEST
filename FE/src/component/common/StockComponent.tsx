@@ -1,4 +1,5 @@
 import { formatNumberToKoreanWon } from "../../util/formatMoney";
+import { formatComma } from "../../util/formatComma";
 interface Props {
   name: string;
   price: string | number;
@@ -13,12 +14,7 @@ const StockComponent = ({ name, price, totalStockPrice, stockImg }: Props) => {
         <p className=" text-black font-semiBold text-sm">{name}</p>
       </div>
       {<p className=" text-gray-600">{formatNumberToKoreanWon(Number(price))}</p>}
-      {totalStockPrice && totalStockPrice < 0 && (
-        <p className=" text-black">총 {formatNumberToKoreanWon(Number(price))} 잃었습니다.</p>
-      )}
-      {totalStockPrice && totalStockPrice >= 0 && (
-        <p className=" text-black">총 {formatNumberToKoreanWon(Number(price))} 얻었습니다.</p>
-      )}
+      {totalStockPrice && <p className=" text-black">총 {formatComma(Number(totalStockPrice))}주 거래되었습니다.</p>}
     </div>
   );
 };

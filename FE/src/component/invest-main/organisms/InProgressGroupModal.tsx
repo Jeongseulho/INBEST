@@ -60,7 +60,7 @@ const InProgressGroupModal = () => {
             <RemainPeriod startDate={data?.startDate || ""} period={data?.period || 1} />
           </div>
 
-          <p className=" font-regular text-md text-myGray ">모의투자가 진행중인 그룹입니다.</p>
+          <p className=" font-regular text-md text-myGray ">이 그룹은 현재 모의투자가 진행중이에요.</p>
           <button
             onClick={() => {
               navigate(`/invest/${simulationSeq}`, {

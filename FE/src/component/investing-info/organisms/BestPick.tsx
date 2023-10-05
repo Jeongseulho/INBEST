@@ -12,6 +12,7 @@ const BestPick = () => {
   const { simulationSeq } = useParams<{ simulationSeq: string }>();
   const { data, isLoading } = useQuery(["bestPick", simulationSeq], () => getBestPick(simulationSeq), {
     staleTime: 0,
+    cacheTime: 0,
   });
   return (
     <div className=" shadow-component col-span-8 row-span-4 p-4">

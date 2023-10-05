@@ -57,6 +57,13 @@ const Industries = ({ industries }: { industries: Industry[] }) => {
                 },
               },
             },
+            tooltip: {
+              y: {
+                formatter: function (value) {
+                  return value.toLocaleString() + "원"; // 툴팁에 표시될 숫자 형식을 변경하려면 이 부분을 수정하세요.
+                },
+              },
+            },
             labels: industryList,
             title: {
               text: industries.length > 0 ? "주로 투자한 종목" : "",
