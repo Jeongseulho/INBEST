@@ -36,7 +36,10 @@ const ChatIcon = () => {
       profileImgSearchName: userInfo?.profileImgSearchName,
       nickname: userInfo?.nickname,
     };
-    client?.publish({ destination: "/app/chat.send", body: JSON.stringify(sendData) });
+    client?.publish({
+      destination: `/app/chat.message.${curChatGroup?.simulationSeq}`,
+      body: JSON.stringify(sendData),
+    });
     setMessage("");
   };
 

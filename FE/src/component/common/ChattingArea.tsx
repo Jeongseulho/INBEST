@@ -28,7 +28,7 @@ const ChattingArea = ({ simulationSeq }: Props) => {
       profileImgSearchName: userInfo?.profileImgSearchName,
       nickname: userInfo?.nickname,
     };
-    client?.publish({ destination: `/app/chat.enter.${simulationSeq}`, body: JSON.stringify(enterData) });
+    client?.publish({ destination: `/app/chat.message.${simulationSeq}`, body: JSON.stringify(enterData) });
 
     return () => {
       const exitData = {
@@ -40,7 +40,7 @@ const ChattingArea = ({ simulationSeq }: Props) => {
         profileImgSearchName: userInfo?.profileImgSearchName,
         nickname: userInfo?.nickname,
       };
-      client?.publish({ destination: "/app/chat.exit." + simulationSeq, body: JSON.stringify(exitData) });
+      client?.publish({ destination: "/app/chat.message." + simulationSeq, body: JSON.stringify(exitData) });
       subscription?.unsubscribe();
     };
   }, [client, simulationSeq, userInfo?.seq, userInfo?.nickname, userInfo?.profileImgSearchName]);
