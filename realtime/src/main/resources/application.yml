@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: prod
+  application:
+    name: realtime
+  config:
+    import: optional:configserver:http://j9d110.p.ssafy.io:9090
