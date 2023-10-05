@@ -24,7 +24,7 @@ const RecentDealStock = () => {
             <div
               className={`${
                 stockInfo.tradingType === 0 ? "bg-lightPrimary" : "bg-lightRed"
-              } bg-opacity-30 flex flex-col items-center p-2 rounded-md w-1/6 gap-6`}
+              } bg-opacity-30 flex flex-col items-center p-2 rounded-md w-[15.5%] gap-6`}
               key={index}
             >
               <div className=" flex items-center justify-between w-full">
