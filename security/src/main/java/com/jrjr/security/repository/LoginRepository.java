@@ -11,4 +11,6 @@ import com.jrjr.security.entity.Login;
 public interface LoginRepository extends JpaRepository<Login, Long> {
 
 	Optional<Login> findByEmail(String email);
+
+	Optional<Login> findByUserSeq(Long userSeq);
 }

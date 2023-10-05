@@ -121,3 +121,26 @@
 ## 1. django - MariaDB 연결
 
 ## 2. django - MongoDB 연결
+
+
+# 09-19(화)
+
+## 1. company data DB에 생성
+
+## 2. company table에 기업코드, 산업코드 추가
+
+## 3. 산업코드 table 생성 및 연결
+
+
+# 09-20(수)
+
+## 1. 재무제표 DB sorting
+
+## 2. 산업분류 table 생성
+
+
+# 09-21(목)
+
+## 1. 뉴스크롤링 DTO 수정
+
+## 2. 뉴스크롤링 로고 추가
