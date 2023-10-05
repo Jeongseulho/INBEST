@@ -68,7 +68,7 @@ public class GroupService {
 		return list;
 	}
 
-	@Transactional
+	// @Transactional
 	public void createGroup(CreatedGroupDTO groupDTO) throws Exception {
 		log.info("[그룹 생성]");
 		// Simulation 저장
@@ -260,7 +260,7 @@ public class GroupService {
 		return memberImageList;
 	}
 
-	@Transactional
+	// @Transactional
 	public void joinGroup(Long simulationSeq, Long userSeq) throws Exception {
 		log.info("[그룹 참여하기]");
 
@@ -320,7 +320,7 @@ public class GroupService {
 	}
 
 	//시뮬레이션 시작 메소드
-	@Transactional
+	// @Transactional
 	public void startSimulation(Long simulationSeq, Long loginSeq) throws Exception {
 		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
 

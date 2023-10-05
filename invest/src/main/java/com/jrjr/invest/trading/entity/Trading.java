@@ -66,6 +66,8 @@ public class Trading extends BaseEntity {
 			.nickname(nickname).amount(amount).price(price)
 			.stockType(stockType).stockCode(stockCode).stockName(stockName)
 			.tradingType(tradingType).conclusionType(conclusionType)
+			.createdDate(getCreatedDate())
+			.lastModifiedDate(getLastModifiedDate())
 			.build();
 	}
 }

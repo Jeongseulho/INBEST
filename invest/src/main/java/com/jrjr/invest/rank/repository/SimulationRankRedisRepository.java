@@ -117,6 +117,7 @@ public class SimulationRankRedisRepository {
 	public RedisSimulationUserRankingDTO getSimulationUserRankingInfo(Long simulationSeq, Long userSeq) {
 		Set<RedisSimulationUserRankingDTO> simulationUserRankingInfo
 			= this.getSimulationUserRankingInfoSet(simulationSeq, 0, -1);
+
 		for (RedisSimulationUserRankingDTO redisSimulationUserRankingDto : simulationUserRankingInfo) {
 			if (redisSimulationUserRankingDto.getUserSeq().equals(userSeq)) {
 				log.info(redisSimulationUserRankingDto.toString());
