@@ -139,6 +139,7 @@ public class SimulationRankRedisRepository {
 		시뮬레이션 별 참가자 랭킹 정보 산정
 	 */
 	public void updateSimulationUserRankingInfo(Long simulationSeq) {
+		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 시작 ====");
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -293,6 +294,7 @@ public class SimulationRankRedisRepository {
 
 		stopWatch.stop();
 		log.info("랭킹 재산정 소요 시간: {} milliseconds", stopWatch.getTotalTimeMillis());
+		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 완료 ====");
 	}
 
 	/*
