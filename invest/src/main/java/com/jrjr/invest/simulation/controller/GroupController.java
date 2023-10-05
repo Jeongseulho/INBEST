@@ -190,7 +190,7 @@ public class GroupController {
 		//비로그인 처리
 		if (loginSeq.equals("")) {
 			throw new Exception("로그인하지 않은 유저입니다.");
-		} else if (Long.valueOf(loginSeq).equals(groupUserDTO.getUserSeq())) {
+		} else if (!Long.valueOf(loginSeq).equals(groupUserDTO.getUserSeq())) {
 			throw new Exception(loginSeq + "로그인 유저는 " + groupUserDTO.getUserSeq() + "유저가 아닙니다.");
 		}
 
