@@ -11,7 +11,10 @@ const Ranking = () => {
 
   const { data: investingAllUserRank, isLoading: isLoadingInvestingAllUserRank } = useQuery(
     ["investingAllUserRank", params.simulationSeq],
-    () => getInvestingAllUserRank(params.simulationSeq)
+    () => getInvestingAllUserRank(params.simulationSeq),
+    {
+      staleTime: 0,
+    }
   );
 
   return (
