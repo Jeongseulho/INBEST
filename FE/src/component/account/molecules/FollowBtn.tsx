@@ -10,7 +10,7 @@ const FollowBtn = ({ memberSeq, isFollow }: { memberSeq: number; isFollow: boole
   const [myInfo, setMyInfo] = useState<GetUserInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
   return (
-    <div className="w-1/5 flex justify-end items-start h-full sm:hidden">
+    <div className=" flex justify-end items-start h-full">
       {userInfo?.seq !== memberSeq &&
         (!isFollow ? (
           <button
