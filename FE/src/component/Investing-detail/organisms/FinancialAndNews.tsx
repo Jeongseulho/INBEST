@@ -50,8 +50,6 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
     revenue: "매출액이란 회사가 제품을 판매하거나 서비스를 제공하여 얻은 액수를 의미합니다.",
     gross_profit: "매출총이익이란 매출액에서 매출원가를 빼서 얻은 순이익을 의미합니다.",
     operating_profit: "영업이익이란 매출총이익에서 판매비와 관리비를 제외한 순이익을 의미합니다.",
-    income_before_tax: "법인세차감전이익이란 법인세를 제외한 순이익을 의미합니다.",
-    income_tax_expense: "법인세비용이란 기업이 낸 여러 세금을 의미합니다.",
     net_income: "총당기순이익이란 기업이 낸 여러 세금을 제외한 순이익을 의미합니다.",
   };
   return (
@@ -78,7 +76,9 @@ const FinancialAndNews = ({ companyInfo }: Props) => {
                   status === "operating_profit_margin" ||
                   status === "roe" ||
                   status === "roic" ||
-                  status === "debt_to_equity_ratio"
+                  status === "debt_to_equity_ratio" ||
+                  status === "income_before_tax" ||
+                  status === "income_tax_expense"
                 )
                   return;
                 return (

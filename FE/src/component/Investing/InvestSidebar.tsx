@@ -90,14 +90,14 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
           >
             내 현황
           </MenuItem>
+          <MenuItem
+            icon={<BsNewspaper />}
+            active={activeTab === INVESTING_TAB.NEWS}
+            onClick={() => setActiveTab(INVESTING_TAB.NEWS)}
+          >
+            뉴스
+          </MenuItem>
           <SubMenu label="투자" icon={<LiaCoinsSolid />}>
-            <MenuItem
-              icon={<AiOutlineFileSearch />}
-              active={activeTab === INVESTING_TAB.SEARCH}
-              onClick={() => setActiveTab(INVESTING_TAB.SEARCH)}
-            >
-              통합 검색
-            </MenuItem>
             <MenuItem
               icon={<GiSouthKorea />}
               active={activeTab === INVESTING_TAB.DOMESTIC}
@@ -119,14 +119,14 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
             >
               가상 화폐
             </MenuItem>
+            <MenuItem
+              icon={<AiOutlineFileSearch />}
+              active={activeTab === INVESTING_TAB.SEARCH}
+              onClick={() => setActiveTab(INVESTING_TAB.SEARCH)}
+            >
+              통합 검색
+            </MenuItem>
           </SubMenu>
-          <MenuItem
-            icon={<BsNewspaper />}
-            active={activeTab === INVESTING_TAB.NEWS}
-            onClick={() => setActiveTab(INVESTING_TAB.NEWS)}
-          >
-            뉴스
-          </MenuItem>
         </Menu>
       </Sidebar>
     </div>

@@ -34,6 +34,8 @@ const IndustryNews = () => {
           <NewsSkeleton />
           <NewsSkeleton />
           <NewsSkeleton />
+          <NewsSkeleton />
+          <NewsSkeleton />
         </div>
       ) : (
         <div className=" grid grid-cols-2 gap-4">

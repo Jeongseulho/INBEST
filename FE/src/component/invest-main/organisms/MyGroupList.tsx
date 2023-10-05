@@ -21,7 +21,7 @@ const MyGroupList = ({ data, isLoading }: Props) => {
       </div>
       <div className="flex justify-between w-full border-t-2 border-b-2 px-4">
         <p className="w-2">#</p>
-        <p className="w-24">그룹 이름</p>
+        <p className="w-40">그룹 이름</p>
         <p className="w-16">현재 인원</p>
         <p className="w-32">시드 머니</p>
         <p className="w-16">평균 티어</p>
@@ -29,13 +29,13 @@ const MyGroupList = ({ data, isLoading }: Props) => {
       </div>
 
       {isLoading ? (
-        <div className=" flex flex-col gap-4 pb-8">
+        <div className=" flex flex-col">
           <GroupSkeleton />
           <GroupSkeleton />
           <GroupSkeleton />
         </div>
       ) : (
-        <div className=" flex flex-col gap-4 pb-8">
+        <div className=" flex flex-col">
           {data?.map(
             (group, index) =>
               group.progressState !== "finished" && (

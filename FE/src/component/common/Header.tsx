@@ -18,7 +18,6 @@ import { Fragment } from "react";
 import "animate.css";
 import { useNavigate } from "react-router-dom";
 
-
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -32,7 +31,7 @@ const Header = () => {
   return (
     <header className="w-full h-[8vh] flex justify-evenly items-center bg-gray-50  bg-opacity-90">
       <img
-        className="h-[8vh] "
+        className="h-[8vh] cursor-pointer"
         src={temp_logo}
         onClick={() => {
           navigate("/");

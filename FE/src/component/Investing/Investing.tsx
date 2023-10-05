@@ -1,5 +1,5 @@
 import InvestSidebar from "./InvestSidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { INVESTING_TAB } from "../../constant/INVESTING_TAB";
 import InvestingInfo from "../investing-info/page/InvestingInfo";
 import InvestingMyInfo from "../investing-myinfo/page/InvestingMyInfo";
@@ -22,6 +22,15 @@ const Investing = () => {
     type: 0,
     logo: "",
   });
+
+  useEffect(() => {
+    if (companyInfo.code !== "" && companyInfo.name !== "") {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+      document.body.style.overflowX = "hidden";
+    }
+  }, [companyInfo.code, companyInfo.name]);
 
   return (
     <div className=" flex max-w-[100vw] ">

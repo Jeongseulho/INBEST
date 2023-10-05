@@ -95,8 +95,8 @@ const ChartTutorial = ({ setTutorialStep, tutorialStep }: Props) => {
         }
           absolute w-[60vw] h-[121vh]  border-black border-opacity-40 -top-52 -left-12 p-4 transition-all duration-300 ease-in-out`}
       >
-        <div className=" absolute -top-[200px] right-6">
-          <div className=" bg-white z-20 rounded-md text-black  p-4 min-w-[400px] flex flex-col gap-3 ">
+        <div className=" absolute -top-[200px] right-6 z-50">
+          <div className=" bg-white  rounded-md text-black  p-4 min-w-[400px] flex flex-col gap-3 ">
             <div className=" flex items-center justify-between">
               {tutorialStep >= 0 && tutorialStep <= 3 ? (
                 <div className=" flex items-center gap-1">

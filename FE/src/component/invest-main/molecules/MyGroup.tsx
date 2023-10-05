@@ -29,12 +29,12 @@ const MyGroup = ({ index, title, currentMemberNum, seedMoney, averageTier, progr
       className=" rounded-lg text-center px-4 font-regular flex justify-between w-full border-b-2 items-center hover:bg-mainMoreLight hover:bg-opacity-30 py-2 transition-colors duration-300 cursor-pointer"
     >
       <p className="w-2">{index}</p>
-      <p className="w-24">{title}</p>
+      <p className="w-40">{title}</p>
       <p className="w-16">{currentMemberNum} 명</p>
       <div className=" w-32">
         <p className=" w-32">{formatNumberToWon(seedMoney)}</p>
       </div>
-      <div className=" w-16 h-16 text-center">
+      <div className=" w-16 h-16 flex items-center justify-center">
         <NumberToTierImage tier={averageTier} />
       </div>
       <p className=" w-16">{progressStateToKorean[progressState]}</p>
