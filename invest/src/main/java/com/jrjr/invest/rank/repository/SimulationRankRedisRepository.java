@@ -207,7 +207,7 @@ public class SimulationRankRedisRepository {
 
 			// 2. 수익률 계산하기
 			long seedMoney = simulationUserDto.getSeedMoney();
-			Integer rate = Math.round((float)(totalMoney - seedMoney) / seedMoney * 100);
+			double rate = (totalMoney - seedMoney) * 1.0 / seedMoney * 100;
 			log.info("수익률: {}%", rate);
 
 			// 3. 보유 중인 주식 정보 정렬하기 (기준: 보유 중인 주식 가격)

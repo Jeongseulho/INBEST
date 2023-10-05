@@ -36,7 +36,7 @@ public class RedisSimulationUserRankingDTO {
 
 	private Long totalMoney;
 
-	private Integer rate;
+	private Double rate;
 
 	private List<TopStockDTO> topNStockInfo;
 }
