@@ -70,7 +70,7 @@ public class BoardEntity extends BaseEntity implements Serializable {
 
 		List<BoardImgDTO> boardImgDTOList = new ArrayList<>();
 
-		if(imgList !=null){
+		if (imgList != null) {
 			for (BoardImgEntity boardImgEntity : imgList) {
 				boardImgDTOList.add(boardImgEntity.toBoardImgDTO());
 			}
@@ -109,7 +109,7 @@ public class BoardEntity extends BaseEntity implements Serializable {
 
 		for (int i = 0; i < likeUserList.size(); i++) {
 			//이미 좋아요를 누른 유저인 경우 해당 유저 제거
-			if (likeUserList.get(i).getSeq() == userEntity.getSeq()) {
+			if (likeUserList.get(i).getSeq().equals(userEntity.getSeq())) {
 				log.info(userEntity.getNickname() + "의 좋아요를 취소합니다.");
 				likeUserList.remove(i);
 				alreadyLike = true;
