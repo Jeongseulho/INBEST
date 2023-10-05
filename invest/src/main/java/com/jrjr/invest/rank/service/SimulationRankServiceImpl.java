@@ -180,20 +180,31 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 			String stockInfoKey = stockType + "_" + stockCode;
 			// 주식 구매: -, 주식 판매: +
 			long totalAmount = trading.getAmount() * trading.getPrice();
-			if (trading.getConclusionType() == 1) {
+			if (trading.getTradingType() == 1) {
 				totalAmount *= -1;
 			}
 			log.info("stockInfoKey: {}", stockInfoKey);
 			log.info("totalAmount: {}", totalAmount);
-			stockInfoMap.put(stockInfoKey, totalAmount);
+
+			if (stockInfoMap.containsKey(stockInfoKey)) {
+				stockInfoMap.put(stockInfoKey, stockInfoMap.get(stockInfoKey) + totalAmount);
+			} else {
+				stockInfoMap.put(stockInfoKey, totalAmount);
+			}
 
 			// companyIndustryInfoMap 에 산업군 별 주식 거래량을 저장
 			FinancialDataCompany financialdataCompany
 				= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
 
-			log.info("CompanyIndustry : {}", financialdataCompany.getCompanyIndustry());
+			String industryInfoKey = financialdataCompany.getCompanyIndustry();
+			log.info("CompanyIndustry : {}", industryInfoKey);
 			log.info("Amount: {}", trading.getAmount());
-			industryInfoMap.put(financialdataCompany.getCompanyIndustry(), trading.getAmount());
+
+			if (industryInfoMap.containsKey(industryInfoKey)) {
+				industryInfoMap.put(industryInfoKey, industryInfoMap.get(industryInfoKey) + trading.getAmount());
+			} else {
+				industryInfoMap.put(industryInfoKey, trading.getAmount());
+			}
 		}
 
 		// stockInfoMap 정렬
@@ -302,7 +313,7 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 			.stockName(financialdataCompany.getCompanyName())
 			.stockMarketPrice(stockMarketPrice)
 			.totalStockPrice(totalAmount)
-			.stockImgSearchName(null)
+			.stockImgSearchName(financialdataCompany.getImgUrl())
 			.build();
 		log.info(topStockDto.toString());
 
