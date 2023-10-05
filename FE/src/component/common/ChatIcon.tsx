@@ -27,6 +27,7 @@ const ChatIcon = () => {
     enabled: !!accessToken,
   });
   const onSendMessage = () => {
+    if (message.trim() === "") return;
     const sendData = {
       type: "message",
       simulationSeq: curChatGroup?.simulationSeq,
