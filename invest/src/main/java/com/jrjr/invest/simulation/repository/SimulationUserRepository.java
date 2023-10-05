@@ -33,7 +33,7 @@ public interface SimulationUserRepository extends JpaRepository<SimulationUser, 
 	@Query("select count( distinct su.seq) from Simulation su where su.finishedDate is not null")
 	Optional<Long> countAllFinishedSimulation();
 
-	@Query("select count( distinct su.seq) from Simulation su where su.finishedDate >= :yesterday and su.simulation.finishedDate < :today")
+	@Query("select count( distinct su.seq) from Simulation su where su.finishedDate >= :yesterday and su.finishedDate < :today")
 	Optional<Long> countAllTodayFinishedSimulation(LocalDateTime yesterday, LocalDateTime today);
 
 	@Query("select count( su.simulation.seq) from SimulationUser su where su.simulation.seq = :simulationSeq")
