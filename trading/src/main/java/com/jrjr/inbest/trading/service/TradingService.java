@@ -183,8 +183,10 @@ public class TradingService {
 			redisCrawlingOperations.put(crawlingHashKey, stockKey, savedCrawling);
 		}
 		//랭킹 변화
+		log.info("===== 참가자별 시뮬레이션 랭킹 정보 업데이트 메서드 실행 =====");
 		simulationRankService.updateSimulationUserRankingInfo(tradingDTO.getSimulationSeq());
 		// 매도 성공 알림 보내기
+		log.info("===== 매도 성공 알림 보내기 시작 =====");
 		notificationService.sendTradingMessage(tradingDTO);
 	}
 
@@ -245,8 +247,10 @@ public class TradingService {
 		}
 		stockUserHashOperations.put(simulationUserHashKey, simulationUserKey, stockUserDTO);
 		//랭킹 변화
+		log.info("===== 참가자별 시뮬레이션 랭킹 정보 업데이트 메서드 실행 =====");
 		simulationRankService.updateSimulationUserRankingInfo(tradingDTO.getSimulationSeq());
 		// 매수 성공 알림 보내기
+		log.info("===== 매수 성공 알림 보내기 시작 =====");
 		notificationService.sendTradingMessage(tradingDTO);
 	}
 
