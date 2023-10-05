@@ -45,7 +45,10 @@ const QuestionJoinModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Pro
     <Modal
       isOpen={modalType === "questionJoin"}
       ariaHideApp={false}
-      onRequestClose={closeModal}
+      onRequestClose={() => {
+        closeModal();
+        setIsJoin(false);
+      }}
       style={{
         content: {
           ...CONTENT_MODAL_STYLE,
@@ -96,6 +99,7 @@ const QuestionJoinModal = ({ refetchMyGroupList, refetchJoinableGroupList }: Pro
                 closeModal();
                 refetchMyGroupList();
                 refetchJoinableGroupList();
+                setIsJoin(false);
               }}
               className=" main-dark-btn"
             >
