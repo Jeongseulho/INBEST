@@ -323,6 +323,18 @@ public class UserServiceImpl implements UserService {
 
 		log.info("--- 날짜 별 티어 점수 조회 시작 ---");
 		List<TierByDateDTO> tierByDates = tierRepository.getTierByDate(userSeq);
+		long sum = 0l;
+		for (int i = 0; i < tierByDates.size(); i++) {
+			TierByDateDTO tierByDateDTO = tierByDates.get(i);
+			sum += tierByDateDTO.getTier();
+			// 0점 미만일 시, 0점으로 계산
+			// 리팩토링 예정: 시뮬레이션 종료 후 티어 점수 계산 시, 티어 합산 결과가 0보다 작다면 0으로 저장 (0점 보다 내려 갈 수 없다.)
+			if (sum < 0) {
+				sum = 0l;
+			}
+			tierByDateDTO.setTier(sum);
+			tierByDates.set(i, tierByDateDTO);
+		}
 		log.info(tierByDates.toString());
 		log.info("--- 날짜 별 티어 점수 조회 완료 ---");
 
