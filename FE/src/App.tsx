@@ -20,6 +20,8 @@ import PersonalRanking from "./component/ranking/organisms/PersonalRanking";
 import PersonalRankingSearch from "./component/ranking/organisms/PersonalRankingSearch";
 import GroupRanking from "./component/ranking/organisms/GroupRanking";
 import PrivateRoute from "./component/common/PrivateRoute";
+import FinancialDictionary from "./component/financial-dictionary/page/FinancialDictionary";
+import MemberProfile from "./component/account/page/MemberProfile";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +51,10 @@ function App() {
                 <Route path="/invest" element={<InvestMain />} />
               </Route>
 
+              <Route element={<PrivateRoute requireAuth={true} />}>
+                <Route path="profile/:memberSeq" element={<MemberProfile />} />
+              </Route>
+
               <Route element={<PrivateRoute requireAuth={false} />}>
                 <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               </Route>
@@ -76,6 +82,10 @@ function App() {
                   <Route path="group/:seq" element={<GroupRanking />} />
                   <Route path="search/:nickname" element={<PersonalRankingSearch />} />
                 </Route>
+              </Route>
+
+              <Route element={<PrivateRoute requireAuth={true} />}>
+                <Route path="financial-dictionary" element={<FinancialDictionary />} />
               </Route>
             </Routes>
           </AnimatePresence>

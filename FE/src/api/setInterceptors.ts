@@ -36,6 +36,7 @@ export const setInterceptors = (instance: AxiosInstance) => {
 
         setAccessToken(newToken);
         originRequest!.headers.Authorization = `Bearer ${newToken}`;
+        return instance(originRequest);
       } else if (message === "ACCESS_DENIED") {
         return toast.error("권한이 부족합니다.");
       } else if (message === "INVALID_TOKEN") {

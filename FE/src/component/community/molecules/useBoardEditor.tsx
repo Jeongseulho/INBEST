@@ -28,6 +28,7 @@ export const useBoardEditor = (title: string) => {
         await createBoard(userInfo!.seq, description, title);
         alert("게시물이 등록되었습니다.");
         queryClient.invalidateQueries("getBoardList");
+        queryClient.invalidateQueries("getBoardTop10");
 
         navigate("/community");
       } catch (err) {

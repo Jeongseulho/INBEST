@@ -1,16 +1,21 @@
 import { TotalRanking } from "../../../type/Ranking";
 import NumberToTierImage from "../../common/NumberToTierImage";
 import { tierToString } from "../../../util/tierToString";
+import { Link } from "react-router-dom";
 const RankerItem = ({ ranker, nickname }: { ranker: TotalRanking; nickname?: string }) => {
   return (
     <>
-      <tr className={`h-20 border-b ${nickname === ranker.nickname ? "bg-slate-300" : " bg-white "}`}>
+      <tr
+        className={`h-20 border-b hover:bg-green-100 ${nickname === ranker.nickname ? "bg-slate-300" : " bg-white "}`}
+      >
         <td className="text-center">{ranker.currentRank}</td>
         <td>
-          <div className="flex items-center">
-            <img src={ranker.profileImgSearchName} alt="유저 이미지" className="w-10 h-10 rounded-full" />
-            <span className="ms-2">{ranker.nickname}</span>
-          </div>
+          <Link to={`/profile/${ranker.seq}`}>
+            <div className="flex items-center hover:cursor-pointer">
+              <img src={ranker.profileImgSearchName} alt="유저 이미지" className="w-10 h-10 rounded-full" />
+              <span className="ms-2">{ranker.nickname}</span>
+            </div>
+          </Link>
         </td>
 
         <td>

@@ -28,15 +28,23 @@ const BoardComment = ({ comment, cocommentText, setCocommentText, onPostCocommen
     setCommentUpdateText,
     onUpdateComment,
     onLikeComment,
+    onMoveProfile,
   } = useBoardComment(comment);
   return (
     <>
       <div className="flex border-b-2 mx-5 mb-5">
-        <img src={comment.writer.profileImgSearchName} alt="이미지" className="rounded-full w-10 h-10 me-3" />
+        <img
+          src={comment.writer.profileImgSearchName}
+          alt="이미지"
+          className="rounded-full w-10 h-10 me-3 hover:cursor-pointer"
+          onClick={() => onMoveProfile(comment.writer.seq)}
+        />
         <div className="w-full">
           <div className="flex justify-between items-center">
             <div>
-              {comment.writer.nickname}
+              <span className="hover:border-b-2 hover:cursor-pointer" onClick={() => onMoveProfile(comment.writer.seq)}>
+                {comment.writer.nickname}
+              </span>
               <span className="ms-3 text-xs text-gray-400">
                 {getTimeAgo(comment.createdDate)}{" "}
                 {comment.createdDate !== comment.lastModifiedDate && !comment.writer.seq && "(삭제됨)"}

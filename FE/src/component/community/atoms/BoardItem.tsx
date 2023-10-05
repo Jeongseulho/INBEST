@@ -24,10 +24,12 @@ const BoardItem = ({ board }: { board: Board }) => {
         </Link>
 
         <div>
-          <div className="flex items-center absolute bottom-12">
-            <img src={board.writer ? board.writer.profileImgSearchName : "임시"} className="w-9 rounded-full" />
-            <p className="text-sm font-bold ms-2">{board.writer ? board.writer.nickname : "임시"}</p>
-          </div>
+          <Link to={`/profile/${board.writer.seq}`}>
+            <div className="flex items-center absolute bottom-12">
+              <img src={board.writer ? board.writer.profileImgSearchName : "임시"} className="w-9 rounded-full" />
+              <p className="text-sm font-bold ms-2">{board.writer ? board.writer.nickname : "임시"}</p>
+            </div>
+          </Link>
 
           <div className="mt-5 grid grid-flow-col gap-1 w-28 absolute bottom-3">
             <div className="flex items-center">

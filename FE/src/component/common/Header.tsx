@@ -15,22 +15,30 @@ import PasswordUpdate from "../account/page/PasswordUpdate";
 import login from "../../asset/image/login.png";
 import Bell from "./Bell";
 import { Fragment } from "react";
+import "animate.css";
+import { useNavigate } from "react-router-dom";
+
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 const Header = () => {
+  const navigate = useNavigate();
   const [myInfo, setMyInfo] = useState<GetUserInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const accessToken = userStore((state) => state.accessToken);
-  const userInfo = userStore((state) => state.userInfo);
-  const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
+
+  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
   return (
     <header className="w-full h-[8vh] flex justify-evenly items-center bg-gray-50  bg-opacity-90">
-      <Link to="/">
-        <img className="h-[8vh] " src={temp_logo} />
-      </Link>
+      <img
+        className="h-[8vh] "
+        src={temp_logo}
+        onClick={() => {
+          navigate("/");
+        }}
+      />
+
       <div className="flex items-center justify-center gap-16">
         <Link to="/invest" className=" text-center text-md">
           모의 투자
@@ -41,7 +49,9 @@ const Header = () => {
         <Link to={"/community"} className=" text-center text-md">
           게시판
         </Link>
-        <a className=" text-center text-md">금융 사전</a>
+        <Link to={"financial-dictionary"} className=" text-center text-md">
+          금융 사전
+        </Link>
       </div>
       {!accessToken && (
         <>
@@ -60,7 +70,7 @@ const Header = () => {
               <Menu.Button
                 as="img"
                 src={userInfo?.profileImgSearchName}
-                className="rounded-full hover:cursor-pointer shadow-md"
+                className="rounded-full hover:cursor-pointer shadow-md animate__animated animate__bounce"
                 width={50}
                 height={50}
                 alt="userImage"
@@ -78,21 +88,22 @@ const Header = () => {
             >
               <Menu.Items className=" z-20 absolute -right-1  mt-2 w-44 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-1">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        href="#"
-                        className={classNames(
-                          active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                          " px-4 py-2  flex items-center"
-                        )}
-                      >
-                        <AiFillProfile />
-
-                        <span className="ms-3">마이페이지</span>
-                      </a>
-                    )}
-                  </Menu.Item>
+                  <Link to={`/profile/${userInfo?.seq}`}>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                            " px-4 py-2  flex items-center"
+                          )}
+                        >
+                          <AiFillProfile />
+                          <span className="ms-3">마이페이지</span>
+                        </a>
+                      )}
+                    </Menu.Item>
+                  </Link>
                   <Menu.Item>
                     {({ active }) => (
                       <div
