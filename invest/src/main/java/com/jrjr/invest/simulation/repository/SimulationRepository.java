@@ -35,4 +35,11 @@ public interface SimulationRepository extends JpaRepository<Simulation, Long> {
 		+ "FROM Simulation s "
 		+ "WHERE s.finishedDate is not null AND s.title LIKE %:keyword%")
 	List<SearchByTitleDTO> getSimulationSearchListByKeyword(@Param("keyword") String keyword);
+
+	@Query("SELECT sum(t.tier) "
+		+ "FROM SimulationUser su "
+		+ "JOIN Tier t ON su.user.seq = t.userSeq "
+		+ "WHERE su.simulation.seq = :simulationSeq "
+		+ "GROUP BY t.userSeq")
+	List<Long> getSimulationUserTier(@Param("simulationSeq") Long simulationSeq);
 }
