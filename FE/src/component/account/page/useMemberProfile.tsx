@@ -10,9 +10,27 @@ export const useMemberProfile = () => {
     retry: 5,
   });
   const [userDetailInfo, setUserDetailInfo] = useState(data?.UserDetailsInfo);
+  const [showFollowWindow, setShowFollowWindow] = useState(false);
+  const [showType, setShowType] = useState<string | null>(null);
+  useEffect(() => {
+    if (showFollowWindow) {
+      document.body.style.overflow = "hidden"; // 바깥 스크롤 비활성화
+    } else {
+      document.body.style.overflowY = "auto";
+      document.body.style.overflowX = "hidden";
+    }
+    return () => {
+      document.body.style.overflowY = "auto";
+      document.body.style.overflowX = "hidden";
+      if (showFollowWindow) {
+        setShowFollowWindow(false);
+      }
+    };
+  }, [showFollowWindow]);
+
   useEffect(() => {
     setUserDetailInfo(data?.UserDetailsInfo);
   }, [data, memberSeq]);
 
-  return { userDetailInfo, isLoading };
+  return { userDetailInfo, isLoading, showFollowWindow, setShowFollowWindow, memberSeq, showType, setShowType };
 };

@@ -14,14 +14,14 @@ const FollowBtn = ({ memberSeq, isFollow }: { memberSeq: number; isFollow: boole
       {userInfo?.seq !== memberSeq &&
         (!isFollow ? (
           <button
-            className="rounded-xl bg-primary text-white w-20 h-10 shadow-mg hover:bg-blue-700 mt-10"
+            className="rounded-xl bg-primary text-white w-20 h-10 shadow-md hover:bg-blue-700 mt-10"
             onClick={() => onPutFollow(memberSeq)}
           >
             팔로우
           </button>
         ) : (
           <button
-            className="rounded-xl bg-red-500 text-white w-24 h-10 shadow-mg hover:bg-red-700 mt-10"
+            className="rounded-xl bg-red-500 text-white w-24 h-10 shadow-md hover:bg-red-700 mt-10"
             onClick={() => onDeleteFollow(memberSeq)}
           >
             팔로우 취소
