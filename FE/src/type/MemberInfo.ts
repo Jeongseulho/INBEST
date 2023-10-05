@@ -10,6 +10,7 @@ export interface UserDetailsInfo {
   tierByDates: TierByDates[];
   simulationRecords: SimulationRecord[];
   isFollow: boolean;
+  userCnt: number;
 }
 export interface GetUserDetailsInfo {
   success: boolean;
@@ -43,4 +44,18 @@ export interface Participants {
 export interface Industry {
   industry: string;
   purchaseAmount: number;
+}
+
+export interface Follow {
+  userSeq: number;
+  email: string;
+  nickname: string;
+  profileImgSearchName: string;
+  tier: number;
+  isFollowed: boolean;
+}
+export interface GetFollows {
+  success: boolean;
+  followingList?: Follow[];
+  followerList?: Follow[];
 }

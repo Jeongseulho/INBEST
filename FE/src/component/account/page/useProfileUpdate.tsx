@@ -109,6 +109,7 @@ export const useProfileUpdate = () => {
       const res = await upadateUserInfo(userInfo!.seq, formData);
 
       setUserInfo({ ...userInfo!, profileImgSearchName: res.UserInfo.profileImgSearchName });
+
       console.log(res);
     } catch (err) {
       toast.error("프로필 변경에 실패했습니다");

@@ -1,7 +1,7 @@
 import { tierToString } from "../../../util/tierToString";
 import ToTierImg from "./ToTierImg";
 import { useMemberTierInfo } from "./useMemberTierInfo";
-const MemberTierInfo = ({ tier }: { tier: number }) => {
+const MemberTierInfo = ({ tier, userCnt }: { tier: number; userCnt: number }) => {
   const { currentRank } = useMemberTierInfo();
   return (
     <div className="sm:hidden md:flex items-center">
@@ -45,7 +45,13 @@ const MemberTierInfo = ({ tier }: { tier: number }) => {
           ></div>
         </div>
         <div className="flex justify-between mt-2">
-          <span>상위</span>
+          {currentRank && (
+            <span>
+              상위{"  "}
+              {Math.round((currentRank / userCnt) * 10000) / 100}
+              <span className="text-sm">%</span>
+            </span>
+          )}
           <span>{currentRank}위</span>
         </div>
       </div>

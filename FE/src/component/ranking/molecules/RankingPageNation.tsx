@@ -4,7 +4,7 @@ import ReactPaginate from "react-paginate";
 
 const RankingPageNation = () => {
   const { pages } = useTierChart();
-  const { handlePageClick } = useRankingPageNation();
+  const { handlePageClick, page } = useRankingPageNation();
   return (
     <div className="flex justify-center ">
       <ReactPaginate
@@ -24,6 +24,7 @@ const RankingPageNation = () => {
         previousLinkClassName="w-full h-full flex justify-center items-center"
         nextLinkClassName="w-full h-full flex justify-center items-center"
         activeClassName="bg-primary text-white border-0"
+        initialPage={Number(page) - 1 ?? 0}
       />
     </div>
   );
