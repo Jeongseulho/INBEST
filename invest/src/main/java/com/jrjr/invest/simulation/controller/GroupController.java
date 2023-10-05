@@ -139,7 +139,8 @@ public class GroupController {
 	})
 	// 그룹 상세
 	@GetMapping("/details")
-	ResponseEntity<?> getDetails(@RequestParam Long simulationSeq, @RequestParam String progressState) throws
+	ResponseEntity<?> getDetails(@RequestParam Long simulationSeq, @RequestParam String progressState,
+		@RequestParam Long loginSeq) throws
 		Exception {
 		log.info("===== 그룹 상세 시작===== ");
 
@@ -151,7 +152,7 @@ public class GroupController {
 		// 진행중인 그룹 - 상세
 		else if (progressState.equals("inProgress")) {
 			log.info("===== 진행 중인 상세 끝  ===== ");
-			return ResponseEntity.ok(groupService.getInProgressGroupDetails(simulationSeq));
+			return ResponseEntity.ok(groupService.getInProgressGroupDetails(simulationSeq, loginSeq));
 		}
 		// 해당하는 그룹이 없을 때
 		else {
@@ -283,11 +284,13 @@ public class GroupController {
 		log.info("페이지 번호 :  " + pageNo);
 		log.info("페이지 크기 :  " + pageSize);
 
-		List<ResponseUserStockDTO> stockList = tradingService.findAllUserStocks(userSeq,simulationSeq,pageNo,pageSize);
+		List<ResponseUserStockDTO> stockList = tradingService.findAllUserStocks(userSeq, simulationSeq, pageNo,
+			pageSize);
 
 		log.info("===== 유저의 보유 주식 찾기 끝=====");
 		return new ResponseEntity<>(stockList, HttpStatus.OK);
 	}
+
 	@Operation(summary = "유저의 보유 주식")
 	@GetMapping("/{simulationSeq}/users/{userSeq}/stocks/{stockCode}")
 	ResponseEntity<?> findUserStocks(
@@ -300,11 +303,13 @@ public class GroupController {
 		log.info("방 seq :  " + simulationSeq);
 		log.info("유저 seq :  " + userSeq);
 
-		ResponseUserStockDTO responseUserStockDTO = tradingService.findUserStock(userSeq,simulationSeq,stockCode,stockType);
+		ResponseUserStockDTO responseUserStockDTO = tradingService.findUserStock(userSeq, simulationSeq, stockCode,
+			stockType);
 
 		log.info("===== 유저의 보유 주식 찾기 끝=====");
 		return new ResponseEntity<>(responseUserStockDTO, HttpStatus.OK);
 	}
+
 	@Operation(summary = "키워드가 포함된 시뮬레이션 리스트 검색")
 	@Parameters(value = {
 		@Parameter(required = true, name = "keyword", description = "검색할 키워드")
@@ -313,7 +318,7 @@ public class GroupController {
 	ResponseEntity<Map<String, Object>> getSimulationSearchListByKeyword(@RequestParam String keyword) {
 		log.info("========== '{}' 키워드가 포함된 시뮬레이션 리스트 검색 시작 ==========", keyword);
 		Map<String, Object> resultMap = new HashMap<>();
-		
+
 		List<SearchByTitleDTO> searchList = groupService.getSimulationSearchListByKeyword(keyword);
 
 		log.info("========== '{}' 키워드가 포함된 시뮬레이션 리스트 검색 완료 ==========", keyword);

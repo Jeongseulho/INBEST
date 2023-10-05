@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.jrjr.invest.rank.dto.RedisSimulationUserRankingDTO;
+import com.jrjr.invest.rank.repository.SimulationRankRedisRepository;
 import com.jrjr.invest.simulation.dto.AssetDTO;
 import com.jrjr.invest.simulation.dto.RedisSimulationUserDTO;
 import com.jrjr.invest.simulation.dto.SearchByTitleDTO;
@@ -35,14 +37,16 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class GroupService {
+
 	private final UserRepository userRepository;
 	private final TradingService tradingService;
 	private final SimulationRepository simulationRepository;
 	private final SimulationUserRepository simulationUserRepository;
+	private final SimulationRankRedisRepository simulationRankRedisRepository;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserDTORedisTemplate;
 	private final LoginHistoryRepository loginHistoryRepository;
 	private final NotificationService notificationService;
@@ -162,9 +166,9 @@ public class GroupService {
 				.title(simulation.getTitle())
 				.currentMemberNum(simulation.getMemberNum())
 				.seedMoney(simulation.getSeedMoney())
-				// .averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
-				.averageTier(0)
+				.averageTier(simulationRankRedisRepository.getSimulationAvgTierInfo(simulation.getSeq()))
 				.progressState(simulation.getProgressState())
+				.period(simulation.getPeriod())
 				.build();
 			groupList.add(groupDTO);
 		}
@@ -193,37 +197,13 @@ public class GroupService {
 					.title(simulation.getTitle())
 					.currentMemberNum(simulation.getMemberNum())
 					.seedMoney(simulation.getSeedMoney())
-					// .averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
-					.averageTier(0)
+					.averageTier(simulationRankRedisRepository.getSimulationAvgTierInfo(simulation.getSeq()))
 					.period(simulation.getPeriod())
 					.build();
 
 				groupList.add(groupDTO);
 			}
 		}
-
-		// //대기중인 그룹만 탐색
-		// for () {
-		//
-		// 	// 대기 중인 그룹만 추가
-		// 	// if (!simulation.getProgressState().equals("waiting")) {
-		// 	// 	continue;
-		// 	// }
-		//
-		// 	// 내가 속한 그룹은 제외
-		// 	boolean mygroup = false;
-		// 	for (SimulationUser simulationUser : simulation.getSimulationUserList()) {
-		// 		if (simulationUser.getUser().getSeq() == user.getSeq()) {
-		// 			mygroup = true;
-		// 			break;
-		// 		}
-		// 	}
-		// 	if (mygroup) {
-		// 		continue;
-		// 	}
-		//
-		//
-		// }
 
 		return groupList;
 	}
@@ -235,8 +215,7 @@ public class GroupService {
 			.title(simulation.getTitle())
 			.seedMoney(simulation.getSeedMoney())
 			.period(simulation.getPeriod())
-			// .averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
-			.averageTier(0)
+			.averageTier(simulationRankRedisRepository.getSimulationAvgTierInfo(simulation.getSeq()))
 			.ownerSeq(simulation.getOwner().getSeq())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.build();
@@ -249,8 +228,7 @@ public class GroupService {
 			.seedMoney(simulation.getSeedMoney())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.startDate(simulation.getStartDate())
-			// .averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
-			.averageTier(0)
+			.averageTier(simulationRankRedisRepository.getSimulationAvgTierInfo(simulation.getSeq()))
 			.rankInGroup(null) // todo : 추후에 추가
 			.rankInGroupFluctuation(null) // todo : 추후에 추가
 			.period(simulation.getPeriod())
@@ -266,8 +244,7 @@ public class GroupService {
 			.currentMemberNum(simulation.getMemberNum())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.seedMoney(simulation.getSeedMoney())
-			// .averageTier(simulationRankServiceImpl.getSimulationAvgTierInfo(simulation.getSeq()))
-			.averageTier(0)
+			.averageTier(simulationRankRedisRepository.getSimulationAvgTierInfo(simulation.getSeq()))
 			.period(simulation.getPeriod())
 			.build();
 	}
@@ -389,19 +366,26 @@ public class GroupService {
 		}
 	}
 
-	//진행 중인 그룹 상세정보가져오기
-	public InProgressGroupDetailsDTO getInProgressGroupDetails(Long simulationSeq) throws Exception {
+	// 진행 중인 그룹 상세정보가져오기
+	public InProgressGroupDetailsDTO getInProgressGroupDetails(Long simulationSeq, Long userSeq) throws Exception {
 		Simulation simulation = simulationRepository.findBySeq(simulationSeq);
 
 		if (simulation == null) {
 			throw new Exception(simulationSeq + "번 방이 없습니다,");
 		}
 
+		RedisSimulationUserRankingDTO simulationUserRankingInfo
+			= simulationRankRedisRepository.getSimulationUserRankingInfo(simulationSeq, userSeq);
+		if (simulationUserRankingInfo == null) {
+			throw new Exception(simulationSeq + "에 내 정보가 없습니다,");
+		}
+
 		return InProgressGroupDetailsDTO.builder()
 			.seedMoney(simulation.getSeedMoney())
-			.averageTier(0)
-			.rankInGroup(0)
-			.rankInGroupFluctuation(0)
+			.averageTier(simulationRankRedisRepository.getSimulationAvgTierInfo(simulation.getSeq()))
+			.rankInGroup(simulationUserRankingInfo.getCurrentRank())
+			.rankInGroupFluctuation(
+				simulationUserRankingInfo.getPreviousRank() - simulationUserRankingInfo.getCurrentRank())
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.startDate(simulation.getStartDate())
 			.period(simulation.getPeriod())
@@ -419,7 +403,7 @@ public class GroupService {
 
 		return WaitingGroupDetailsDTO.builder()
 			.seedMoney(simulation.getSeedMoney())
-			.averageTier(0)
+			.averageTier(simulationRankRedisRepository.getSimulationAvgTierInfo(simulation.getSeq()))
 			.currentMemberImageList(getMemberImageList(simulationSeq))
 			.period(simulation.getPeriod())
 			.ownerSeq(simulation.getOwner().getSeq())
