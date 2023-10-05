@@ -24,6 +24,7 @@ export const useProfileUpdate = () => {
   const [isChangedNickname, setIsChangedNickname] = useState(false);
   const [isCheckedNickname, setIsCheckedNickname] = useState(false);
   const [formNickname, setFormNickname] = useState(userInfo?.nickname ?? "");
+
   // 닉네임 중복확인
   const onCheckNickname = async (nickname: string) => {
     if (nickname === "") {
@@ -103,6 +104,7 @@ export const useProfileUpdate = () => {
       const res = await upadateUserInfo(userInfo!.seq, formData);
       toast.success("프로필이 변경되었습니다");
       setUserInfo({ ...userInfo!, profileImgSearchName: res.UserInfo.profileImgSearchName });
+      window.location.reload();
     } catch (err) {
       toast.error("프로필 변경에 실패했습니다");
       console.log(err);
@@ -117,7 +119,6 @@ export const useProfileUpdate = () => {
     }
   }, [imgInfo]);
 
-  useEffect(() => {});
   return {
     imgInfo,
     setImgInfo,
