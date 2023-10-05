@@ -9,7 +9,7 @@ const Oauth = () => {
   const queryString = location.search;
   const params = new URLSearchParams(queryString);
   const provider = location.pathname.slice(-5);
-  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
+  const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
   const navigate = useNavigate();
   const authorizeCode = params.get("code");
 
@@ -20,7 +20,6 @@ const Oauth = () => {
       setAccessToken(resAccessToken!);
       setRefreshToken(refreshToken!);
       setUserInfo(others);
-      console.log(res);
       navigate("/");
     } catch (err) {
       toast.error("로그인에 실패했습니다. 다시 시도해 주세요.");
@@ -31,11 +30,6 @@ const Oauth = () => {
   useEffect(() => {
     onOauthLogin();
   }, []);
-  useEffect(() => {
-    console.log(accessToken);
-    console.log(userInfo);
-  }, [accessToken, userInfo]);
-
   return <></>;
 };
 export default Oauth;

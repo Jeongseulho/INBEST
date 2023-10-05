@@ -1,9 +1,10 @@
+import modalStore from "../../../store/modalStore";
 interface Props {
   onNextStep: () => void;
-  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
 }
-const InitGroup = ({ onNextStep, closeCreateModal, resetStepAndGroupSetting }: Props) => {
+const InitGroup = ({ onNextStep, resetStepAndGroupSetting }: Props) => {
+  const { closeModal } = modalStore();
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
@@ -11,14 +12,14 @@ const InitGroup = ({ onNextStep, closeCreateModal, resetStepAndGroupSetting }: P
           모의 투자 그룹을 생성하려면 <br /> 몇가지 설정이 필요해요
         </h3>
         <p className=" text-myGray text-center">
-          모의 투자 진행 기간, 계좌 연동 모드 여부, 시드 머니, 가속 모드 여부 <br />
+          모의 투자 진행 기간, 시드 머니, 그룹 이름 <br />
           설정을 통해 모의 투자 그룹을 생성할 수 있어요
         </p>
       </div>
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeCreateModal();
+            closeModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"

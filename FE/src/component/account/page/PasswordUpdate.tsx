@@ -20,6 +20,7 @@ const ProfileUpdate = ({
     handleSubmit,
     register,
     getValues,
+    setError,
     reset,
     formState: { errors },
   } = useForm<{ password1: string; password2: string }>();
@@ -28,11 +29,13 @@ const ProfileUpdate = ({
     <>
       <Modal
         isOpen={showModal}
+        ariaHideApp={false}
+        closeTimeoutMS={300}
         style={{
           content: {
             ...CONTENT_MODAL_STYLE,
             width: "500px",
-            height: "510px",
+            height: "541px",
             margin: "auto",
           },
           overlay: OVERLAY_MODAL_STYLE,
@@ -131,9 +134,18 @@ const ProfileUpdate = ({
           </div>
           <div className="flex justify-end  mt-5">
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setShowModal(false);
                 reset();
+                setError("password1", {
+                  type: "npassword1error",
+                  message: "",
+                });
+                setError("password2", {
+                  type: "npassword1error",
+                  message: "",
+                });
               }}
               className="me-2 jongRyul-gray w-16"
             >

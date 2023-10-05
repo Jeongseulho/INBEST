@@ -8,7 +8,6 @@ export const usePasswordUpdate = (setShowModal: React.Dispatch<React.SetStateAct
   const { userInfo } = userStore();
   const onPasswordUpdate = async (password: string) => {
     try {
-      console.log();
       await passwordUpdate(userInfo!.seq, password);
       setShowModal(false);
       toast.success("비밀번호가 변경되었습니다.");

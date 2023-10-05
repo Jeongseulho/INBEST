@@ -1,15 +1,15 @@
 import { IoIosAddCircleOutline } from "react-icons/io";
-import { GroupInviteUser } from "../../../type/GroupSetting";
+import { SearchUser } from "../../../type/Group";
 interface Props {
   nickname: string;
   profileImg: string;
-  dispatch: React.Dispatch<{ type: "ADD_INVITE"; payload: GroupInviteUser }>;
-  payload: GroupInviteUser;
+  dispatch: React.Dispatch<{ type: "ADD_INVITE"; payload: SearchUser }>;
+  payload: SearchUser;
 }
 
 const UserItem = ({ nickname, profileImg, dispatch, payload }: Props) => {
   return (
-    <div className=" flex items-center m-2 mt-4">
+    <div className=" flex items-center m-1 gap-1">
       <img src={profileImg} width={40} />
       <p>{nickname}</p>
 
@@ -21,7 +21,13 @@ const UserItem = ({ nickname, profileImg, dispatch, payload }: Props) => {
           })
         }
       >
-        <IoIosAddCircleOutline color="#6CE061" size="32" />
+        <IoIosAddCircleOutline
+          color="#6CE061"
+          size="32"
+          style={{
+            cursor: "pointer",
+          }}
+        />
       </span>
     </div>
   );

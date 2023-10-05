@@ -41,6 +41,8 @@ const ProfileUpdate = ({
     isCheckedNickname,
     onUpdate,
     onReset,
+    formNickname,
+    setFormNickname,
   } = useProfileUpdate();
   const { userInfo } = userStore();
   const {
@@ -52,13 +54,13 @@ const ProfileUpdate = ({
     reset,
     formState: { errors },
   } = useForm<SignupFormValue>();
-  useEffect(() => {
-    console.log(imgInfo);
-  }, [imgInfo]);
+  useEffect(() => {}, [imgInfo]);
   return (
     <>
       <Modal
         isOpen={showModal}
+        ariaHideApp={false}
+        closeTimeoutMS={300}
         style={{
           content: {
             ...CONTENT_MODAL_STYLE,
@@ -126,7 +128,6 @@ const ProfileUpdate = ({
               </div>
               <input
                 onChange={(e) => {
-                  console.log(e.target.files);
                   if (!e.target.files || e.target.files.length === 0 || !e.target) {
                     setIsChanged(false);
                     return;
@@ -137,6 +138,7 @@ const ProfileUpdate = ({
                 }}
                 ref={selectImg}
                 type="file"
+                accept="image/*"
                 id="file"
                 style={{ display: "none" }}
               />
@@ -185,14 +187,19 @@ const ProfileUpdate = ({
               <div className="flex my-2">
                 <input
                   type="text"
+                  value={formNickname}
                   disabled={isCheckedNickname}
                   className="signup-input w-full"
                   placeholder="닉네임을 입력해 주세요"
-                  defaultValue={myInfo?.nickname}
                   {...register("nickname", {
                     required: "닉네임은 필수 입력 사항입니다.",
+                    pattern: {
+                      value: /^[a-zA-Z0-9가-힣ぁ-んァ-ンー]{1,10}$/,
+                      message: "닉네임은 특수문자를 제외한 1~10자만 입력가능합니다.",
+                    },
                   })}
                   onChange={(e) => {
+                    setFormNickname(e.target.value);
                     if (e.target.value === myInfo?.nickname) {
                       setIsChangedNickname(false);
                     } else {
@@ -262,7 +269,7 @@ const ProfileUpdate = ({
                     </div>
                     <div className="flex">
                       <input
-                        defaultChecked={myInfo?.gender === 0}
+                        defaultChecked={myInfo?.gender === 0 || myInfo?.gender === null}
                         {...register("gender")}
                         id="none"
                         type="radio"
@@ -278,13 +285,15 @@ const ProfileUpdate = ({
             <div className="text-center mt-20">
               <button
                 className="jongRyul-gray w-24 h-12 me-3"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   onReset();
                   setShowModal(false);
                   setError("nickname", {
                     type: "nicknameerror",
                     message: "",
                   });
+                  setIsDefaultImg(false);
                   reset();
                 }}
               >

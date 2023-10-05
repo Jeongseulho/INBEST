@@ -1,13 +1,14 @@
 import { useReducer, useState } from "react";
-import { GroupSetting, Period, SeedMoney, GroupInviteUser } from "../../../type/GroupSetting";
+import { SearchUser } from "../../../type/Group";
+import { GroupSetting, Period, SeedMoney } from "../../../type/GroupSetting";
 import { GROUP_CREATE_STEP_MAP } from "../../../constant/GROUP_CREATE_STEP_MAP";
+import userStore from "../../../store/userStore";
 
 type Action =
   | { type: "PERIOD"; payload: Period }
   | { type: "SEED_MONEY"; payload: SeedMoney }
-  | { type: "ADD_INVITE"; payload: GroupInviteUser }
-  | { type: "DELETE_INVITE"; payload: GroupInviteUser }
-  | { type: "ALL_USER"; payload: GroupInviteUser[] }
+  | { type: "ADD_INVITE"; payload: SearchUser }
+  | { type: "DELETE_INVITE"; payload: number }
   | { type: "TITLE"; payload: string }
   | { type: "RESET" };
 
@@ -16,13 +17,14 @@ export const useCreateModal = () => {
   const onNextStep = () => {
     setStep((prev) => prev + 1);
   };
+  const { userInfo } = userStore();
 
   const initGroupSetting: GroupSetting = {
-    period: 1,
-    seedMoney: 0,
-    unInviteUsers: [],
-    inviteUsers: [],
+    period: 7,
+    seedMoney: 1000000,
+    invitedUsers: [],
     title: "",
+    ownerSeq: userInfo?.seq || 0,
   };
 
   const reducer = (groupSetting: GroupSetting, action: Action): GroupSetting => {
@@ -31,23 +33,18 @@ export const useCreateModal = () => {
         return { ...groupSetting, period: action.payload };
       case "SEED_MONEY":
         return { ...groupSetting, seedMoney: action.payload };
-      case "ALL_USER":
-        return {
-          ...groupSetting,
-          unInviteUsers: action.payload,
-          inviteUsers: [],
-        };
       case "ADD_INVITE":
+        if (groupSetting.invitedUsers.find((user) => user.seq === action.payload.seq)) {
+          return groupSetting;
+        }
         return {
           ...groupSetting,
-          inviteUsers: [...groupSetting.inviteUsers, action.payload],
-          unInviteUsers: groupSetting.unInviteUsers.filter((user) => user.userSeq !== action.payload.userSeq),
+          invitedUsers: [...groupSetting.invitedUsers, action.payload],
         };
       case "DELETE_INVITE":
         return {
           ...groupSetting,
-          inviteUsers: groupSetting.inviteUsers.filter((user) => user.userSeq !== action.payload.userSeq),
-          unInviteUsers: [...groupSetting.unInviteUsers, action.payload],
+          invitedUsers: groupSetting.invitedUsers.filter((user) => user.seq !== action.payload),
         };
       case "TITLE":
         return { ...groupSetting, title: action.payload };

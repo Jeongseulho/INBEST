@@ -1,11 +1,17 @@
+import modalStore from "../../../store/modalStore";
+import { GroupSetting } from "../../../type/GroupSetting";
+import { UseMutateFunction } from "react-query";
+import { ApiSuccessMessage } from "../../../type/ApiSuccessMessage";
 interface Props {
-  closeCreateModal: () => void;
   resetStepAndGroupSetting: () => void;
   dispatch: React.Dispatch<{ type: "TITLE"; payload: string }>;
   title: string;
+  groupSetting: GroupSetting;
+  mutate: UseMutateFunction<ApiSuccessMessage, unknown, GroupSetting, unknown>;
 }
 
-const SettingTitle = ({ closeCreateModal, resetStepAndGroupSetting, dispatch, title }: Props) => {
+const SettingTitle = ({ resetStepAndGroupSetting, dispatch, title, mutate, groupSetting }: Props) => {
+  const { closeModal } = modalStore();
   return (
     <div className=" relative w-full h-full">
       <div className=" flex flex-col items-center justify-around h-5/6">
@@ -28,14 +34,16 @@ const SettingTitle = ({ closeCreateModal, resetStepAndGroupSetting, dispatch, ti
       <div className=" flex justify-center absolute bottom-0 w-full">
         <button
           onClick={() => {
-            closeCreateModal();
+            closeModal();
             resetStepAndGroupSetting();
           }}
           className=" ms-10 me-5 gray-btn"
         >
           취소
         </button>
-        <button className=" me-10 ms-5 main-dark-btn">모의 투자 그룹 생성</button>
+        <button onClick={() => mutate(groupSetting)} className=" me-10 ms-5 main-dark-btn">
+          모의 투자 그룹 생성
+        </button>
       </div>
     </div>
   );

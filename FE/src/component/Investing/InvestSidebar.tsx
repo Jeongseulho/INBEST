@@ -8,6 +8,8 @@ import { BsCurrencyBitcoin } from "react-icons/bs";
 import { BsNewspaper } from "react-icons/bs";
 import { LiaCoinsSolid } from "react-icons/lia";
 import { INVESTING_TAB } from "../../constant/INVESTING_TAB";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 interface Props {
   activeTab: number;
@@ -15,6 +17,11 @@ interface Props {
 }
 
 const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
+
   const theme = {
     sidebar: {
       backgroundColor: "#ffffff",
@@ -62,7 +69,7 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
 
   return (
     <div className=" bg-white">
-      <h3 className=" my-10 text-center font-regular text-dark">그룹 이름</h3>
+      <h5 className=" my-10 text-center font-regular text-dark">{location.state.title}</h5>
       <Sidebar
         backgroundColor={theme.sidebar.backgroundColor}
         rootStyles={{
@@ -88,14 +95,14 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
           >
             내 현황
           </MenuItem>
+          <MenuItem
+            icon={<BsNewspaper />}
+            active={activeTab === INVESTING_TAB.NEWS}
+            onClick={() => setActiveTab(INVESTING_TAB.NEWS)}
+          >
+            뉴스
+          </MenuItem>
           <SubMenu label="투자" icon={<LiaCoinsSolid />}>
-            <MenuItem
-              icon={<AiOutlineFileSearch />}
-              active={activeTab === INVESTING_TAB.SEARCH}
-              onClick={() => setActiveTab(INVESTING_TAB.SEARCH)}
-            >
-              통합 검색
-            </MenuItem>
             <MenuItem
               icon={<GiSouthKorea />}
               active={activeTab === INVESTING_TAB.DOMESTIC}
@@ -115,16 +122,16 @@ const InvestSidebar = ({ activeTab, setActiveTab }: Props) => {
               active={activeTab === INVESTING_TAB.CRYPTO}
               onClick={() => setActiveTab(INVESTING_TAB.CRYPTO)}
             >
-              가상 자산
+              가상 화폐
+            </MenuItem>
+            <MenuItem
+              icon={<AiOutlineFileSearch />}
+              active={activeTab === INVESTING_TAB.SEARCH}
+              onClick={() => setActiveTab(INVESTING_TAB.SEARCH)}
+            >
+              통합 검색
             </MenuItem>
           </SubMenu>
-          <MenuItem
-            icon={<BsNewspaper />}
-            active={activeTab === INVESTING_TAB.NEWS}
-            onClick={() => setActiveTab(INVESTING_TAB.NEWS)}
-          >
-            뉴스
-          </MenuItem>
         </Menu>
       </Sidebar>
     </div>

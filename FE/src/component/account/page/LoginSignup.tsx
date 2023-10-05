@@ -18,7 +18,7 @@ const LoginSignup = () => {
         </div>
         <div className="grid grid-cols-2">
           <div
-            className={`flex justify-center items-center mt-5 min-h-[88vh] animate__animated ${
+            className={`flex justify-center items-center mt-5 animate__animated ${
               showLogin ? "animate__fadeInRight" : ""
             }`}
           >

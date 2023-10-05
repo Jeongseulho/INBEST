@@ -1,23 +1,36 @@
-import { formatNumberToWon } from "../../../util/formatMoney";
+import { truncateContent } from "../../../util/formatContent";
+import { COMPANY_TYPE } from "../../../constant/COMPANY_TYPE";
+import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 
 interface Props {
-  logo: string;
   name: string;
   code: string;
-  price: number;
+  type: 0 | 1 | 2;
   index: number;
+  setCompanyInfo: React.Dispatch<React.SetStateAction<CompanyInfo>>;
+  companyImg: string;
 }
 
-const SearchItem = ({ logo, name, code, price, index }: Props) => {
+const SearchItem = ({ name, code, type, index, setCompanyInfo, companyImg }: Props) => {
   return (
-    <div className=" flex justify-around border-t-2 items-center py-2 ">
+    <div
+      onClick={() =>
+        setCompanyInfo({
+          name,
+          code,
+          type,
+          logo: companyImg,
+        })
+      }
+      className=" flex justify-center gap-20 border-b-2 items-center py-2 cursor-pointer hover:bg-gray-400 hover:bg-opacity-20 transition-colors duration-300"
+    >
       <p className=" w-2 text-center">{index}</p>
-      <div className=" flex w-28 justify-center">
-        <img src={logo} />
-        <p>{name}</p>
+      <div className=" w-36 text-center flex items-center justify-center gap-1">
+        <img src={companyImg} width={30} />
+        <p className="text-center">{truncateContent(name, 6)}</p>
       </div>
       <p className=" w-28 text-center">{code}</p>
-      <p className=" w-28 text-center">{formatNumberToWon(price)}</p>
+      <p className=" w-16 text-center">{COMPANY_TYPE[type]}</p>
     </div>
   );
 };

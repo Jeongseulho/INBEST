@@ -26,6 +26,7 @@ export interface LoginResultValue extends ApiSuccessMessage {
   role: string;
   provider: string;
   grantType: string;
+  nickname: string;
 }
 
 export interface GetUserInfo {
