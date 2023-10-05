@@ -185,15 +185,26 @@ public class SimulationRankServiceImpl implements SimulationRankService {
 			}
 			log.info("stockInfoKey: {}", stockInfoKey);
 			log.info("totalAmount: {}", totalAmount);
-			stockInfoMap.put(stockInfoKey, totalAmount);
+
+			if (stockInfoMap.containsKey(stockInfoKey)) {
+				stockInfoMap.put(stockInfoKey, stockInfoMap.get(stockInfoKey) + totalAmount);
+			} else {
+				stockInfoMap.put(stockInfoKey, totalAmount);
+			}
 
 			// companyIndustryInfoMap 에 산업군 별 주식 거래량을 저장
 			FinancialDataCompany financialdataCompany
 				= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(stockType, stockCode);
 
-			log.info("CompanyIndustry : {}", financialdataCompany.getCompanyIndustry());
+			String industryInfoKey = financialdataCompany.getCompanyIndustry();
+			log.info("CompanyIndustry : {}", industryInfoKey);
 			log.info("Amount: {}", trading.getAmount());
-			industryInfoMap.put(financialdataCompany.getCompanyIndustry(), trading.getAmount());
+
+			if (industryInfoMap.containsKey(industryInfoKey)) {
+				industryInfoMap.put(industryInfoKey, industryInfoMap.get(industryInfoKey) + trading.getAmount());
+			} else {
+				industryInfoMap.put(industryInfoKey, trading.getAmount());
+			}
 		}
 
 		// stockInfoMap 정렬
