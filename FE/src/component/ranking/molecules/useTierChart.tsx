@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export const useTierChart = () => {
   const { data, isError } = useQuery(["TierCount"], () => getTiersCount(), { retry: 3 });
-  console.log(data);
+
   const bronze = data?.TierRankInfo.bronze ?? 0;
   const silver = data?.TierRankInfo.silver ?? 0;
   const gold = data?.TierRankInfo.gold ?? 0;

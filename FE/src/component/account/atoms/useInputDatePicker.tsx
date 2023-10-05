@@ -5,7 +5,6 @@ export const useInputDatePicker = () => {
   const [month, setMonth] = useState(new Date().getMonth());
 
   const handleMonthChange = (date: Date) => {
-    console.log(date);
     setMonth(date.getMonth());
   };
 

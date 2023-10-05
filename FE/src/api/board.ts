@@ -4,13 +4,11 @@ import { Comment, GetBoardDetail, GetBoardList } from "../type/Board";
 const apiWithAuth = instanceWithAuth("board-service/boards");
 
 export const createBoard = async (userSeq: number, context: string, title: string): Promise<ApiSuccessMessage> => {
-  console.log(userSeq, context, title);
   const { data } = await apiWithAuth.post("", {
     userSeq,
     context,
     title,
   });
-  console.log(data);
   return data;
 };
 
@@ -89,7 +87,6 @@ export const putBoard = async (
     context,
     title,
   });
-  console.log(data);
 
   return data;
 };

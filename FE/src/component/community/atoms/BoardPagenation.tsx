@@ -1,8 +1,7 @@
 import { useBoardPagenation } from "./useBoardPagenation";
 import ReactPaginate from "react-paginate";
 const BoardPagenation = () => {
-  const { count, pages, handlePageClick } = useBoardPagenation();
-  console.log(count);
+  const { pages, handlePageClick } = useBoardPagenation();
   return (
     <div className="flex justify-center ">
       <ReactPaginate

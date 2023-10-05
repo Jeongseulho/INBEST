@@ -1,16 +1,7 @@
-import { getBoardDetail } from "../../../api/board";
 import { likeBoard } from "../../../api/board";
 import { useQueryClient } from "react-query";
 export const useBoardItem = () => {
   const queryClient = useQueryClient();
-  const onDetailPage = async (seq: string) => {
-    try {
-      const res = await getBoardDetail(seq);
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const onLike = async (boardSeq: string) => {
     try {
@@ -21,5 +12,5 @@ export const useBoardItem = () => {
     }
   };
 
-  return { onDetailPage, onLike };
+  return { onLike };
 };

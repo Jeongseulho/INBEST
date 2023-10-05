@@ -120,7 +120,6 @@ export const useGeneralSignup = () => {
       toast.error("닉네임 중복검사를 완료해 주세요");
       return;
     }
-    console.log(data);
 
     try {
       const userInfo = {
@@ -131,7 +130,6 @@ export const useGeneralSignup = () => {
         nickname: data.nickname,
         password: data.password,
       };
-      console.log(userInfo);
       await toast.promise(signup(userInfo), {
         success: "성공적으로 회원가입 되었습니다. 로그인 해 주세요.",
       });

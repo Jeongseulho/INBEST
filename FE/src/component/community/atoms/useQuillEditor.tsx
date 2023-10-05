@@ -18,7 +18,6 @@ export const useQuillEdit = ({ quillRef }: { quillRef: React.LegacyRef<ReactQuil
       try {
         const blobImg = new Blob([file!], { type: file!.type });
         const resizedImage = await resizeImage(blobImg, 500, 500); // 원하는 크기로 조정
-        console.log(resizedImage);
         //업로드할 파일의 이름으로 Date 사용
         const name = Date.now();
         //s3 관련 설정들
@@ -27,7 +26,6 @@ export const useQuillEdit = ({ quillRef }: { quillRef: React.LegacyRef<ReactQuil
           accessKeyId: import.meta.env.VITE_APP_AWS_S3_BUCKET_ACCESS_KEY_ID,
           secretAccessKey: import.meta.env.VITE_APP_AWS_S3_BUCKET_SECRET_ACCESS_KEY,
         });
-        console.log(resizedImage);
         //앞서 생성한
         const upload = new AWS.S3.ManagedUpload({
           params: {
@@ -40,7 +38,6 @@ export const useQuillEdit = ({ quillRef }: { quillRef: React.LegacyRef<ReactQuil
         //이미지 업로드
         //업로드 된 이미지 url을 가져오기
         const url_key = await upload.promise().then((res) => res.Key);
-        console.log(url_key);
         //useRef를 사용해 에디터에 접근한 후
         //에디터의 현재 커서 위치에 이미지 삽입
         const editor = (quillRef as React.RefObject<ReactQuill>).current?.getEditor();

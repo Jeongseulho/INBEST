@@ -16,7 +16,6 @@ const BoardEditor = ({ title }: { title: string }) => {
           const res = await getBoardDetail(boardSeq);
           const content = res.board.context;
           setHtmlContent(content);
-          console.log(content);
         } catch (err) {
           console.log(err);
         }
