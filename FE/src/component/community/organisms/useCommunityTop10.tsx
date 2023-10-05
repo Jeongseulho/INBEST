@@ -7,6 +7,6 @@ export const useCommunityTop10 = () => {
   });
   const boardList = data?.board;
   if (error) console.log(error);
-  console.log(boardList);
+
   return { boardList };
 };

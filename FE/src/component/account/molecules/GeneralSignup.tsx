@@ -70,7 +70,6 @@ const GeneralLogin = () => {
                   message: "",
                 });
                 onCheckEmail(emailValue);
-                console.log(emailValue);
               }
             }}
             placeholder="이메일을 입력해 주세요"
@@ -103,7 +102,6 @@ const GeneralLogin = () => {
                 message: "",
               });
               onCheckEmail(emailValue);
-              console.log(emailValue);
             }}
           >
             전송하기
@@ -203,7 +201,6 @@ const GeneralLogin = () => {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     const nickNameValue = getValues("nickname");
-                    console.log(nickNameValue);
                     if (nickNameValue === "") {
                       setError("nickname", {
                         type: "nickNameError",
@@ -216,7 +213,6 @@ const GeneralLogin = () => {
                       message: "",
                     });
                     oncheckNickname(nickNameValue);
-                    console.log(nickNameValue);
                   }
                 }}
               />
@@ -243,7 +239,6 @@ const GeneralLogin = () => {
                   message: "",
                 });
                 oncheckNickname(nickNameValue);
-                console.log(nickNameValue);
               }}
             >
               중복확인

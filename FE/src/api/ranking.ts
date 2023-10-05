@@ -5,7 +5,6 @@ const apiWithAuth = instanceWithAuth("invest-service");
 
 export const getTotalRank = async (start: number, end: number): Promise<GetTotalRankRes> => {
   const { data } = await apiWithAuth.get("rank/users", { params: { start, end } });
-  console.log(data);
   return data;
 };
 export const getTiersCount = async (): Promise<GetTierRankInfo> => {

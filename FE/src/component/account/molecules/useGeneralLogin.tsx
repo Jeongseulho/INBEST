@@ -7,13 +7,12 @@ import userStore from "../../../store/userStore";
 import { useState } from "react";
 export const useGeneralLogin = () => {
   const navigate = useNavigate();
-  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
+  const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
   const [showModal, setShowModal] = useState(false);
   const onLongin = async (user: LoginFormValue) => {
     try {
       const res: LoginResultValue = await login(user);
       toast.success("로그인 되었습니다.");
-      console.log(res);
       const { accessToken: resAccessToken, refreshToken, ...others } = res;
       if (resAccessToken) {
         setAccessToken(resAccessToken);
@@ -21,8 +20,6 @@ export const useGeneralLogin = () => {
       }
       setUserInfo(others);
       navigate("/");
-      console.log(accessToken);
-      console.log(userInfo);
     } catch (err) {
       if (!(err as AxiosError)?.response) {
         toast.error("문제가 발생하였습니다. 다시 시도해 주세요.");

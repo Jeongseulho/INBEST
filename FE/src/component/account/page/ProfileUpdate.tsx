@@ -208,7 +208,6 @@ const ProfileUpdate = ({
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      console.log(e.key);
                       e.preventDefault();
                       // Enter 키 누르면 사진사라지는 현상제거
                     }

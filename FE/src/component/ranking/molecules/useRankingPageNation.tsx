@@ -5,8 +5,6 @@ export const useRankingPageNation = () => {
   const location = useLocation();
   const [totalUser, setTotalUser] = useState(0);
 
-  console.log(navigate.name);
-
   const handlePageClick = (e: { selected: number }) => {
     const currentUrl = new URL(location.search, window.location.origin);
     currentUrl.searchParams.set("page", String(e.selected + 1));

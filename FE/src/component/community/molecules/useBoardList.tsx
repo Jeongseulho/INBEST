@@ -18,7 +18,6 @@ export const useBoardList = () => {
       retry: 5,
     }
   );
-  console.log(data);
   const boards = data?.board;
   if (isError) {
     console.log(error);
