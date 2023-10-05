@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.jrjr.invest.global.exception.NotFoundException;
 import com.jrjr.invest.rank.dto.RedisTierRankDTO;
 import com.jrjr.invest.rank.dto.RedisUserDTO;
+import com.jrjr.invest.rank.repository.SimulationRankRedisRepository;
 import com.jrjr.invest.rank.repository.UserRankRedisRepository;
 import com.jrjr.invest.simulation.repository.RateRepository;
 import com.jrjr.invest.simulation.repository.TierRepository;
@@ -23,6 +24,7 @@ public class UserRankServiceImpl implements UserRankService {
 
 	private final UserRepository userRepository;
 	private final UserRankRedisRepository userRankRedisRepository;
+	private final SimulationRankRedisRepository simulationRankRedisRepository;
 	private final TierRepository tierRepository;
 	private final RateRepository rateRepository;
 
@@ -55,14 +57,21 @@ public class UserRankServiceImpl implements UserRankService {
 	}
 
 	/*
-			회원 프로필 정보 수정
-		 */
+		회원 프로필 정보 수정
+	*/
 	@Override
 	public void updateUserProfileInfo(RedisUserDTO redisUserDto) {
 		log.info("수정 할 회원 정보: {}", redisUserDto.toString());
 
-		userRankRedisRepository.updateUserProfileInfo(redisUserDto);
-		this.updateUserRankingInfo();
+		userRankRedisRepository.updateUserProfileInfo(redisUserDto); // user hash table 업데이트
+		this.updateUserRankingInfo(); // 개인 랭킹 재산정
+
+		// 참여중인 시뮬레이션 그룹 seq 모두 조회
+		List<Long> participatingSimulationSeq = userRepository.getParticipatingSimulationSeq(redisUserDto.getSeq());
+		// 참여중인 시뮬레이션 프로필 정보 수정
+		for (Long simulationSeq : participatingSimulationSeq) {
+			simulationRankRedisRepository.updateSimulationUserRankingInfo(simulationSeq);
+		}
 	}
 
 	/*
