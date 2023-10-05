@@ -24,6 +24,7 @@ import com.jrjr.security.repository.LoginRepository;
 import com.jrjr.security.repository.RefreshTokenRepository;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -74,8 +75,6 @@ public class JwtProvider {
 		return Optional.empty();
 	}
 
-<<<<<<<< HEAD:spring/src/main/java/com/jrjr/inbest/jwt/service/JwtProvider.java
-========
 	public boolean isValidToken(String token) {
 		log.info("JwtProvider - isValidToken 실행");
 
@@ -94,7 +93,6 @@ public class JwtProvider {
 		}
 	}
 
->>>>>>>> origin/master:security/src/main/java/com/jrjr/security/service/JwtProvider.java
 	public Claims getClaims(String token) {
 		log.info("JwtProvider - getClaims 실행");
 
@@ -110,8 +108,6 @@ public class JwtProvider {
 		}
 	}
 
-<<<<<<<< HEAD:spring/src/main/java/com/jrjr/inbest/jwt/service/JwtProvider.java
-========
 	public boolean compareRefreshTokens(String refreshToken) {
 		log.info("JwtProvider - compareRefreshTokens 실행");
 
@@ -126,7 +122,6 @@ public class JwtProvider {
 		return refreshToken.equals(refreshTokenEntity.get().getRefreshToken());
 	}
 
->>>>>>>> origin/master:security/src/main/java/com/jrjr/security/service/JwtProvider.java
 	public LoginDto getUserInfoFromToken(String token) {
 		log.info("JwtProvider - getUserInfoFromToken 실행");
 
