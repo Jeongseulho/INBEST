@@ -16,20 +16,12 @@ const InvestMain = () => {
     data: myGroupList,
     isLoading: isLoadingMyGroupList,
     refetch: refetchMyGroupList,
-  } = useQuery(["myGroupList"], getMyGroupList, {
-    cacheTime: 0,
-    staleTime: 0,
-    retry: 3,
-  });
+  } = useQuery(["myGroupList"], getMyGroupList, {});
   const {
     data: joinableGroupList,
     isLoading: isLoadingJoinableGroupList,
     refetch: refetchJoinableGroupList,
-  } = useQuery(["joinableGroupList"], getJoinableGroupList, {
-    cacheTime: 0,
-    staleTime: 0,
-    retry: 3,
-  });
+  } = useQuery(["joinableGroupList"], getJoinableGroupList);
   const { activeTab, setActiveTab, groupFilter, dispatch, initGroupFilter } = useFilterModal();
   const [filter, setFilter] = useState(initGroupFilter);
 
