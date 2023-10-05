@@ -360,6 +360,9 @@ public class GroupService {
 				redisSimulationUserDTO);
 		}
 
+		//초기 랭킹 저장
+		simulationRankRedisRepository.updateSimulationUserRankingInfo(simulationSeq);
+
 		// 시뮬레이션 시작 알림 메세지 보내기
 		for (SimulationUser simulationUser : simulation.getSimulationUserList()) {
 			notificationService.sendStartNotification(simulationSeq, simulationUser.getUser().getSeq());
