@@ -63,7 +63,7 @@ export const useQuillEdit = ({ quillRef }: { quillRef: React.LegacyRef<ReactQuil
         maxWidth,
         maxHeight,
         "png",
-        80, // 이미지 품질 (0~100)
+        100, // 이미지 품질 (0~100)
         0, // 회전 각도
         (uri) => {
           resolve(uri);

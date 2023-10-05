@@ -8,7 +8,7 @@ const BoardEditor = ({ title }: { title: string }) => {
   const { quillRef, htmlContent, setHtmlContent, onSubmit } = useBoardEditor(title);
   const [searchParams] = useSearchParams();
   const boardSeq = searchParams.get("boardSeq");
-  console.log(boardSeq);
+
   useEffect(() => {
     if (boardSeq) {
       const getValue = async () => {

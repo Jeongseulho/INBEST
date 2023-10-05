@@ -4,7 +4,9 @@ const GroupItem = ({ groupItem, searchSeq }: { groupItem: SimulationRankingInfo;
   return (
     <>
       <tr
-        className={`h-20 border-b ${searchSeq && searchSeq === groupItem.simulationSeq ? "bg-gray-300" : "bg-white"} `}
+        className={`h-20 border-b hover:bg-green-100 ${
+          searchSeq && searchSeq === groupItem.simulationSeq ? "bg-gray-300" : "bg-white"
+        } `}
       >
         <td className="text-center">{groupItem.currentRank}</td>
         <td>

@@ -9,6 +9,7 @@ import BoardComment from "../atoms/BoardComment";
 import userStore from "../../../store/userStore";
 import BoardMenubar from "../atoms/BoardMenubar";
 import { getKorTime } from "../../../util/formatDateSign";
+import { Link } from "react-router-dom";
 const BoardDetailContent = () => {
   const {
     board,
@@ -55,10 +56,12 @@ const BoardDetailContent = () => {
             {board?.view}
           </div>
         </div>
-        <div className="flex items-center">
-          <img src={board?.writer.profileImgSearchName} className="w-10 rounded-full me-3" />
-          <p className="font-medium">{board?.writer.nickname}</p>
-        </div>
+        <Link to={`/profile/${board?.writer.seq}`}>
+          <div className="flex items-center">
+            <img src={board?.writer.profileImgSearchName} className="w-10 rounded-full me-3" />
+            <p className="font-medium">{board?.writer.nickname}</p>
+          </div>
+        </Link>
       </div>
       <div className="border-b-2 mx-3">
         <div className="bg-white mx-5 mt-6 min-h-[20rem] relative pb-16">

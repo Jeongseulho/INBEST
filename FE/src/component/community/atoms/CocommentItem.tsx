@@ -23,14 +23,22 @@ const CocommentItem = ({ comment, board, cocomment, onDeleteComment }: CommentPr
     setCommentUpdateText,
     onUpdateCocoment,
     onLikeCocomment,
+    onMoveProfile,
   } = useCocommentItem(cocomment);
   return (
     <div className="flex border-b-2 mx-5 mt-1 bg-gray-200 pt-2 ps-2 pe-2 rounded-md border-gray-300">
-      <img src={cocomment.writer.profileImgSearchName} alt="이미지" className="rounded-full w-10 h-10 me-3" />
+      <img
+        src={cocomment.writer.profileImgSearchName}
+        alt="이미지"
+        className="rounded-full w-10 h-10 me-3 hover:cursor-pointer"
+        onClick={() => onMoveProfile(cocomment.writer.seq)}
+      />
       <div className="w-full">
         <div className="flex justify-between items-center">
           <div>
-            {cocomment.writer.nickname}
+            <span className="hover:border-b-2 hover:cursor-pointer" onClick={() => onMoveProfile(cocomment.writer.seq)}>
+              {cocomment.writer.nickname}
+            </span>
             <span className="ms-3 text-xs text-gray-400">
               {getTimeAgo(comment.createdDate)}{" "}
               {cocomment.createdDate !== cocomment.lastModifiedDate && !cocomment.writer.seq && "(삭제됨)"}

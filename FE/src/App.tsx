@@ -20,6 +20,8 @@ import PersonalRanking from "./component/ranking/organisms/PersonalRanking";
 import PersonalRankingSearch from "./component/ranking/organisms/PersonalRankingSearch";
 import GroupRanking from "./component/ranking/organisms/GroupRanking";
 import FinancialDictionary from "./component/financial-dictionary/page/FinancialDictionary";
+import MemberProfile from "./component/account/page/MemberProfile";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -40,6 +42,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="login" element={<LoginSignup />} />
+              <Route path="profile/:memberSeq" element={<MemberProfile />} />
               <Route path="/invest" element={<InvestMain />} />
               <Route path="login/oauth2/code/kakao" element={<Oauth />} />
               <Route path="login/oauth2/code/naver" element={<Oauth />} />
