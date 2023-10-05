@@ -10,7 +10,9 @@ import { AiFillQuestionCircle } from "react-icons/ai";
 
 const BestPick = () => {
   const { simulationSeq } = useParams<{ simulationSeq: string }>();
-  const { data, isLoading } = useQuery(["bestPick", simulationSeq], () => getBestPick(simulationSeq));
+  const { data, isLoading } = useQuery(["bestPick", simulationSeq], () => getBestPick(simulationSeq), {
+    staleTime: 0,
+  });
   return (
     <div className=" shadow-component col-span-8 row-span-4 p-4">
       <div className="  flex items-center gap-2">

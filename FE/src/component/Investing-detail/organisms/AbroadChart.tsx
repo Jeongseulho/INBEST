@@ -8,6 +8,7 @@ import spinner from "../../../asset/image/spinner.svg";
 import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 import help from "../../../asset/image/help.png";
 import ChartTutorial from "../molecules/ChartTutorial";
+import notResult from "../../../asset/image/notResult.png";
 
 interface Props {
   companyInfo: CompanyInfo;
@@ -78,7 +79,12 @@ const AbroadChart = ({ companyInfo }: Props) => {
         ) : (
           <>
             {data === undefined || Object.keys(data.output2[0]).length === 0 ? (
-              <div>데이터가 없습니다.</div>
+              <div className="flex justify-center items-center w-[450px] h-full">
+                <div className="text-center">
+                  <img src={notResult} alt="404" className="w-56 h-56" />
+                  데이터 준비중입니다!
+                </div>
+              </div>
             ) : tutorialStep >= 0 ? (
               <ChartTutorial setTutorialStep={setTutorialStep} tutorialStep={tutorialStep} />
             ) : (

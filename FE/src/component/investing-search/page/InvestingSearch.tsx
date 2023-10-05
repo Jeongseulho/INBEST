@@ -11,6 +11,7 @@ interface Props {
 
 const InvestingSearch = ({ setCompanyInfo }: Props) => {
   const [searchCompanyKeyword, setSearchCompanyKeyword] = useState<string>("");
+
   const onChangeSearchCompanyKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchCompanyKeyword(e.target.value);
   };
@@ -18,7 +19,7 @@ const InvestingSearch = ({ setCompanyInfo }: Props) => {
     ["searchCompany", searchCompanyKeyword],
     () => getSearchCompany(searchCompanyKeyword),
     {
-      enabled: searchCompanyKeyword.length > 0,
+      enabled: searchCompanyKeyword.length > 1,
     }
   );
   return (

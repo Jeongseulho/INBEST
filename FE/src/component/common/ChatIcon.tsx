@@ -22,7 +22,8 @@ const ChatIcon = () => {
 
   const { data } = useQuery(["myGroupList"], getMyGroupList, {
     onSuccess: (data) => {
-      setCurChatGroup(data[0]);
+      const notFinishedGroup = data.filter((group) => group.progressState !== "finished");
+      setCurChatGroup(notFinishedGroup[0]);
     },
     enabled: !!accessToken,
   });
@@ -88,30 +89,32 @@ const ChatIcon = () => {
                         leaveTo="opacity-0"
                       >
                         <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                          {data?.map((myGroup, index) => (
-                            <Listbox.Option
-                              key={index}
-                              className={({ active }) =>
-                                `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                  active ? "bg-amber-100 text-amber-900" : "text-gray-900"
-                                }`
-                              }
-                              value={myGroup}
-                            >
-                              {({ selected }) => (
-                                <>
-                                  <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
-                                    {myGroup.title}
-                                  </span>
-                                  {selected && (
-                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                      <AiOutlineCheck />
+                          {data
+                            ?.filter((group) => group.progressState !== "finished")
+                            ?.map((myGroup, index) => (
+                              <Listbox.Option
+                                key={index}
+                                className={({ active }) =>
+                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                    active ? "bg-amber-100 text-amber-900" : "text-gray-900"
+                                  }`
+                                }
+                                value={myGroup}
+                              >
+                                {({ selected }) => (
+                                  <>
+                                    <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                                      {myGroup.title}
                                     </span>
-                                  )}
-                                </>
-                              )}
-                            </Listbox.Option>
-                          ))}
+                                    {selected && (
+                                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                        <AiOutlineCheck />
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </Listbox.Option>
+                            ))}
                         </Listbox.Options>
                       </Transition>
                     </div>

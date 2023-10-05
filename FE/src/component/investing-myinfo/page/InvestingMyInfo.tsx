@@ -9,7 +9,9 @@ import { useParams } from "react-router-dom";
 const InvestingMyInfo = () => {
   const { simulationSeq } = useParams();
 
-  const { data, isLoading } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq));
+  const { data, isLoading } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq), {
+    staleTime: 0,
+  });
   const myProfit =
     data && data.length >= 2 ? (data[data.length - 1].asset - data[0].asset) / data[data.length - 1].asset : 0;
 

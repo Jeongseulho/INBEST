@@ -5,6 +5,7 @@ import { formatNumberToWon } from "../../../util/formatMoney";
 import IncreaseIcon from "../../common/IncreaseIcon";
 import DecreaseIcon from "../../common/DecreaseIcon";
 import StockComponent from "../../common/StockComponent";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   ranking: number;
@@ -18,9 +19,11 @@ interface Props {
     totalStockPrice: number;
     stockImgSearchName: string;
   }[];
+  userSeq: number;
 }
 
-const Ranker = ({ ranking, profileImg, nickname, money, percentage, stockInfoList }: Props) => {
+const Ranker = ({ ranking, profileImg, nickname, money, percentage, stockInfoList, userSeq }: Props) => {
+  const navigate = useNavigate();
   return (
     <div
       className={`flex flex-col gap-4 p-2 rounded-xl items-center ${
@@ -35,8 +38,15 @@ const Ranker = ({ ranking, profileImg, nickname, money, percentage, stockInfoLis
         `}
             className=" w-[40px] h-[40px]"
           />
-          <img src={profileImg} width={40} className=" rounded-full" />
-          <h5 className=" text-white drop-shadow-2xl">{nickname}</h5>
+          <div
+            className=" flex items-center gap-2 cursor-pointer"
+            onClick={() => {
+              navigate(`/profile/${userSeq}`);
+            }}
+          >
+            <img src={profileImg} width={40} className=" rounded-full" />
+            <h5 className=" text-white drop-shadow-2xl">{nickname}</h5>
+          </div>
         </div>
 
         <div className=" flex items-center">

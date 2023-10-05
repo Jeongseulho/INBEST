@@ -6,7 +6,9 @@ import { formatNumberToKoreanWon } from "../../../util/formatMoney";
 
 const MyStock = () => {
   const { simulationSeq } = useParams();
-  const { data, isLoading } = useQuery(["myStockList", simulationSeq], () => getMyStockList(simulationSeq));
+  const { data, isLoading } = useQuery(["myStockList", simulationSeq], () => getMyStockList(simulationSeq), {
+    staleTime: 0,
+  });
   return (
     <div className=" shadow-component col-span-full row-span-1 p-4 flex flex-col gap-10">
       <div className="  flex items-center gap-2">

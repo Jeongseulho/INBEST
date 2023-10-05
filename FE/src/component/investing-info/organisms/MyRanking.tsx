@@ -6,10 +6,13 @@ import { useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import down from "../../../asset/image/down.png";
 import up from "../../../asset/image/up.png";
+import { formatNumberToKoreanWon } from "../../../util/formatMoney";
 
 const MyRanking = () => {
   const { simulationSeq } = useParams();
-  const { data, isLoading } = useQuery(["myRanking", simulationSeq], () => getMyInvestingRanking(simulationSeq));
+  const { data, isLoading } = useQuery(["myRanking", simulationSeq], () => getMyInvestingRanking(simulationSeq), {
+    staleTime: 0,
+  });
   return (
     <div className=" shadow-component col-span-4 p-4 flex flex-col gap-10">
       <div className="  flex items-center gap-2">
@@ -24,9 +27,10 @@ const MyRanking = () => {
             <NormalRanking
               ranking={data.MySimulationUserRankingInfo.currentRank}
               percentage={data.MySimulationUserRankingInfo.rate}
-              money={data.MySimulationUserRankingInfo.currentMoney}
+              money={data.MySimulationUserRankingInfo.totalMoney}
               profileImg={data.MySimulationUserRankingInfo.profileImgSearchName}
               nickname={data.MySimulationUserRankingInfo.nickname}
+              userSeq={data.MySimulationUserRankingInfo.userSeq}
             />
             <div className=" flex items-center justify-center gap-2">
               <p className=" text-center text-myGray text-sm">내 순위 변동 :</p>
@@ -51,6 +55,12 @@ const MyRanking = () => {
                   </div>
                 )}
               </div>
+            </div>
+            <div className=" flex items-center justify-center gap-2">
+              <p className=" text-sm text-center text-myGray">현금 보유량 : </p>
+              <p className=" text-lg font-bold">
+                {formatNumberToKoreanWon(data.MySimulationUserRankingInfo.currentMoney)}
+              </p>
             </div>
           </>
         )
