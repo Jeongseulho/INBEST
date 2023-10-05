@@ -24,7 +24,7 @@ const MemberBaseInfo = ({
         <div className="text-center text-2xl border-b-2 mb-0 pb-2">{nickname}</div>
         <div className="flex justify-center">
           <div
-            className="border-e-2 pt-2 w-1/2 text-center hover:cursor-pointer"
+            className="border-e-2 pt-2 w-1/2 text-center hover:cursor-pointer hover:bg-green-100 duration-300 transition-colors"
             onClick={() => {
               setShowType("following");
               setShowFollowWindow(true);
@@ -34,7 +34,7 @@ const MemberBaseInfo = ({
             <div>{follower}</div>
           </div>
           <div
-            className="pt-2 w-1/2 text-center hover:cursor-pointer"
+            className="pt-2 w-1/2 text-center hover:cursor-pointer hover:bg-green-100 duration-300 transition-colors"
             onClick={() => {
               setShowType("follower");
               setShowFollowWindow(true);

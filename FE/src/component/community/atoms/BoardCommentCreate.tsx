@@ -11,7 +11,7 @@ const BoardCommentCreate = ({ setCommentText, onPostComment, commentText, commen
   const { userInfo } = userStore();
   return (
     <>
-      <div className="flex items-start relative mx-10 mt-8">
+      <div className="flex items-start relative mx-10 mt-8 animate__animated animate__lightSpeedInRight animate__faster">
         <img src={userInfo?.profileImgSearchName} alt="프로필 이미지" className="w-10 rounded-full me-5" />
         <textarea
           className="border w-full min-h-[8rem] resize-none p-3 mb-12"

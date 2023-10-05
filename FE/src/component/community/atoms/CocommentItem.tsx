@@ -26,7 +26,7 @@ const CocommentItem = ({ comment, board, cocomment, onDeleteComment }: CommentPr
     onMoveProfile,
   } = useCocommentItem(cocomment);
   return (
-    <div className="flex border-b-2 mx-5 mt-1 bg-gray-200 pt-2 ps-2 pe-2 rounded-md border-gray-300">
+    <div className="flex border-b-2 mx-5 mt-1 bg-gray-200 pt-2 ps-2 pe-2 rounded-md border-gray-300 animate__animated animate__zoomIn animate__faster">
       <img
         src={cocomment.writer.profileImgSearchName}
         alt="이미지"

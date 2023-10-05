@@ -23,11 +23,9 @@ export const useProfileUpdate = () => {
   // 닉네임 바뀌었는데 중복검사 안했으면 못바꾸게 해야됨
   const [isChangedNickname, setIsChangedNickname] = useState(false);
   const [isCheckedNickname, setIsCheckedNickname] = useState(false);
-
+  const [formNickname, setFormNickname] = useState(userInfo?.nickname ?? "");
   // 닉네임 중복확인
   const onCheckNickname = async (nickname: string) => {
-    console.log(nickname);
-    console.log(/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]*$/.test(nickname));
     if (nickname === "") {
       toast.error("닉네임을 입력해 주세요.");
       return;
@@ -86,8 +84,6 @@ export const useProfileUpdate = () => {
 
   // 최종 제출
   const onUpdate = async (data: UpdateUser) => {
-    console.log(data);
-    console.log(croppedImgBlob);
     if (isChangedNickname && !isCheckedNickname) {
       return toast.error("닉네임 중복검사를 완료해 주세요.");
     }
@@ -96,21 +92,17 @@ export const useProfileUpdate = () => {
       formData.append("file", croppedImgBlob, "tmp.png");
     }
 
-    formData.append("nickname", data.nickname);
+    formData.append("nickname", formNickname);
     formData.append("gender", data.gender.toString());
     if (data.birth) formData.append("birth", data.birth);
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+
     try {
       if (isDefaultImg) {
         await changeDefaultImg(userInfo!.seq);
       }
       const res = await upadateUserInfo(userInfo!.seq, formData);
-
+      toast.success("프로필이 변경되었습니다");
       setUserInfo({ ...userInfo!, profileImgSearchName: res.UserInfo.profileImgSearchName });
-
-      console.log(res);
     } catch (err) {
       toast.error("프로필 변경에 실패했습니다");
       console.log(err);
@@ -146,5 +138,7 @@ export const useProfileUpdate = () => {
     onReset,
     isChangedNickname,
     onUpdate,
+    formNickname,
+    setFormNickname,
   };
 };
