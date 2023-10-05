@@ -121,7 +121,12 @@ const ChatIcon = () => {
                 <div className="w-full flex justify-around bg-green-100 items-center gap-2">
                   <input
                     className=" overflow-y-hidden flex-grow m-2 py-3 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none text-sm items-center"
-                    placeholder="전송할 메세지를 입력해주세요."
+                    placeholder={
+                      curChatGroup?.simulationSeq === undefined
+                        ? "참여한 그룹이 없어요."
+                        : "전송할 메세지를 입력해주세요."
+                    }
+                    disabled={curChatGroup?.simulationSeq === undefined}
                     style={{ outline: "none" }}
                     onChange={onChangeMessage}
                     onKeyUp={(e) => {
@@ -133,8 +138,11 @@ const ChatIcon = () => {
                   ></input>
                   <button
                     type="button"
-                    className=" h-3/4 mr-1 inline-flex items-center justify-center rounded-lg px-2 transition duration-500 ease-in-out text-white bg-mainDark hover:bg-mainMoreDark focus:outline-none"
+                    className={`
+                    ${curChatGroup?.simulationSeq === undefined ? " bg-myGray " : "bg-mainDark hover:bg-mainMoreDark"}
+                    h-3/4 mr-1 inline-flex items-center justify-center rounded-lg px-2 transition duration-500 ease-in-out text-white focus:outline-none`}
                     onClick={onSendMessage}
+                    disabled={curChatGroup?.simulationSeq === undefined}
                   >
                     <span className="font-bold text-sm">Send</span>
                     <svg

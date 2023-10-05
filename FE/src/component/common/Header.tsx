@@ -16,13 +16,11 @@ import login from "../../asset/image/login.png";
 import Bell from "./Bell";
 import { Fragment } from "react";
 import "animate.css";
-import { useNavigate } from "react-router-dom";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 const Header = () => {
-  const navigate = useNavigate();
   const [myInfo, setMyInfo] = useState<GetUserInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -30,13 +28,9 @@ const Header = () => {
   const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
   return (
     <header className="w-full h-[8vh] flex justify-evenly items-center bg-gray-50  bg-opacity-90">
-      <img
-        className="h-[8vh] cursor-pointer"
-        src={temp_logo}
-        onClick={() => {
-          navigate("/");
-        }}
-      />
+      <Link to="/">
+        <img className="h-[8vh]" src={temp_logo} />
+      </Link>
 
       <div className="flex items-center justify-center gap-16">
         <Link to="/invest" className=" text-center text-md">
