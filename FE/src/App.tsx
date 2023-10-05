@@ -22,6 +22,7 @@ import GroupRanking from "./component/ranking/organisms/GroupRanking";
 import PrivateRoute from "./component/common/PrivateRoute";
 import FinancialDictionary from "./component/financial-dictionary/page/FinancialDictionary";
 import MemberProfile from "./component/account/page/MemberProfile";
+import NotFound404 from "./component/common/NotFound404";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -87,6 +88,7 @@ function App() {
               <Route element={<PrivateRoute requireAuth={true} />}>
                 <Route path="financial-dictionary" element={<FinancialDictionary />} />
               </Route>
+              <Route path="/*" element={<NotFound404 />} />
             </Routes>
           </AnimatePresence>
         </Layout>

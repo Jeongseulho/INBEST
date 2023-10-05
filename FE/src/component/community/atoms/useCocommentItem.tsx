@@ -29,7 +29,7 @@ export const useCocommentItem = (comment: Comment) => {
     }
   };
   const onMoveProfile = (seq: number | null | undefined) => {
-    if (!!seq) {
+    if (seq) {
       return navigate(`/profile/${seq}`);
     } else return toast.warning("삭제된 댓글입니다");
   };
