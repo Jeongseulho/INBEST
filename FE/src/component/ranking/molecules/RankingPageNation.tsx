@@ -24,7 +24,7 @@ const RankingPageNation = () => {
         previousLinkClassName="w-full h-full flex justify-center items-center"
         nextLinkClassName="w-full h-full flex justify-center items-center"
         activeClassName="bg-primary text-white border-0"
-        initialPage={Number(page) - 1 ?? 0}
+        initialPage={page ? Number(page) - 1 : 0}
       />
     </div>
   );
