@@ -1,5 +1,6 @@
 package com.jrjr.inbest.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,6 +132,74 @@ public class FriendService {
 
 		// 팔로워가 없다면
 		return followerList.orElse(null);
+	}
+
+	/*
+		다른 회원의 팔로잉 목록 조회
+	 */
+	public List<FriendDTO> findAllOtherFollowings(Long userSeq, Long loginSeq) throws Exception {
+		log.info("조회할 회원 seq: {}", userSeq);
+		log.info("로그인 회원 seq: {}", loginSeq);
+		this.existsUser(userSeq);
+		this.existsUser(loginSeq);
+
+		Optional<List<Long>> otherFollowingSeqList = friendRepository.getOtherFollowingSeqList(userSeq);
+		if (otherFollowingSeqList.isEmpty()) {
+			log.info("{}가 팔로우 하고 있는 회원이 없음", userSeq);
+			return null;
+		}
+
+		List<FriendDTO> followingList = new ArrayList<>();
+		for (Long seq : otherFollowingSeqList.get()) {
+			// 본인이라면 continue;
+			if (seq.equals(loginSeq)) {
+				continue;
+			}
+
+			Optional<FriendDTO> friendDto = userRepository.getFriendInfo(seq);
+			if (friendDto.isEmpty()) {
+				continue;
+			}
+
+			friendDto.get().setIsFollowed(friendRepository.existsByFollowingSeqAndFollowedSeq(seq, loginSeq));
+			followingList.add(friendDto.get());
+		}
+
+		return followingList;
+	}
+
+	/*
+		다른 회원의 팔로워 목록 조회
+	 */
+	public List<FriendDTO> findAllOtherFollowers(Long userSeq, Long loginSeq) throws Exception {
+		log.info("조회할 회원 seq: {}", userSeq);
+		log.info("로그인 회원 seq: {}", loginSeq);
+		this.existsUser(userSeq);
+		this.existsUser(loginSeq);
+
+		Optional<List<Long>> otherFollowerSeqList = friendRepository.getOtherFollowerSeqList(userSeq);
+		if (otherFollowerSeqList.isEmpty()) {
+			log.info("{}를 팔로우 하고 있는 회원이 없음", userSeq);
+			return null;
+		}
+
+		List<FriendDTO> followerList = new ArrayList<>();
+		for (Long seq : otherFollowerSeqList.get()) {
+			// 본인이라면 continue;
+			if (seq.equals(loginSeq)) {
+				continue;
+			}
+
+			Optional<FriendDTO> friendDto = userRepository.getFriendInfo(seq);
+			if (friendDto.isEmpty()) {
+				continue;
+			}
+
+			friendDto.get().setIsFollowed(friendRepository.existsByFollowingSeqAndFollowedSeq(seq, loginSeq));
+			followerList.add(friendDto.get());
+		}
+
+		return followerList;
 	}
 
 	/*

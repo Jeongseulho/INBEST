@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.jrjr.inbest.user.dto.FriendDTO;
 import com.jrjr.inbest.user.dto.ParticipantDTO;
 import com.jrjr.inbest.user.dto.SearchByNicknameDTO;
 import com.jrjr.inbest.user.entity.User;
@@ -34,4 +35,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "WHERE u.nickname LIKE %:keyword% "
 			+ "GROUP BY u.seq")
 	List<SearchByNicknameDTO> getUserSearchListByKeyword(@Param("keyword") String keyword);
+
+	@Query(
+		"SELECT NEW com.jrjr.inbest.user.dto.FriendDTO(u.seq, u.email, u.nickname, u.profileImgSearchName, SUM(t.tier)) "
+			+ "FROM User u "
+			+ "JOIN Tier t ON u.seq = t.userSeq "
+			+ "WHERE u.seq = :userSeq")
+	Optional<FriendDTO> getFriendInfo(@Param("userSeq") Long userSeq);
 }

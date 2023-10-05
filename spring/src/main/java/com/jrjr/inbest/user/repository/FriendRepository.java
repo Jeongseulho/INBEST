@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import com.jrjr.inbest.user.dto.FriendDTO;
 import com.jrjr.inbest.user.entity.Friend;
 
+import io.lettuce.core.dynamic.annotation.Param;
+
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
@@ -27,7 +29,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 			+ "WHERE f.followedSeq = :userSeq "
 			+ "GROUP BY f.followingSeq, f.isFollowBack "
 			+ "ORDER BY f.isFollowBack DESC")
-	Optional<List<FriendDTO>> getFollowingList(Long userSeq);
+	Optional<List<FriendDTO>> getFollowingList(@Param("userSeq") Long userSeq);
 
 	@Query(
 		"SELECT NEW com.jrjr.inbest.user.dto.FriendDTO(u.seq, u.email, u.nickname, u.profileImgSearchName, SUM(t.tier), f.isFollowBack) "
@@ -37,7 +39,13 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 			+ "WHERE f.followingSeq = :userSeq "
 			+ "GROUP BY f.followedSeq, f.isFollowBack "
 			+ "ORDER BY f.isFollowBack DESC")
-	Optional<List<FriendDTO>> getFollowerList(Long userSeq);
+	Optional<List<FriendDTO>> getFollowerList(@Param("userSeq") Long userSeq);
+
+	@Query("SELECT f.followingSeq FROM Friend f WHERE f.followedSeq = :userSeq")
+	Optional<List<Long>> getOtherFollowingSeqList(@Param("userSeq") Long userSeq);
+
+	@Query("SELECT f.followedSeq FROM Friend f WHERE f.followingSeq = :userSeq")
+	Optional<List<Long>> getOtherFollowerSeqList(@Param("userSeq") Long userSeq);
 
 	Optional<Integer> countByFollowingSeq(Long userSeq);
 
