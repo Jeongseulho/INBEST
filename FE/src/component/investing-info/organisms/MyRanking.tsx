@@ -30,6 +30,7 @@ const MyRanking = () => {
               money={data.MySimulationUserRankingInfo.totalMoney}
               profileImg={data.MySimulationUserRankingInfo.profileImgSearchName}
               nickname={data.MySimulationUserRankingInfo.nickname}
+              userSeq={data.MySimulationUserRankingInfo.userSeq}
             />
             <div className=" flex items-center justify-center gap-2">
               <p className=" text-center text-myGray text-sm">내 순위 변동 :</p>

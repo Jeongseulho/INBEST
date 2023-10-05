@@ -2,7 +2,7 @@ import trade from "../../../asset/image/trade.png";
 import { useQuery } from "react-query";
 import { getAbroadStockPrice } from "../../../api/investingStockChart";
 import spinner from "../../../asset/image/spinner.svg";
-
+import notResult from "../../../asset/image/notResult.png";
 import { useState } from "react";
 import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 import AbroadSellBuyStatus from "../molecules/AbroadSellBuyStatus";
@@ -41,7 +41,12 @@ const AbroadTrade = ({ companyInfo }: Props) => {
               {isLoading ? (
                 <img src={spinner} className=" mx-auto" />
               ) : !data ? (
-                <div>데이터가 없습니다.</div>
+                <div className="flex justify-center items-center w-[450px] h-full">
+                  <div className="text-center">
+                    <img src={notResult} alt="404" className="w-56 h-56" />
+                    데이터 준비중입니다!
+                  </div>
+                </div>
               ) : (
                 <AbroadSellBuyStatus data={data} sellMaxAmount={sellMaxAmount} buyMaxAmount={buyMaxAmount} />
               )}
@@ -75,7 +80,12 @@ const AbroadTrade = ({ companyInfo }: Props) => {
                 <img src={spinner} className=" mx-auto" />
               </>
             ) : !data ? (
-              <div>데이터가 없습니다.</div>
+              <div className="flex justify-center items-center w-[450px] h-full">
+                <div className="text-center">
+                  <img src={notResult} alt="404" className="w-56 h-56" />
+                  데이터 준비중입니다!
+                </div>
+              </div>
             ) : curTab === "sell" ? (
               <SellOrderTab
                 expectedPrice={Math.round((data.pask1 + data.pbid1) / 2)}

@@ -2,7 +2,7 @@ import trade from "../../../asset/image/trade.png";
 import { useQuery } from "react-query";
 import { getKorStockPrice } from "../../../api/investingStockChart";
 import spinner from "../../../asset/image/spinner.svg";
-
+import notResult from "../../../asset/image/notResult.png";
 import { useState } from "react";
 import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 import SellBuyStatus from "../molecules/SellBuyStatus";
@@ -41,7 +41,12 @@ const Trade = ({ companyInfo }: Props) => {
               {isLoading ? (
                 <img src={spinner} className=" mx-auto" />
               ) : data === undefined || Object.keys(data.output1).length === 0 ? (
-                <div>데이터가 없습니다.</div>
+                <div className="flex justify-center items-center w-[450px] h-full">
+                  <div className="text-center">
+                    <img src={notResult} alt="404" className="w-56 h-56" />
+                    데이터 준비중입니다!
+                  </div>
+                </div>
               ) : (
                 <SellBuyStatus data={data} sellMaxAmount={sellMaxAmount} buyMaxAmount={buyMaxAmount} />
               )}
@@ -75,7 +80,12 @@ const Trade = ({ companyInfo }: Props) => {
                 <img src={spinner} className=" mx-auto" />
               </>
             ) : data === undefined || Object.keys(data.output1).length === 0 ? (
-              <div>데이터가 없습니다.</div>
+              <div className="flex justify-center items-center w-[450px] h-full">
+                <div className="text-center">
+                  <img src={notResult} alt="404" className="w-56 h-56" />
+                  데이터 준비중입니다!
+                </div>
+              </div>
             ) : curTab === "sell" ? (
               <SellOrderTab expectedPrice={data.output2.antc_cnpr} companyInfo={companyInfo} stockType={0} />
             ) : (

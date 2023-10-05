@@ -50,6 +50,7 @@ const Ranking = () => {
                 money={ranker.totalMoney}
                 percentage={ranker.rate}
                 stockInfoList={ranker.topNStockInfo}
+                userSeq={ranker.userSeq}
               />
             ))}
           {investingAllUserRank &&
@@ -61,6 +62,7 @@ const Ranking = () => {
                 money={ranker.totalMoney}
                 percentage={ranker.rate}
                 nickname={ranker.nickname}
+                userSeq={ranker.userSeq}
               />
             ))}
         </>

@@ -2,12 +2,12 @@ import trade from "../../../asset/image/trade.png";
 import { useQuery } from "react-query";
 import { getCryptoPrice } from "../../../api/investingStockChart";
 import spinner from "../../../asset/image/spinner.svg";
-
 import { useState } from "react";
 import { CompanyInfo } from "../../../type/InvestingCompanyDetail";
 import CryptoSellBuyStatus from "../molecules/CryptoSellBuyStatus";
 import SellOrderTab from "../molecules/SellOrderTab";
 import BuyOrderTab from "../molecules/BuyOrderTab";
+import notResult from "../../../asset/image/notResult.png";
 
 interface Props {
   companyInfo: CompanyInfo;
@@ -61,7 +61,12 @@ const CryptoTrade = ({ companyInfo }: Props) => {
               {isLoading ? (
                 <img src={spinner} className=" mx-auto" />
               ) : !data ? (
-                <div>데이터가 없습니다.</div>
+                <div className="flex justify-center items-center w-[450px] h-full">
+                  <div className="text-center">
+                    <img src={notResult} alt="404" className="w-56 h-56" />
+                    데이터 준비중입니다!
+                  </div>
+                </div>
               ) : (
                 <CryptoSellBuyStatus data={data.data} sellMaxAmount={sellMaxAmount} buyMaxAmount={buyMaxAmount} />
               )}
@@ -95,7 +100,12 @@ const CryptoTrade = ({ companyInfo }: Props) => {
                 <img src={spinner} className=" mx-auto" />
               </>
             ) : !data.data ? (
-              <div>데이터가 없습니다.</div>
+              <div className="flex justify-center items-center w-[450px] h-full">
+                <div className="text-center">
+                  <img src={notResult} alt="404" className="w-56 h-56" />
+                  데이터 준비중입니다!
+                </div>
+              </div>
             ) : curTab === "sell" ? (
               <SellOrderTab
                 expectedPrice={Math.round((Number(data.data.asks[0].price) + Number(data.data.bids[0].price)) / 2)}
