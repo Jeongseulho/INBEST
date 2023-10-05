@@ -10,9 +10,11 @@ import { getMyGroupList } from "../../api/group";
 import { MyGroup } from "../../type/Group";
 import stompStore from "../../store/stompStore";
 import userStore from "../../store/userStore";
+import { useRef } from "react";
 
 const ChatIcon = () => {
   const { client } = stompStore();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const { userInfo, accessToken } = userStore();
   const [curChatGroup, setCurChatGroup] = useState<MyGroup>();
   const [message, setMessage] = useState("");
@@ -42,6 +44,7 @@ const ChatIcon = () => {
       body: JSON.stringify(sendData),
     });
     setMessage("");
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -117,7 +120,7 @@ const ChatIcon = () => {
                     </div>
                   </Listbox>
                 </div>
-                <ChattingArea simulationSeq={curChatGroup?.simulationSeq || 0} />
+                <ChattingArea simulationSeq={curChatGroup?.simulationSeq || 0} scrollRef={scrollRef} />
                 <div className="w-full flex justify-around bg-green-100 items-center gap-2">
                   <input
                     className=" overflow-y-hidden flex-grow m-2 py-3 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none text-sm items-center"

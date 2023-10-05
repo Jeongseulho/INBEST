@@ -20,7 +20,7 @@ const SellOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
   const { amount, price, onChangeAmount, onChangePrice } = useOrderTab(expectedPrice);
   const profitPercentage =
     expectedPrice === 0 ? 0 : Number((((price - expectedPrice) / expectedPrice) * 100).toFixed(2));
-  const { data: heldStockNum } = useQuery(["myStock", simulationSeq], () =>
+  const { data: heldStockNum, refetch } = useQuery(["myStock", simulationSeq], () =>
     getHeldStockNum(simulationSeq, companyInfo.code, stockType)
   );
 
@@ -39,6 +39,7 @@ const SellOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
       },
       onSuccess: () => {
         toast.success("매도 주문이 완료되었습니다.");
+        refetch();
       },
     }
   );

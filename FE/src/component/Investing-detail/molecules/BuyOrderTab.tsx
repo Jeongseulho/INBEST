@@ -17,7 +17,7 @@ interface Props {
 }
 const BuyOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
   const { simulationSeq } = useParams<{ simulationSeq: string }>();
-  const { data: myAsset } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq), {});
+  const { data: myAsset, refetch } = useQuery(["myAsset", simulationSeq], () => getMyAsset(simulationSeq), {});
   const { amount, price, onChangeAmount, onChangePrice } = useOrderTab(expectedPrice);
   const profitPercentage =
     expectedPrice === 0 ? 0 : Number((((price - expectedPrice) / expectedPrice) * 100).toFixed(2));
@@ -37,6 +37,7 @@ const BuyOrderTab = ({ expectedPrice, companyInfo, stockType }: Props) => {
       },
       onSuccess: () => {
         toast.success("매수 주문이 완료되었습니다.");
+        refetch();
       },
     }
   );
