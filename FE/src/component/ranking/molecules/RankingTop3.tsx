@@ -26,19 +26,15 @@ const RankingTop3 = () => {
             <div className="flex items-center mt-10 ms-5">
               <img src={ranker.profileImgSearchName} className="rounded-full w-20 h-20 shadow-md" alt="유저이미지" />
 
-              <div className="flex items-center justify-between">
-                <div className="ms-10 mx-5">
+              <div className="flex items-center justify-center w-full">
+                <div className="mx-5">
                   <ToTierImg tier={ranker.tier} w={70} />
                 </div>
 
-                <div className="flex justify-center">
-                  <div className="text-center">
-                    <div>
-                      <p className="flex items-center line-clamp-1 text-2xl">{tierToString(ranker.tier)}</p>
-                    </div>
-                    <div>
-                      <span className="text-center text-lg"> {ranker.tier % 100} P</span>
-                    </div>
+                <div className="text-center me-[10%]">
+                  <p className="flex items-center line-clamp-1 text-xl font-regular">{tierToString(ranker.tier)}</p>
+                  <div>
+                    <span className="text-center text-lg"> {ranker.tier % 100} P</span>
                   </div>
                 </div>
               </div>

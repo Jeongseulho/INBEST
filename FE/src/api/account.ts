@@ -3,7 +3,7 @@ import { instanceWithAuth } from "./interceptors";
 import { ApiSuccessMessage } from "../type/ApiSuccessMessage";
 import { SignupSubmitFormValue, LoginFormValue, LoginResultValue, ApiGetUserInfo } from "../type/Accounts";
 import { GetFinancialDictionary } from "../type/Dictionary";
-import { GetUserDetailsInfo } from "../type/MemberInfo";
+import { GetFollows, GetUserDetailsInfo } from "../type/MemberInfo";
 const api = apiInstance("spring-service");
 const apiWithAuth = instanceWithAuth("spring-service");
 export const checkEmail = async (email: string): Promise<ApiSuccessMessage> => {
@@ -81,4 +81,14 @@ export const putFollow = async (followingSeq: number): Promise<ApiSuccessMessage
 export const deleteFollow = async (followingSeq: number): Promise<ApiSuccessMessage> => {
   const { data } = await apiWithAuth.delete(`friends/follow/${followingSeq}`);
   return data;
+};
+
+export const getFollow = async (followingSeq: number, type: string | null): Promise<GetFollows> => {
+  if (type === "following") {
+    const { data } = await apiWithAuth.get(`friends/followings/${followingSeq}`);
+    return data;
+  } else {
+    const { data } = await apiWithAuth.get(`friends/followers/${followingSeq}`);
+    return data;
+  }
 };

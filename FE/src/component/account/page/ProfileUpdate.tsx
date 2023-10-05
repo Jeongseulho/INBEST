@@ -266,7 +266,7 @@ const ProfileUpdate = ({
                     </div>
                     <div className="flex">
                       <input
-                        defaultChecked={myInfo?.gender === 0}
+                        defaultChecked={myInfo?.gender === 0 || myInfo?.gender === null}
                         {...register("gender")}
                         id="none"
                         type="radio"
