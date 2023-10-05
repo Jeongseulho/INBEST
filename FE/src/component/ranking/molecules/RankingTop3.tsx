@@ -8,7 +8,7 @@ import ToTierImg from "../../account/molecules/ToTierImg";
 const RankingTop3 = () => {
   const { top3List } = useRankingTop3();
   return (
-    <div className="flex justify-between w-full mt-10">
+    <div className="flex justify-between w-full mt-5">
       {top3List?.map((ranker, idx) => (
         <div
           className={`w-[32%] h-[13rem] border border-black border-opacity-20 rounded-lg shadow-md ${
