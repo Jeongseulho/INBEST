@@ -33,10 +33,10 @@ const MyRanking = () => {
               <div>
                 {data.MySimulationUserRankingInfo.currentRank === data.MySimulationUserRankingInfo.previousRank ? (
                   <p className=" text-sm">변동없음</p>
-                ) : data.MySimulationUserRankingInfo.currentRank >= data.MySimulationUserRankingInfo.previousRank ? (
+                ) : data.MySimulationUserRankingInfo.currentRank < data.MySimulationUserRankingInfo.previousRank ? (
                   <div className=" flex items-center">
                     <p className=" text-mainMoreDark">
-                      {data.MySimulationUserRankingInfo.currentRank - data.MySimulationUserRankingInfo.previousRank}등
+                      {data.MySimulationUserRankingInfo.previousRank - data.MySimulationUserRankingInfo.currentRank}등
                       상승
                     </p>
                     <img src={up} width={40} />
@@ -44,7 +44,7 @@ const MyRanking = () => {
                 ) : (
                   <div className=" flex items-center">
                     <p className=" text-myRed">
-                      {data.MySimulationUserRankingInfo.previousRank - data.MySimulationUserRankingInfo.currentRank}등
+                      {data.MySimulationUserRankingInfo.currentRank - data.MySimulationUserRankingInfo.previousRank}등
                       하락
                     </p>
                     <img src={down} width={40} />
