@@ -41,6 +41,8 @@ const ProfileUpdate = ({
     isCheckedNickname,
     onUpdate,
     onReset,
+    formNickname,
+    setFormNickname,
   } = useProfileUpdate();
   const { userInfo } = userStore();
   const {
@@ -185,10 +187,10 @@ const ProfileUpdate = ({
               <div className="flex my-2">
                 <input
                   type="text"
+                  value={formNickname}
                   disabled={isCheckedNickname}
                   className="signup-input w-full"
                   placeholder="닉네임을 입력해 주세요"
-                  defaultValue={myInfo?.nickname}
                   {...register("nickname", {
                     required: "닉네임은 필수 입력 사항입니다.",
                     pattern: {
@@ -197,6 +199,7 @@ const ProfileUpdate = ({
                     },
                   })}
                   onChange={(e) => {
+                    setFormNickname(e.target.value);
                     if (e.target.value === myInfo?.nickname) {
                       setIsChangedNickname(false);
                     } else {
@@ -205,6 +208,7 @@ const ProfileUpdate = ({
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
+                      console.log(e.key);
                       e.preventDefault();
                       // Enter 키 누르면 사진사라지는 현상제거
                     }
