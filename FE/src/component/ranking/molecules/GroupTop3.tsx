@@ -4,7 +4,7 @@ import bronze from "../../../asset/image/bronze_medal.png";
 import { SimulationRankingInfo } from "../../../type/Ranking";
 const RankingTop3 = ({ top3List }: { top3List?: SimulationRankingInfo[] }) => {
   return (
-    <div className="flex justify-around w-full mt-10">
+    <div className="flex justify-around w-full mt-5">
       {top3List?.map((ranker, idx) => (
         <div
           className={`w-[32%] h-[10rem] border border-black border-opacity-20 rounded-lg shadow-md ${
