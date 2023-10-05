@@ -5,7 +5,7 @@ import TierChart from "../molecules/TierChart";
 
 const PersonalRanking = () => {
   return (
-    <div className=" w-2/3">
+    <div className=" w-3/4">
       <RankingTop3 />
       <TierChart />
       <PersonalTotal />

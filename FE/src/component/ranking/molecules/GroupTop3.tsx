@@ -20,7 +20,9 @@ const RankingTop3 = ({ top3List }: { top3List?: SimulationRankingInfo[] }) => {
             </p>
           </div>
           <div className="text-center mt-3">
-            <span className="text-lg">평균 수익률 : </span>
+            <span className="text-lg">
+              평균 수익률 <span className="mx-2">:</span>{" "}
+            </span>
             <span className={`text-2xl ${ranker.revenuRate >= 0 ? "text-red-600" : "text-blue-500"}`}>
               {ranker.revenuRate >= 0 ? "+" : "-"}
               {ranker.revenuRate}%

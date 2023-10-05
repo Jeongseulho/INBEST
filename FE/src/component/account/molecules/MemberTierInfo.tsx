@@ -33,7 +33,7 @@ const MemberTierInfo = ({ tier, userCnt }: { tier: number; userCnt: number }) =>
                 : "text-blue-300"
             }`}
           >
-            {tier % 100}P
+            {tier >= 300 ? tier - 300 : tier % 100}P
           </span>
         </div>
 
