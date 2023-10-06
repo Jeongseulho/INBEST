@@ -11,13 +11,13 @@ const LoginForm = () => {
             <p className="text-xl text-center">회원가입</p>
             <GeneralSignup />
           </div>
-          <div className="hidden">
-            <div className="w-10/12 py-2 my-5 text-center mx-auto">
-              <HorizonLine text="OR" />
-            </div>
-            <div className="flex justify-center mt-9 w-5/6 mx-auto">
-              <SocialLogin />
-            </div>
+          {/* <div className="hidden"> */}
+          <div className="w-10/12 py-2 my-5 text-center mx-auto">
+            <HorizonLine text="OR" />
+          </div>
+          <div className="flex justify-center mt-9 w-5/6 mx-auto">
+            <SocialLogin />
+            {/* </div> */}
           </div>
         </div>
       </div>
