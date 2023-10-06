@@ -8,7 +8,6 @@ from . import views
 #     path("company/<str:company_code>/", views.CompanyByNewsList),  # 기업별 뉴스
 # ]
 
-
 urlpatterns = [
     path("", views.MainNewsList),  # 메인 뉴스 목록
     path("breakingnews/", views.BreakingNewsList),  # 뉴스 속보 목록
