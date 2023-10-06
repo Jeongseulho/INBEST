@@ -200,19 +200,19 @@ const GeneralLogin = () => {
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    const nickNameValue = getValues("nickname");
-                    if (nickNameValue === "") {
+                    const nicknameValue = getValues("nickname");
+                    if (nicknameValue === "") {
                       setError("nickname", {
-                        type: "nickNameError",
+                        type: "nicknameError",
                         message: "닉네임을 입력해 주세요.",
                       });
                       return;
                     }
                     setError("nickname", {
-                      type: "nickNameError",
+                      type: "nicknameError",
                       message: "",
                     });
-                    oncheckNickname(nickNameValue);
+                    oncheckNickname(nicknameValue);
                   }
                 }}
               />
@@ -225,20 +225,20 @@ const GeneralLogin = () => {
               type="button"
               disabled={isSentNickName}
               onClick={() => {
-                const nickNameValue = getValues("nickname");
+                const nicknameValue = getValues("nickname");
 
-                if (nickNameValue === "") {
+                if (nicknameValue === "") {
                   setError("nickname", {
-                    type: "nickNameError",
+                    type: "nicknameError",
                     message: "닉네임을 입력해 주세요.",
                   });
                   return;
                 }
                 setError("nickname", {
-                  type: "nickNameError",
+                  type: "nicknameError",
                   message: "",
                 });
-                oncheckNickname(nickNameValue);
+                oncheckNickname(nicknameValue);
               }}
             >
               중복확인
