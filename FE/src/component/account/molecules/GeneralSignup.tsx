@@ -59,7 +59,7 @@ const GeneralLogin = () => {
                 if (emailValue === "") {
                   setError("email", {
                     type: "emailerror",
-                    message: "이메일을 입력해 주세요",
+                    message: "이메일을 입력해 주세요.",
                   });
                   return;
                 } else if (isSentEmailCode) {
@@ -93,7 +93,7 @@ const GeneralLogin = () => {
               if (emailValue === "") {
                 setError("email", {
                   type: "emailerror",
-                  message: "이메일을 입력 해주세요",
+                  message: "이메일을 입력 해주세요.",
                 });
                 return;
               }
@@ -204,7 +204,7 @@ const GeneralLogin = () => {
                     if (nickNameValue === "") {
                       setError("nickname", {
                         type: "nickNameError",
-                        message: "닉네임을 입력해 주세요",
+                        message: "닉네임을 입력해 주세요.",
                       });
                       return;
                     }
@@ -230,7 +230,7 @@ const GeneralLogin = () => {
                 if (nickNameValue === "") {
                   setError("nickname", {
                     type: "nickNameError",
-                    message: "닉네임을 입력해 주세요",
+                    message: "닉네임을 입력해 주세요.",
                   });
                   return;
                 }
