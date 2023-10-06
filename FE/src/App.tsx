@@ -28,8 +28,6 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 2,
-      staleTime: Infinity,
-      cacheTime: Infinity,
       refetchOnWindowFocus: false,
     },
   },
