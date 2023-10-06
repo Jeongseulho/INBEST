@@ -15,7 +15,7 @@ const FinancialDictionary = () => {
   return (
     <div>
       <div className="h-20 flex justify-center mt-5">
-        <div className="w-2/3 border-b-2 flex items-end justify-between">
+        <div className="w-2/3 border-b-2 flex items-end justify-between border-black">
           <div className="text-3xl mb-2">금융사전</div>
           <div className="relative w-1/2 mb-2">
             <input
