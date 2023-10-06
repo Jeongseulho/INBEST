@@ -40,7 +40,7 @@ const CocommentItem = ({ comment, board, cocomment, onDeleteComment }: CommentPr
               {cocomment.writer.nickname}
             </span>
             <span className="ms-3 text-xs text-gray-400">
-              {getTimeAgo(comment.createdDate)}{" "}
+              {getTimeAgo(cocomment.createdDate)}{" "}
               {cocomment.createdDate !== cocomment.lastModifiedDate && !cocomment.writer.seq && "(삭제됨)"}
             </span>
           </div>
