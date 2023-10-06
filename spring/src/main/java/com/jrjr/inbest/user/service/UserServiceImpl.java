@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
 			.profileImgSearchName(user.getProfileImgSearchName())
 			.role(login.getRole())
 			.provider(login.getProvider())
+			.nickname(user.getNickname())
 			.build();
 
 		this.insertUserRankingInfo(userDto);
