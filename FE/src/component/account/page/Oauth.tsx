@@ -4,6 +4,15 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import userStore from "../../../store/userStore";
 import { toast } from "react-toastify";
+
+interface ErrorResponse {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+}
+
 const Oauth = () => {
   const location = useLocation();
   const queryString = location.search;
@@ -21,8 +30,12 @@ const Oauth = () => {
       setRefreshToken(refreshToken!);
       setUserInfo(others);
       navigate("/");
-    } catch (err) {
-      toast.error("로그인에 실패했습니다. 다시 시도해 주세요.");
+    } catch (err: unknown) {
+      if ((err as ErrorResponse).response?.data.message === "가입 경로 불일치") {
+        toast.error("이미 가입된 메일입니다.");
+      } else {
+        toast.error("로그인에 실패했습니다. 다시 시도해 주세요.");
+      }
       navigate("login");
       console.log(err);
     }
