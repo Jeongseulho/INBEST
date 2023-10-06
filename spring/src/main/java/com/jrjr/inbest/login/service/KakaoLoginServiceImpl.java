@@ -42,6 +42,9 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 	@Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
 	private String redirectUri;
 
+	@Value("${spring.security.oauth2.client.registration.naver.authorization-grant-type}")
+	private String authorizationGrantType;
+
 	@Transactional
 	@Override
 	public UserDto login(String authorizeCode) {
@@ -98,6 +101,7 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 		JSONObject tokenInfo = webClient.post()
 			.uri(uriBuilder -> uriBuilder
 				.path("/oauth/token")
+				.queryParam("grant_type", authorizationGrantType)
 				.queryParam("client_id", clientId)
 				.queryParam("redirect_uri", redirectUri)
 				.queryParam("code", authorizeCode)
