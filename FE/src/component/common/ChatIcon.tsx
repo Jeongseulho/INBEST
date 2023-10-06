@@ -147,7 +147,7 @@ const ChatIcon = () => {
                     onClick={onSendMessage}
                     disabled={curChatGroup?.simulationSeq === undefined}
                   >
-                    <span className="font-bold text-sm">Send</span>
+                    <span className="font-bold text-sm">전송</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20"
