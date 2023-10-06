@@ -148,6 +148,7 @@ const Header = () => {
                             setAccessToken(null);
                             setRefreshToken(null);
                             setUserInfo(null);
+                            location.reload();
                           } catch (err) {
                             console.log(err);
                           }
