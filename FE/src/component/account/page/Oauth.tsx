@@ -12,6 +12,7 @@ const Oauth = () => {
   const { setAccessToken, setUserInfo, setRefreshToken } = userStore();
   const navigate = useNavigate();
   const authorizeCode = params.get("code");
+  console.log(provider);
   const onOauthLogin = async () => {
     try {
       const res = await oauthlogin(authorizeCode!, provider);
