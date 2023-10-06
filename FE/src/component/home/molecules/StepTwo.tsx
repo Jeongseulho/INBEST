@@ -9,7 +9,7 @@ const StepTwo = ({ setCurStep }: StepProps) => {
   return (
     <motion.div ref={ref} initial="hidden" animate={animation} variants={variants} className=" h-screen top-40 z-50">
       <img src={company_screen} alt="" className=" w-1/3  relative left-[45%] top-12 " />
-      <img src={tutorial_screen} alt="" className=" w-1/3 relative left-[65%] top-12" />
+      <img src={tutorial_screen} alt="" className=" w-1/3 relative left-[65%] top-24" />
     </motion.div>
   );
 };
