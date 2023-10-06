@@ -132,14 +132,14 @@ public class KakaoLoginServiceImpl implements OAuthLoginService {
 
 		Map<String, Object> userInfo = (Map<String, Object>)response.get("kakao_account");
 		log.info("email: {}", userInfo.get("email"));
-		log.info("name: {}", userInfo.get("name"));
+		// log.info("name: {}", userInfo.get("name"));
 		log.info("gender: {}", userInfo.getOrDefault("gender", 0).equals("male") ? 1 : 2);
-		log.info("birthyear: {}", userInfo.getOrDefault("birthyear", null));
-		log.info("birthday: {}", userInfo.getOrDefault("birthday", null));
+		// log.info("birthyear: {}", userInfo.getOrDefault("birthyear", null));
+		// log.info("birthday: {}", userInfo.getOrDefault("birthday", null));
 
 		return UserDto.builder()
 			.email((String)userInfo.get("email"))
-			.name((String)userInfo.get("name"))
+			.name("이름")
 			.gender(userInfo.getOrDefault("gender", 0).equals("male") ? 1 : 2)
 			.birthyear((String)userInfo.getOrDefault("birthyear", null))
 			.birthday((String)userInfo.getOrDefault("birthday", null))
