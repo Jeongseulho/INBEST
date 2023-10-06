@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import py_eureka_client.eureka_client as eureka_client
+import socket
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-nyj498$!206ft5cc-f_6fym=b0vp7=jvc$4d7uk1qyb#z8*m0('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -83,14 +85,6 @@ DATABASES = {
         'PASSWORD': 'M2hFMrhLIv',
         'HOST': 'stg-yswa-kr-practice-db-master.mariadb.database.azure.com',
         'PORT': '3306',
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'test',
-    #     'USER': 'root',
-    #     'PASSWORD': '1234',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306'
     }
 }
 
@@ -135,3 +129,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+def register_with_eureka():
+    # EUREKA_CLIENT 설정 및 서버에 등록.
+    eureka_client.init(
+        eureka_server='http://j9d110.p.ssafy.io:8761/',
+        app_name="news-service",
+        instance_ip="13.124.168.191",
+        instance_host="j9d110.p.ssafy.io",
+        instance_port=8200,  # Django 애플리케이션의 포트
+    )
+register_with_eureka()
