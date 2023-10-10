@@ -263,9 +263,6 @@ public User extends RootDTO{
 
 ![로그인회원가입](https://github.com/Jeongseulho/CSstudy/assets/110578739/28403132-da96-4aa0-a29c-8ba05e1c7ef0)
 
-### 프로필 변경
-![chrome-capture-2023-9-102 (1)](https://github.com/KwonJongryul/study/assets/122791001/b6f649eb-d744-4406-95ae-bcc848fe7a46)
-
 
 ## 랭킹
 
