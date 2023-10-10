@@ -1,13 +1,13 @@
 package com.jrjr.inbest.trading.config;
 
-import com.jrjr.inbest.trading.dto.RedisStockDTO;
-import com.jrjr.inbest.trading.dto.StockUserDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import com.jrjr.inbest.trading.dto.RedisStockDTO;
 
 import lombok.RequiredArgsConstructor;
 

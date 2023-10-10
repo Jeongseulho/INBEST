@@ -13,7 +13,7 @@ import com.jrjr.inbest.rank.service.SimulationRankService;
 import com.jrjr.inbest.trading.constant.TradingResultType;
 import com.jrjr.inbest.trading.dto.CrawlingDTO;
 import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
-import com.jrjr.inbest.trading.dto.StockUserDTO;
+import com.jrjr.inbest.trading.dto.RedisStockUserDTO;
 import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.entity.RedisTradingEntity;
 import com.jrjr.inbest.trading.entity.TradingEntity;
@@ -30,7 +30,7 @@ public class TradingService {
 	private final RedisTemplate<String, TradingDTO> redisTradingTemplate;
 	private final RedisTemplate<String, CrawlingDTO> redisCrawlingTemplate;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
-	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
+	private final RedisTemplate<String, RedisStockUserDTO> redisStockUserTemplate;
 	private final NotificationService notificationService;
 	private final SimulationRankService simulationRankService;
 
@@ -124,8 +124,8 @@ public class TradingService {
 		String simulationUserHashKey =
 			"simulation_" + tradingDTO.getSimulationSeq() + "_user_" + tradingDTO.getUserSeq();
 		String simulationUserKey = tradingDTO.getStockType() + "_" + tradingDTO.getStockCode();
-		HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
-		StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey, simulationUserKey);
+		HashOperations<String, String, RedisStockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
+		RedisStockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey, simulationUserKey);
 		// stockUserDTO.setMarketPrice(tradingDTO.getPrice());
 		stockUserDTO.setAmount(stockUserDTO.getAmount() - tradingDTO.getAmount());
 		stockUserDTO.setLastModifiedDate(LocalDateTime.now());
@@ -227,12 +227,12 @@ public class TradingService {
 		String simulationUserHashKey =
 			"simulation_" + tradingDTO.getSimulationSeq() + "_user_" + tradingDTO.getUserSeq();
 		String simulationUserKey = tradingDTO.getStockType() + "_" + tradingDTO.getStockCode();
-		HashOperations<String, String, StockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
-		StockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey, simulationUserKey);
+		HashOperations<String, String, RedisStockUserDTO> stockUserHashOperations = redisStockUserTemplate.opsForHash();
+		RedisStockUserDTO stockUserDTO = stockUserHashOperations.get(simulationUserHashKey, simulationUserKey);
 
 		//처음로산 매수한 주식인 경우
 		if (stockUserDTO == null) {
-			stockUserDTO = StockUserDTO.builder()
+			stockUserDTO = RedisStockUserDTO.builder()
 				.type(tradingDTO.getStockType())
 				.amount(tradingDTO.getAmount())
 				.name(tradingDTO.getStockName())
@@ -273,8 +273,8 @@ public class TradingService {
 	}
 
 	public boolean canSell(TradingDTO tradingDTO) throws Exception {
-		HashOperations<String, String, StockUserDTO> hashOperations = redisStockUserTemplate.opsForHash();
-		StockUserDTO stock = hashOperations.get(
+		HashOperations<String, String, RedisStockUserDTO> hashOperations = redisStockUserTemplate.opsForHash();
+		RedisStockUserDTO stock = hashOperations.get(
 			"simulation_" + tradingDTO.getSimulationSeq() + "_user_" + tradingDTO.getSeq(),
 			tradingDTO.getStockType() + "_" + tradingDTO.getStockCode());
 
