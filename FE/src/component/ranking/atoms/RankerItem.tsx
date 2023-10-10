@@ -16,14 +16,14 @@ const RankerItem = ({ ranker, nickname }: { ranker: TotalRanking; nickname?: str
             {ranker.currentRank}
 
             {ranker.currentRank < ranker.previousRank ? (
-              <span className="text-red-600">
+              <span className="text-red-600 ms-2 flex items-center text-xs">
                 {Math.abs(ranker.currentRank - ranker.previousRank)}
                 <div className="ms-2">
                   <BiSolidUpArrow />
                 </div>
               </span>
-            ) : ranker.currentRank > ranker.previousRank ? (
-              <span className="text-blue-600">
+            ) : ranker.currentRank > ranker.previousRank && ranker.previousRank ? (
+              <span className="ms-2 text-blue-600 flex items-center text-xs">
                 {Math.abs(ranker.currentRank - ranker.previousRank)}
                 <div className="ms-2">
                   <BiSolidDownArrow />

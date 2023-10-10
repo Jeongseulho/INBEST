@@ -9,7 +9,7 @@ import InvestMain from "./component/invest-main/page/InvestMain";
 import { AnimatePresence } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import Investing from "./component/Investing/Investing";
+// import Investing from "./component/Investing/Investing";
 import Community from "./component/community/page/Community";
 import CommunityList from "./component/community/organisms/CommunityList";
 import CommunityCreate from "./component/community/organisms/CommunityCreate";
@@ -24,6 +24,8 @@ import FinancialDictionary from "./component/financial-dictionary/page/Financial
 import MemberProfile from "./component/account/page/MemberProfile";
 import NotFound404 from "./component/common/NotFound404";
 
+import { lazy, Suspense } from "react";
+import Loading from "./component/common/Loading";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -32,7 +34,7 @@ const queryClient = new QueryClient({
     },
   },
 });
-
+const Investing = lazy(() => import("./component/Investing/Investing"));
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -70,9 +72,16 @@ function App() {
                   <Route path="detail" element={<CommunityDetail />} />
                 </Route>
               </Route>
-
+              {/*  */}
               <Route element={<PrivateRoute requireAuth={true} />}>
-                <Route path="/invest/:simulationSeq" element={<Investing />} />
+                <Route
+                  path="/invest/:simulationSeq"
+                  element={
+                    <Suspense fallback={<Loading />}>
+                      <Investing />
+                    </Suspense>
+                  }
+                />
               </Route>
 
               <Route element={<PrivateRoute requireAuth={true} />}>
