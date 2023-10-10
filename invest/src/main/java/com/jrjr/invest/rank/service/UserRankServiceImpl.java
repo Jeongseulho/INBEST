@@ -172,6 +172,10 @@ public class UserRankServiceImpl implements UserRankService {
 		}
 		log.info(nickname + "의 userZSet seq: " + zSetIdx);
 
+		// 시작 인덱스는 0부터
+		if (zSetIdx < 10) {
+			zSetIdx = 10L;
+		}
 		return userRankRedisRepository.getUserRankingInfoList(zSetIdx - 10, zSetIdx + 10);
 	}
 
