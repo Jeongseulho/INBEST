@@ -1,5 +1,5 @@
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export const useRankingPageNation = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -11,7 +11,19 @@ export const useRankingPageNation = () => {
     navigate(currentUrl.search);
     window.scrollTo(0, 0);
   };
+
   const [searchParams] = useSearchParams();
-  const page = searchParams.get("page") ? Number(searchParams.get("page")) : "";
-  return { totalUser, handlePageClick, setTotalUser, page };
+  const [page, setPage] = useState(searchParams.get("page") ? Number(searchParams.get("page")) : "");
+  const firstOrLast = (page: number) => {
+    const currentUrl = new URL(location.search, window.location.origin);
+    currentUrl.searchParams.set("page", String(page));
+    setPage(page);
+    navigate(currentUrl.search);
+    window.scrollTo(0, 0);
+  };
+  useEffect(() => {
+    setPage(searchParams.get("page") ? Number(searchParams.get("page")) : "");
+  }, [searchParams.get("page")]);
+
+  return { totalUser, handlePageClick, setTotalUser, page, firstOrLast };
 };

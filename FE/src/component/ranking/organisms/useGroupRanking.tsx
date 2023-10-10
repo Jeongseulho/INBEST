@@ -11,7 +11,12 @@ export const useGroupRanking = () => {
   const [searchSeq, setSearchSeq] = useState(Number(seq));
   const [searchParams] = useSearchParams();
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-  const pages = tempList?.length ?? 1;
+  const [pages, setPages] = useState(tempList ? Math.ceil(tempList?.length / 20) : 1);
+  useEffect(() => {
+    if (tempList) {
+      setPages(Math.ceil(tempList?.length / 20));
+    }
+  }, [tempList?.length]);
   const calculatePageRange = (currentPage: number): number[] => {
     // 현재 페이지와 페이지당 아이템 수를 이용해 페이지 범위 계산
     const startItem = (currentPage - 1) * 20 + 1;
