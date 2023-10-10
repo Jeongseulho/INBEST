@@ -17,7 +17,7 @@ import com.jrjr.inbest.rank.dto.RedisUserDTO;
 import com.jrjr.inbest.rank.dto.TopStockDTO;
 import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
 import com.jrjr.inbest.trading.dto.RedisStockDTO;
-import com.jrjr.inbest.trading.dto.StockUserDTO;
+import com.jrjr.inbest.trading.dto.RedisStockUserDTO;
 import com.jrjr.inbest.trading.entity.FinancialDataCompany;
 import com.jrjr.inbest.trading.repository.FinancialDataCompanyRepository;
 
@@ -30,7 +30,7 @@ public class SimulationRankRedisRepository {
 	private final HashOperations<String, String, RedisUserDTO> userHash; // key: USER_HASH_KEY
 	private final HashOperations<String, String, RedisSimulationUserDTO> simulationUserHash; // key: simulation_simulationSeq
 	private final HashOperations<String, String, RedisStockDTO> stockHash; // key: STOCK_HASH_KEY
-	private final HashOperations<String, String, StockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
+	private final HashOperations<String, String, RedisStockUserDTO> stockUserHash; // key: simulation_simulationSeq_user_userSeq
 	private final ZSetOperations<String, RedisSimulationUserRankingDTO> simulationUserRankingZSet; // key: simulation_simulationSeq_sort
 	private final FinancialDataCompanyRepository financialDataCompanyRepository;
 
@@ -42,7 +42,7 @@ public class SimulationRankRedisRepository {
 	public SimulationRankRedisRepository(RedisTemplate<String, RedisUserDTO> userRedisTemplate,
 		RedisTemplate<String, RedisSimulationUserDTO> simulationUserRedisTemplate,
 		RedisTemplate<String, RedisStockDTO> stockRedisTemplate,
-		RedisTemplate<String, StockUserDTO> stockUserRedisTemplate,
+		RedisTemplate<String, RedisStockUserDTO> stockUserRedisTemplate,
 		RedisTemplate<String, RedisSimulationUserRankingDTO> simulationUserRankingRedisTemplate,
 		FinancialDataCompanyRepository financialDataCompanyRepository
 	) {
@@ -80,7 +80,7 @@ public class SimulationRankRedisRepository {
 	/*
 		보유 주식 정보 가져오기
 	 */
-	public Map<String, StockUserDTO> getStockUserInfoMap(Long simulationSeq, String userSeq) {
+	public Map<String, RedisStockUserDTO> getStockUserInfoMap(Long simulationSeq, String userSeq) {
 		String stockUserHashKey = "simulation_" + simulationSeq + "_user_" + userSeq;
 		return stockUserHash.entries(stockUserHashKey);
 	}
@@ -88,7 +88,7 @@ public class SimulationRankRedisRepository {
 	/*
 		주식의 현재 시가 정보 가져오기
 	 */
-	public Long getStockMarketPrice(Integer stockType, String stockCode) {
+	public String getStockMarketPrice(Integer stockType, String stockCode) {
 		String stockHashKey = stockType + "_" + stockCode;
 		RedisStockDTO redisStockDto = stockHash.get(STOCK_HASH_KEY, stockHashKey);
 		if (redisStockDto == null) {
@@ -96,7 +96,7 @@ public class SimulationRankRedisRepository {
 			return null;
 		}
 		log.info(redisStockDto.toString());
-		return redisStockDto.getMarketPrice();
+		return String.valueOf(redisStockDto.getMarketPrice());
 	}
 
 	/*
@@ -120,7 +120,7 @@ public class SimulationRankRedisRepository {
 		시뮬레이션 별 참가자 랭킹 정보 산정
 	 */
 	public void updateSimulationUserRankingInfo(Long simulationSeq) {
-		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 시작 =====");
+		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 시작 ====");
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -158,13 +158,13 @@ public class SimulationRankRedisRepository {
 			List<TopStockDTO> stockInfoList = new ArrayList<>();
 			// 보유 주식 정보 가져오기
 			log.info("--- 보유 중인 주식 정보 가져오기 ---");
-			Map<String, StockUserDTO> stockUserDtoMap = this.getStockUserInfoMap(simulationSeq, userSeq);
+			Map<String, RedisStockUserDTO> stockUserDtoMap = this.getStockUserInfoMap(simulationSeq, userSeq);
 			for (String stockTypeCode : stockUserDtoMap.keySet()) {
-				StockUserDTO redisStockUserDto = stockUserDtoMap.get(stockTypeCode);
+				RedisStockUserDTO redisStockUserDto = stockUserDtoMap.get(stockTypeCode);
 				Long amount = redisStockUserDto.getAmount(); // 주식 보유량
-				long stockMarketPrice = this.getStockMarketPrice(redisStockUserDto.getType(),
+				String stockMarketPrice = this.getStockMarketPrice(redisStockUserDto.getType(),
 					redisStockUserDto.getStockCode()); // 주식 시가 정보
-				long totalStockPrice = amount * stockMarketPrice; // 보유 중인 주식 가격
+				long totalStockPrice = amount * Long.parseLong(stockMarketPrice); // 보유 중인 주식 가격
 
 				FinancialDataCompany financialDataCompanyEntity
 					= financialDataCompanyRepository.findByCompanyStockTypeAndCompanyStockCode(
@@ -173,7 +173,7 @@ public class SimulationRankRedisRepository {
 				// 참가자가 보유 중인 주식 정보 추가
 				TopStockDTO topStockDto = TopStockDTO.builder()
 					.stockName(redisStockUserDto.getName())
-					.stockMarketPrice(String.valueOf(stockMarketPrice))
+					.stockMarketPrice(stockMarketPrice)
 					.totalStockPrice(totalStockPrice)
 					.stockImgSearchName(financialDataCompanyEntity.getImgUrl())
 					.build();
@@ -187,7 +187,7 @@ public class SimulationRankRedisRepository {
 
 			// 2. 수익률 계산하기
 			long seedMoney = simulationUserDto.getSeedMoney();
-			Integer rate = Math.round((float)(totalMoney - seedMoney) / seedMoney * 100);
+			double rate = (totalMoney - seedMoney) * 1.0 / seedMoney * 100;
 			log.info("수익률: {}%", rate);
 
 			// 3. 보유 중인 주식 정보 정렬하기 (기준: 보유 중인 주식 가격)
@@ -274,7 +274,7 @@ public class SimulationRankRedisRepository {
 		}
 
 		stopWatch.stop();
-		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 완료 =====");
 		log.info("랭킹 재산정 소요 시간: {} milliseconds", stopWatch.getTotalTimeMillis());
+		log.info("===== 시뮬레이션 별 참가자 랭킹 정보 산정 완료 ====");
 	}
 }

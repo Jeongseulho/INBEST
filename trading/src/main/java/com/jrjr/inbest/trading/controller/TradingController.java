@@ -1,28 +1,23 @@
 package com.jrjr.inbest.trading.controller;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
-import com.jrjr.inbest.trading.dto.StockUserDTO;
-import com.jrjr.inbest.trading.dto.TradingDTO;
+
 import com.jrjr.inbest.trading.constant.TradingResultType;
+import com.jrjr.inbest.trading.dto.RedisSimulationUserDTO;
+import com.jrjr.inbest.trading.dto.RedisStockUserDTO;
+import com.jrjr.inbest.trading.dto.TradingDTO;
 import com.jrjr.inbest.trading.service.TradingService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TradingController {
 	private final TradingService tradingService;
 	private final RedisTemplate<String, RedisSimulationUserDTO> redisSimulationUserTemplate;
-	private final RedisTemplate<String, StockUserDTO> redisStockUserTemplate;
+	private final RedisTemplate<String, RedisStockUserDTO> redisStockUserTemplate;
 	// private final FileReaderService fileReaderService;
 	// private final LogoCrawler logoCrawler;
 	//
@@ -68,7 +63,7 @@ public class TradingController {
 		tradingService.insertTrading(tradingDto);
 
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("success",true);
+		resultMap.put("success", true);
 
 		log.info("========== 주식 거래 등록 종료 ==========");
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
