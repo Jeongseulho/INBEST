@@ -249,7 +249,7 @@ public User extends RootDTO{
 
 ### 📌아키텍처 설계
 
-![image](https://github.com/Jeongseulho/portfolio/assets/110578739/6e846690-db85-4b73-ba57-3a332e6728a6)
+![아키텍처도](https://github.com/Jeongseulho/INBEST_README/assets/110578739/8b774bdb-b7db-4eb0-9672-d16b2e3fc9b9)
 
 ## 💻주요 화면 스크린샷, gif
 
