@@ -19,6 +19,11 @@ const HeaderAlarmItem = ({ setAlarmList, id, alarm }: Props) => {
   const { mutate } = useMutation((simulationSeq: number) => joinGroup(simulationSeq), {
     onSuccess: () => {
       toast.success("그룹에 참여되었습니다, [모의투자]탭의 [내 그룹]에서 확인해보세요.");
+    },
+    onError: () => {
+      toast.error("이미 진행중인 그룹입니다, 참여할 수 없습니다.");
+    },
+    onSettled: () => {
       onReadAlarm();
     },
   });
