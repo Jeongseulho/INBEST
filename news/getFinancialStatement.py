@@ -77,6 +77,9 @@ for company_code in company_codes:
 
                 amount = float(amount_str)
 
+                print(account_name)
+                print(amount)
+
                 if (account_name == "유동자산" or account_name =="Ⅰ. 유동자산") and not handled_current_assets:
                     financial_statement_dict["current_assets"] = amount
                     handled_current_assets = True
