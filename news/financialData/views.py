@@ -9,6 +9,7 @@ import re
 from .models import Company
 import FinanceDataReader as fdr
 from .models import FinancialStatement, FinancialStatement_2022, FinancialStatement_2021, CompanyIndicatorsScore, FinancialProductRank10
+import math
 
 
 # 한국 최다검색 주식 목록
@@ -406,6 +407,9 @@ def kospi(request):
 
     latest_row = kospi.iloc[-1]
     
+    if math.isnan(latest_row['등락률']):
+        latest_row['등락률'] = 0
+        
     kospi_data = {
         'name': 'KOSPI',
         'fluctuation_rate': latest_row['등락률'],
@@ -423,6 +427,9 @@ def kosdaq(request):
     kosdaq['등락률'] = ((kosdaq['Close'] - kosdaq['전일 종가']) / kosdaq['전일 종가']) * 100
 
     latest_row = kosdaq.iloc[-1]
+
+    if math.isnan(latest_row['등락률']):
+        latest_row['등락률'] = 0
     
     kosdaq_data = {
         'name': 'KOSDAQ',
@@ -465,6 +472,10 @@ def kospi200(request):
     kospi200['등락률'] = ((kospi200['Close'] - kospi200['전일 종가']) / kospi200['전일 종가']) * 100
 
     latest_row = kospi200.iloc[-1]
+
+    if math.isnan(latest_row['등락률']):
+        latest_row['등락률'] = 0
+        
     kospi200_data = {
     'name': 'KOSPI 200',
     'fluctuation_rate': latest_row['등락률'],

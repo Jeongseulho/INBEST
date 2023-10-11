@@ -15,7 +15,7 @@ urlpatterns = [
     path("kosdaq/", views.kosdaq), # 코스닥 등락 정보
     path("exchange_rate/", views.exchange_rate), # 환율 등락 정보
     path("kospi200/", views.kospi200), # 코스피 200 등락 정보
-    path("nasdaq/", views.nasdaq), # 코스닥 등락 정보
+    path("nasdaq/", views.nasdaq), # 나스닥 등락 정보
     path("dowjones/", views.dowjones), # 다우존스 등락 정보
     path("sp500/", views.sp500), # sp500 등락 정보
     path("vix/", views.vix), # vix 등락 정보
