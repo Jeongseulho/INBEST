@@ -23,7 +23,7 @@ const Summary = ({ companyInfo }: Props) => {
           <h6>영업 이익 변화</h6>
           <IncomeThreeYearsChart companyInfo={companyInfo} />
         </div>
-        <div className=" shadow-component col-start-7 col-end-12 flex flex-col gap-10 items-center justify-center">
+        <div className=" shadow-component col-start-7 col-end-12 p-4 flex flex-col gap-10 items-center justify-center">
           <h6>매출액 변화</h6>
           <RevenueThreeYearsChart companyInfo={companyInfo} />
         </div>
