@@ -10,22 +10,26 @@ import { useState } from "react";
 import userStore from "../../store/userStore";
 import { logout } from "../../api/account";
 import { getUserInfo } from "../../api/account";
-import { GetUserInfo } from "../../type/Accounts";
 import PasswordUpdate from "../account/page/PasswordUpdate";
 import login from "../../asset/image/login.png";
 import Bell from "./Bell";
 import { Fragment } from "react";
 import "animate.css";
+import { useQuery } from "react-query";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 const Header = () => {
-  const [myInfo, setMyInfo] = useState<GetUserInfo | null>(null);
+  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
   const [showModal, setShowModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const { data } = useQuery([getUserInfo, showModal], () => getUserInfo(userInfo!.seq), {
+    enabled: !!userInfo?.seq,
+    refetchOnMount: true,
+  });
+  const myInfo = data?.UserInfo;
 
-  const { accessToken, userInfo, setAccessToken, setUserInfo, setRefreshToken } = userStore();
   return (
     <header className="w-full h-[8vh] flex justify-evenly items-center bg-gray-50  bg-opacity-90">
       <Link to="/">
@@ -100,14 +104,8 @@ const Header = () => {
                   <Menu.Item>
                     {({ active }) => (
                       <div
-                        onClick={async () => {
-                          try {
-                            const res = await getUserInfo(userInfo!.seq);
-                            setMyInfo(res.UserInfo);
-                            setShowModal(true);
-                          } catch (err) {
-                            console.log(err);
-                          }
+                        onClick={() => {
+                          setShowModal(true);
                         }}
                         className={classNames(
                           active ? "bg-gray-100 text-gray-900" : "text-gray-700",

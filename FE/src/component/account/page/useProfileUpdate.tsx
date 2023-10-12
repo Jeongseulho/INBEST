@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useRef } from "react";
 import { ReactCropperElement } from "react-cropper";
-import { checkNickname, upadateUserInfo, changeDefaultImg } from "../../../api/account";
+import { checkNickname, upadateUserInfo, changeDefaultImg, getUserInfo } from "../../../api/account";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { UpdateUser } from "../../../type/Accounts";
 import userStore from "../../../store/userStore";
+import { useQuery } from "react-query";
 export const useProfileUpdate = () => {
   const { userInfo, setUserInfo } = userStore();
   // input에 담은 이미지 정보
@@ -23,20 +24,30 @@ export const useProfileUpdate = () => {
   // 닉네임 바뀌었는데 중복검사 안했으면 못바꾸게 해야됨
   const [isChangedNickname, setIsChangedNickname] = useState(false);
   const [isCheckedNickname, setIsCheckedNickname] = useState(false);
-  const [formNickname, setFormNickname] = useState(userInfo?.nickname ?? "");
+  const { data } = useQuery([getUserInfo], () => getUserInfo(userInfo!.seq), {
+    enabled: !!userInfo?.seq,
+    refetchOnMount: true,
+  });
+  const myInfo = data?.UserInfo;
+
+  const [formNickname, setFormNickname] = useState(data?.UserInfo.nickname ?? "");
+
+  useEffect(() => {
+    if (data) setFormNickname(data?.UserInfo.nickname);
+  }, [data]);
 
   // 닉네임 중복확인
-  const onCheckNickname = async (nickname: string) => {
-    if (nickname === "") {
+  const onCheckNickname = async () => {
+    if (formNickname === "") {
       toast.error("닉네임을 입력해 주세요.");
       return;
     }
-    if (!/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]{1,10}$/.test(nickname)) {
+    if (!/^[a-zA-Z0-9가-힣ぁ-んァ-ンー]{1,10}$/.test(formNickname)) {
       toast.error("닉네임은 특수문자를 제외한 1~10자만 입력가능합니다.");
       return;
     }
     try {
-      await checkNickname(nickname);
+      await checkNickname(formNickname);
       return toast.error("이미 존재하는 닉네임입니다");
     } catch (err: unknown) {
       const { status } = (err as AxiosError).response!;
@@ -103,7 +114,7 @@ export const useProfileUpdate = () => {
       }
       const res = await upadateUserInfo(userInfo!.seq, formData);
       toast.success("프로필이 변경되었습니다");
-      setUserInfo({ ...userInfo!, profileImgSearchName: res.UserInfo.profileImgSearchName });
+      setUserInfo({ ...userInfo!, nickname: formNickname, profileImgSearchName: res.UserInfo.profileImgSearchName });
       window.location.reload();
     } catch (err) {
       toast.error("프로필 변경에 실패했습니다");
@@ -141,5 +152,6 @@ export const useProfileUpdate = () => {
     onUpdate,
     formNickname,
     setFormNickname,
+    myInfo,
   };
 };
