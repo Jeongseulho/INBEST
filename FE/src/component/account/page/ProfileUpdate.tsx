@@ -91,7 +91,6 @@ const ProfileUpdate = ({
         }}
       >
         <div>
-          {myInfo?.gender}
           <h3 className="text-center my-10">회원정보 변경</h3>
           {myInfo && (
             <form
