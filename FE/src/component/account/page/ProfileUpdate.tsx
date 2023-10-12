@@ -20,7 +20,7 @@ const ProfileUpdate = ({
 }: {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  myInfo?: GetUserInfo;
+  myInfo?: GetUserInfo | null;
 }) => {
   const {
     beforeCropUrl,
