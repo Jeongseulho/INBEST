@@ -53,11 +53,8 @@ const ProfileUpdate = ({
     setError,
     reset,
     formState: { errors },
-  } = useForm<SignupFormValue>();
+  } = useForm<SignupFormValue>({ defaultValues: { nickname: formNickname } });
 
-  // const values = myInfo;
-  console.log(myInfo);
-  // useForm({ defaultValues: { nickname: values?.nickname }, values });
   useEffect(() => {
     setFormNickname(myInfo?.nickname ?? "");
     if (showModal) {
