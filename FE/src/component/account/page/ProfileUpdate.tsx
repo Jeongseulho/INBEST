@@ -53,7 +53,7 @@ const ProfileUpdate = ({
     setError,
     reset,
     formState: { errors },
-  } = useForm<SignupFormValue>({ defaultValues: { nickname: formNickname } });
+  } = useForm<SignupFormValue>();
 
   useEffect(() => {
     setFormNickname(myInfo?.nickname ?? "");
@@ -208,13 +208,13 @@ const ProfileUpdate = ({
                     disabled={isCheckedNickname}
                     className="signup-input w-full"
                     placeholder="닉네임을 입력해 주세요"
+                    value={formNickname}
                     {...register("nickname", {
                       required: "닉네임은 필수 입력 사항입니다.",
                       pattern: {
                         value: /^[a-zA-Z0-9가-힣ぁ-んァ-ンー]{1,10}$/,
                         message: "닉네임은 특수문자를 제외한 1~10자만 입력가능합니다.",
                       },
-                      value: formNickname,
                     })}
                     onChange={(e) => {
                       setFormNickname(e.target.value);

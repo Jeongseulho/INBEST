@@ -169,8 +169,12 @@ const Header = () => {
           <Bell />
         </div>
       )}
-      <ProfileUpdate myInfo={myInfo} showModal={showModal} setShowModal={setShowModal} />
-      <PasswordUpdate showModal={showPasswordModal} setShowModal={setShowPasswordModal} />
+      {myInfo && (
+        <>
+          <ProfileUpdate myInfo={myInfo} showModal={showModal} setShowModal={setShowModal} />
+          <PasswordUpdate showModal={showPasswordModal} setShowModal={setShowPasswordModal} />
+        </>
+      )}
     </header>
   );
 };
