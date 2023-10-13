@@ -80,6 +80,13 @@ public class UserRankRedisRepository {
 	}
 
 	/*
+		userZSet 에서 랭킹(인덱스) 가져오기
+	 */
+	public Long getUserRankingIndex(Long userSeq) {
+		return userZSet.reverseRank(USER_SORT_KEY, String.valueOf(userSeq));
+	}
+
+	/*
 		전체 개인 랭킹 정보 불러오기
 	 */
 	public List<RedisUserDTO> getUserRankingInfoList(Long start, Long end) {

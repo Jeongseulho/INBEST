@@ -165,24 +165,18 @@ public class UserRankServiceImpl implements UserRankService {
 		}
 		log.info(nickname + "의 userSeq: " + userSeq);
 
-		// redis user hash table 에서 userSeq 으로 검색 후 랭킹 정보 조회
-		RedisUserDTO userDto = userRankRedisRepository.getUserInfo(userSeq);
-		if (userDto == null) {
+		// redis user sorted sets 에서 userSeq 으로 검색 후 랭킹 정보 조회
+		Long zSetIdx = userRankRedisRepository.getUserRankingIndex(userSeq);
+		if (zSetIdx == null) {
 			throw new NotFoundException(nickname + " 닉네임으로 검색된 회원 정보가 없음");
 		}
-		Integer currentRank = userDto.getCurrentRank();
-		log.info(nickname + "의 현재 랭킹: " + currentRank);
+		log.info(nickname + "의 userZSet seq: " + zSetIdx);
 
-		// +- 10 등 범위 산정
-		long start = currentRank > 10 ? currentRank - 10 : 1;
-		long end = currentRank + 10;
-		log.info("조회 랭킹 범위: " + start + " ~ " + end);
-
-		// 해당 범위 랭킹 정보 검색
-		List<RedisUserDTO> userRankingInfoList = userRankRedisRepository.getUserRankingInfoList(start - 1, end - 1);
-		log.info(userRankingInfoList.toString());
-
-		return userRankingInfoList;
+		// 시작 인덱스는 0부터
+		if (zSetIdx < 10) {
+			zSetIdx = 10L;
+		}
+		return userRankRedisRepository.getUserRankingInfoList(zSetIdx - 10, zSetIdx + 10);
 	}
 
 	/*
