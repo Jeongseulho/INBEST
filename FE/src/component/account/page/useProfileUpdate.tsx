@@ -30,11 +30,10 @@ export const useProfileUpdate = () => {
   });
   const myInfo = data?.UserInfo;
 
-  const [formNickname, setFormNickname] = useState(userInfo?.nickname ?? "");
-
+  const [formNickname, setFormNickname] = useState(myInfo?.nickname ?? "");
   useEffect(() => {
-    if (data && data.UserInfo.nickname.trim() !== "") setFormNickname(data.UserInfo.nickname);
-  }, [data]);
+    if (myInfo && myInfo.nickname.trim() !== "") setFormNickname(myInfo.nickname);
+  }, [myInfo]);
 
   // 닉네임 중복확인
   const onCheckNickname = async () => {
